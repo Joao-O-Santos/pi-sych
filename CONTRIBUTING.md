@@ -26,8 +26,8 @@ Pi extensions and skills run with the local user’s permissions. They are not a
 
 1. Verify the package version and release notes by hand.
 2. Ensure GitLab has a protected `v*` tag rule.
-3. For the first publish of an unclaimed package, create a short-lived granular npm publish token and add it as GitLab’s protected, masked `NPM_TOKEN` CI/CD variable. Do not put it in a repository file, shell history, or chat.
-4. Create an annotated tag whose name exactly matches `v` plus `package.json`’s version, then push it to GitLab.
-5. After the first publish, configure npm’s **Trusted Publisher** for GitLab CI/CD: namespace `Joao-O-Santos`, project `pi-sych`, CI file `.gitlab-ci.yml`; delete `NPM_TOKEN`.
+3. For the first publish of an unclaimed package, manually publish the verified package from an authenticated local checkout. Do not use a release tag until that publish succeeds.
+4. Configure npm’s **Trusted Publisher** for GitLab CI/CD: namespace `Joao-O-Santos`, project `pi-sych`, CI file `.gitlab-ci.yml`.
+5. Create an annotated tag whose name exactly matches `v` plus `package.json`’s version, then push it to GitLab.
 
-The GitLab tag pipeline reruns the checks and publishes with npm provenance. It uses the temporary GitLab token only when supplied for the first package claim; later tags use GitLab OIDC trusted publishing. Do not create a release tag until its required authentication configuration is complete.
+The GitLab tag pipeline reruns the checks and publishes new matching versions with npm provenance through GitLab OIDC. For the first manually published version, it recognizes the existing exact version and succeeds without republishing it. No npm token is stored in this repository or required as a GitLab CI/CD variable.
