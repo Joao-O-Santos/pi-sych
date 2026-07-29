@@ -83,6 +83,10 @@ Pi Sych is not a sandbox. Worker modes limit visible Pi tools, not operating-sys
 
 Remote results, model output, browser opening, and passing a candidate to a tool are not evidence or approval. `intendedWritePaths` report task scope and unexpected mutations after the fact; they do not prevent host changes.
 
+### Known upstream issue
+
+Pi `0.82.1` currently carries `brace-expansion@5.0.7` through its nested `minimatch` dependency. npm identifies it as a high-severity memory-exhaustion denial-of-service advisory; Pi Sych does not introduce or directly expose that dependency. The patched `brace-expansion@5.0.8` exists, but Pi must update its nested resolution. Treat untrusted glob or brace-pattern input cautiously until an upstream Pi update resolves it.
+
 ## For maintainers
 
 - `ARCHITECTURE.md` — implemented technical map

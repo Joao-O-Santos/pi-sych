@@ -50,7 +50,7 @@ test("status command explains canonical synchronization state", async () => {
 
   const { event, stderr } = await invokeCommand(root, agentDir, "pi-sych-status");
   assert.equal(stderr, "");
-  assert.match(event.message, /pi-sych 0\.1\.0/);
+  assert.match(event.message, /pi-sych 0\.0\.0/);
   assert.match(event.message, /Current:\n- PROJECT\.md — objective/);
   assert.match(event.message, /no synchronization review is required/);
 });

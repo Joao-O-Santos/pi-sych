@@ -32,4 +32,8 @@ publish-npm:
     - npm test
     - npm run smoke
     - npm pack --dry-run
+    - |
+      if [ -n "${NPM_TOKEN:-}" ]; then
+        printf '%s\n' "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+      fi
     - npm publish --provenance
