@@ -26,15 +26,17 @@ publish-npm:
       aud: sigstore
   script:
     - npm ci
-    - test "$CI_COMMIT_TAG" = "v$(node -p \"require('./package.json').version\")"
+    - |
+      package_version="$(node -p 'require("./package.json").version')"
+      test "$CI_COMMIT_TAG" = "v${package_version}"
     - npm run typecheck
     - npm run test:deps
     - npm test
     - npm run smoke
     - npm pack --dry-run
     - |
-      package_name="$(node -p \"require('./package.json').name\")"
-      package_version="$(node -p \"require('./package.json').version\")"
+      package_name="$(node -p 'require("./package.json").name')"
+      package_version="$(node -p 'require("./package.json").version')"
       if published_version="$(npm view "${package_name}@${package_version}" version 2>/dev/null)" \
         && [ "${published_version}" = "${package_version}" ]; then
         echo "${package_name}@${package_version} is already published; skipping publish."

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -42,11 +43,18 @@ test("supervisor exposes only its direct plan-review tool and annotation command
 
 test("public package manifest loads only the supervisor extension", () => {
   assert.equal(packageJson.name, "pi-sych");
-  assert.equal(packageJson.version, "0.0.1");
+  assert.equal(packageJson.version, "0.0.2");
   assert.equal(packageJson.private, undefined);
   assert.deepEqual(packageJson.files, ["config", "docs/CONFIGURATION.md", "extensions", "skills", "scripts/bootstrap-worker-agent-dir.mjs", "README.md", "LICENSE", "CONTRIBUTING.md"]);
   assert.equal(packageJson.repository.url, "git+https://gitlab.com/Joao-O-Santos/pi-sych.git");
   assert.deepEqual(packageJson.pi.extensions, ["./extensions/workbench/index.ts"]);
+});
+
+test("release job uses shell-safe tag version checks", () => {
+  const releaseConfig = readFileSync(new URL("../../.gitlab-ci.yml", import.meta.url), "utf8");
+  assert.match(releaseConfig, /package_version="\$\(node -p 'require\("\.\/package\.json"\)\.version'\)"/);
+  assert.match(releaseConfig, /test "\$CI_COMMIT_TAG" = "v\$\{package_version\}"/);
+  assert.doesNotMatch(releaseConfig, /\\"require\('\.\/package\.json'\)\.version\\"/);
 });
 
 test("package status rejects incomplete metadata", async () => {
