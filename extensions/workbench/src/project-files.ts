@@ -4,7 +4,7 @@ import { dirname, isAbsolute, parse, relative, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 
 export const CORE_PROJECT_FILES = ["PROJECT.md", "EVIDENCE.md", "SYNC.md"] as const;
-export const OPTIONAL_PROJECT_FILES = ["DECISIONS.md", "STYLE.md"] as const;
+export const OPTIONAL_PROJECT_FILES = ["DECISIONS.md", "STYLE.md", "TODO.md"] as const;
 
 export interface DiscoveredProjectFile {
   name: (typeof CORE_PROJECT_FILES)[number] | (typeof OPTIONAL_PROJECT_FILES)[number];

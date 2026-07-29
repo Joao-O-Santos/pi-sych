@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { basename, relative, resolve } from "node:path";
-import { fingerprintFile } from "./sync.js";
+import { fingerprintFile, type SyncArtifact } from "./sync.js";
 import { discoverProjectFiles, resolveProjectPath, writeApprovedFile } from "./project-files.js";
 
 export const PROPOSAL_LABELS = ["explicit", "inferred", "unresolved", "contradicted", "unsupported"] as const;
@@ -203,6 +203,15 @@ export function formatCandidateReview(candidate: CandidateReview): string {
   return lines.join("\n");
 }
 
+function syncArtifactMetadata(name: string): Pick<SyncArtifact, "role" | "authoritativeFor"> {
+  if (name === "PROJECT.md") return { role: "project", authoritativeFor: ["objective", "scope", "contribution", "accepted-direction"] };
+  if (name === "EVIDENCE.md") return { role: "evidence", authoritativeFor: ["literature-support", "empirical-claims", "caveats"] };
+  if (name === "DECISIONS.md") return { role: "decisions", authoritativeFor: ["consequential-decisions"] };
+  if (name === "STYLE.md") return { role: "style", authoritativeFor: ["style"] };
+  if (name === "TODO.md") return { role: "tasks", authoritativeFor: ["task-state", "priorities", "blockers"] };
+  return { role: "instructions", authoritativeFor: ["project-instructions"] };
+}
+
 function syncMarkdown(confirmedAt: string, artifacts: Array<Record<string, unknown>>): string {
   return `# Project synchronization\n\n\`\`\`json\n${JSON.stringify({ version: 1, confirmedAt, artifacts }, null, 2)}\n\`\`\`\n`;
 }
@@ -211,8 +220,8 @@ export async function buildSyncCandidate(projectRoot: string): Promise<Candidate
   const discovery = await discoverProjectFiles(projectRoot);
   const artifacts = [] as Array<Record<string, unknown>>;
   for (const file of discovery.files.filter((file) => file.name !== "SYNC.md" && file.exists)) {
-    const domains = file.name === "PROJECT.md" ? ["objective", "scope", "contribution", "accepted-direction"] : file.name === "EVIDENCE.md" ? ["literature-support", "empirical-claims", "caveats"] : ["project-instructions"];
-    artifacts.push({ path: relative(discovery.root, file.path), role: file.name === "PROJECT.md" ? "project" : file.name === "EVIDENCE.md" ? "evidence" : "instructions", status: "current", authoritativeFor: domains, fingerprint: await fingerprintFile(file.path) });
+    const metadata = syncArtifactMetadata(file.name);
+    artifacts.push({ path: relative(discovery.root, file.path), ...metadata, status: "current", fingerprint: await fingerprintFile(file.path) });
   }
   const content = syncMarkdown(new Date().toISOString(), artifacts);
   return {

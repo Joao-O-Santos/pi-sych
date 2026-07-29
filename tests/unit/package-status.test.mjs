@@ -43,7 +43,7 @@ test("supervisor exposes only its direct plan-review tool and annotation command
 
 test("public package manifest loads only the supervisor extension", () => {
   assert.equal(packageJson.name, "pi-sych");
-  assert.equal(packageJson.version, "0.0.2");
+  assert.equal(packageJson.version, "0.1.0");
   assert.equal(packageJson.private, undefined);
   assert.deepEqual(packageJson.files, ["config", "docs/CONFIGURATION.md", "extensions", "skills", "scripts/bootstrap-worker-agent-dir.mjs", "README.md", "LICENSE", "CONTRIBUTING.md"]);
   assert.equal(packageJson.repository.url, "git+https://gitlab.com/Joao-O-Santos/pi-sych.git");
@@ -54,6 +54,8 @@ test("release job uses shell-safe tag version checks", () => {
   const releaseConfig = readFileSync(new URL("../../.gitlab-ci.yml", import.meta.url), "utf8");
   assert.match(releaseConfig, /package_version="\$\(node -p 'require\("\.\/package\.json"\)\.version'\)"/);
   assert.match(releaseConfig, /test "\$CI_COMMIT_TAG" = "v\$\{package_version\}"/);
+  assert.match(releaseConfig, /npm install --global npm@11\.16\.0/);
+  assert.match(releaseConfig, /npm 11\.5\.1 or later is required for trusted publishing/);
   assert.doesNotMatch(releaseConfig, /\\"require\('\.\/package\.json'\)\.version\\"/);
 });
 

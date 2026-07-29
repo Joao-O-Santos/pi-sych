@@ -6,7 +6,7 @@ Pi Sych is a Pi package with a supervisor extension, a separately bootstrapped w
 
 **Supervisor:** `extensions/workbench/index.ts` adds operating guidance and registers project status, initialization, synchronization, drift, evidence, retrospective, dispatch, verification, and review surfaces. Focused modules implement the behavior.
 
-**Project state:** `project-files.ts` discovers `PROJECT.md`, `EVIDENCE.md`, `SYNC.md`, and optional `DECISIONS.md`/`STYLE.md`. `sync.ts` compares declared SHA-256 fingerprints and reports changed, missing, stale, or conflicted files without choosing an authority. `candidates.ts`, `drift.ts`, and `evidence.ts` produce reviewable proposals rather than silent writes.
+**Project state:** `project-files.ts` discovers `PROJECT.md`, `EVIDENCE.md`, `SYNC.md`, and optional `DECISIONS.md`/`STYLE.md`/`TODO.md`. `TODO.md` is a local task-state ledger, not authority for project direction or evidence. `sync.ts` compares declared SHA-256 fingerprints and reports changed, missing, stale, or conflicted files without choosing an authority. `candidates.ts`, `drift.ts`, and `evidence.ts` produce reviewable proposals rather than silent writes.
 
 **Workers:** `worker-engine.ts` validates one dispatch schema and nested result envelope, resolves exact selected skills, launches an ephemeral Pi process with an exact tool surface, keeps one immutable result, limits retries to transient failures before mutation, and reports dirty or committed changes. Project-local `.pi-sych/` runtime state is excluded through Git’s local exclude file when necessary. `extensions/worker/index.ts` exposes only result submission and worker status. `model-catalog.ts` reads the private user-ranked model catalog.
 

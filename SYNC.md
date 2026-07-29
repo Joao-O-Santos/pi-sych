@@ -3,7 +3,7 @@
 ```json
 {
   "version": 1,
-  "confirmedAt": "2026-07-29T03:22:45+01:00",
+  "confirmedAt": "2026-07-29T03:30:32+01:00",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -25,14 +25,14 @@
       "role": "architecture",
       "status": "current",
       "authoritativeFor": ["implemented-architecture"],
-      "fingerprint": "sha256:2a673eb69328f0f0d26f009496a70093250dade94753c5f37ad6e6dc15e4ff3f"
+      "fingerprint": "sha256:ceb904a5d65bd19824469e7ebaca76fa1e704af8eacc4a9f7c83da4917f0704c"
     },
     {
       "path": "README.md",
       "role": "documentation",
       "status": "current",
       "authoritativeFor": ["package-usage", "human-review-limits"],
-      "fingerprint": "sha256:537f87255f4b7d5a9d38fb4964d0ddc2ec68167eaf0c5082982ab1711881a359",
+      "fingerprint": "sha256:19b6dfb637c18402631104d04b44b25766c807cb749cdc17137b45c95ed6d387",
       "updateFrom": ["ARCHITECTURE.md", "package.json"]
     },
     {
@@ -40,7 +40,7 @@
       "role": "package-boundary",
       "status": "current",
       "authoritativeFor": ["scripts", "Pi-discovery"],
-      "fingerprint": "sha256:87a1d8abdc3617bec301e83a0539f7fd8e04ae7010cc411ad8290279f00240d9",
+      "fingerprint": "sha256:dfa1998bfb79cba5e3773f6061af97541434d7ed447f771f33de4a6fed802a2d",
       "updateFrom": ["extensions", "skills", "tests"]
     },
     {

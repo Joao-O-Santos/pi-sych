@@ -18,11 +18,14 @@ test("canonical discovery selects the nearest project and reports optional files
   await writeFile(join(root, "PROJECT.md"), "# Project\n\n## Objective\n\nX\n\n## Current direction\n\nY\n\n## Definition of done\n\nZ\n");
   await writeFile(join(root, "SYNC.md"), "candidate");
   await writeFile(join(root, "STYLE.md"), "# Style\n");
+  await writeFile(join(root, "TODO.md"), "# Tasks\n");
 
   const discovery = await discoverProjectFiles(nested);
   assert.equal(discovery.root, root);
   assert.equal(discovery.files.find((file) => file.name === "STYLE.md").exists, true);
   assert.equal(discovery.files.find((file) => file.name === "DECISIONS.md").exists, false);
+  assert.equal(discovery.files.find((file) => file.name === "TODO.md").exists, true);
+  assert.equal(discovery.files.find((file) => file.name === "TODO.md").required, false);
   assert.equal(discovery.files.find((file) => file.name === "EVIDENCE.md").required, true);
   assert.equal(discovery.files.some((file) => file.name === "AGENTS.md"), false);
 });

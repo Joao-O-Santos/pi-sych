@@ -66,9 +66,13 @@ test("sync candidate is reviewable and fingerprints observed existing files", as
   const root = await mkdtemp(join(tmpdir(), "pi-sych-sync-candidate-"));
   await writeFile(join(root, "PROJECT.md"), "# Project\n\n## Objective\nX\n## Current direction\nY\n## Definition of done\nZ\n");
   await writeFile(join(root, "EVIDENCE.md"), "# Evidence\n");
+  await writeFile(join(root, "TODO.md"), "# Tasks\n");
   const candidate = await buildSyncCandidate(root);
   assert.equal(candidate.files[0].path, "SYNC.md");
   assert.match(candidate.files[0].content, /"PROJECT\.md"/);
   assert.match(candidate.files[0].content, /"EVIDENCE\.md"/);
+  assert.match(candidate.files[0].content, /"TODO\.md"/);
+  assert.match(candidate.files[0].content, /"role": "tasks"/);
+  assert.match(candidate.files[0].content, /"task-state"/);
   assert.match(formatCandidateReview(candidate), /Confirm each proposed authority domain/);
 });

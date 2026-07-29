@@ -6,7 +6,7 @@ It keeps a project’s decisions and evidence visible in files, gives workers on
 
 ## What it helps with
 
-- Keep a short, reviewable project record in `PROJECT.md`, `EVIDENCE.md`, and `SYNC.md`.
+- Keep a short, reviewable project record in `PROJECT.md`, `EVIDENCE.md`, and `SYNC.md`, with optional decision, style, and task-ledger files.
 - Notice when those files or their declared dependents have drifted.
 - Delegate a bounded review, research, or implementation task without handing a worker the whole conversation.
 - Record actual verification commands, exit codes, output, and changed files.
@@ -61,6 +61,27 @@ Executable verification is optional. Many scientific-writing judgments require s
 Workers receive an objective, exact inputs, selected skills, expected output, intended write paths, and any declared supervisor verification contract. They do not receive the supervisor conversation.
 
 For Git work, the included `git-workflow` skill defaults to direct work on `main`, atomic verified commits, and explicit approval for remote or history-changing operations. A repository’s established commit convention takes precedence.
+
+## Optional project files
+
+Use `DECISIONS.md` for consequential accepted decisions and their rationale, `STYLE.md` for project-specific writing or presentation constraints, and `TODO.md` for a local task ledger. `TODO.md` is optional: Pi Sych discovers and synchronizes it only when present; it does not create one or interpret an unchecked task as a project failure.
+
+Keep task state distinct from project direction and evidence. A compact ledger can use stable IDs and three sections:
+
+```md
+# Tasks
+
+## Active
+- [ ] T-001 — Describe the next bounded task.
+
+## Blocked
+- [ ] T-002 — State the blocker and the needed decision or input.
+
+## Done
+- [x] T-000 — Record completed work without treating it as a change of direction.
+```
+
+If GitLab issues are the operative task tracker, record that choice explicitly rather than maintaining two competing task lists.
 
 ## Human review is not optional
 

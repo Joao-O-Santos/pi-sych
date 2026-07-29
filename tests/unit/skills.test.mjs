@@ -46,6 +46,15 @@ test("git workflow skill defaults to main while respecting repository convention
   assert.doesNotMatch(content, /Do not use conventional-commit prefixes/);
 });
 
+test("TODO.md guidance preserves its bounded task-ledger role", async () => {
+  const artifactSkill = await readFile("skills/artifact-to-project/SKILL.md", "utf8");
+  const readme = await readFile("README.md", "utf8");
+  assert.match(artifactSkill, /`TODO\.md`/);
+  assert.match(artifactSkill, /not evidence, project direction/);
+  assert.match(readme, /## Optional project files/);
+  assert.match(readme, /If GitLab issues are the operative task tracker/);
+});
+
 test("public skills do not retain superseded runtime, controller, provider, or personal-overlay language", async () => {
   const files = await skillFiles();
   const forbidden = /Magic Context|magic-context|\bAFT\b|cortexkit|pi-vcc|OpenCode|opencode|openai-codex|gpt-\d|claude-|mistral-|named-agent hierarchy/i;
