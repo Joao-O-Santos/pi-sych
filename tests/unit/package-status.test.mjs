@@ -43,11 +43,19 @@ test("supervisor exposes only its direct plan-review tool and annotation command
 
 test("public package manifest loads only the supervisor extension", () => {
   assert.equal(packageJson.name, "pi-sych");
-  assert.equal(packageJson.version, "0.1.0");
+  assert.equal(packageJson.version, "0.1.1");
   assert.equal(packageJson.private, undefined);
-  assert.deepEqual(packageJson.files, ["config", "docs/CONFIGURATION.md", "extensions", "skills", "scripts/bootstrap-worker-agent-dir.mjs", "README.md", "LICENSE", "CONTRIBUTING.md"]);
+  assert.deepEqual(packageJson.files, ["config", "docs/CONFIGURATION.md", "extensions", "skills", "scripts/bootstrap-worker-agent-dir.mjs", "README.md", "LICENSE", "CONTRIBUTING.md", "CHANGELOG.md"]);
   assert.equal(packageJson.repository.url, "git+https://gitlab.com/Joao-O-Santos/pi-sych.git");
   assert.deepEqual(packageJson.pi.extensions, ["./extensions/workbench/index.ts"]);
+});
+
+test("public changelog records releases and the unpublished historical tag", () => {
+  const changelog = readFileSync(new URL("../../CHANGELOG.md", import.meta.url), "utf8");
+  assert.match(changelog, /## \[0\.1\.1\]/);
+  assert.match(changelog, /## \[0\.1\.0\]/);
+  assert.match(changelog, /## \[0\.0\.2\]/);
+  assert.match(changelog, /npm has no `pi-sych@0\.0\.1` version/);
 });
 
 test("release job uses shell-safe tag version checks", () => {

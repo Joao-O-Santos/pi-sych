@@ -1,6 +1,6 @@
 {
   "name": "pi-sych",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "General project and artifact development workbench for Pi",
   "files": [
     "config",
@@ -10,7 +10,8 @@
     "scripts/bootstrap-worker-agent-dir.mjs",
     "README.md",
     "LICENSE",
-    "CONTRIBUTING.md"
+    "CONTRIBUTING.md",
+    "CHANGELOG.md"
   ],
   "license": "MIT",
   "repository": {
