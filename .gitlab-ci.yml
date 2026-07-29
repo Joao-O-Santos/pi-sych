@@ -1,0 +1,12 @@
+image: node:24-bookworm
+
+stages:
+  - verify
+
+verify:
+  stage: verify
+  script:
+    - npm ci
+    - npm run typecheck
+    - npm test
+    - npm run smoke

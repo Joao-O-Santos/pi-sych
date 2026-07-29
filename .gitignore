@@ -1,0 +1,29 @@
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+
+# Project-local Pi state and environment files
+.pi/
+.pi-sych/
+.env
+.env.*
+!.env.example
+
+# Credentials and private key material
+auth.json
+*.pem
+*.key
+*.p12
+*.secrets.json
+*.secrets.jsonc
+
+# Ephemeral compiled runtime used by worker-engine tests
+.test-build/
+
+# Rendered evaluation fixtures
+fixtures/revealjs-build/slides.html
+fixtures/r-quarto-alignment/report.html
+fixtures/r-quarto-alignment/report.knit.md
+fixtures/revealjs-build/slides_files/
+fixtures/r-quarto-alignment/report_files/

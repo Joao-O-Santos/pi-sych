@@ -1,0 +1,52 @@
+{
+  "name": "@joao/pi-sych",
+  "version": "0.1.0",
+  "private": true,
+  "description": "General project and artifact development workbench for Pi",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "pi-package",
+    "pi",
+    "agent",
+    "writing",
+    "research",
+    "software-engineering"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build:test": "rm -rf .test-build && tsc --project tsconfig.test.json",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "npm run build:test && node --test tests/unit/*.test.mjs",
+    "test:integration": "node --test tests/integration/*.test.mjs",
+    "test:deps": "node scripts/check-mcporter-dependencies.mjs",
+    "deps:latest": "npm update pi-mcporter && npm run test:deps && npm test",
+    "smoke": "node scripts/smoke-test.mjs"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-agent-core": "*",
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-tui": "*",
+    "typebox": "*"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "^0.82.1",
+    "@types/node": "24.12.4",
+    "typebox": "1.1.38",
+    "typescript": "5.9.3"
+  },
+  "pi": {
+    "extensions": [
+      "./extensions/workbench/index.ts"
+    ],
+    "skills": [
+      "./skills"
+    ]
+  },
+  "dependencies": {
+    "@plannotator/pi-extension": "^0.25.0",
+    "jiti": "^2.7.0",
+    "pi-mcporter": "latest"
+  }
+}

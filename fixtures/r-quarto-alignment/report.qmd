@@ -1,0 +1,11 @@
+---
+title: R/Quarto alignment fixture
+format: html
+---
+
+```{r}
+values <- c(2, 4, 6)
+mean(values)
+```
+
+The computed mean is 5.

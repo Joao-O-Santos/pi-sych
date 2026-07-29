@@ -1,0 +1,8 @@
+{
+  "objective": "Develop a concise project brief.",
+  "audience": "A project owner and collaborator.",
+  "contribution": "A reviewable initial state.",
+  "deliverables": "PROJECT.md and EVIDENCE.md candidates.",
+  "constraints": "Do not accept inferred claims automatically.",
+  "definitionOfDone": "The owner approves the candidate files."
+}
