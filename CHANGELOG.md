@@ -2,6 +2,13 @@
 
 All notable changes to Pi Sych are documented here. Versions are immutable npm publications unless explicitly marked otherwise.
 
+## [0.1.2] - 2026-07-29
+
+### Changed
+
+- Upgraded development TypeScript to 7.0.2 and added TypeScript 6+ test-build configuration.
+- Added Biome formatting and linting with tab indentation, developer scripts, and GitLab CI enforcement.
+
 ## [0.1.1] - 2026-07-29
 
 ### Added

@@ -6,6 +6,7 @@ Pi Sych favors the smallest implementation that makes project state, delegation,
 
 ```sh
 npm run typecheck
+npm run style
 npm run test:deps
 npm test
 npm run smoke
@@ -14,6 +15,19 @@ git diff --check
 ```
 
 `npm test` compiles TypeScript into ignored `.test-build/`, runs deterministic unit tests, and exercises Pi package loading through RPC integration tests. Live MCP checks are opt-in and must report actual server, selector, time, identifiers, and limitations.
+
+## Code style
+
+Biome formats and lints the TypeScript, JavaScript, and test sources. Structural indentation uses tabs; Biome owns line wrapping and other layout rather than preserving manual column alignment.
+
+```sh
+npm run lint          # lint only
+npm run format:check  # formatting only, without writes
+npm run style         # CI-equivalent formatting, lint, and safe-assist checks
+npm run format:fix    # apply formatter, safe lint, and import-organization fixes
+```
+
+This is a project-local style, not a claim of full Google TypeScript Style compliance. For background on tab indentation, see [Why tabs are clearly superior](https://lea.verou.me/blog/2012/01/why-tabs-are-clearly-superior/). [XO configuration](https://github.com/xojs/xo#config) is a useful reference for a more opinionated ESLint-based alternative; Pi Sych uses Biome, not XO.
 
 ## Design constraints
 

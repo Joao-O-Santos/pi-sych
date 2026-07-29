@@ -9,6 +9,7 @@ verify:
   script:
     - npm ci
     - npm run typecheck
+    - npm run style
     - npm run test:deps
     - npm test
     - npm run smoke
@@ -34,6 +35,7 @@ publish-npm:
       package_version="$(node -p 'require("./package.json").version')"
       test "$CI_COMMIT_TAG" = "v${package_version}"
     - npm run typecheck
+    - npm run style
     - npm run test:deps
     - npm test
     - npm run smoke

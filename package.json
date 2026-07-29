@@ -1,6 +1,6 @@
 {
   "name": "pi-sych",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "General project and artifact development workbench for Pi",
   "files": [
     "config",
@@ -33,6 +33,10 @@
   ],
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "lint": "biome lint extensions scripts tests",
+    "format:check": "biome ci --linter-enabled=false --assist-enabled=false extensions scripts tests",
+    "format:fix": "biome check --write extensions scripts tests",
+    "style": "biome ci extensions scripts tests",
     "build:test": "rm -rf .test-build && tsc --project tsconfig.test.json",
     "test": "npm run test:unit && npm run test:integration",
     "test:unit": "npm run build:test && node --test tests/unit/*.test.mjs",
@@ -49,10 +53,11 @@
     "typebox": "*"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.5.6",
     "@earendil-works/pi-coding-agent": "^0.82.1",
     "@types/node": "24.12.4",
     "typebox": "1.1.38",
-    "typescript": "5.9.3"
+    "typescript": "7.0.2"
   },
   "pi": {
     "extensions": [

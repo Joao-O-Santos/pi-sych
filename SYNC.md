@@ -3,7 +3,7 @@
 ```json
 {
   "version": 1,
-  "confirmedAt": "2026-07-29T03:51:40+01:00",
+  "confirmedAt": "2026-07-29T14:30:35+01:00",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -40,7 +40,7 @@
       "role": "package-boundary",
       "status": "current",
       "authoritativeFor": ["scripts", "Pi-discovery"],
-      "fingerprint": "sha256:c680f99607375e1bee499bd7cd0973d14c9d7fa9c3aedc833dbc6654e16ea019",
+      "fingerprint": "sha256:d81d4ac78dc94dc7e1e75765d844d80e3b928e4776c10e9f075b4310e0265752",
       "updateFrom": ["extensions", "skills", "tests"]
     },
     {
@@ -55,7 +55,7 @@
       "role": "documentation",
       "status": "current",
       "authoritativeFor": ["development-checks"],
-      "fingerprint": "sha256:69ecb6f2a38dddd902ebae93daaf9973ef509d6eae455ab79bd046b899d49912"
+      "fingerprint": "sha256:abd15e0df22172674bc133d40a4ec90e450a50123ecb23eba2e56c3f3ea76017"
     }
   ]
 }
