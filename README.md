@@ -16,7 +16,13 @@ Pi Sych does **not** make model output evidence, approve its own changes, verify
 
 ## Start
 
-Install or load Pi Sych as a local package. Pi Sych already declares its Plannotator dependency; do **not** add Plannotator separately as a Pi extension.
+Install the public package with Pi:
+
+```sh
+pi install npm:pi-sych
+```
+
+For local development, load `/path/to/pi-sych` as a package instead. Pi Sych already declares its Plannotator dependency; do **not** add Plannotator separately as a Pi extension.
 
 ```json
 {
@@ -69,9 +75,11 @@ Before submitting, publishing, deploying, or relying on generated work, a human 
 
 If a claim, citation, result, or decision cannot be checked, mark it as unresolved rather than letting polished language hide the gap.
 
-## Trust limits
+## SECURITY WARNING
 
-Pi Sych is not a sandbox. Worker modes limit visible Pi tools, not operating-system permissions. `full-host` workers and configured remote tools run with the Pi process’s permissions; use external containment when that matters.
+Pi Sych is **alpha software**. It was developed with substantial AI assistance (including vibe-coded work). Its maintainer is experienced with R, Git/GitLab, Linux, and scientific writing, but is not a TypeScript or Node.js specialist. Read the code, inspect dependencies, and report problems; do not treat this disclosure as a guarantee of safety or quality.
+
+Pi Sych is not a sandbox. Worker modes limit visible Pi tools, not operating-system permissions. `full-host` workers and configured remote tools run with the Pi process’s permissions; use external containment when that matters. Pi’s [security](https://pi.dev/docs/latest/security) and [containerization](https://pi.dev/docs/latest/containerization) guidance describe the relevant trust boundary and external isolation options.
 
 Remote results, model output, browser opening, and passing a candidate to a tool are not evidence or approval. `intendedWritePaths` report task scope and unexpected mutations after the fact; they do not prevent host changes.
 

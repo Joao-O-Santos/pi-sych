@@ -2,11 +2,34 @@ image: node:24-bookworm
 
 stages:
   - verify
+  - release
 
 verify:
   stage: verify
   script:
     - npm ci
     - npm run typecheck
+    - npm run test:deps
     - npm test
     - npm run smoke
+    - npm pack --dry-run
+    - git diff --check
+
+publish-npm:
+  stage: release
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+  id_tokens:
+    NPM_ID_TOKEN:
+      aud: "npm:registry.npmjs.org"
+    SIGSTORE_ID_TOKEN:
+      aud: sigstore
+  script:
+    - npm ci
+    - test "$CI_COMMIT_TAG" = "v$(node -p \"require('./package.json').version\")"
+    - npm run typecheck
+    - npm run test:deps
+    - npm test
+    - npm run smoke
+    - npm pack --dry-run
+    - npm publish --provenance

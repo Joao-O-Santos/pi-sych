@@ -41,6 +41,9 @@ test("supervisor exposes only its direct plan-review tool and annotation command
 });
 
 test("public package manifest loads only the supervisor extension", () => {
+  assert.equal(packageJson.name, "pi-sych");
+  assert.equal(packageJson.private, undefined);
+  assert.equal(packageJson.repository.url, "git+https://gitlab.com/Joao-O-Santos/pi-sych.git");
   assert.deepEqual(packageJson.pi.extensions, ["./extensions/workbench/index.ts"]);
 });
 

@@ -1,9 +1,16 @@
 {
   "name": "pi-sych",
   "version": "0.1.0",
-  "private": true,
   "description": "General project and artifact development workbench for Pi",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/Joao-O-Santos/pi-sych.git"
+  },
+  "homepage": "https://gitlab.com/Joao-O-Santos/pi-sych#readme",
+  "bugs": {
+    "url": "https://gitlab.com/Joao-O-Santos/pi-sych/-/issues"
+  },
   "type": "module",
   "keywords": [
     "pi-package",
