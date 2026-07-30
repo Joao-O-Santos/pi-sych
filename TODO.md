@@ -22,4 +22,3 @@ This optional ledger tracks the minimal-architecture refactor. It is not authori
 - [x] R-004 — Implemented graph-aware mechanical checking and acknowledgement with cycle-tolerant direct/transitive impact reporting.
 - [x] R-002 — Added the approved target architecture, design principles, refactor plan, and package maintainer conventions.
 - [x] R-001 — Recorded the protected baseline: 4,072 counted production TypeScript lines, 58 unit tests, 4 integration tests, smoke and package checks passing; isolated fixture commits from user GPG configuration.
-- [x] R-000 — Approve `pi-sych-refactor-plan.md` with top-to-bottom implementation authorization.
