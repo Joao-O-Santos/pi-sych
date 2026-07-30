@@ -12,14 +12,12 @@ import {
 } from "node:fs/promises";
 import { dirname, isAbsolute, parse, relative, resolve } from "node:path";
 
-export const CORE_PROJECT_FILES = [
-	"PROJECT.md",
-	"EVIDENCE.md",
-	"SYNC.md",
-] as const;
+export const CORE_PROJECT_FILES = ["PROJECT.md", "SYNC.md"] as const;
 export const OPTIONAL_PROJECT_FILES = [
-	"DECISIONS.md",
+	"AGENTS.md",
 	"STYLE.md",
+	"EVIDENCE.md",
+	"DECISIONS.md",
 	"TODO.md",
 ] as const;
 

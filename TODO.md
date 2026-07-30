@@ -5,7 +5,6 @@ This optional ledger tracks the minimal-architecture refactor. It is not authori
 ## Active
 
 - [ ] R-003 — Replace the supervisor surface with `dispatch_worker`, `project_status`, and optional `submit_plan`.
-- [ ] R-004 — Implement flexible graph-aware project checking and acknowledgement.
 - [ ] R-005 — Simplify bounded dispatch with a 90-second default and explicit override.
 - [ ] R-006 — Inject optional project `AGENTS.md` and applicable `STYLE.md` into worker packets.
 - [ ] R-007 — Move bootstrap, status review, drift, reconciliation, verification, and retrospective procedures into skills.
@@ -20,6 +19,7 @@ This optional ledger tracks the minimal-architecture refactor. It is not authori
 
 ## Done
 
+- [x] R-004 — Implemented graph-aware mechanical checking and acknowledgement with cycle-tolerant direct/transitive impact reporting.
 - [x] R-002 — Added the approved target architecture, design principles, refactor plan, and package maintainer conventions.
 - [x] R-001 — Recorded the protected baseline: 4,072 counted production TypeScript lines, 58 unit tests, 4 integration tests, smoke and package checks passing; isolated fixture commits from user GPG configuration.
 - [x] R-000 — Approve `pi-sych-refactor-plan.md` with top-to-bottom implementation authorization.

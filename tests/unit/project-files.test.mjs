@@ -43,10 +43,10 @@ test("canonical discovery selects the nearest project and reports optional files
 	);
 	assert.equal(
 		discovery.files.find((file) => file.name === "EVIDENCE.md").required,
-		true,
+		false,
 	);
 	assert.equal(
-		discovery.files.some((file) => file.name === "AGENTS.md"),
+		discovery.files.find((file) => file.name === "AGENTS.md").required,
 		false,
 	);
 });
