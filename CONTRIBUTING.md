@@ -24,9 +24,6 @@ Pi extensions and skills run with the local user’s permissions. They are not a
 
 ## Releases
 
-1. Verify the package version and release notes by hand.
-2. Ensure GitLab has a protected `v*` tag rule.
-3. Configure npm’s **Trusted Publisher** for GitLab CI/CD: namespace `Joao-O-Santos`, project `pi-sych`, CI file `.gitlab-ci.yml`.
-4. Create an annotated tag whose name exactly matches `v` plus `package.json`’s version, then push it to GitLab.
+Most contributions do not need release work. When a maintainer requests a release, prepare a focused changelog entry, confirm the intended version, run the documented checks, and inspect `npm pack --dry-run` so the package contains only intended public files.
 
-The GitLab tag pipeline reruns the checks and publishes new matching versions with npm provenance through GitLab OIDC, including the first publication when the trust is configured in advance. If the exact version already exists, the job succeeds without republishing it. No npm token is stored in this repository or required as a GitLab CI/CD variable.
+Maintainers create the signed release commit and annotated `v<version>` tag after explicit authorization. The configured GitLab tag pipeline reruns the release checks and publishes a new matching npm version with provenance. Contributors do not need an npm token or access to publishing credentials.
