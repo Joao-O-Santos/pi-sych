@@ -107,7 +107,7 @@ test("TODO.md guidance preserves its bounded task-ledger role", async () => {
 	const readme = await readFile("README.md", "utf8");
 	assert.match(artifactSkill, /`TODO\.md`/);
 	assert.match(artifactSkill, /not evidence, project direction/);
-	assert.match(readme, /## Optional project files/);
+	assert.match(readme, /## Project files/);
 	assert.match(readme, /If GitLab issues are the operative task tracker/);
 });
 

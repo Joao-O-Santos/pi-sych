@@ -16,6 +16,10 @@ git diff --check
 
 `npm test` compiles TypeScript into ignored `.test-build/`, runs deterministic unit tests, and exercises Pi package loading through RPC integration tests. Live MCP checks are opt-in and must report actual server, selector, time, identifiers, and limitations.
 
+## Opt-in local usage acceptance
+
+`npm run test:usage` is intentionally excluded from `npm test` and CI. It is gated by `PI_SYCH_USAGE_TEST=1`, uses a real Pi/model call against a disposable dummy project, and inspects resulting artifacts and session JSON. Run it only when real-model behavior adds value beyond deterministic tests; it may require configured local model credentials and can incur provider cost.
+
 ## Code style
 
 Biome formats and lints the TypeScript, JavaScript, and test sources. Structural indentation uses tabs; Biome owns line wrapping and other layout rather than preserving manual column alignment.
@@ -31,7 +35,7 @@ This is a project-local style, not a claim of full Google TypeScript Style compl
 
 ## Design constraints
 
-- No generic workflow DAG, fixed agent pipeline, compatibility matrix, or duplicate MCP/review implementation.
+- No generic workflow DAG, fixed agent pipeline, compatibility matrix, or duplicate MCP/review implementation. Project-declared dependency edges are a flexible mechanical graph, not a workflow engine.
 - No command/path pseudo-security or sandbox claims.
 - Keep provider choices, credentials, model ranking, and personal examples in private configuration.
 - Workers receive a smallest-complete explicit packet and no supervisor transcript.

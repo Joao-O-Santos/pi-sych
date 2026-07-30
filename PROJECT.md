@@ -34,8 +34,8 @@
 
 ## Current state
 
-[verified] The package has a supervisor extension, a separately bootstrapped worker extension, project-state helpers, verification, optional remote research, and a minimal Plannotator review adapter. Deterministic checks are recorded in `EVIDENCE.md`.
+[verified] The package has a minimal supervisor with `dispatch_worker` and `project_status`, a separately bootstrapped worker extension, graph-aware project state, optional remote research through MCPorter, retained Plannotator annotation/review adapters, semantic workflow skills, and deterministic acceptance checks. The counted production TypeScript is kept to a rough estimate below 2,000 lines.
 
 ## Immediate next step
 
-[accepted] Keep the package small. Add behavior or documentation only when it serves a real user need and can be explained, reviewed, and verified.
+[accepted] Keep the package small. The minimal-architecture refactor is implemented; next maintain the major-release documentation, run opt-in real-Pi usage checks when valuable, and add behavior only when it serves a real user need and can be explained, reviewed, and verified.

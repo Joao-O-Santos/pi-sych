@@ -2,6 +2,19 @@
 
 All notable changes to Pi Sych are documented here. Versions are immutable npm publications unless explicitly marked otherwise.
 
+## [1.0.0] - 2026-07-30
+
+### Changed
+
+- Replaced the public workflow-tool surface with `dispatch_worker`, `project_status`, and optional `submit_plan`.
+- Moved bootstrap, conceptual drift, reconciliation, evidence, verification, and retrospective procedures into skills.
+- Added flexible graph-aware `SYNC.md` dependency checking and explicit acknowledgement.
+- Simplified worker dispatch, retained optional MCPorter remote research, and retained both Plannotator annotation commands.
+
+### Removed
+
+- Candidate, reconciliation, semantic-drift, evidence, retrospective, and verification wrapper tools and commands.
+
 ## [0.1.2] - 2026-07-29
 
 ### Changed

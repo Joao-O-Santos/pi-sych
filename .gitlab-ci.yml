@@ -10,6 +10,7 @@ verify:
     - npm ci
     - npm run typecheck
     - npm run style
+    - npm run source:budget
     - npm run test:deps
     - npm test
     - npm run smoke
@@ -36,6 +37,7 @@ publish-npm:
       test "$CI_COMMIT_TAG" = "v${package_version}"
     - npm run typecheck
     - npm run style
+    - npm run source:budget
     - npm run test:deps
     - npm test
     - npm run smoke

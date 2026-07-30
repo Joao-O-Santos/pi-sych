@@ -1,40 +1,40 @@
 # Architecture
 
-Pi Sych is a Pi package with a supervisor extension, a separately bootstrapped worker extension, project-local state, deterministic synchronization helpers, and review-gated durable changes. It does not impose a fixed multi-agent pipeline.
+Pi Sych has a small mechanical core and a progressively disclosed skill corpus.
 
 ## Runtime
 
-**Supervisor:** `extensions/workbench/index.ts` adds operating guidance and registers project status, initialization, synchronization, drift, evidence, retrospective, dispatch, verification, and review surfaces. Focused modules implement the behavior.
+The supervisor extension (`extensions/workbench/index.ts`) registers three agent tools:
 
-**Project state:** `project-files.ts` discovers `PROJECT.md`, `EVIDENCE.md`, `SYNC.md`, and optional `DECISIONS.md`/`STYLE.md`/`TODO.md`. `TODO.md` is a local task-state ledger, not authority for project direction or evidence. `sync.ts` compares declared SHA-256 fingerprints and reports changed, missing, stale, or conflicted files without choosing an authority. `candidates.ts`, `drift.ts`, and `evidence.ts` produce reviewable proposals rather than silent writes.
+- `dispatch_worker` — one bounded clean-context worker call;
+- `project_status` — mechanical check or explicit acknowledgement; and
+- `submit_plan` — narrow optional Plannotator review.
 
-**Workers:** `worker-engine.ts` validates one dispatch schema and nested result envelope, resolves exact selected skills, launches an ephemeral Pi process with an exact tool surface, keeps one immutable result, limits retries to transient failures before mutation, and reports dirty or committed changes. Project-local `.pi-sych/` runtime state is excluded through Git’s local exclude file when necessary. `extensions/worker/index.ts` exposes only result submission and worker status. `model-catalog.ts` reads the private user-ranked model catalog.
+It also registers `/pi-sych-status`, `/pi-sych-mcp`, `/plannotator-annotate`, and `/plannotator-last`.
 
-**Verification and review:** `verification.ts` executes optional explicit executable/argument arrays in the supervisor after worker submission and records actual exit codes, bounded output, timestamps, and changed files. Non-executable scientific review remains a human task. `plannotator.ts` lazily imports documented browser helpers without loading Plannotator’s extension entrypoint. `submit_plan` records plan-level approval before candidate or reconciliation application; annotation commands return human feedback to the supervisor.
+`project-status.ts` parses version-1 `SYNC.md`, validates safe relative paths and SHA-256 fingerprints, checks tracked files, and traverses declared `updateFrom` or `dependsOn` edges. Edges may be strings or `{ path, reason }` records. Cycles are reported safely; no role taxonomy, conceptual-drift judgment, or authority selection exists in TypeScript. Acknowledgement updates only named existing tracked files and marks unacknowledged dependents `needs-review`.
 
-**Skills and tests:** `skills/` contains reusable guidance with YAML identity metadata. `fixtures/` provides test inputs. Unit tests cover helpers; integration tests exercise Pi RPC loading and visible commands.
+`worker-engine.ts` validates one compact dispatch request, injects optional project `AGENTS.md` and applicable `STYLE.md`, launches a clean Pi worker, applies a 90-second default timeout or validated override, forwards cancellation, uses `SIGTERM` then `SIGKILL`, and reads one immutable result from a temporary directory. It has no worker registry, polling surface, verification contract, run archive, mutation lock, or semantic workflow engine.
 
-## Data flow
+`extensions/worker/index.ts` exposes only `submit_artifact`. The worker result is bound to an internal task/run identity and is written once.
 
-1. Pi loads the package, supervisor extension, and relevant skills.
-2. The supervisor locates project files and compares `SYNC.md` fingerprints.
-3. It works directly or dispatches one bounded worker with exact inputs, skills, output expectations, intended writes, and verification commands.
-4. Workers submit one immutable result; the supervisor records process outcomes and project changes.
-5. Verification and human review remain separate from model claims.
-6. Only explicitly approved durable changes update project files and synchronization state.
+`model-catalog.ts` reads private ranked model profiles. `mcporter.ts` remains an explicit remote-research adapter for Context7, OpenAlex, and Scholar Gateway. `plannotator.ts` remains a lazy compatibility boundary; Pi Sych never loads Plannotator's extension entrypoint.
+
+## Project state
+
+Core files after initialization:
+
+- `PROJECT.md` — accepted purpose, scope, constraints, current direction, and definition of done.
+- `SYNC.md` — acknowledged fingerprints, declared dependencies, statuses, and acknowledgement metadata.
+
+Optional files are `AGENTS.md`, `STYLE.md`, `EVIDENCE.md`, `DECISIONS.md`, and `TODO.md`. `TODO.md` is task state only.
+
+A hash mismatch means changed content after acknowledgement. It does not establish conceptual drift, correctness, or authority. Skills and the project owner handle those judgments.
+
+## Skills and verification
+
+Skills contain semantic workflow: bootstrap, status interpretation, conceptual drift review, reconciliation, writing, research, coding, verification, and retrospection. Pi's normal read/edit/write/Bash tools and project-native checks remain the default implementation and verification mechanisms.
 
 ## Boundaries
 
-`SYNC.md` has domain-specific authority, not a global source-of-truth flag. A changed fingerprint invalidates confirmation but does not decide what is correct.
-
-Worker modes choose visible Pi tools; they are not security boundaries. Use external containment where host security matters.
-
-## Entry points
-
-- `package.json` — package and Pi discovery metadata
-- `extensions/workbench/index.ts` — supervisor runtime
-- `extensions/worker/index.ts` — worker runtime
-- `scripts/bootstrap-worker-agent-dir.mjs` — worker profile bootstrap
-- `skills/*/SKILL.md` — reusable guidance
-- `README.md` — human-facing use and trust limits
-- `docs/CONFIGURATION.md`, `docs/DEVELOPMENT.md` — advanced configuration and maintenance
+Workers are short-lived calls, not autonomous agents. Tool modes control visible Pi tools, not host permissions. Human review remains necessary for consequential decisions, claims, publication, deployment, and irreversible changes.

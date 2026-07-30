@@ -26,7 +26,7 @@ Create `~/.config/pi/pi-sych/models.json` with model metadata and user-ranked pr
 }
 ```
 
-Dispatch tries the first suitable model and at most one fallback after a retryable launch failure. `PI_SYCH_MODEL_CATALOG` selects another catalog; `PI_SYCH_MODEL_PROFILES` is a direct JSON override for automation.
+`dispatch_worker` selects the first model in the requested profile. `PI_SYCH_MODEL_CATALOG` selects another catalog; `PI_SYCH_MODEL_PROFILES` is a direct JSON override for automation. Workers default to 90 seconds; set a deliberate bounded `timeoutMs` override for longer work.
 
 `PI_SYCH_WORKER_AGENT_DIR` chooses the worker runtime directory. `PI_SYCH_PI_BIN` selects the Pi executable for development tests. The bootstrap helper writes worker-only settings and an MCPorter exposure policy, and symlinks available auth/model files rather than copying them:
 
@@ -49,6 +49,6 @@ The matching package skill reads it when present. Examples express preference; t
 
 ## Remote research
 
-Set `remoteResearch: true` only for an assigned worker. It receives the `pi-mcporter` proxy and the explicit `MCPORTER_CONFIG`; ordinary workers receive neither. `PI_SYCH_MCPORTER_CONFIG` selects the private transport configuration and otherwise defaults to `~/.config/pi-sych/mcp/mcporter.json`.
+Set `remoteResearch: true` only for an assigned `dispatch_worker` call. It receives the `pi-mcporter` proxy and the explicit `MCPORTER_CONFIG`; ordinary workers receive neither. The generated worker policy exposes Context7, OpenAlex, and Scholar Gateway. `PI_SYCH_MCPORTER_CONFIG` selects the private transport configuration and otherwise defaults to `~/.config/pi-sych/mcp/mcporter.json`.
 
 Configure only intended MCP servers and use `"imports": []` when the installed MCPorter supports it. `/pi-sych-mcp` reports bridge/runtime versions and configuration presence without printing credentials. `node scripts/pi-sych-mcp-auth.mjs [--no-browser]` starts Scholar Gateway OAuth. MCPorter owns credential storage; never put credentials in this package, worker artifacts, or logs.

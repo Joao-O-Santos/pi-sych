@@ -1,42 +1,20 @@
 # Pi Sych
 
-Pi Sych is a Pi package for people doing serious writing, research, analysis, and code—not a machine for producing plausible-looking text.
+Pi Sych is a small Pi package for serious writing, research, analysis, and software work. It provides explicit project state, bounded clean-context workers, and optional human plan review. It does not automate authority, conceptual judgment, or final responsibility.
 
-It keeps a project’s decisions and evidence visible in files, gives workers only the context they need, records what checks actually happened, and stops consequential changes for human review. You remain responsible for the argument, data, citations, and final text.
+## Principles
 
-## What it helps with
-
-- Keep a short, reviewable project record in `PROJECT.md`, `EVIDENCE.md`, and `SYNC.md`, with optional decision, style, and task-ledger files.
-- Notice when those files or their declared dependents have drifted.
-- Delegate a bounded review, research, or implementation task without handing a worker the whole conversation.
-- Record actual verification commands, exit codes, output, and changed files.
-- Use Plannotator for explicit human review of consequential plans or local text.
-
-Pi Sych does **not** make model output evidence, approve its own changes, verify citations it has not checked, or replace a line-by-line final human review.
+Pi Sych follows the [design principles](principles.md): humans own consequential decisions and final outputs; supervisors own coordination; important knowledge belongs in visible files; workers are short-lived and receive the smallest complete context; mechanical tools handle mechanical facts; skills and people handle meaning; existing Pi, MCPorter, Plannotator, and project tooling come before new infrastructure; and permanent code should stay small.
 
 ## Start
-
-Install the public package with Pi:
 
 ```sh
 pi install npm:pi-sych
 ```
 
-For local development, load `/path/to/pi-sych` as a package instead. Pi Sych already declares its Plannotator dependency; do **not** add Plannotator separately as a Pi extension.
+For local development, load the package path in Pi settings. Pi Sych already declares Plannotator; do not load Plannotator's extension separately.
 
-```json
-{
-  "packages": [{
-    "source": "/path/to/pi-sych",
-    "extensions": ["extensions/workbench/index.ts"],
-    "skills": ["skills"],
-    "prompts": [],
-    "themes": []
-  }]
-}
-```
-
-For delegated workers, create their isolated Pi profile once:
+To prepare a separate worker profile:
 
 ```sh
 node scripts/bootstrap-worker-agent-dir.mjs \
@@ -45,71 +23,69 @@ node scripts/bootstrap-worker-agent-dir.mjs \
   --supervisor-agent-dir ~/.config/pi
 ```
 
-If you use workers, add your own model ranking at `~/.config/pi/pi-sych/models.json`. Advanced worker, model, skill-example, and remote-research configuration is in `docs/CONFIGURATION.md`.
+Configure private model profiles at `~/.config/pi/pi-sych/models.json`. See [configuration](docs/CONFIGURATION.md).
 
-## Normal workflow
+## Core workflow
 
-1. Start with `/pi-sych-init` for a new project, or `/pi-sych-init path/to/artifact` for existing work.
-2. Check `/pi-sych-status`; use `/pi-sych-drift` when the project files disagree.
-3. Let the supervisor work directly for small tasks or dispatch a bounded worker when an independent context is useful.
-4. For consequential changes—central claims, architecture, publication, deployment, irreversible changes, or substantive synchronization—review a concise plan with `submit_plan` before applying anything.
-5. Run meaningful executable checks through `pi_sych_verify` or an explicit dispatch verification contract.
-6. Review changed dependents and refresh `SYNC.md` only after you decide what is correct.
+1. Use the `bootstrap-project` skill to establish `PROJECT.md`, `SYNC.md`, and only useful optional files.
+2. Use `project_status` with `action: "check"` to inspect hashes, missing files, declared dependents, and cycles.
+3. Read relevant files and use skills for planning, writing, review, conceptual drift, reconciliation, coding, or verification.
+4. Work directly when practical. Use `dispatch_worker` only for a bounded independent review, research task, or implementation task.
+5. For consequential plans, use `submit_plan` for explicit human review.
+6. After actual review, use `project_status` with `action: "acknowledge"`, named files, and a truthful reason.
 
-Executable verification is optional. Many scientific-writing judgments require source checking or expert human review rather than a command. When a dispatch includes exact verification commands, the supervisor runs those commands after the worker submits its result and reports failures separately.
+A changed hash means content changed after acknowledgement. It does **not** establish conceptual drift, authority, correctness, or approval.
 
-Workers receive an objective, exact inputs, selected skills, expected output, intended write paths, and any declared supervisor verification contract. They do not receive the supervisor conversation.
+## Tools
 
-For Git work, the included `git-workflow` skill defaults to direct work on `main`, atomic verified commits, and explicit approval for remote or history-changing operations. A repository’s established commit convention takes precedence.
+| Tool | Purpose |
+|---|---|
+| `dispatch_worker` | Runs one short-lived worker with exact context, selected skills, optional remote research, and a 90-second default timeout. Set a deliberate bounded override for longer work. |
+| `project_status` | Checks mechanical project state or acknowledges named reviewed files. It reports declared dependency impact but never resolves semantic disagreement. |
+| `submit_plan` | Opens an existing project-local Markdown plan for explicit human review. Approval does not start implementation. |
 
-## Optional project files
+Commands: `/pi-sych-status`, `/pi-sych-mcp`, `/plannotator-annotate <file>`, and `/plannotator-last`.
 
-Use `DECISIONS.md` for consequential accepted decisions and their rationale, `STYLE.md` for project-specific writing or presentation constraints, and `TODO.md` for a local task ledger. `TODO.md` is optional: Pi Sych discovers and synchronizes it only when present; it does not create one or interpret an unchecked task as a project failure.
+## Project files
 
-Keep task state distinct from project direction and evidence. A compact ledger can use stable IDs and three sections:
+`PROJECT.md` and `SYNC.md` are the core state after initialization. The following files are optional:
 
-```md
-# Tasks
+- `AGENTS.md` — project conventions and collaboration instructions.
+- `STYLE.md` — prose, documentation, presentation, code, or testing conventions.
+- `EVIDENCE.md` — inspectable sources, results, claims, and limits.
+- `DECISIONS.md` — consequential accepted decisions and rationale.
+- `TODO.md` — a task ledger; never authority for direction or evidence. If GitLab issues are the operative task tracker, record that choice rather than maintaining competing task lists.
 
-## Active
-- [ ] T-001 — Describe the next bounded task.
+`SYNC.md` stores acknowledged SHA-256 fingerprints and flexible declared dependencies. Dependencies may contain cycles; Pi Sych reports them safely for orientation. A changed input marks its direct and transitive dependents for review, not automatic edits.
 
-## Blocked
-- [ ] T-002 — State the blocker and the needed decision or input.
+## Workers and remote research
 
-## Done
-- [x] T-000 — Record completed work without treating it as a change of direction.
-```
+Workers receive no supervisor transcript. They receive selected context files, selected skills, project `AGENTS.md` when present, and `STYLE.md` for edit work when present.
 
-If GitLab issues are the operative task tracker, record that choice explicitly rather than maintaining two competing task lists.
+- `read-only`: `read`, `grep`, `find`, and `ls`.
+- `edit`: read-only tools plus `edit`.
+- `full-host`: `read`, `edit`, and `bash`.
 
-## Human review is not optional
+Every worker also has `submit_artifact`. Tool visibility is not sandboxing. `full-host` workers have the Pi process's host permissions.
 
-Use `submit_plan` for approval-gated plans. It opens a browser review and waits for an explicit decision; opening or closing the browser is not approval. Use `/plannotator-annotate <file>` for a project-local file or `/plannotator-last` for the last assistant message.
+Set `remoteResearch: true` only for assigned remote research. It exposes MCPorter with the configured Context7, OpenAlex, and Scholar Gateway bridge; ordinary workers do not receive it. MCPorter credentials remain private. See [configuration](docs/CONFIGURATION.md).
 
-Before submitting, publishing, deploying, or relying on generated work, a human must review:
+## Verification and review
 
-- every sentence for accuracy and intended meaning;
-- every citation, quotation, source claim, and interpretation against the original source;
-- every numerical result, table, figure, code path, and command result that matters;
-- every declaration about authorship, ethics, conflicts, data, code, permissions, or exclusivity.
+Use project-native formatter, linter, type checker, tests, build, and smoke commands through Pi's built-in Bash. The `verify-change` skill helps choose and report meaningful checks. Passing commands do not prove source validity, semantic quality, or human approval.
 
-If a claim, citation, result, or decision cannot be checked, mark it as unresolved rather than letting polished language hide the gap.
+Use `submit_plan` for consequential plans. Use `/plannotator-annotate` for a file and `/plannotator-last` for the last assistant response. A human must review consequential claims, citations, data, code paths, deployment, publication, and final artifacts.
 
-## SECURITY WARNING
+## Security and limits
 
-Pi Sych is **alpha software**. It was developed with substantial AI assistance (including vibe-coded work). Its maintainer is experienced with R, Git/GitLab, Linux, and scientific writing, but is not a TypeScript or Node.js specialist. Read the code, inspect dependencies, and report problems; do not treat this disclosure as a guarantee of safety or quality.
+Pi Sych is alpha software. Read the code and dependencies before relying on it. It is not a sandbox; external containment is required when host permissions or hostile inputs matter. Remote results, model output, browser opening, passing checks, and acknowledgement are not evidence or approval.
 
-Pi Sych is not a sandbox. Worker modes limit visible Pi tools, not operating-system permissions. `full-host` workers and configured remote tools run with the Pi process’s permissions; use external containment when that matters. Pi’s [security](https://pi.dev/docs/latest/security) and [containerization](https://pi.dev/docs/latest/containerization) guidance describe the relevant trust boundary and external isolation options.
+Pi `0.82.1` currently carries the upstream `brace-expansion@5.0.7` high-severity denial-of-service advisory through nested `minimatch`. Pi Sych does not introduce or directly expose it; treat untrusted glob or brace-pattern input cautiously until Pi updates its nested resolution.
 
-Remote results, model output, browser opening, and passing a candidate to a tool are not evidence or approval. `intendedWritePaths` report task scope and unexpected mutations after the fact; they do not prevent host changes.
+## Maintainers
 
-### Known upstream issue
-
-Pi `0.82.1` currently carries `brace-expansion@5.0.7` through its nested `minimatch` dependency. npm identifies it as a high-severity memory-exhaustion denial-of-service advisory; Pi Sych does not introduce or directly expose that dependency. The patched `brace-expansion@5.0.8` exists, but Pi must update its nested resolution. Treat untrusted glob or brace-pattern input cautiously until an upstream Pi update resolves it.
-
-## For maintainers
-
-- `ARCHITECTURE.md` — implemented technical map
-- `docs/CONFIGURATION.md` — advanced configuration
-- `docs/DEVELOPMENT.md` — checks and contribution constraints
+- [Architecture](ARCHITECTURE.md)
+- [Target architecture](pi-sych-redefined-architecture.md)
+- [Development](docs/DEVELOPMENT.md)
+- [Configuration](docs/CONFIGURATION.md)
+- [Maintainer instructions](AGENTS.md)
