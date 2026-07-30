@@ -25,7 +25,7 @@ immutable npm publications unless explicitly marked otherwise.
   review of current changes or a PR URL, without enabling Plannotator
   plan-mode.
 - Added reproducible `markdown:check` and `markdown:fix` commands using
-  Pandoc Markdown at 72 columns.
+  Pandoc Markdown 3.10.1 at 72 columns.
 
 ### Changed
 

@@ -3,7 +3,7 @@
 ``` json
 {
   "version": 1,
-  "confirmedAt": "2026-07-30T18:50:12.097Z",
+  "confirmedAt": "2026-07-30T19:08:14.650Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -24,7 +24,7 @@
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:9f7e27daf5075d9d4cb76aa7a9141ee0c5d731e3280a2c00480c23e530f95e07",
+      "fingerprint": "sha256:9744b8d140e0800c66400550c3fe35b34fea4a52cc4f794b15852ed232114cf8",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -38,8 +38,8 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T18:50:12.097Z",
-        "reason": "Reviewed the final v1.2.0 project state, evidence, architecture, human documentation, latest-dependency manifest, Pandoc formatting workflow, and completed release-gate results."
+        "at": "2026-07-30T19:07:46.286Z",
+        "reason": "Reviewed the v1.2.0 Pandoc 3.10.1 CI correction, corrected release-gate evidence, packaged formatter script dependency, and final development guidance."
       }
     },
     {
@@ -69,8 +69,8 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T18:50:12.097Z",
-        "reason": "Reviewed the final v1.2.0 project state, evidence, architecture, human documentation, latest-dependency manifest, Pandoc formatting workflow, and completed release-gate results."
+        "at": "2026-07-30T19:08:14.650Z",
+        "reason": "Reviewed README compatibility with the final v1.2.0 package metadata, latest-dependency policy, versioned assets, and packaged Pandoc formatter."
       }
     },
     {
@@ -85,11 +85,12 @@
       "updateFrom": [
         "extensions",
         "skills",
-        "tests"
+        "tests",
+        "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T18:50:12.097Z",
-        "reason": "Reviewed the final v1.2.0 project state, evidence, architecture, human documentation, latest-dependency manifest, Pandoc formatting workflow, and completed release-gate results."
+        "at": "2026-07-30T19:07:46.286Z",
+        "reason": "Reviewed the v1.2.0 Pandoc 3.10.1 CI correction, corrected release-gate evidence, packaged formatter script dependency, and final development guidance."
       }
     },
     {
@@ -107,15 +108,15 @@
     },
     {
       "path": "docs/DEVELOPMENT.md",
-      "fingerprint": "sha256:6838a49783b6bcd50e4792630183df2b32b58e34fd84316da223ae3c208f8632",
+      "fingerprint": "sha256:c7cd6471f8de9325ee8487d770147d91d70d2e8898b26895ed71952fc9d2946b",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "development-checks"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T18:50:12.097Z",
-        "reason": "Reviewed the final v1.2.0 project state, evidence, architecture, human documentation, latest-dependency manifest, Pandoc formatting workflow, and completed release-gate results."
+        "at": "2026-07-30T19:07:46.286Z",
+        "reason": "Reviewed the v1.2.0 Pandoc 3.10.1 CI correction, corrected release-gate evidence, packaged formatter script dependency, and final development guidance."
       }
     }
   ]

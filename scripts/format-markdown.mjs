@@ -5,6 +5,8 @@ import { readFile, rename, writeFile } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+export const PANDOC_VERSION = "3.10.1";
+
 export const MARKDOWN_FILES = [
 	"AGENTS.md",
 	"ARCHITECTURE.md",
@@ -35,15 +37,31 @@ const PANDOC_ARGS = [
 	"--columns=72",
 ];
 
+let pandocVerified = false;
+
+function verifyPandoc() {
+	if (pandocVerified) return;
+	const result = spawnSync("pandoc", ["--version"], { encoding: "utf8" });
+	if (result.error?.code === "ENOENT")
+		throw new Error(
+			`Pandoc ${PANDOC_VERSION} is required for Markdown checks; install that release on a contributor host.`,
+		);
+	if (result.error)
+		throw new Error(`Unable to inspect Pandoc: ${result.error.message}`);
+	const actual = result.stdout.match(/^pandoc\s+(\S+)/)?.[1];
+	if (result.status !== 0 || actual !== PANDOC_VERSION)
+		throw new Error(
+			`Pandoc ${PANDOC_VERSION} is required for reproducible Markdown; found ${actual ?? "unknown"}.`,
+		);
+	pandocVerified = true;
+}
+
 export function formatMarkdown(path) {
+	verifyPandoc();
 	const result = spawnSync("pandoc", [...PANDOC_ARGS, path], {
 		encoding: "utf8",
 		maxBuffer: 10 * 1024 * 1024,
 	});
-	if (result.error?.code === "ENOENT")
-		throw new Error(
-			"Pandoc is required for Markdown checks; install pandoc or run this check on a configured contributor host.",
-		);
 	if (result.error)
 		throw new Error(
 			`Unable to run Pandoc for ${path}: ${result.error.message}`,

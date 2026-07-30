@@ -37,9 +37,11 @@ credentials and can incur provider cost.
 ## Code style
 
 Biome formats and lints the TypeScript, JavaScript, and test sources.
-Pandoc formats the listed human-facing Markdown and templates at 72
-columns. Structural code indentation uses tabs; Biome owns code wrapping
-and other layout rather than preserving manual column alignment.
+Pandoc 3.10.1 formats the listed human-facing Markdown and templates at
+72 columns. The fixed formatter version prevents source churn across
+Pandoc releases; CI installs that release explicitly. Structural code
+indentation uses tabs; Biome owns code wrapping and other layout rather
+than preserving manual column alignment.
 
 ``` sh
 npm run lint            # code lint only

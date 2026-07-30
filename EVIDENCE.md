@@ -22,23 +22,26 @@ brace-delimited project-state labels, latest dependency policy, Pi 0.83
 compatibility, and v1.2.0 release readiness **Evidence:** Discount and
 Pandoc both rendered `{accepted} Example.` literally as paragraph text.
 `markdown:check` verified 18 named human-facing documents/templates
-after `markdown:fix` applied Pandoc Markdown at 72 columns. A clean
-`npm ci` resolved Pi 0.83.0, Plannotator 0.25.1, TypeBox 1.3.8, Node
-types 26.1.2, and the other manifest `latest` dependencies recorded in
-the lockfile. Biome/style, Markdown check, typecheck, MCPorter
+after `markdown:fix` applied Pandoc Markdown 3.10.1 at 72 columns. A
+clean `npm ci` resolved Pi 0.83.0, Plannotator 0.25.1, TypeBox 1.3.8,
+Node types 26.1.2, and the other manifest `latest` dependencies recorded
+in the lockfile. Biome/style, Markdown check, typecheck, MCPorter
 dependency check, 40 unit tests, 3 integration tests, 2 smoke checks,
 source budget (\~1800/2000), package dry run (63 files), CI YAML
 parsing, whitespace check, and one opt-in real-Pi workflow passed. The
 code review wrapper was self-reviewed for lazy loading, feedback-error
 propagation, and absence of plan-mode registration. Project-status
 parsing accepts Pandoc's standard spaced JSON fence (```` ``` json ````)
-as well as the compact form. **Limits:** Literal `latest` ranges make
-future clean lockfile refreshes intentionally non-reproducible until the
-refreshed lockfile is reviewed. The committed lockfile fixes this
-release's actual graph. Production audit still reports the inherited
-high-severity `brace-expansion` advisory through Pi. Renderer checks
-establish literal brace handling, not identical styling in every
-Markdown host. **Checked:** 2026-07-30
+as well as the compact form. The first v1.2.0 tag pipeline stopped
+before tests or publication because Debian Pandoc 2.17 formatted
+differently; CI and the formatter now require 3.10.1, and the complete
+local gate was rerun successfully after that correction. **Limits:**
+Literal `latest` ranges make future clean lockfile refreshes
+intentionally non-reproducible until the refreshed lockfile is reviewed.
+The committed lockfile fixes this release's actual graph. Production
+audit still reports the inherited high-severity `brace-expansion`
+advisory through Pi. Renderer checks establish literal brace handling,
+not identical styling in every Markdown host. **Checked:** 2026-07-30
 
 ## E-002 --- Public skill corpus is separated from private overlay
 

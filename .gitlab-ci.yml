@@ -1,14 +1,19 @@
 image: node:24-bookworm
 
+variables:
+  PANDOC_VERSION: "3.10.1"
+
+before_script:
+  - node -e '(async () => { const response = await fetch(`https://github.com/jgm/pandoc/releases/download/${process.env.PANDOC_VERSION}/pandoc-${process.env.PANDOC_VERSION}-1-amd64.deb`); if (!response.ok) throw new Error(`Pandoc download failed with ${response.status}`); require("node:fs").writeFileSync("/tmp/pandoc.deb", Buffer.from(await response.arrayBuffer())); })().catch(error => { console.error(error); process.exit(1); })'
+  - dpkg --install /tmp/pandoc.deb
+  - pandoc --version
+
 stages:
   - verify
   - release
 
 verify:
   stage: verify
-  before_script:
-    - apt-get update
-    - apt-get install --yes --no-install-recommends pandoc
   script:
     - npm ci
     - npm run typecheck
@@ -22,9 +27,6 @@ verify:
 
 publish-npm:
   stage: release
-  before_script:
-    - apt-get update
-    - apt-get install --yes --no-install-recommends pandoc
   rules:
     - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
   id_tokens:
