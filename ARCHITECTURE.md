@@ -2,7 +2,7 @@
 
 Pi Sych has a small mechanical core and a progressively disclosed skill corpus.
 
-![](https://unpkg.com/pi-sych@1.0.2/docs/img/supervisors_context.png)
+![](https://unpkg.com/pi-sych@1.0.3/docs/img/architecture.png)
 
 ## Runtime
 

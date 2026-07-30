@@ -2,6 +2,12 @@
 
 All notable changes to Pi Sych are documented here. Versions are immutable npm publications unless explicitly marked otherwise.
 
+## [1.0.3] - 2026-07-30
+
+### Fixed
+
+- Corrected the architecture document to embed the architecture diagram rather than the supervisor-context diagram.
+
 ## [1.0.2] - 2026-07-30
 
 ### Changed

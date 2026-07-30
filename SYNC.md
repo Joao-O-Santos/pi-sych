@@ -3,11 +3,11 @@
 ```json
 {
   "version": 1,
-  "confirmedAt": "2026-07-30T02:26:15.845Z",
+  "confirmedAt": "2026-07-30T02:40:47.200Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:25b6a814e331c252a7e4bbc22cf4d75bf287ac891b801bfdf1f41bf9b18af29d",
+      "fingerprint": "sha256:db7760d7dd25f59b70fdeb0bf34ca09c2b9f6ba7625f34f81ad0b1c593d19ad6",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -18,8 +18,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T02:26:15.845Z",
-        "reason": "Reviewed the v1.0.2 README principles and image-renderer compatibility update, package metadata, and affected project documentation."
+        "at": "2026-07-30T02:40:47.200Z",
+        "reason": "Reviewed the v1.0.3 correction that embeds the architecture diagram in ARCHITECTURE.md, updates versioned package image URLs, and updates the release metadata."
       }
     },
     {
@@ -38,26 +38,26 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T02:26:15.845Z",
-        "reason": "Reviewed the v1.0.2 README principles and image-renderer compatibility update, package metadata, and affected project documentation."
+        "at": "2026-07-30T02:40:47.200Z",
+        "reason": "Reviewed the v1.0.3 correction that embeds the architecture diagram in ARCHITECTURE.md, updates versioned package image URLs, and updates the release metadata."
       }
     },
     {
       "path": "ARCHITECTURE.md",
-      "fingerprint": "sha256:7b3fda8e148a4267a3fa20240c8f17b319f4dc49155e7d16df846ad886af58c7",
+      "fingerprint": "sha256:efd58e0b7e60fe23e92e5a053a0fd638c9f3aea5faa490943a38ec9e2891c802",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T02:26:15.845Z",
-        "reason": "Reviewed the v1.0.2 README principles and image-renderer compatibility update, package metadata, and affected project documentation."
+        "at": "2026-07-30T02:40:47.200Z",
+        "reason": "Reviewed the v1.0.3 correction that embeds the architecture diagram in ARCHITECTURE.md, updates versioned package image URLs, and updates the release metadata."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:a76a33692988f067abb1f71d82cd998c2103662d735d5a4b352aae35b753850b",
+      "fingerprint": "sha256:b8f9e6c04c8002405a82291091de0a729bf4d7052400b3929884172d0ff2eed1",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -69,13 +69,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T02:26:15.845Z",
-        "reason": "Reviewed the v1.0.2 README principles and image-renderer compatibility update, package metadata, and affected project documentation."
+        "at": "2026-07-30T02:40:47.200Z",
+        "reason": "Reviewed the v1.0.3 correction that embeds the architecture diagram in ARCHITECTURE.md, updates versioned package image URLs, and updates the release metadata."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:4c3f75eabedd689a3b765c031a825d4737beafd32a8a21df79b1496cd19aa306",
+      "fingerprint": "sha256:ea438cec729ad003db174d601f2219a92a427b9e4ff90b6d9faf881b32ee5e56",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -88,8 +88,8 @@
         "tests"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T02:26:15.845Z",
-        "reason": "Reviewed the v1.0.2 README principles and image-renderer compatibility update, package metadata, and affected project documentation."
+        "at": "2026-07-30T02:40:47.200Z",
+        "reason": "Reviewed the v1.0.3 correction that embeds the architecture diagram in ARCHITECTURE.md, updates versioned package image URLs, and updates the release metadata."
       }
     },
     {
@@ -114,8 +114,8 @@
         "development-checks"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T02:26:15.845Z",
-        "reason": "Reviewed the v1.0.2 README principles and image-renderer compatibility update, package metadata, and affected project documentation."
+        "at": "2026-07-30T02:40:47.200Z",
+        "reason": "Reviewed the v1.0.3 correction that embeds the architecture diagram in ARCHITECTURE.md, updates versioned package image URLs, and updates the release metadata."
       }
     }
   ]

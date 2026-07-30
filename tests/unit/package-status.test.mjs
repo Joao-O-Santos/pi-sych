@@ -37,7 +37,7 @@ test("minimal supervisor surface exposes only mechanical tools and retained huma
 
 test("public manifest retains the package boundary and developer tooling", () => {
 	assert.equal(packageJson.name, "pi-sych");
-	assert.equal(packageJson.version, "1.0.2");
+	assert.equal(packageJson.version, "1.0.3");
 	assert.equal(PACKAGE_ROOT, process.cwd());
 	assert.equal(packageJson.devDependencies.typescript, "7.0.2");
 	assert.equal(packageJson.devDependencies["@biomejs/biome"], "2.5.6");
@@ -54,7 +54,7 @@ test("public manifest retains the package boundary and developer tooling", () =>
 	);
 	assert.equal(
 		packageJson.pi.image,
-		"https://unpkg.com/pi-sych@1.0.2/docs/img/architecture.png",
+		"https://unpkg.com/pi-sych@1.0.3/docs/img/architecture.png",
 	);
 });
 

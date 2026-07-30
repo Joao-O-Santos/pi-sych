@@ -2,7 +2,7 @@
 
 Pi Sych is a small Pi package for serious writing, research, analysis, and software work. It provides explicit project state, bounded clean-context workers, and optional human plan review. It does not automate authority, conceptual judgment, or final responsibility.
 
-![](https://unpkg.com/pi-sych@1.0.2/docs/img/architecture.png)
+![](https://unpkg.com/pi-sych@1.0.3/docs/img/architecture.png)
 
 ## Principles
 
@@ -72,7 +72,7 @@ Commands: `/pi-sych-status`, `/pi-sych-mcp`, `/plannotator-annotate <file>`, and
 
 ## Workers and remote research
 
-![](https://unpkg.com/pi-sych@1.0.2/docs/img/supervisors_context.png)
+![](https://unpkg.com/pi-sych@1.0.3/docs/img/supervisors_context.png)
 
 Workers receive no supervisor transcript. They receive selected context files, selected skills, project `AGENTS.md` when present, and `STYLE.md` for edit work when present.
 
