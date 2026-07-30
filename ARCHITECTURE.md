@@ -12,7 +12,7 @@ The supervisor extension (`extensions/workbench/index.ts`) registers three agent
 - `project_status` — mechanical check or explicit acknowledgement; and
 - `submit_plan` — narrow optional Plannotator review.
 
-It also registers `/pi-sych-status`, `/pi-sych-mcp`, `/plannotator-annotate`, and `/plannotator-last`.
+It also registers `/pi-sych-status`, `/pi-sych-mcp`, `/plannotator-annotate`, `/plannotator-last`, and `/plannotator-review`. It does not register Plannotator plan-mode tooling or the `/plannotator` planning toggle.
 
 `project-status.ts` parses version-1 `SYNC.md`, validates safe relative paths and SHA-256 fingerprints, checks tracked files, and traverses declared `updateFrom` or `dependsOn` edges. Edges may be strings or `{ path, reason }` records. Cycles are reported safely; no role taxonomy, conceptual-drift judgment, or authority selection exists in TypeScript. Acknowledgement updates only named existing tracked files and marks unacknowledged dependents `needs-review`.
 
@@ -20,7 +20,7 @@ It also registers `/pi-sych-status`, `/pi-sych-mcp`, `/plannotator-annotate`, an
 
 `extensions/worker/index.ts` exposes only `submit_artifact`. The worker result is bound to an internal task/run identity and is written once. Its `resultPackage` is either `inline` or an existing durable project-relative path; temporary runtime paths are not returned.
 
-`model-catalog.ts` reads private ranked model profiles. `mcporter.ts` remains an explicit remote-research adapter for Context7, OpenAlex, and Scholar Gateway. `plannotator.ts` remains a lazy compatibility boundary; Pi Sych never loads Plannotator's extension entrypoint.
+`model-catalog.ts` reads private ranked model profiles. `mcporter.ts` remains an explicit remote-research adapter for Context7, OpenAlex, and Scholar Gateway. `plannotator.ts` remains a lazy compatibility boundary; Pi Sych never loads Plannotator's extension entrypoint and never enables Plannotator plan-mode. The `/plannotator-review` command is a thin wrapper that opens Plannotator’s code-review UI for the current VCS diff or a pull-request URL.
 
 ## Project state
 

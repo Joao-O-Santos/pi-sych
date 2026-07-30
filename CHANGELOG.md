@@ -11,6 +11,7 @@ All notable changes to Pi Sych are documented here. Versions are immutable npm p
 - Added companion-skill guidance and selected review/reporting practices informed by an archived skill comparison.
 - Added optional layered review skills `review-structure`, `review-detail`, and `review-copyedit` that compose with `artifact-review` through ordinary multi-skill worker selection.
 - Added package prose and Reveal.js defaults, a portable `templates/revealjs-baseline.css`, selectable verification recipes, decision-memo options, and a README inspirations section for external retrospective tools.
+- Added the human `/plannotator-review` command for Plannotator code review of current changes or a PR URL, without enabling Plannotator plan-mode.
 
 ### Changed
 

@@ -16,6 +16,8 @@ import {
 import { loadModelProfiles } from "./src/model-catalog.js";
 import type { PlanReviewDecision } from "./src/plannotator.js";
 import {
+	parseCodeReviewArgs,
+	startCodeReview,
 	startFileAnnotation,
 	startLastMessageAnnotation,
 	startPlanReview,
@@ -311,6 +313,38 @@ export default function piSychWorkbench(pi: ExtensionAPI): void {
 				);
 				ctx.ui.notify(`Plannotator annotation opened: ${session.url}`, "info");
 				annotationFeedback(pi, ctx, session);
+			} catch (error) {
+				notifyError(ctx, error);
+			}
+		},
+	});
+
+	// Human-only command: opens Plannotator code review without plan-mode tooling.
+	pi.registerCommand("plannotator-review", {
+		description:
+			"Open Plannotator code review for current changes or a PR URL; pass --git or --gitbutler to force that provider",
+		handler: async (args, ctx) => {
+			try {
+				const session = await startCodeReview(ctx, parseCodeReviewArgs(args));
+				ctx.ui.notify(`Plannotator code review opened: ${session.url}`, "info");
+				void session
+					.waitForDecision()
+					.then((result) => {
+						if (result.exit) {
+							ctx.ui.notify("Code review session closed.", "info");
+							return;
+						}
+						if (result.approved) {
+							ctx.ui.notify("Code review approved.", "info");
+							return;
+						}
+						if (result.feedback?.trim())
+							void pi.sendUserMessage(result.feedback, {
+								deliverAs: "followUp",
+							});
+						else ctx.ui.notify("Code review closed (no feedback).", "info");
+					})
+					.catch((error: unknown) => notifyError(ctx, error));
 			} catch (error) {
 				notifyError(ctx, error);
 			}

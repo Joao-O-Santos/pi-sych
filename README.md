@@ -55,7 +55,7 @@ Optional files are useful only when they serve a purpose:
 
 Workers are short-lived Pi sessions used for a clearly bounded task. They receive only the selected project material, not your main conversation. A worker may load several skills at once—for example `artifact-review` plus `review-structure` and `review-detail`—without any fixed multi-agent pipeline. A full-host worker has the same host permissions as Pi, so use it only when that capability is genuinely needed.
 
-For a consequential plan, Pi can open a browser review through Plannotator. Approval does not automatically start work; your feedback and approval notes return to Pi for the next decision.
+For a consequential plan, Pi can open a browser review through Plannotator via `submit_plan`. Use `/plannotator-review` when you want to annotate the current VCS diff or a pull-request URL. Approval does not automatically start work; your feedback returns to Pi for the next decision. Pi Sych does not enable Plannotator plan-mode obligations or the `/plannotator` planning toggle.
 
 ## Inspirations
 
@@ -81,4 +81,4 @@ Use `project_status` to inspect missing core files, changed tracked files, decla
 
 Worker modes are `read-only` (inspection), `edit` (inspection and edits), and `full-host` (inspection, edits, and Bash). Every result includes its summary, artifacts, changed files, limitations, result package, and any abnormal process outcome.
 
-Commands: `/pi-sych-status`, `/pi-sych-mcp`, `/plannotator-annotate <file>`, and `/plannotator-last`.
+Commands: `/pi-sych-status`, `/pi-sych-mcp`, `/plannotator-annotate <file>`, `/plannotator-last`, and `/plannotator-review` (code review for current changes or a PR URL). There is no `/plannotator` plan-mode toggle.

@@ -82,8 +82,8 @@ test("public workbench extension loads without private configuration", async () 
 	]);
 	assert.equal(names.includes("plannotator-annotate"), true);
 	assert.equal(names.includes("plannotator-last"), true);
+	assert.equal(names.includes("plannotator-review"), true);
 	assert.equal(names.includes("plannotator"), false);
-	assert.equal(names.includes("plannotator-review"), false);
 });
 
 test("bootstrapped worker starts with only the worker extension", async () => {

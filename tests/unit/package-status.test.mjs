@@ -8,7 +8,26 @@ import piSychWorkbench, {
 	PACKAGE_ROOT,
 	SUPERVISOR_GUIDANCE,
 } from "../../.test-build/workbench/index.js";
+import { parseCodeReviewArgs } from "../../.test-build/workbench/src/plannotator.js";
 import packageJson from "../../package.json" with { type: "json" };
+
+test("parseCodeReviewArgs accepts provider flags and PR URLs only", () => {
+	assert.deepEqual(parseCodeReviewArgs(""), {
+		prUrl: undefined,
+		vcsType: undefined,
+		useLocal: true,
+	});
+	assert.deepEqual(
+		parseCodeReviewArgs('--gitbutler --no-local "https://example.test/pr/1"'),
+		{
+			prUrl: "https://example.test/pr/1",
+			vcsType: "gitbutler",
+			useLocal: false,
+		},
+	);
+	assert.equal(parseCodeReviewArgs("not-a-url --git").prUrl, undefined);
+	assert.equal(parseCodeReviewArgs("not-a-url --git").vcsType, "git");
+});
 
 test("minimal supervisor surface exposes only mechanical tools and retained human commands", () => {
 	const tools = [];
@@ -32,7 +51,9 @@ test("minimal supervisor surface exposes only mechanical tools and retained huma
 		"pi-sych-status",
 		"plannotator-annotate",
 		"plannotator-last",
+		"plannotator-review",
 	]);
+	assert.equal(commands.includes("plannotator"), false);
 	assert.match(SUPERVISOR_GUIDANCE, /90 seconds/);
 	assert.match(SUPERVISOR_GUIDANCE, /not conceptual drift/);
 });

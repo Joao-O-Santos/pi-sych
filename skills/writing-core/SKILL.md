@@ -52,25 +52,25 @@ project `STYLE.md` rather than re-arguing them each session.
 
 ### Mechanical wrapping
 
-When a mechanical wrap helps and **Pandoc is installed**, prefer:
+When a mechanical wrap helps and **Pandoc is installed**, prefer Pandoc’s own
+Markdown writer (not GFM), with pipe tables kept and grid/simple/multiline
+tables disabled:
 
 ```sh
-pandoc FILE.md -f gfm -t gfm --wrap=auto --columns=72 -o FILE.md
+pandoc FILE.md \
+  -f markdown \
+  -t markdown+pipe_tables-simple_tables-multiline_tables-grid_tables \
+  --wrap=auto --columns=72 \
+  -o FILE.md
 ```
 
-On a plain GitHub-flavored fixture this reflows prose and list items, keeps pipe
-tables and fenced code, and only lightly normalizes table separators. Residual
-limits: it may break Markdown links across lines and insert a space after fence
-markers (` ``` ts`). Inspect the diff before keeping it.
+That path reflows prose while remaining in Pandoc Markdown. Residual limits: it
+may realign pipe-table separators, break links across lines, or insert a space
+after fence markers. Inspect the diff before keeping it. Avoid bare
+`pandoc -t markdown`, which often rewrites tables into grid form.
 
-Other options, in declining preference for this default:
-
-- **dprint** with its Markdown plugin: wraps prose and leaves fences intact; may
-  realign tables; requires a separate install.
-- **Prettier**: can wrap prose but may rewrite fenced code and tables.
-- Editors with `textwidth` / format-paragraph for manual or selective wraps.
-- Avoid `pandoc -t markdown` for this job: that path often rewrites tables into
-  grid form.
+Other options: dprint (extra install; may realign tables), Prettier (may rewrite
+fences/tables), or an editor `textwidth` / format-paragraph pass.
 
 Do not add a Markdown formatter dependency to this package solely for wrapping.
 Do not claim a formatter check was applied unless it was run and its diff was

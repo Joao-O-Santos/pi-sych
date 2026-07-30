@@ -21,7 +21,7 @@ Pi Sych is a small mechanical substrate for explicit project state, bounded dele
 ## Public runtime target
 
 - Agent tools: `dispatch_worker`, `project_status`, and optional `submit_plan`.
-- Commands: `/pi-sych-status`, `/plannotator-annotate`, and optional `/pi-sych-mcp`.
+- Commands: `/pi-sych-status`, `/pi-sych-mcp`, `/plannotator-annotate <file>`, `/plannotator-last`, `/plannotator-review`. No `/plannotator` plan-mode toggle.
 - Worker calls are synchronous and short-lived. The omitted timeout defaults to 90 seconds; supervisors set an explicit bounded override for longer work.
 - Project-level `AGENTS.md`, `STYLE.md`, `EVIDENCE.md`, `DECISIONS.md`, and `TODO.md` are optional.
 

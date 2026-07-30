@@ -13,6 +13,13 @@ export interface AnnotationDecision {
 	approved?: boolean;
 }
 
+export interface CodeReviewDecision {
+	approved: boolean;
+	feedback?: string;
+	annotations?: unknown[];
+	exit?: boolean;
+}
+
 export interface ReviewSession {
 	url: string;
 	waitForDecision(): Promise<PlanReviewDecision>;
@@ -21,6 +28,17 @@ export interface ReviewSession {
 export interface AnnotationSession {
 	url: string;
 	waitForDecision(): Promise<AnnotationDecision>;
+}
+
+export interface CodeReviewSession {
+	url: string;
+	waitForDecision(): Promise<CodeReviewDecision>;
+}
+
+export interface CodeReviewRequest {
+	prUrl?: string;
+	vcsType?: "git" | "gitbutler";
+	useLocal?: boolean;
 }
 
 type PlannotatorModule = {
@@ -39,6 +57,10 @@ type PlannotatorModule = {
 		ctx: ExtensionContext,
 		text: string,
 	): Promise<AnnotationSession>;
+	startCodeReviewBrowserSession(
+		ctx: ExtensionContext,
+		options?: CodeReviewRequest,
+	): Promise<CodeReviewSession>;
 };
 
 const jiti = createJiti(import.meta.url, { interopDefault: true });
@@ -82,4 +104,28 @@ export async function startLastMessageAnnotation(
 	return text
 		? plannotator.startLastMessageAnnotationSession(ctx, text)
 		: undefined;
+}
+
+/** Parse `/plannotator-review` args without loading Plannotator plan-mode code. */
+export function parseCodeReviewArgs(input = ""): CodeReviewRequest {
+	const tokens = input.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g) ?? [];
+	let vcsType: CodeReviewRequest["vcsType"];
+	let useLocal = true;
+	let prUrl: string | undefined;
+	for (const raw of tokens) {
+		const token = raw.replace(/^['"]|['"]$/g, "");
+		if (token === "--git") vcsType = "git";
+		else if (token === "--gitbutler") vcsType = "gitbutler";
+		else if (token === "--local") useLocal = true;
+		else if (token === "--no-local") useLocal = false;
+		else if (/^https?:\/\//.test(token) && !prUrl) prUrl = token;
+	}
+	return { prUrl, vcsType, useLocal };
+}
+
+export async function startCodeReview(
+	ctx: ExtensionContext,
+	options: CodeReviewRequest = {},
+): Promise<CodeReviewSession> {
+	return (await loadPlannotator()).startCodeReviewBrowserSession(ctx, options);
 }

@@ -6,7 +6,7 @@ Most people need only a private model-profile file before using workers. Pi Sych
 
 `package.json` loads the main Pi extension. Workers and MCPorter load only for an explicitly requested task.
 
-Pi Sych declares `@plannotator/pi-extension` as a runtime dependency but never loads its extension entrypoint. The workbench imports documented lazy browser helpers for `submit_plan`, `/plannotator-annotate`, and `/plannotator-last`. Do not separately install or configure Plannotator as a Pi extension for this package.
+Pi Sych declares `@plannotator/pi-extension` as a runtime dependency but never loads its extension entrypoint. The workbench imports documented lazy browser helpers for `submit_plan`, `/plannotator-annotate`, `/plannotator-last`, and `/plannotator-review`. It does not register Plannotator plan-mode, `/plannotator`, or related planning obligations. Do not separately install or configure Plannotator as a Pi extension for this package.
 
 ## Models and worker runtime
 
