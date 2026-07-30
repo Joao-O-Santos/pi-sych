@@ -6,7 +6,7 @@
 **Kind:** observed behaviour
 **Source:** `package.json`, `tests/unit`, and `tests/integration`
 **Supports:** package readiness and deterministic-check claims
-**Evidence:** The package scripts define typecheck, style, source-budget, unit, integration, and smoke checks; the refactored deterministic suites pass with 27 unit tests, 3 integration tests, and 2 smoke checks.
+**Evidence:** The package scripts define typecheck, style, source-budget, unit, integration, and smoke checks; the current deterministic suites pass with 36 unit tests, 3 integration tests, and 2 smoke checks.
 **Limits:** A passing local check does not establish host-wide security, real-model usage, or prove all scientific workflows.
 **Checked:** 2026-07-29
 
@@ -29,6 +29,16 @@
 **Evidence:** Schema discovery connected to Context7, the configured OpenAlex stdio server, and OAuth-authenticated Scholar Gateway. One bounded retrieval call to each server returned a JSON response.
 **Limits:** These checks establish only observed connectivity and bounded retrieval at that time. Remote content remains external and non-authoritative until reviewed; OpenAlex uses a third-party rolling `npx` server and full-host execution.
 **Checked:** 2026-07-28
+
+## E-008 — v1.1.0 interface, documentation, and skill review passed
+
+**Status:** verified
+**Kind:** observed behaviour and reviewed documentation
+**Source:** `extensions/workbench/index.ts`, `extensions/workbench/src/project-status.ts`, `extensions/workbench/src/worker-engine.ts`, `templates/PROJECT.md`, public documentation, affected skills, deterministic checks, one opt-in usage run, and interactive Plannotator review
+**Supports:** model-visible worker and plan-review results, provider-compatible schemas, mechanical project-state checks, project-state template, human-facing documentation, and companion-skill guidance
+**Evidence:** A live pre-change worker dispatch exposed only its summary to the supervisor, and interactive Plannotator review decisions exposed only approval/revision text; the v1.1.0 implementation formats the validated result and review feedback into tool content, with unit coverage. The public documentation and archived-skill comparison were reviewed through Plannotator. Biome, typecheck, dependency check, 36 unit tests, 3 integration tests, 2 smoke checks, package dry-run, CI YAML parsing, whitespace check, and the explicit real-Pi usage acceptance passed.
+**Limits:** The interactive observations used the pre-release installed extension; model-visible formatting is verified deterministically from the v1.1.0 source and by the real-Pi session acceptance, but awaits a published-package interactive session. Passing checks and reviewed skill guidance do not establish universal provider, browser, or workflow behavior.
+**Checked:** 2026-07-30
 
 ## E-007 — Corrective package and diagram review passed
 
@@ -66,6 +76,6 @@
 **Kind:** observed behaviour
 **Source:** Interactive `submit_plan` call for `.pi/plannotator-adapter-test.md`; `tests/unit/package-status.test.mjs`; `tests/integration/package-load.test.mjs`
 **Supports:** direct plan-review adapter and unactivated-extension claims
-**Evidence:** The supervisor's `submit_plan` opened a Plannotator browser review, returned an explicit approval with annotated feedback, and did not begin implementation. Package-load tests confirm Pi Sych registers `/plannotator-annotate` and `/plannotator-last` while official Plannotator commands are absent.
+**Evidence:** The supervisor's `submit_plan` opened a Plannotator browser review and did not begin implementation. Package-load tests confirm Pi Sych registers `/plannotator-annotate` and `/plannotator-last` while official Plannotator commands are absent. The v1.0.3 wrapper exposed only approval/revision text; v1.1.0 adds model-visible feedback formatting, documented in E-008.
 **Limits:** This is one interactive approval observation. It does not establish behavior for every browser, operating system, future Plannotator release, or annotation workflow.
 **Checked:** 2026-07-28

@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, extname, isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { StringEnum } from "@earendil-works/pi-ai";
 import type {
 	ExtensionAPI,
 	ExtensionCommandContext,
@@ -13,6 +14,7 @@ import {
 	remoteResearchExtensionPaths,
 } from "./src/mcporter.js";
 import { loadModelProfiles } from "./src/model-catalog.js";
+import type { PlanReviewDecision } from "./src/plannotator.js";
 import {
 	startFileAnnotation,
 	startLastMessageAnnotation,
@@ -23,7 +25,7 @@ import {
 	checkProjectStatus,
 	formatProjectStatusCheck,
 } from "./src/project-status.js";
-import { dispatchWorker } from "./src/worker-engine.js";
+import { type DispatchOutcome, dispatchWorker } from "./src/worker-engine.js";
 
 export const PACKAGE_ROOT = resolve(
 	dirname(fileURLToPath(import.meta.url)),
@@ -42,11 +44,7 @@ export const SUPERVISOR_GUIDANCE = [
 
 const dispatchParameters = Type.Object({
 	task: Type.String(),
-	mode: Type.Union([
-		Type.Literal("read-only"),
-		Type.Literal("edit"),
-		Type.Literal("full-host"),
-	]),
+	mode: StringEnum(["read-only", "edit", "full-host"] as const),
 	expectedOutput: Type.String(),
 	contextFiles: Type.Array(
 		Type.Object({ path: Type.String(), purpose: Type.String() }),
@@ -58,10 +56,69 @@ const dispatchParameters = Type.Object({
 });
 
 const statusParameters = Type.Object({
-	action: Type.Union([Type.Literal("check"), Type.Literal("acknowledge")]),
+	action: StringEnum(["check", "acknowledge"] as const),
 	files: Type.Optional(Type.Array(Type.String())),
 	reason: Type.Optional(Type.String()),
 });
+
+const TOOL_CONTENT_LIMIT = 8_192;
+
+function boundedToolContent(value: string): string {
+	return value.length > TOOL_CONTENT_LIMIT
+		? `${value.slice(0, TOOL_CONTENT_LIMIT - 15)}\n[truncated]`
+		: value;
+}
+
+function listContent(label: string, values: string[]): string[] {
+	return values.length
+		? [label, ...values.map((value) => `- ${value}`)]
+		: [`${label} none`];
+}
+
+export function formatDispatchWorkerOutcome(outcome: DispatchOutcome): string {
+	const result = outcome.result;
+	const lines = [
+		`Worker status: ${result?.status ?? "unavailable"}`,
+		`Summary: ${result?.summary ?? outcome.failure?.message ?? "no result"}`,
+		"",
+		...listContent(
+			"Artifacts:",
+			result?.artifacts.map(
+				(artifact) => `${artifact.path} (${artifact.kind})`,
+			) ?? [],
+		),
+		"",
+		...listContent("Changed files:", result?.changedFiles ?? []),
+		"",
+		`Result package: ${result?.resultPackage ?? "unavailable"}`,
+		"",
+		...listContent("Limitations:", result?.limitations ?? []),
+	];
+	const launch = outcome.launch;
+	if (
+		launch &&
+		(launch.classification || launch.terminationSignal || launch.exitCode !== 0)
+	) {
+		lines.push(
+			"",
+			`Process warning: ${launch.classification ?? "abnormal exit"}; exit code ${launch.exitCode ?? "none"}; signal ${launch.terminationSignal ?? "none"}.`,
+		);
+	}
+	return boundedToolContent(lines.join("\n"));
+}
+
+export function formatSubmitPlanResult(
+	result: PlanReviewDecision,
+	savedPath: string | undefined,
+): string {
+	return boundedToolContent(
+		[
+			result.approved ? "Plan approved." : "Plan requires revision.",
+			`Saved path: ${savedPath ?? "none"}`,
+			`Feedback: ${result.feedback?.trim() || "none"}`,
+		].join("\n"),
+	);
+}
 
 function projectFile(cwd: string, path: string): string | undefined {
 	if (!path.trim()) return undefined;
@@ -123,10 +180,10 @@ export default function piSychWorkbench(pi: ExtensionAPI): void {
 				),
 				signal,
 			});
-			const text = outcome.result
-				? `Worker ${outcome.result.status}: ${outcome.result.summary}`
-				: `Worker failed: ${outcome.failure?.message ?? "no result"}`;
-			return { content: [{ type: "text", text }], details: outcome };
+			return {
+				content: [{ type: "text", text: formatDispatchWorkerOutcome(outcome) }],
+				details: outcome,
+			};
 		},
 	});
 
@@ -190,16 +247,12 @@ export default function piSychWorkbench(pi: ExtensionAPI): void {
 				details: { pending: true, url: session.url },
 			});
 			const result = await session.waitForDecision();
+			const savedPath = result.savedPath ?? relative(ctx.cwd, path);
 			return {
 				content: [
-					{
-						type: "text",
-						text: result.approved
-							? "Plan approved."
-							: "Plan requires revision.",
-					},
+					{ type: "text", text: formatSubmitPlanResult(result, savedPath) },
 				],
-				details: { ...result, filePath: relative(ctx.cwd, path) },
+				details: { ...result, savedPath },
 			};
 		},
 	});

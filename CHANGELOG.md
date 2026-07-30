@@ -2,6 +2,20 @@
 
 All notable changes to Pi Sych are documented here. Versions are immutable npm publications unless explicitly marked otherwise.
 
+## [1.1.0] - 2026-07-30
+
+### Added
+
+- Added model-visible worker result details, Plannotator plan feedback, Google-compatible enum schemas, core project-file checks, and shallow `PROJECT.md` validation.
+- Added `Previous action` and an explicit `None at present.` option for a project’s immediate next step.
+- Added companion-skill guidance and selected review/reporting practices informed by an archived skill comparison.
+
+### Changed
+
+- Rewrote public documentation around people installing and using Pi Sych, while keeping maintainer detail in the architecture and development guides.
+- Made project-status cycle, legacy-status, MCPorter fallback, package-load diagnostics, and opt-in usage-test handling more reliable.
+- Removed stale public references to the intentionally deleted target-architecture and principles documents.
+
 ## [1.0.3] - 2026-07-30
 
 ### Fixed

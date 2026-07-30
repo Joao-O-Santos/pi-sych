@@ -3,11 +3,11 @@
 ```json
 {
   "version": 1,
-  "confirmedAt": "2026-07-30T02:40:47.200Z",
+  "confirmedAt": "2026-07-30T13:08:05.103Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:db7760d7dd25f59b70fdeb0bf34ca09c2b9f6ba7625f34f81ad0b1c593d19ad6",
+      "fingerprint": "sha256:baffef9728d27d35f781c465e21a08dae34903eae73a6b0bfead336b8b92e5b7",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -18,13 +18,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T02:40:47.200Z",
-        "reason": "Reviewed the v1.0.3 correction that embeds the architecture diagram in ARCHITECTURE.md, updates versioned package image URLs, and updates the release metadata."
+        "at": "2026-07-30T13:08:05.103Z",
+        "reason": "Reviewed the approved v1.1.0 interface hardening, project-state template, human-facing documentation, public skill guidance, package boundary, and actual verification evidence."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:b5d2ed78758f72904f52e8aa261d729830b1ecaa4f06aba91bf1ab8ea9eb66b3",
+      "fingerprint": "sha256:17bda9d9b1ad95fade2d698771ce7abfad24d09a60e6c31458341163f4f78f36",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -38,26 +38,26 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T02:40:47.200Z",
-        "reason": "Reviewed the v1.0.3 correction that embeds the architecture diagram in ARCHITECTURE.md, updates versioned package image URLs, and updates the release metadata."
+        "at": "2026-07-30T13:08:05.103Z",
+        "reason": "Reviewed the approved v1.1.0 interface hardening, project-state template, human-facing documentation, public skill guidance, package boundary, and actual verification evidence."
       }
     },
     {
       "path": "ARCHITECTURE.md",
-      "fingerprint": "sha256:efd58e0b7e60fe23e92e5a053a0fd638c9f3aea5faa490943a38ec9e2891c802",
+      "fingerprint": "sha256:310804d0b78c35f03753fcb53464df2d486c1c7796912a65c899c24b4ec50e7f",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T02:40:47.200Z",
-        "reason": "Reviewed the v1.0.3 correction that embeds the architecture diagram in ARCHITECTURE.md, updates versioned package image URLs, and updates the release metadata."
+        "at": "2026-07-30T13:08:05.103Z",
+        "reason": "Reviewed the approved v1.1.0 interface hardening, project-state template, human-facing documentation, public skill guidance, package boundary, and actual verification evidence."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:b8f9e6c04c8002405a82291091de0a729bf4d7052400b3929884172d0ff2eed1",
+      "fingerprint": "sha256:ecce3bb215d90c5e2912b1d8bd426bc68b78bf230d0b1a94120a08ab4f8b9631",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -69,13 +69,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T02:40:47.200Z",
-        "reason": "Reviewed the v1.0.3 correction that embeds the architecture diagram in ARCHITECTURE.md, updates versioned package image URLs, and updates the release metadata."
+        "at": "2026-07-30T13:08:05.103Z",
+        "reason": "Reviewed the approved v1.1.0 interface hardening, project-state template, human-facing documentation, public skill guidance, package boundary, and actual verification evidence."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:ea438cec729ad003db174d601f2219a92a427b9e4ff90b6d9faf881b32ee5e56",
+      "fingerprint": "sha256:781a3a0f4a0f1eea7adcbe655efc430513227d4110f6bc193adc4829d6d31d46",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -88,34 +88,34 @@
         "tests"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T02:40:47.200Z",
-        "reason": "Reviewed the v1.0.3 correction that embeds the architecture diagram in ARCHITECTURE.md, updates versioned package image URLs, and updates the release metadata."
+        "at": "2026-07-30T13:08:05.103Z",
+        "reason": "Reviewed the approved v1.1.0 interface hardening, project-state template, human-facing documentation, public skill guidance, package boundary, and actual verification evidence."
       }
     },
     {
       "path": "docs/CONFIGURATION.md",
-      "fingerprint": "sha256:c7b6b6e0abe1abf4a66ce79746e3e3e5a2e7c3ae4f533de2d8fb1f8b46135410",
+      "fingerprint": "sha256:3c142caf9fac0746e015b9fbc2765ecee9558bc66c1ebc2548448b6ac633f208",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T01:04:35.543Z",
-        "reason": "Completed the approved minimal-architecture refactor and reviewed the affected documentation, evidence, and package metadata."
+        "at": "2026-07-30T13:08:05.103Z",
+        "reason": "Reviewed the approved v1.1.0 interface hardening, project-state template, human-facing documentation, public skill guidance, package boundary, and actual verification evidence."
       }
     },
     {
       "path": "docs/DEVELOPMENT.md",
-      "fingerprint": "sha256:2c391e446aac4f7e08ac8968e5b703348d62be8bd6e38f335a87c7c6eb36339e",
+      "fingerprint": "sha256:ad51a0ff4793eee2583042ccd1e7ce69d32c68d99665f5b0b0e383b6881b431e",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "development-checks"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T02:40:47.200Z",
-        "reason": "Reviewed the v1.0.3 correction that embeds the architecture diagram in ARCHITECTURE.md, updates versioned package image URLs, and updates the release metadata."
+        "at": "2026-07-30T13:08:05.103Z",
+        "reason": "Reviewed the approved v1.1.0 interface hardening, project-state template, human-facing documentation, public skill guidance, package boundary, and actual verification evidence."
       }
     }
   ]

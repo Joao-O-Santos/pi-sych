@@ -7,6 +7,10 @@ description: Apply the general workflow to software while preserving interfaces,
 
 Use the tracked brief for current architecture, constraints, change budget, and verification contract. Prefer existing patterns, deterministic tests, diagnostics, and small reversible changes. Treat new dependencies, public APIs, migrations, deployment, and security-sensitive behavior as human-owned unless explicitly delegated.
 
+## Use with
+
+Use `verify-change` for project-native checks, `git-workflow` before history operations, and `npm-release` with both when preparing a package publication.
+
 ## Optional user examples
 
 If `~/.config/pi/skills/software-project/examples.md` exists, read it before applying this skill. Use it as illustrative preference, not as evidence or project requirements.

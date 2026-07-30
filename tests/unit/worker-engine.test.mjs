@@ -8,6 +8,7 @@ import {
 	DEFAULT_TIMEOUT_MS,
 	dispatchWorker,
 	launchPiWorker,
+	mcporterConfigPath,
 	resolveSelectedSkillPaths,
 	taskPrompt,
 	toolsForMode,
@@ -144,6 +145,32 @@ test("dispatch injects optional project conventions and returns one validated re
 	assert.match(prompt, /STYLE\.md \(artifact conventions\)/);
 	assert.equal(outcome.timeoutMs, DEFAULT_TIMEOUT_MS);
 	assert.equal(outcome.result?.status, "complete");
+	assert.deepEqual(outcome.launch, { exitCode: 0, stdout: "", stderr: "" });
+});
+
+test("dispatch retains a valid result after an abnormal process outcome", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-worker-outcome-"));
+	await writeFile(join(root, "PROJECT.md"), "# Project\n");
+	const outcome = await dispatchWorker({
+		projectRoot: root,
+		workerAgentDir: join(root, "agent"),
+		request,
+		profiles: { default: ["test/model"] },
+		launcher: async (spec) => {
+			await writeImmutableResult(spec.resultPath, result(spec));
+			return {
+				exitCode: null,
+				stdout: "",
+				stderr: "",
+				classification: "timeout",
+				terminationSignal: "SIGKILL",
+			};
+		},
+	});
+	assert.equal(outcome.result?.status, "complete");
+	assert.equal(outcome.failure, undefined);
+	assert.equal(outcome.launch?.classification, "timeout");
+	assert.equal(outcome.launch?.terminationSignal, "SIGKILL");
 });
 
 test("dispatch rejects a result package that is not durable", async () => {
@@ -166,6 +193,32 @@ test("dispatch rejects a result package that is not durable", async () => {
 	assert.match(
 		outcome.failure?.message ?? "",
 		/resultPackage path is unavailable/,
+	);
+});
+
+test("result packages may be readable project directories", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-worker-directory-"));
+	await writeFile(join(root, "PROJECT.md"), "# Project\n");
+	const outcome = await dispatchWorker({
+		projectRoot: root,
+		workerAgentDir: join(root, "agent"),
+		request,
+		profiles: { default: ["test/model"] },
+		launcher: async (spec) => {
+			await writeImmutableResult(spec.resultPath, {
+				...result(spec),
+				resultPackage: ".",
+			});
+			return { exitCode: 0, stdout: "", stderr: "" };
+		},
+	});
+	assert.equal(outcome.result?.resultPackage, ".");
+});
+
+test("MCPorter defaults to homedir when HOME is absent", () => {
+	assert.equal(
+		mcporterConfigPath({}, "/test-home"),
+		join("/test-home", ".config/pi-sych/mcp/mcporter.json"),
 	);
 });
 

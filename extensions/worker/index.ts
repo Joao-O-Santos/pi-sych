@@ -1,3 +1,4 @@
+import { StringEnum } from "@earendil-works/pi-ai";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import {
@@ -7,11 +8,7 @@ import {
 
 const resultParameters = Type.Object({
 	schemaVersion: Type.Literal(1),
-	status: Type.Union([
-		Type.Literal("complete"),
-		Type.Literal("partial"),
-		Type.Literal("failed"),
-	]),
+	status: StringEnum(["complete", "partial", "failed"] as const),
 	summary: Type.String(),
 	artifacts: Type.Array(
 		Type.Object({ path: Type.String(), kind: Type.String() }),

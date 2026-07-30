@@ -90,6 +90,7 @@ export interface DispatchOutcome {
 	model: string;
 	attempts: number;
 	timeoutMs: number;
+	launch?: WorkerLaunchOutcome;
 	result?: WorkerResult;
 	failure?: {
 		classification:
@@ -185,6 +186,16 @@ export function toolsForRequest(
 		...MODE_TOOLS[request.mode],
 		...(request.remoteResearch ? ["mcporter"] : []),
 	];
+}
+
+export function mcporterConfigPath(
+	environment: NodeJS.ProcessEnv = process.env,
+	userHome = homedir(),
+): string {
+	return resolve(
+		environment.HOME ?? userHome,
+		".config/pi-sych/mcp/mcporter.json",
+	);
 }
 
 export function resolveSelectedSkillPaths(
@@ -437,11 +448,7 @@ export const launchPiWorker: WorkerLauncher = async (spec) =>
 				...(spec.request.remoteResearch
 					? {
 							MCPORTER_CONFIG:
-								process.env.PI_SYCH_MCPORTER_CONFIG ??
-								resolve(
-									process.env.HOME ?? "~",
-									".config/pi-sych/mcp/mcporter.json",
-								),
+								process.env.PI_SYCH_MCPORTER_CONFIG ?? mcporterConfigPath(),
 						}
 					: {}),
 			},
@@ -539,12 +546,14 @@ export async function dispatchWorker(options: {
 			result = undefined;
 			resultError = error instanceof Error ? error.message : String(error);
 		}
-		if (result) return { identity, model, attempts: 1, timeoutMs, result };
+		if (result)
+			return { identity, model, attempts: 1, timeoutMs, launch, result };
 		return {
 			identity,
 			model,
 			attempts: 1,
 			timeoutMs,
+			launch,
 			failure: {
 				classification:
 					launch.classification ??

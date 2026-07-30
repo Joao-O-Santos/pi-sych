@@ -71,7 +71,7 @@ test("status command reports mechanical state without semantic drift claims", as
 	const agentDir = await mkdtemp(join(tmpdir(), "pi-sych-agent-"));
 	await writeFile(
 		join(root, "PROJECT.md"),
-		"# Project\n\n## Objective\nX\n## Current direction\nY\n## Definition of done\nZ\n",
+		"# Project\n\n## Objective\nX\n## Current direction\nY\n## Definition of done\nZ\n## Previous action\nNone yet.\n## Immediate next step\nNone at present.\n",
 	);
 	const fingerprint = await fingerprintFile(join(root, "PROJECT.md"));
 	await writeFile(

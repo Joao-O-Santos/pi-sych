@@ -38,6 +38,10 @@ countervailing processes could explain the pattern. A non-significant result is
 not proof of no effect, and statistical significance is not practical or
 theoretical importance.
 
+## Use with
+
+Use `scholarly-manuscript` for the paper-wide argument, `r-quarto` for traceability to analysis and rendering, and `verification` to compare the final manuscript with its evidence chain.
+
 ## Optional user examples
 
 If `~/.config/pi/skills/empirical-paper/examples.md` exists, read it before applying this skill. Use it as illustrative preference, not as evidence or project requirements.

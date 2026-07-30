@@ -24,6 +24,10 @@ is unavailable rather than reconstructing it from narrative. Confirm that
 revision did not turn exploratory results into confirmatory claims or erase
 meaningful nulls, limitations, or scope conditions.
 
+## Use with
+
+Use `verify-change` for project-native commands and their actual outcomes. Use `artifact-review` for a bounded diagnostic before a revision, and pair empirical or computational work with `empirical-paper` or `r-quarto`.
+
 ## Optional user examples
 
 If `~/.config/pi/skills/verification/examples.md` exists, read it before applying this skill. Use it as illustrative preference, not as evidence or project requirements.

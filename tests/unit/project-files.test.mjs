@@ -17,7 +17,7 @@ test("canonical discovery selects the nearest project and reports optional files
 	await mkdir(nested, { recursive: true });
 	await writeFile(
 		join(root, "PROJECT.md"),
-		"# Project\n\n## Objective\n\nX\n\n## Current direction\n\nY\n\n## Definition of done\n\nZ\n",
+		"# Project\n\n## Objective\n\nX\n\n## Current direction\n\nY\n\n## Definition of done\n\nZ\n\n## Previous action\n\nNone yet.\n\n## Immediate next step\n\nNone at present.\n",
 	);
 	await writeFile(join(root, "SYNC.md"), "candidate");
 	await writeFile(join(root, "STYLE.md"), "# Style\n");
@@ -53,12 +53,14 @@ test("canonical discovery selects the nearest project and reports optional files
 
 test("PROJECT.md validation is shallow but requires operative headings", () => {
 	const valid = validateProjectMarkdown(
-		"# Project\n\n## Objective\nX\n## Current direction\nY\n## Definition of done\nZ\n",
+		"# Project\n\n## Objective\nX\n## Current direction\nY\n## Definition of done\nZ\n## Previous action\nNone yet.\n## Immediate next step\nNone at present.\n",
 	);
 	assert.equal(valid.valid, true);
 	const invalid = validateProjectMarkdown("# Notes\n\n## Objective\nX\n");
 	assert.equal(invalid.valid, false);
 	assert.match(invalid.errors.join("\n"), /Current direction/);
+	assert.match(invalid.errors.join("\n"), /Previous action/);
+	assert.match(invalid.errors.join("\n"), /Immediate next step/);
 });
 
 test("evidence helpers extract bounded entry metadata", () => {

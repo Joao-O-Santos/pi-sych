@@ -1,6 +1,6 @@
 # Development
 
-Pi Sych favors the smallest implementation that makes project state, delegation, review, and verification truthful. Add a focused function or tool only when existing Pi, Plannotator, or MCPorter interfaces cannot provide the behavior.
+This guide is for package contributors. Pi Sych favors the smallest implementation that makes project state, delegation, review, and verification inspectable. Add a focused function or tool only when existing Pi, Plannotator, or MCPorter interfaces cannot provide the behavior.
 
 ## Checks
 
@@ -8,6 +8,7 @@ Pi Sych favors the smallest implementation that makes project state, delegation,
 npm run typecheck
 npm run style
 npm run test:deps
+npm run source:budget
 npm test
 npm run smoke
 npm pack --dry-run

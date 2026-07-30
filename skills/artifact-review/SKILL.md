@@ -10,7 +10,7 @@ prose, skeptical review, pedagogy, audience load, grant compliance,
 architecture, maintainability, requirements, or security. Report the problem,
 why it matters, the minimum response, scope, interaction risks, complexity
 effect, and whether it is a defect, tradeoff, robustness issue, or preference.
-Do not redesign the artifact or apply findings independently.
+Do not redesign the artifact or apply findings independently. When useful, order findings by location and state the problem, why it matters, and the smallest credible response. End with one explicit blind-spot question when the selected lens could miss a material alternative.
 
 ## Scholarly skeptical review
 
@@ -29,6 +29,10 @@ analyses, or reporting changed after results were known; whether null or
 contrary evidence is omitted; and whether practical importance is being
 confused with a threshold statistic. Preserve the distinction between a missing
 citation, a weak inference, an unresolved alternative, and an authorial choice.
+
+## Use with
+
+Use `strategy` to choose among accepted findings, `verify-change` after an implemented response, and `verification` for a whole-artifact judgment. Use `drift-review` before `reconcile-project` when findings reveal cross-file disagreement.
 
 ## Optional user examples
 

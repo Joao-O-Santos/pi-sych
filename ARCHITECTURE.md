@@ -1,8 +1,8 @@
 # Architecture
 
-Pi Sych has a small mechanical core and a progressively disclosed skill corpus.
+This guide is for maintainers and technically curious users. Pi Sych keeps a small mechanical core for process bounds, files, hashes, paths, and immutable worker results; skills and people handle interpretation, writing, research, and consequential judgment.
 
-![](https://unpkg.com/pi-sych@1.0.3/docs/img/architecture.png)
+![](https://unpkg.com/pi-sych@1.1.0/docs/img/architecture.png)
 
 ## Runtime
 
@@ -24,14 +24,14 @@ It also registers `/pi-sych-status`, `/pi-sych-mcp`, `/plannotator-annotate`, an
 
 ## Project state
 
-Core files after initialization:
+After initialization, the core files are:
 
-- `PROJECT.md` — accepted purpose, scope, constraints, current direction, and definition of done.
+- `PROJECT.md` — accepted purpose, scope, constraints, current direction, definition of done, previous action, and immediate next step.
 - `SYNC.md` — acknowledged fingerprints, declared dependencies, statuses, and acknowledgement metadata.
 
 Optional files are `AGENTS.md`, `STYLE.md`, `EVIDENCE.md`, `DECISIONS.md`, and `TODO.md`. `TODO.md` is task state only.
 
-A hash mismatch means changed content after acknowledgement. It does not establish conceptual drift, correctness, or authority. Skills and the project owner handle those judgments.
+A hash mismatch records changed content after acknowledgement. It does not decide correctness, authority, or conceptual disagreement; those remain matters for the project owner and relevant skills.
 
 ## Skills and verification
 

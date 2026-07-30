@@ -40,6 +40,10 @@ Remove filler and double negatives only when doing so preserves meaning and
 rhythm. Do not hard-wrap, require a fixed paragraph template, or flatten an
 author's voice without an applicable project rule.
 
+## Use with
+
+Use `style-application` after the argument and structure are sound. Use `style-calibration` before proposing durable project style rules, and pair a genre skill such as `scholarly-manuscript`, `book-and-tutorial`, or `revealjs-slides` with this general writing guidance.
+
 ## Optional user examples
 
 If `~/.config/pi/skills/writing-core/examples.md` exists, read it before applying this skill. Use it as illustrative preference, not as evidence or project requirements.

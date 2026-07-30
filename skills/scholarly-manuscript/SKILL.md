@@ -34,6 +34,10 @@ primary result, and implication intelligible on its own; do not introduce
 claims, citations, or methods absent from the manuscript. Keep target-journal
 requirements, evidence strength, and authorial decisions visible throughout.
 
+## Use with
+
+Pair with `writing-core` for argument and prose decisions. Use `empirical-paper` with `r-quarto` for data-backed manuscripts, or `theoretical-paper` with `theory-development` for theoretical work. Use `verification` before submission.
+
 ## Optional user examples
 
 If `~/.config/pi/skills/scholarly-manuscript/examples.md` exists, read it before applying this skill. Use it as illustrative preference, not as evidence or project requirements.

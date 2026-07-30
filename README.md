@@ -1,105 +1,77 @@
 # Pi Sych
 
-Pi Sych is a small Pi package for serious writing, research, analysis, and software work. It provides explicit project state, bounded clean-context workers, and optional human plan review. It does not automate authority, conceptual judgment, or final responsibility.
+Pi Sych is a Pi package for people who want their writing, research, analysis, or software projects to stay understandable as they evolve. It helps you keep visible project state, delegate a bounded task to a clean-context worker, and request human review of consequential plans. It does not decide what is true, important, or approved for you.
 
-![](https://unpkg.com/pi-sych@1.0.3/docs/img/architecture.png)
+![](https://unpkg.com/pi-sych@1.1.0/docs/img/architecture.png)
 
-## Principles
-
-Pi Sych follows nine [design principles](principles.md):
-
-1. Humans remain responsible for consequential decisions and final outputs.
-2. The supervisor owns project coherence and coordination.
-3. Memory is lossy, biased, and unreliable: write it down.
-4. Use short-lived workers for independent review and bounded specialist tasks.
-5. Give every agent the smallest complete context.
-6. Choose the right model for the right task.
-7. Use mechanical tools for mechanical problems; use skills and judgment for semantic problems.
-8. Prefer existing tools and skills to new infrastructure.
-9. Write as little code as possible.
-
-## Start
+## Install
 
 ```sh
 pi install npm:pi-sych
 ```
 
-For local development, load the package path in Pi settings. Pi Sych already declares Plannotator; do not load Plannotator's extension separately.
+Pi Sych includes its Plannotator integration. Do not install Plannotator as a separate Pi extension for this package. To use workers, configure your private model profiles as described in the [configuration guide](docs/CONFIGURATION.md).
 
-To prepare a separate worker profile:
+## What it helps with
 
-```sh
-node scripts/bootstrap-worker-agent-dir.mjs \
-  --agent-dir ~/.cache/pi/pi-sych/worker-agent \
-  --package-root /path/to/pi-sych \
-  --supervisor-agent-dir ~/.config/pi
-```
+- Keep a short `PROJECT.md` and a machine-checkable `SYNC.md` beside your work.
+- See which tracked files changed and which declared dependents may need review.
+- Ask a short-lived worker to research, review, or implement one bounded task with only the context you select.
+- Open a plan or document in Plannotator for your review and send feedback back to Pi.
 
-Configure private model profiles at `~/.config/pi/pi-sych/models.json`. See [configuration](docs/CONFIGURATION.md).
+## Start a project
 
-## Core workflow
+1. Use the `bootstrap-project` skill to create `PROJECT.md`, `SYNC.md`, and only the optional files that help your project.
+2. Use `project_status` to see missing files, changed tracked files, declared dependencies, and cycles.
+3. Read the relevant work, use an appropriate skill, and make ordinary changes directly.
+4. Use `dispatch_worker` for an independent, bounded task when a separate context is genuinely useful.
+5. Use `submit_plan` before an irreversible or otherwise consequential change.
+6. After you have actually reviewed a change, acknowledge the files you reviewed with `project_status`.
 
-1. Use the `bootstrap-project` skill to establish `PROJECT.md`, `SYNC.md`, and only useful optional files.
-2. Use `project_status` with `action: "check"` to inspect hashes, missing files, declared dependents, and cycles.
-3. Read relevant files and use skills for planning, writing, review, conceptual drift, reconciliation, coding, or verification.
-4. Work directly when practical. Use `dispatch_worker` only for a bounded independent review, research task, or implementation task.
-5. For consequential plans, use `submit_plan` for explicit human review.
-6. After actual review, use `project_status` with `action: "acknowledge"`, named files, and a truthful reason.
-
-A changed hash means content changed after acknowledgement. It does **not** establish conceptual drift, authority, correctness, or approval.
-
-## Tools
-
-| Tool | Purpose |
-|---|---|
-| `dispatch_worker` | Runs one short-lived worker with exact context, selected skills, optional remote research, and a 90-second default timeout. Set a deliberate bounded override for longer work. |
-| `project_status` | Checks mechanical project state or acknowledges named reviewed files. It reports declared dependency impact but never resolves semantic disagreement. |
-| `submit_plan` | Opens an existing project-local Markdown plan for explicit human review. Approval does not start implementation. |
-
-Commands: `/pi-sych-status`, `/pi-sych-mcp`, `/plannotator-annotate <file>`, and `/plannotator-last`.
+A changed hash tells you that a file differs from its last acknowledgement. It is a prompt to inspect the work, not a verdict about quality, authority, or conceptual disagreement.
 
 ## Project files
 
-`PROJECT.md` and `SYNC.md` are the core state after initialization. The following files are optional:
+`PROJECT.md` records your purpose, current direction, completion criteria, previous action, and immediate next step. Use `None at present.` when there is no accepted next action. `SYNC.md` records SHA-256 fingerprints and declared file dependencies.
+
+Optional files are useful only when they serve a purpose:
 
 - `AGENTS.md` — project conventions and collaboration instructions.
-- `STYLE.md` — prose, documentation, presentation, code, or testing conventions.
+- `STYLE.md` — writing, presentation, code, or testing conventions.
 - `EVIDENCE.md` — inspectable sources, results, claims, and limits.
-- `DECISIONS.md` — consequential accepted decisions and rationale.
-- `TODO.md` — a task ledger; never authority for direction or evidence. If GitLab issues are the operative task tracker, record that choice rather than maintaining competing task lists.
+- `DECISIONS.md` — consequential decisions and their rationale.
+- `TODO.md` — a task ledger, not a source of authority or evidence. If GitLab issues are the operative task tracker, record that choice instead of maintaining competing lists.
 
-`SYNC.md` stores acknowledged SHA-256 fingerprints and flexible declared dependencies. Dependencies may contain cycles; Pi Sych reports them safely for orientation. A changed input marks its direct and transitive dependents for review, not automatic edits.
+## Workers and review
 
-## Workers and remote research
+![](https://unpkg.com/pi-sych@1.1.0/docs/img/supervisors_context.png)
 
-![](https://unpkg.com/pi-sych@1.0.3/docs/img/supervisors_context.png)
+A worker receives no transcript of your main Pi conversation. You choose its task, expected output, context files, skills, model profile, and—only for assigned research—remote access. It has a 90-second default timeout; choose a bounded longer timeout only when the task warrants it.
 
-Workers receive no supervisor transcript. They receive selected context files, selected skills, project `AGENTS.md` when present, and `STYLE.md` for edit work when present.
+- `read-only` workers can inspect files.
+- `edit` workers can inspect and edit files.
+- `full-host` workers can inspect, edit, and run Bash commands.
 
-- `read-only`: `read`, `grep`, `find`, and `ls`.
-- `edit`: read-only tools plus `edit`.
-- `full-host`: `read`, `edit`, and `bash`.
+Every worker returns a visible structured result with its summary, artifacts, changed files, limitations, result package, and any abnormal process outcome. Tool visibility is not containment: a full-host worker has the Pi process's host permissions.
 
-Every worker also has `submit_artifact`. A result package is either inline or an existing durable project-relative path. Tool visibility is not sandboxing. `full-host` workers have the Pi process's host permissions.
+For a consequential plan, `submit_plan` opens a browser review. Approval does not automatically begin implementation. Feedback and approval notes are returned to Pi so the next step remains yours to choose.
 
-Set `remoteResearch: true` only for assigned remote research. It exposes MCPorter with the configured Context7, OpenAlex, and Scholar Gateway bridge; ordinary workers do not receive it. MCPorter credentials remain private. See [configuration](docs/CONFIGURATION.md).
+Commands: `/pi-sych-status`, `/pi-sych-mcp`, `/plannotator-annotate <file>`, and `/plannotator-last`.
 
-## Verification and review
+## Working principles
 
-Use project-native formatter, linter, type checker, tests, build, and smoke commands through Pi's built-in Bash. The `verify-change` skill helps choose and report meaningful checks. Passing commands do not prove source validity, semantic quality, or human approval.
+1. Humans remain responsible for consequential decisions and final outputs.
+2. The main Pi session coordinates the work; workers handle bounded tasks.
+3. Important project state belongs in files, not only in conversation memory.
+4. Give every worker the smallest complete context.
+5. Choose a model that fits the task.
+6. Use mechanical tools for mechanical questions and judgment for semantic ones.
+7. Prefer existing Pi tools and skills to new infrastructure.
+8. Keep the implementation small enough to inspect.
+9. Treat generated prose, remote results, and passing checks as inputs to review, not substitutes for it.
 
-Use `submit_plan` for consequential plans. Use `/plannotator-annotate` for a file and `/plannotator-last` for the last assistant response. A human must review consequential claims, citations, data, code paths, deployment, publication, and final artifacts.
+## For maintainers
 
-## Security and limits
+See [architecture](ARCHITECTURE.md), [development](docs/DEVELOPMENT.md), [configuration](docs/CONFIGURATION.md), [contributing](CONTRIBUTING.md), and [maintainer instructions](AGENTS.md).
 
-Pi Sych is alpha software. Read the code and dependencies before relying on it. It is not a sandbox; external containment is required when host permissions or hostile inputs matter. Remote results, model output, browser opening, passing checks, and acknowledgement are not evidence or approval.
-
-Pi `0.82.1` currently carries the upstream `brace-expansion@5.0.7` high-severity denial-of-service advisory through nested `minimatch`. Pi Sych does not introduce or directly expose it; treat untrusted glob or brace-pattern input cautiously until Pi updates its nested resolution.
-
-## Maintainers
-
-- [Architecture](ARCHITECTURE.md)
-- [Target architecture](pi-sych-redefined-architecture.md)
-- [Development](docs/DEVELOPMENT.md)
-- [Configuration](docs/CONFIGURATION.md)
-- [Maintainer instructions](AGENTS.md)
+Pi Sych is alpha software. Review code and dependencies before relying on it for consequential work. For hostile inputs or stronger isolation requirements, use external containment rather than assuming a Pi tool mode is a security boundary.

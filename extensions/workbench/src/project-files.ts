@@ -106,6 +106,8 @@ export function validateProjectMarkdown(markdown: string): ProjectValidation {
 		"Objective",
 		"Current direction",
 		"Definition of done",
+		"Previous action",
+		"Immediate next step",
 	]) {
 		if (
 			!headings.some(

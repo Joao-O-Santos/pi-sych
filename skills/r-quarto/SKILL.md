@@ -32,6 +32,10 @@ console text, or a model's statistical intuition. Check that variable names,
 conditions, sample sizes, estimates, and interpretations agree across code,
 tables, figures, and prose.
 
+## Use with
+
+Use `empirical-paper` for manuscript claims supported by the analysis, `verify-change` for actual R or Quarto commands, and `verification` to inspect the rendered artifact and its evidence chain.
+
 ## Optional user examples
 
 If `~/.config/pi/skills/r-quarto/examples.md` exists, read it before applying this skill. Use it as illustrative preference, not as evidence or project requirements.

@@ -15,6 +15,10 @@ Use existing project tooling before adding wrappers. Inspect package scripts, fo
 
 Mechanical checks do not settle semantic quality, source validity, or human approval.
 
+## Use with
+
+Use `verification` when command results must be interpreted against the whole artifact, its evidence, and its brief. Use `software-project`, `r-quarto`, or `npm-release` for domain-specific checks and release constraints.
+
 ## Optional user examples
 
 If `~/.config/pi/skills/verify-change/examples.md` exists, read it before applying this skill. Use it as illustrative preference, not as evidence or project requirements.

@@ -31,6 +31,24 @@ async function artifact(root, path, extra = {}) {
 	};
 }
 
+test("check reports missing core files and shallow PROJECT.md validation errors", async () => {
+	const missingRoot = await mkdtemp(join(tmpdir(), "pi-sych-project-status-"));
+	const missing = await checkProjectStatus(missingRoot);
+	assert.deepEqual(missing.missingCore, ["PROJECT.md", "SYNC.md"]);
+	assert.match(
+		formatProjectStatusCheck(missing),
+		/Missing core files:\n- PROJECT\.md\n- SYNC\.md/,
+	);
+
+	const invalidRoot = await fixture([]);
+	const invalid = await checkProjectStatus(invalidRoot);
+	assert.match(invalid.projectErrors.join("\n"), /Objective/);
+	assert.match(
+		formatProjectStatusCheck(invalid),
+		/PROJECT\.md validation errors:/,
+	);
+});
+
 test("check is read-only and reports declared direct and transitive impact without semantic labels", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-project-status-"));
 	await writeFile(join(root, "PROJECT.md"), "before\n");
@@ -139,6 +157,28 @@ test("acknowledgement requires existing tracked files and a reason", async () =>
 	);
 });
 
+test("check displays every persisted non-current status", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-project-status-"));
+	await writeFile(join(root, "PROJECT.md"), "# Project\n");
+	await writeFile(join(root, "stale.md"), "stale\n");
+	await writeFile(join(root, "conflicted.md"), "conflicted\n");
+	await writeFile(join(root, "missing.md"), "missing\n");
+	const artifacts = [
+		await artifact(root, "PROJECT.md"),
+		await artifact(root, "stale.md", { status: "stale" }),
+		await artifact(root, "conflicted.md", { status: "conflicted" }),
+		await artifact(root, "missing.md", { status: "missing" }),
+	];
+	await writeFile(
+		join(root, "SYNC.md"),
+		`# Sync\n\n\`\`\`json\n${JSON.stringify({ version: 1, confirmedAt: "2026-01-01T00:00:00.000Z", artifacts })}\n\`\`\`\n`,
+	);
+	const formatted = formatProjectStatusCheck(await checkProjectStatus(root));
+	assert.match(formatted, /Persisted as stale:\n- stale\.md/);
+	assert.match(formatted, /Persisted as conflicted:\n- conflicted\.md/);
+	assert.match(formatted, /Persisted as missing:\n- missing\.md/);
+});
+
 test("v1 manifests accept reasoned dependencies and report cycles without rejecting them", async () => {
 	const hash = `sha256:${"a".repeat(64)}`;
 	const root = await fixture([
@@ -158,5 +198,12 @@ test("v1 manifests accept reasoned dependencies and report cycles without reject
 	await writeFile(join(root, "guide.md"), "guide\n");
 	const result = await checkProjectStatus(root);
 	assert.deepEqual(result.cycles, [["PROJECT.md", "guide.md", "PROJECT.md"]]);
+	assert.equal(
+		result.impacted.some(
+			(impact) =>
+				impact.path === "PROJECT.md" && impact.from.includes("PROJECT.md"),
+		),
+		false,
+	);
 	assert.match(JSON.stringify(result), /changed/);
 });

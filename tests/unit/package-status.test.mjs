@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import piSychWorkbench, {
+	formatDispatchWorkerOutcome,
+	formatSubmitPlanResult,
 	PACKAGE_ROOT,
 	SUPERVISOR_GUIDANCE,
 } from "../../.test-build/workbench/index.js";
@@ -35,9 +37,51 @@ test("minimal supervisor surface exposes only mechanical tools and retained huma
 	assert.match(SUPERVISOR_GUIDANCE, /not conceptual drift/);
 });
 
+test("tool content formatters include bounded worker and plan result details", () => {
+	const workerContent = formatDispatchWorkerOutcome({
+		identity: { taskId: "task", runId: "run" },
+		model: "test/model",
+		attempts: 1,
+		timeoutMs: 100,
+		launch: {
+			exitCode: 1,
+			stdout: "",
+			stderr: "",
+			terminationSignal: "SIGTERM",
+		},
+		result: {
+			schemaVersion: 1,
+			taskId: "task",
+			runId: "run",
+			status: "partial",
+			summary: "Useful partial work.",
+			artifacts: [{ path: "result.md", kind: "report" }],
+			changedFiles: ["result.md"],
+			resultPackage: "inline",
+			limitations: ["No network."],
+		},
+	});
+	assert.match(workerContent, /Worker status: partial/);
+	assert.match(workerContent, /Artifacts:\n- result\.md \(report\)/);
+	assert.match(workerContent, /Changed files:\n- result\.md/);
+	assert.match(workerContent, /Result package: inline/);
+	assert.match(workerContent, /Limitations:\n- No network/);
+	assert.match(
+		workerContent,
+		/Process warning: abnormal exit; exit code 1; signal SIGTERM/,
+	);
+	const planContent = formatSubmitPlanResult(
+		{ approved: false, savedPath: "plans/revised.md", feedback: "Add checks." },
+		"plans/revised.md",
+	);
+	assert.match(planContent, /Plan requires revision/);
+	assert.match(planContent, /Saved path: plans\/revised\.md/);
+	assert.match(planContent, /Feedback: Add checks/);
+});
+
 test("public manifest retains the package boundary and developer tooling", () => {
 	assert.equal(packageJson.name, "pi-sych");
-	assert.equal(packageJson.version, "1.0.3");
+	assert.equal(packageJson.version, "1.1.0");
 	assert.equal(PACKAGE_ROOT, process.cwd());
 	assert.equal(packageJson.devDependencies.typescript, "7.0.2");
 	assert.equal(packageJson.devDependencies["@biomejs/biome"], "2.5.6");
@@ -49,12 +93,8 @@ test("public manifest retains the package boundary and developer tooling", () =>
 	assert.equal(packageJson.files.includes("AGENTS.md"), true);
 	assert.equal(packageJson.files.includes("ARCHITECTURE.md"), true);
 	assert.equal(
-		packageJson.files.includes("pi-sych-redefined-architecture.md"),
-		true,
-	);
-	assert.equal(
 		packageJson.pi.image,
-		"https://unpkg.com/pi-sych@1.0.3/docs/img/architecture.png",
+		"https://unpkg.com/pi-sych@1.1.0/docs/img/architecture.png",
 	);
 });
 

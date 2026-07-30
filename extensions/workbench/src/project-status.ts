@@ -2,7 +2,9 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import {
+	CORE_PROJECT_FILES,
 	discoverProjectFiles,
+	readAndValidateProject,
 	resolveProjectPath,
 	writeApprovedFile,
 } from "./project-files.js";
@@ -64,6 +66,8 @@ export interface ProjectStatusCheck {
 	missing: string[];
 	impacted: ImpactedArtifact[];
 	cycles: string[][];
+	missingCore: (typeof CORE_PROJECT_FILES)[number][];
+	projectErrors: string[];
 }
 
 function requireString(value: unknown, label: string): string {
@@ -254,14 +258,17 @@ function impacts(
 		const current = queue.shift();
 		if (!current) break;
 		for (const dependent of reverse.get(current.path) ?? []) {
-			const entry = result.get(dependent) ?? {
-				path: dependent,
-				from: [],
-				direct: current.depth === 0,
-			};
-			if (!entry.from.includes(current.origin)) entry.from.push(current.origin);
-			entry.direct ||= current.depth === 0;
-			result.set(dependent, entry);
+			if (dependent !== current.origin) {
+				const entry = result.get(dependent) ?? {
+					path: dependent,
+					from: [],
+					direct: current.depth === 0,
+				};
+				if (!entry.from.includes(current.origin))
+					entry.from.push(current.origin);
+				entry.direct ||= current.depth === 0;
+				result.set(dependent, entry);
+			}
 			const key = `${dependent}\0${current.origin}`;
 			if (!visited.has(key)) {
 				visited.add(key);
@@ -310,6 +317,22 @@ export async function checkProjectStatus(
 ): Promise<ProjectStatusCheck> {
 	const discovery = await discoverProjectFiles(startPath);
 	const syncPath = resolve(discovery.root, "SYNC.md");
+	const missingCore = CORE_PROJECT_FILES.filter(
+		(name) => !discovery.files.find((file) => file.name === name)?.exists,
+	);
+	const projectFile = discovery.files.find(
+		(file) => file.name === "PROJECT.md",
+	);
+	let projectErrors: string[] = [];
+	if (projectFile?.exists) {
+		try {
+			projectErrors = (await readAndValidateProject(projectFile.path)).errors;
+		} catch (error) {
+			projectErrors = [
+				`PROJECT.md could not be validated: ${error instanceof Error ? error.message : String(error)}`,
+			];
+		}
+	}
 	try {
 		const manifest = parseProjectStatusMarkdown(
 			await readFile(syncPath, "utf8"),
@@ -347,6 +370,8 @@ export async function checkProjectStatus(
 			missing,
 			impacted: impacts(manifest.artifacts, [...changed, ...missing]),
 			cycles: findCycles(manifest.artifacts),
+			missingCore,
+			projectErrors,
 		};
 	} catch (error) {
 		return {
@@ -358,27 +383,45 @@ export async function checkProjectStatus(
 			missing: [],
 			impacted: [],
 			cycles: [],
+			missingCore,
+			projectErrors,
 		};
 	}
 }
 
 export function formatProjectStatusCheck(state: ProjectStatusCheck): string {
 	const lines = ["Project status", "", `Root: ${state.projectRoot}`];
+	if (state.missingCore.length)
+		lines.push(
+			"",
+			"Missing core files:",
+			...state.missingCore.map((path) => `- ${path}`),
+		);
+	if (state.projectErrors.length)
+		lines.push(
+			"",
+			"PROJECT.md validation errors:",
+			...state.projectErrors.map((error) => `- ${error}`),
+		);
 	if (state.syncError)
 		return [...lines, "", `State unavailable: ${state.syncError}`].join("\n");
 	if (state.changed.length)
 		lines.push("", "Changed:", ...state.changed.map((path) => `- ${path}`));
 	if (state.missing.length)
 		lines.push("", "Missing:", ...state.missing.map((path) => `- ${path}`));
-	const needsReview = state.artifacts
-		.filter((artifact) => artifact.status === "needs-review")
-		.map((artifact) => artifact.path);
-	if (needsReview.length)
-		lines.push(
-			"",
-			"Persisted as needing review:",
-			...needsReview.map((path) => `- ${path}`),
-		);
+	for (const status of PROJECT_STATUSES.filter(
+		(status) => status !== "current",
+	)) {
+		const persisted = state.artifacts
+			.filter((artifact) => artifact.status === status)
+			.map((artifact) => artifact.path);
+		if (persisted.length)
+			lines.push(
+				"",
+				`Persisted as ${status === "needs-review" ? "needing review" : status}:`,
+				...persisted.map((path) => `- ${path}`),
+			);
+	}
 	if (state.impacted.length)
 		lines.push(
 			"",

@@ -1,8 +1,10 @@
 # Configuration
 
+Most people need only a private model-profile file before using workers. Pi Sych keeps provider choices, credentials, model ranking, and personal examples outside the public package.
+
 ## Public package
 
-The public package contains neutral defaults. `package.json` loads the supervisor extension; workers and MCPorter load only for explicitly dispatched work. Provider choices, model ranking, credentials, and personal examples stay outside the repository.
+`package.json` loads the main Pi extension. Workers and MCPorter load only for an explicitly requested task.
 
 Pi Sych declares `@plannotator/pi-extension` as a runtime dependency but never loads its extension entrypoint. The workbench imports documented lazy browser helpers for `submit_plan`, `/plannotator-annotate`, and `/plannotator-last`. Do not separately install or configure Plannotator as a Pi extension for this package.
 
@@ -26,7 +28,7 @@ Create `~/.config/pi/pi-sych/models.json` with model metadata and user-ranked pr
 }
 ```
 
-`dispatch_worker` selects the first model in the requested profile. `PI_SYCH_MODEL_CATALOG` selects another catalog; `PI_SYCH_MODEL_PROFILES` is a direct JSON override for automation. Workers default to 90 seconds; set a deliberate bounded `timeoutMs` override for longer work.
+When you ask Pi to dispatch a worker, `dispatch_worker` selects the first model in the requested profile. `PI_SYCH_MODEL_CATALOG` selects another catalog; `PI_SYCH_MODEL_PROFILES` is a direct JSON override for automation. Workers default to 90 seconds; set a deliberate bounded `timeoutMs` override for longer work.
 
 `PI_SYCH_WORKER_AGENT_DIR` chooses the worker runtime directory. `PI_SYCH_PI_BIN` selects the Pi executable for development tests. The bootstrap helper writes worker-only settings and an MCPorter exposure policy, and symlinks available auth/model files rather than copying them:
 

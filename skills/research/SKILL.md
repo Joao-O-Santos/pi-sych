@@ -26,6 +26,8 @@ a retrieved source.
 
 ## Scale the search to the question
 
+Label the intended coverage as **lookup** for a targeted proposition or **synthesis** for a broad, fragmented, or disputed question. The label describes the work performed; it is not a claim of exhaustiveness.
+
 For a targeted claim, identify the exact proposition, search a small set of
 synonyms and competing terms, return concise source notes, and stop when the
 claim is adequately covered. For a fragmented, disputed, or systematic
@@ -38,6 +40,10 @@ source type, claim, basis or methods, relevance, evidence strength, and
 caveats. A research memo should state its scope and coverage level. Retrieval
 is not manuscript drafting: hand off evidence and uncertainty before turning it
 into prose.
+
+## Use with
+
+Use `scholarly-manuscript` or `canonical-to-artifact` when turning reviewed source notes into an artifact. Use `artifact-review` to scrutinize a claim and `verification` before publication-facing use.
 
 ## Optional user examples
 

@@ -38,13 +38,28 @@ test("real Pi can inspect a disposable project and write an artifact", {
 	});
 	await writeFile(
 		join(root, "PROJECT.md"),
-		"# Project\n\n## Objective\nWrite a dummy report.\n\n## Current direction\nKeep it concise.\n\n## Definition of done\nREPORT.md exists.\n",
+		"# Project\n\n## Objective\nWrite a dummy report.\n\n## Current direction\nKeep it concise.\n\n## Definition of done\nREPORT.md exists.\n\n## Previous action\nNone yet.\n\n## Immediate next step\nNone at present.\n",
 	);
 	await writeFile(
 		join(root, "SYNC.md"),
 		'# Project synchronization\n\n```json\n{"version":1,"confirmedAt":"2026-01-01T00:00:00Z","artifacts":[]}\n```\n',
 	);
 	const result = await new Promise((resolvePromise, reject) => {
+		let settled = false;
+		let timedOut = false;
+		let outerTimeout;
+		let killTimeout;
+		const timeoutError = () =>
+			new Error(
+				`Pi usage test timed out\nstdout:\n${stdout}\nstderr:\n${stderr}`,
+			);
+		const settle = (callback, value) => {
+			if (settled) return;
+			settled = true;
+			clearTimeout(outerTimeout);
+			clearTimeout(killTimeout);
+			callback(value);
+		};
 		const child = spawn(
 			"pi",
 			[
@@ -77,6 +92,14 @@ test("real Pi can inspect a disposable project and write an artifact", {
 		);
 		let stdout = "";
 		let stderr = "";
+		outerTimeout = setTimeout(() => {
+			timedOut = true;
+			child.kill("SIGTERM");
+			killTimeout = setTimeout(() => {
+				child.kill("SIGKILL");
+				settle(reject, timeoutError());
+			}, 2_000);
+		}, 120_000);
 		child.stdout.setEncoding("utf8");
 		child.stderr.setEncoding("utf8");
 		child.stdout.on("data", (chunk) => {
@@ -85,8 +108,12 @@ test("real Pi can inspect a disposable project and write an artifact", {
 		child.stderr.on("data", (chunk) => {
 			stderr += chunk;
 		});
-		child.once("error", reject);
-		child.once("close", (code) => resolvePromise({ code, stdout, stderr }));
+		child.once("error", (error) => settle(reject, error));
+		child.once("close", (code) =>
+			timedOut
+				? settle(reject, timeoutError())
+				: settle(resolvePromise, { code, stdout, stderr }),
+		);
 	});
 	assert.equal(result.code, 0, result.stderr);
 	assert.equal(
@@ -96,6 +123,7 @@ test("real Pi can inspect a disposable project and write an artifact", {
 	const sessionJson = await readFile(session, "utf8");
 	assert.match(sessionJson, /project_status/);
 	assert.match(sessionJson, /dispatch_worker/);
-	assert.match(sessionJson, /Worker complete/);
+	assert.match(sessionJson, /Worker status: complete/);
+	assert.match(sessionJson, /Result package: inline/);
 	assert.match(sessionJson, /REPORT\.md/);
 });

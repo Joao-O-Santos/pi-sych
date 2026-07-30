@@ -36,6 +36,10 @@
 
 [verified] The package has a minimal supervisor with `dispatch_worker` and `project_status`, a separately bootstrapped worker extension, graph-aware project state, optional remote research through MCPorter, retained Plannotator annotation/review adapters, semantic workflow skills, behavioral worker-lifecycle tests, and opt-in real-Pi acceptance. The rough production TypeScript estimate remains below 2,000 lines.
 
+## Previous action
+
+[verified] Published `v1.0.3`, correcting the architecture-diagram link and publishing the prior cleanup commits.
+
 ## Immediate next step
 
-[accepted] Publish the focused `v1.0.3` architecture-diagram correction, then keep the package small and add behavior only when it serves a real user need and can be explained, reviewed, and verified.
+[accepted] None at present.

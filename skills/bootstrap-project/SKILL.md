@@ -15,6 +15,10 @@ Use this skill for a new project or to reconstruct visible state from existing w
 
 `SYNC.md` records acknowledged content and declared dependencies; it does not establish truth or settle disagreement.
 
+## Use with
+
+Use `project-initialization` when reconstructing materially incomplete state from existing artifacts. Use `project-briefing` to refresh an established brief, and `project-status-review` after reviewing a change.
+
 ## Optional user examples
 
 If `~/.config/pi/skills/bootstrap-project/examples.md` exists, read it before applying this skill. Use it as illustrative preference, not as evidence or project requirements.

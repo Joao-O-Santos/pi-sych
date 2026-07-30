@@ -19,7 +19,11 @@ Identify the principal artifact and inspect its headings and directly relevant s
 
 ## Write and synchronization
 
-Use `/pi-sych-sync` to produce a reviewable `SYNC.md` candidate after project files exist. Confirm proposed authority domains and freshness states with the user. Write candidate files only after explicit approval. State which artifacts may need synchronization after the approved write.
+Create a reviewable `SYNC.md` candidate from the template after project files exist. Confirm the proposed tracked files and declared dependencies with the user. Write candidate files only after explicit approval, then use `project_status` to check and acknowledge files actually reviewed.
+
+## Use with
+
+Use `bootstrap-project` for a lighter-weight start from a focused interview. Use `project-briefing` to refresh an existing brief from artifacts, and `project-status-review` after approved state changes.
 
 ## Optional user examples
 

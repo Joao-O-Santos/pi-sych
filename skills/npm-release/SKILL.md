@@ -23,6 +23,10 @@ description: Prepare and verify a public npm package release with explicit versi
 - Verify the exact published `name@version`, tarball contents, provenance information when available, and the tagged commit.
 - Record failed checks and unresolved upstream advisories accurately. Do not silently republish, retag, or overwrite a version; npm versions are immutable.
 
+## Use with
+
+Use `git-workflow` for signed commits and tags, `verify-change` for the release gate, and `software-project` for the implementation boundary before publication.
+
 ## Private examples
 
 If `~/.config/pi/skills/npm-release/examples.md` exists, read it before applying this skill. Use it as illustrative preference, not as evidence or project requirements.
