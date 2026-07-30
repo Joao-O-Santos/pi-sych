@@ -2,6 +2,18 @@
 
 All notable changes to Pi Sych are documented here. Versions are immutable npm publications unless explicitly marked otherwise.
 
+## [1.0.1] - 2026-07-30
+
+### Added
+
+- Added behavioral tests for worker cancellation, `SIGTERM`, the termination grace period, and forced `SIGKILL`.
+- Expanded opt-in real-Pi acceptance to exercise a clean-context `dispatch_worker` call.
+- Added Pi package-gallery image metadata, packaged architecture documentation, and corrected architecture diagrams rendered from versioned README URLs.
+
+### Fixed
+
+- Report persisted `needs-review` state even when every tracked file still matches its recorded hash.
+
 ## [1.0.0] - 2026-07-30
 
 ### Changed

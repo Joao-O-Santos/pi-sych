@@ -37,7 +37,7 @@ test("minimal supervisor surface exposes only mechanical tools and retained huma
 
 test("public manifest retains the package boundary and developer tooling", () => {
 	assert.equal(packageJson.name, "pi-sych");
-	assert.equal(packageJson.version, "1.0.0");
+	assert.equal(packageJson.version, "1.0.1");
 	assert.equal(PACKAGE_ROOT, process.cwd());
 	assert.equal(packageJson.devDependencies.typescript, "7.0.2");
 	assert.equal(packageJson.devDependencies["@biomejs/biome"], "2.5.6");
@@ -45,6 +45,30 @@ test("public manifest retains the package boundary and developer tooling", () =>
 		"./extensions/workbench/index.ts",
 	]);
 	assert.equal(packageJson.files.includes("CHANGELOG.md"), true);
+	assert.equal(packageJson.files.includes("docs"), true);
+	assert.equal(packageJson.files.includes("AGENTS.md"), true);
+	assert.equal(packageJson.files.includes("ARCHITECTURE.md"), true);
+	assert.equal(
+		packageJson.files.includes("pi-sych-redefined-architecture.md"),
+		true,
+	);
+	assert.equal(
+		packageJson.pi.image,
+		"https://unpkg.com/pi-sych@1.0.1/docs/img/architecture.png",
+	);
+	for (const image of ["architecture.png", "supervisors_context.png"])
+		assert.ok(
+			readFileSync(new URL(`../../docs/img/${image}`, import.meta.url)).length >
+				0,
+		);
+	const readme = readFileSync(
+		new URL("../../README.md", import.meta.url),
+		"utf8",
+	);
+	assert.match(
+		readme,
+		/!\[Pi Sych minimal architecture\]\(https:\/\/unpkg\.com\/pi-sych@1\.0\.1\/docs\/img\/architecture\.png\)/,
+	);
 });
 
 test("release pipeline checks style before publishing", () => {

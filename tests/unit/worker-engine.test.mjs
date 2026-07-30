@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { chmod, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -7,6 +7,7 @@ import test from "node:test";
 import {
 	DEFAULT_TIMEOUT_MS,
 	dispatchWorker,
+	launchPiWorker,
 	resolveSelectedSkillPaths,
 	taskPrompt,
 	toolsForMode,
@@ -33,8 +34,41 @@ function result(spec) {
 		artifacts: [{ path: "review.md", kind: "review" }],
 		changedFiles: [],
 		limitations: [],
-		resultPackage: "result.json",
+		resultPackage: "inline",
 	};
+}
+
+async function fakePi(source) {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-fake-pi-"));
+	const path = join(root, "pi.mjs");
+	await writeFile(path, `#!/usr/bin/env node\n${source}\n`);
+	await chmod(path, 0o755);
+	return { path, root };
+}
+
+function launchSpec(overrides = {}) {
+	return {
+		taskId: "task",
+		runId: "run",
+		request,
+		workerAgentDir: process.cwd(),
+		resultPath: join(tmpdir(), "unused-result.json"),
+		projectRoot: process.cwd(),
+		model: "test/model",
+		prompt: "bounded test",
+		packageRoot: process.cwd(),
+		extraExtensionPaths: [],
+		...overrides,
+	};
+}
+
+function launchWithPi(path, spec) {
+	const previous = process.env.PI_SYCH_PI_BIN;
+	process.env.PI_SYCH_PI_BIN = path;
+	const pending = launchPiWorker(spec);
+	if (previous === undefined) delete process.env.PI_SYCH_PI_BIN;
+	else process.env.PI_SYCH_PI_BIN = previous;
+	return pending;
 }
 
 test("dispatch validates a compact request and uses the 90-second default", () => {
@@ -110,6 +144,73 @@ test("dispatch injects optional project conventions and returns one validated re
 	assert.match(prompt, /STYLE\.md \(artifact conventions\)/);
 	assert.equal(outcome.timeoutMs, DEFAULT_TIMEOUT_MS);
 	assert.equal(outcome.result?.status, "complete");
+});
+
+test("dispatch rejects a result package that is not durable", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-worker-package-"));
+	await writeFile(join(root, "PROJECT.md"), "# Project\n");
+	const outcome = await dispatchWorker({
+		projectRoot: root,
+		workerAgentDir: join(root, "agent"),
+		request,
+		profiles: { default: ["test/model"] },
+		launcher: async (spec) => {
+			await writeImmutableResult(spec.resultPath, {
+				...result(spec),
+				resultPackage: "missing.json",
+			});
+			return { exitCode: 0, stdout: "", stderr: "" };
+		},
+	});
+	assert.equal(outcome.failure?.classification, "invalid-result");
+	assert.match(
+		outcome.failure?.message ?? "",
+		/resultPackage path is unavailable/,
+	);
+});
+
+test("timeout sends SIGTERM and force-kills a non-responsive worker", async () => {
+	const marker = join(
+		await mkdtemp(join(tmpdir(), "pi-sych-timeout-")),
+		"signals.txt",
+	);
+	const executable = await fakePi(
+		`import { appendFileSync } from "node:fs"; process.on("SIGTERM", () => appendFileSync(${JSON.stringify(marker)}, "SIGTERM\\n")); setInterval(() => {}, 1000);`,
+	);
+	const started = Date.now();
+	const outcome = await launchWithPi(
+		executable.path,
+		launchSpec({ request: { ...request, timeoutMs: 100 } }),
+	);
+	assert.equal(outcome.classification, "timeout");
+	assert.equal(outcome.exitCode, null);
+	assert.equal(outcome.terminationSignal, "SIGKILL");
+	assert.match(await readFile(marker, "utf8"), /SIGTERM/);
+	assert.ok(
+		Date.now() - started >= 1_900,
+		"worker was not given the kill grace period",
+	);
+});
+
+test("cancellation sends SIGTERM and preserves the cancelled classification", async () => {
+	const marker = join(
+		await mkdtemp(join(tmpdir(), "pi-sych-cancel-")),
+		"signals.txt",
+	);
+	const executable = await fakePi(
+		`import { appendFileSync } from "node:fs"; process.on("SIGTERM", () => { appendFileSync(${JSON.stringify(marker)}, "SIGTERM\\n"); process.exit(0); }); setInterval(() => {}, 1000);`,
+	);
+	const controller = new AbortController();
+	const pending = launchWithPi(
+		executable.path,
+		launchSpec({ signal: controller.signal }),
+	);
+	setTimeout(() => controller.abort(), 100);
+	const outcome = await pending;
+	assert.equal(outcome.classification, "cancelled");
+	assert.equal(outcome.exitCode, 0);
+	assert.equal(outcome.terminationSignal, null);
+	assert.match(await readFile(marker, "utf8"), /SIGTERM/);
 });
 
 test("skill resolution and worker prompts use only selected resources", async () => {

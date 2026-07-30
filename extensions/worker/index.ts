@@ -18,7 +18,10 @@ const resultParameters = Type.Object({
 	),
 	changedFiles: Type.Array(Type.String()),
 	limitations: Type.Array(Type.String()),
-	resultPackage: Type.String(),
+	resultPackage: Type.String({
+		description:
+			"Use 'inline' when the structured result is complete; otherwise provide an existing durable project-relative path.",
+	}),
 });
 
 export default function piSychWorker(pi: ExtensionAPI): void {

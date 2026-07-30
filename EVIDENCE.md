@@ -30,14 +30,24 @@
 **Limits:** These checks establish only observed connectivity and bounded retrieval at that time. Remote content remains external and non-authoritative until reviewed; OpenAlex uses a third-party rolling `npx` server and full-host execution.
 **Checked:** 2026-07-28
 
+## E-007 — Corrective package and diagram review passed
+
+**Status:** verified
+**Kind:** observed behaviour
+**Source:** `docs/img/architecture.png`, `docs/img/supervisors_context.png`, `README.md`, `ARCHITECTURE.md`, `package.json`, and package dry-run output
+**Supports:** current visual architecture, Pi gallery preview, and packaged-documentation claims
+**Evidence:** Both regenerated diagrams were visually checked against the implemented tool names, timeout and dependency semantics, worker context, optional project files, MCPorter boundary, and human ownership. The package manifest includes the diagrams and versioned image URLs used by the README and gallery metadata.
+**Limits:** Visual summaries omit implementation detail and do not supersede the text documentation or code. Rendering on Pi.dev remains dependent on publication and the gallery renderer fetching the declared URL.
+**Checked:** 2026-07-30
+
 ## E-006 — Opt-in local Pi usage acceptance passed
 
 **Status:** verified
 **Kind:** observed behaviour
 **Source:** `tests/usage/minimal-workflow.test.mjs`; one explicit local `PI_SYCH_USAGE_TEST=1 npm run test:usage` run
 **Supports:** real-Pi usage path and session/artifact inspection
-**Evidence:** A disposable dummy project was given a real Pi prompt; the run created `REPORT.md` and the test inspected the saved session JSON for the `project_status` call and artifact path.
-**Limits:** This is one local model run, not a CI guarantee or a broad quality assessment. It used the locally configured model and credentials.
+**Evidence:** A disposable dummy project was given a real Pi prompt; the supervisor called `project_status`, launched one clean-context read-only worker through `dispatch_worker`, created `REPORT.md`, and the test inspected the saved session JSON for both tool calls, the completed worker result, and the artifact path.
+**Limits:** This is one local supervisor/worker model run, not a CI guarantee or a broad quality assessment. It used locally configured models and credentials.
 **Checked:** 2026-07-30
 
 ## E-005 — Minimal architecture refactor passes deterministic acceptance
@@ -46,7 +56,7 @@
 **Kind:** observed behaviour
 **Source:** `package.json`, `tests/unit`, `tests/integration`, `scripts/check-source-budget.mjs`
 **Supports:** minimal runtime surface, graph-aware project status, bounded dispatch, retained MCP/Plannotator adapters, and production-code budget claims
-**Evidence:** The supervisor exposes `dispatch_worker`, `project_status`, and `submit_plan`; the worker exposes immutable result submission; semantic workflows are packaged as skills; the rough production TypeScript estimate is about 1,600 lines against a 2,000-line limit; deterministic tests and smoke checks pass.
+**Evidence:** The supervisor exposes `dispatch_worker`, `project_status`, and `submit_plan`; the worker exposes immutable result submission; semantic workflows are packaged as skills; the rough production TypeScript estimate remains below the 2,000-line limit; deterministic tests include actual worker cancellation, graceful termination, forced-kill behavior, and rejection of non-durable result-package paths.
 **Limits:** This does not establish real-model usage, remote retrieval at the current time, or substantive correctness of project artifacts.
 **Checked:** 2026-07-29
 

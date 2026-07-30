@@ -76,10 +76,12 @@ test("status command reports mechanical state without semantic drift claims", as
 	const fingerprint = await fingerprintFile(join(root, "PROJECT.md"));
 	await writeFile(
 		join(root, "SYNC.md"),
-		`# Project synchronization\n\n\`\`\`json\n${JSON.stringify({ version: 1, confirmedAt: "2026-07-28T12:00:00Z", artifacts: [{ path: "PROJECT.md", status: "current", fingerprint }] }, null, 2)}\n\`\`\`\n`,
+		`# Project synchronization\n\n\`\`\`json\n${JSON.stringify({ version: 1, confirmedAt: "2026-07-28T12:00:00Z", artifacts: [{ path: "PROJECT.md", status: "needs-review", fingerprint }] }, null, 2)}\n\`\`\`\n`,
 	);
 	const { event, stderr } = await invokeStatus(root, agentDir);
 	assert.equal(stderr, "");
 	assert.match(event.message, /Project status/);
+	assert.match(event.message, /Persisted as needing review:\n- PROJECT\.md/);
+	assert.match(event.message, /match their recorded hashes/);
 	assert.match(event.message, /not conceptual drift/);
 });

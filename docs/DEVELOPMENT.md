@@ -18,7 +18,7 @@ git diff --check
 
 ## Opt-in local usage acceptance
 
-`npm run test:usage` is intentionally excluded from `npm test` and CI. It is gated by `PI_SYCH_USAGE_TEST=1`, uses a real Pi/model call against a disposable dummy project, and inspects resulting artifacts and session JSON. Run it only when real-model behavior adds value beyond deterministic tests; it may require configured local model credentials and can incur provider cost.
+`npm run test:usage` is intentionally excluded from `npm test` and CI. It is gated by `PI_SYCH_USAGE_TEST=1`, uses real Pi/model calls against a disposable dummy project, exercises `project_status` and one clean-context `dispatch_worker` call, and inspects the resulting artifact and session JSON. Run it only when real-model behavior adds value beyond deterministic tests; it requires configured local model credentials and can incur provider cost.
 
 ## Code style
 

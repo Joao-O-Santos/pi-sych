@@ -2,6 +2,8 @@
 
 Pi Sych is a small Pi package for serious writing, research, analysis, and software work. It provides explicit project state, bounded clean-context workers, and optional human plan review. It does not automate authority, conceptual judgment, or final responsibility.
 
+![Pi Sych minimal architecture](https://unpkg.com/pi-sych@1.0.1/docs/img/architecture.png)
+
 ## Principles
 
 Pi Sych follows the [design principles](principles.md): humans own consequential decisions and final outputs; supervisors own coordination; important knowledge belongs in visible files; workers are short-lived and receive the smallest complete context; mechanical tools handle mechanical facts; skills and people handle meaning; existing Pi, MCPorter, Plannotator, and project tooling come before new infrastructure; and permanent code should stay small.
@@ -60,13 +62,15 @@ Commands: `/pi-sych-status`, `/pi-sych-mcp`, `/plannotator-annotate <file>`, and
 
 ## Workers and remote research
 
+![Context available to the supervisor and a bounded worker](https://unpkg.com/pi-sych@1.0.1/docs/img/supervisors_context.png)
+
 Workers receive no supervisor transcript. They receive selected context files, selected skills, project `AGENTS.md` when present, and `STYLE.md` for edit work when present.
 
 - `read-only`: `read`, `grep`, `find`, and `ls`.
 - `edit`: read-only tools plus `edit`.
 - `full-host`: `read`, `edit`, and `bash`.
 
-Every worker also has `submit_artifact`. Tool visibility is not sandboxing. `full-host` workers have the Pi process's host permissions.
+Every worker also has `submit_artifact`. A result package is either inline or an existing durable project-relative path. Tool visibility is not sandboxing. `full-host` workers have the Pi process's host permissions.
 
 Set `remoteResearch: true` only for assigned remote research. It exposes MCPorter with the configured Context7, OpenAlex, and Scholar Gateway bridge; ordinary workers do not receive it. MCPorter credentials remain private. See [configuration](docs/CONFIGURATION.md).
 

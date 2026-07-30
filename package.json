@@ -1,15 +1,18 @@
 {
   "name": "pi-sych",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "General project and artifact development workbench for Pi",
   "files": [
     "config",
     "templates",
-    "docs/CONFIGURATION.md",
+    "docs",
     "extensions",
     "skills",
     "scripts/bootstrap-worker-agent-dir.mjs",
     "README.md",
+    "AGENTS.md",
+    "ARCHITECTURE.md",
+    "pi-sych-redefined-architecture.md",
     "principles.md",
     "LICENSE",
     "CONTRIBUTING.md",
@@ -69,7 +72,8 @@
     ],
     "skills": [
       "./skills"
-    ]
+    ],
+    "image": "https://unpkg.com/pi-sych@1.0.1/docs/img/architecture.png"
   },
   "dependencies": {
     "@plannotator/pi-extension": "^0.25.0",

@@ -2,6 +2,8 @@
 
 Pi Sych has a small mechanical core and a progressively disclosed skill corpus.
 
+![Context available to the supervisor and a bounded worker](https://unpkg.com/pi-sych@1.0.1/docs/img/supervisors_context.png)
+
 ## Runtime
 
 The supervisor extension (`extensions/workbench/index.ts`) registers three agent tools:
@@ -16,7 +18,7 @@ It also registers `/pi-sych-status`, `/pi-sych-mcp`, `/plannotator-annotate`, an
 
 `worker-engine.ts` validates one compact dispatch request, injects optional project `AGENTS.md` and applicable `STYLE.md`, launches a clean Pi worker, applies a 90-second default timeout or validated override, forwards cancellation, uses `SIGTERM` then `SIGKILL`, and reads one immutable result from a temporary directory. It has no worker registry, polling surface, verification contract, run archive, mutation lock, or semantic workflow engine.
 
-`extensions/worker/index.ts` exposes only `submit_artifact`. The worker result is bound to an internal task/run identity and is written once.
+`extensions/worker/index.ts` exposes only `submit_artifact`. The worker result is bound to an internal task/run identity and is written once. Its `resultPackage` is either `inline` or an existing durable project-relative path; temporary runtime paths are not returned.
 
 `model-catalog.ts` reads private ranked model profiles. `mcporter.ts` remains an explicit remote-research adapter for Context7, OpenAlex, and Scholar Gateway. `plannotator.ts` remains a lazy compatibility boundary; Pi Sych never loads Plannotator's extension entrypoint.
 

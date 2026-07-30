@@ -4,12 +4,12 @@ This optional ledger tracks the minimal-architecture refactor. It is not authori
 
 ## Active
 
-
 ## Blocked
 
-- [ ] R-012 — Regenerate architecture diagrams from the approved edit prompts if suitable image-editing capability becomes available; they are retained as source artifacts and are not presented as current runtime documentation.
-
 ## Done
+
+- [x] R-013 — Completed the independently reviewed v1.0.1 corrective patch: visible persisted review state, behavioral worker lifecycle and durable-result tests, expanded opt-in dispatch acceptance, corrected packaged diagrams, gallery metadata, and release verification.
+- [x] R-012 — Regenerated and reviewed the packaged architecture diagrams; both are presented in the README through versioned package URLs.
 
 - [x] R-011 — Enforced the rough production TypeScript budget, completed deterministic and opt-in local real-Pi acceptance, and inspected the dummy artifact and saved session JSON.
 - [x] R-010 — Rewrote README, architecture, configuration, templates, and supervisor-context documentation; retained diagram sources with an explicit stale-source note.

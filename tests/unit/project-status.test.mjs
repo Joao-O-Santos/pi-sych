@@ -8,6 +8,7 @@ import {
 	acknowledgeProjectStatus,
 	checkProjectStatus,
 	fingerprintFile,
+	formatProjectStatusCheck,
 	parseProjectStatusMarkdown,
 } from "../../.test-build/workbench/src/project-status.js";
 
@@ -95,6 +96,12 @@ test("acknowledgement updates selected hashes and marks only unselected dependen
 	assert.equal(manifest.artifacts[1].status, "needs-review");
 	assert.equal(manifest.artifacts[2].status, "needs-review");
 	assert.equal(manifest.artifacts[1].fingerprint, artifacts[1].fingerprint);
+	const formatted = formatProjectStatusCheck(await checkProjectStatus(root));
+	assert.match(
+		formatted,
+		/Persisted as needing review:\n- guide\.md\n- artifact\.md/,
+	);
+	assert.match(formatted, /All tracked files match their recorded hashes/);
 	await acknowledgeProjectStatus(
 		root,
 		["guide.md"],

@@ -370,6 +370,15 @@ export function formatProjectStatusCheck(state: ProjectStatusCheck): string {
 		lines.push("", "Changed:", ...state.changed.map((path) => `- ${path}`));
 	if (state.missing.length)
 		lines.push("", "Missing:", ...state.missing.map((path) => `- ${path}`));
+	const needsReview = state.artifacts
+		.filter((artifact) => artifact.status === "needs-review")
+		.map((artifact) => artifact.path);
+	if (needsReview.length)
+		lines.push(
+			"",
+			"Persisted as needing review:",
+			...needsReview.map((path) => `- ${path}`),
+		);
 	if (state.impacted.length)
 		lines.push(
 			"",
@@ -386,7 +395,7 @@ export function formatProjectStatusCheck(state: ProjectStatusCheck): string {
 			...state.cycles.map((cycle) => `- ${cycle.join(" → ")}`),
 		);
 	if (!state.changed.length && !state.missing.length)
-		lines.push("", "All tracked files match their acknowledged hashes.");
+		lines.push("", "All tracked files match their recorded hashes.");
 	lines.push(
 		"",
 		"A changed hash establishes changed content, not conceptual drift or authority.",

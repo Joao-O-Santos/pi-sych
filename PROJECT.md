@@ -10,7 +10,7 @@
 
 ## Intended contribution
 
-[accepted] Pi Sych keeps project state and evidence visible, reports drift without silently choosing a winner, and supports bounded workers without claiming that generated prose or automated checks replace human judgment.
+[accepted] Pi Sych keeps project state and evidence visible, reports changed hashes and declared dependency impact without silently making semantic judgments, and supports bounded workers without claiming that generated prose or automated checks replace human judgment.
 
 ## Deliverables
 
@@ -34,8 +34,8 @@
 
 ## Current state
 
-[verified] The package has a minimal supervisor with `dispatch_worker` and `project_status`, a separately bootstrapped worker extension, graph-aware project state, optional remote research through MCPorter, retained Plannotator annotation/review adapters, semantic workflow skills, and deterministic acceptance checks. The counted production TypeScript is kept to a rough estimate below 2,000 lines.
+[verified] The package has a minimal supervisor with `dispatch_worker` and `project_status`, a separately bootstrapped worker extension, graph-aware project state, optional remote research through MCPorter, retained Plannotator annotation/review adapters, semantic workflow skills, behavioral worker-lifecycle tests, and opt-in real-Pi acceptance. The rough production TypeScript estimate remains below 2,000 lines.
 
 ## Immediate next step
 
-[accepted] Keep the package small. The minimal-architecture refactor is implemented; next maintain the major-release documentation, run opt-in real-Pi usage checks when valuable, and add behavior only when it serves a real user need and can be explained, reviewed, and verified.
+[accepted] Complete the reviewed `v1.0.1` corrective release, then keep the package small and add behavior only when it serves a real user need and can be explained, reviewed, and verified.

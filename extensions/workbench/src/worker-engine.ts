@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { constants, existsSync, statSync } from "node:fs";
 import { access, mkdir, mkdtemp, open, readFile, rm } from "node:fs/promises";
 import { homedir, tmpdir } from "node:os";
-import { dirname, isAbsolute, resolve } from "node:path";
+import { dirname, isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const WORKER_MODES = ["read-only", "edit", "full-host"] as const;
@@ -82,6 +82,7 @@ export interface WorkerLaunchOutcome {
 	stdout: string;
 	stderr: string;
 	classification?: "cancelled" | "timeout" | "spawn-failure";
+	terminationSignal?: NodeJS.Signals | null;
 }
 
 export interface DispatchOutcome {
@@ -290,6 +291,7 @@ export function taskPrompt(
 				]
 			: []),
 		"Submit exactly one truthful immutable result with submit_artifact before finishing.",
+		"Set resultPackage to 'inline' when the structured result is complete; otherwise use an existing durable project-relative path.",
 	].join("\n");
 }
 
@@ -367,6 +369,28 @@ async function readWorkerResult(
 	} catch (error) {
 		if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
 		throw error;
+	}
+}
+
+async function validateResultPackage(
+	projectRoot: string,
+	result: WorkerResult,
+): Promise<void> {
+	if (result.resultPackage === "inline") return;
+	const path = resolve(projectRoot, result.resultPackage);
+	const rel = relative(projectRoot, path);
+	if (
+		rel === ".." ||
+		rel.startsWith(`..${process.platform === "win32" ? "\\" : "/"}`) ||
+		isAbsolute(rel)
+	)
+		throw new Error(
+			"resultPackage must be 'inline' or a project-relative path",
+		);
+	try {
+		await access(path, constants.R_OK);
+	} catch {
+		throw new Error("resultPackage path is unavailable");
 	}
 }
 
@@ -463,8 +487,14 @@ export const launchPiWorker: WorkerLauncher = async (spec) =>
 				classification: "spawn-failure",
 			}),
 		);
-		child.once("close", (exitCode) =>
-			finish({ exitCode, stdout, stderr, classification: stopClassification }),
+		child.once("close", (exitCode, terminationSignal) =>
+			finish({
+				exitCode,
+				stdout,
+				stderr,
+				classification: stopClassification,
+				terminationSignal,
+			}),
 		);
 	});
 
@@ -504,7 +534,9 @@ export async function dispatchWorker(options: {
 		let resultError: string | undefined;
 		try {
 			result = await readWorkerResult(resultPath, identity);
+			if (result) await validateResultPackage(options.projectRoot, result);
 		} catch (error) {
+			result = undefined;
 			resultError = error instanceof Error ? error.message : String(error);
 		}
 		if (result) return { identity, model, attempts: 1, timeoutMs, result };

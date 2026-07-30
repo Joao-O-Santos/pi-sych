@@ -3,11 +3,11 @@
 ```json
 {
   "version": 1,
-  "confirmedAt": "2026-07-30T01:07:24.518Z",
+  "confirmedAt": "2026-07-30T02:16:20.647Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:b7e8bc2dfc4edcea037bdc6663edd020602f488f425b232d7e0851391aff37ff",
+      "fingerprint": "sha256:1628abe53fe58d04489a85012c1e7a1775530cc6904c271662e3bf74cde87166",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -18,13 +18,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T01:07:24.518Z",
-        "reason": "Reviewed the completed refactor, release metadata, project direction, evidence update, and documentation changes."
+        "at": "2026-07-30T02:16:20.647Z",
+        "reason": "Reviewed the v1.0.1 corrective implementation, package metadata, current diagrams, evidence, project direction, and affected documentation before release."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:d7b1a59bced1974dce34d1fe12051f78109e68a467ba5143e12c5f88f6a00870",
+      "fingerprint": "sha256:b5d2ed78758f72904f52e8aa261d729830b1ecaa4f06aba91bf1ab8ea9eb66b3",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -38,27 +38,27 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T01:07:24.518Z",
-        "reason": "Reviewed the completed refactor, release metadata, project direction, evidence update, and documentation changes."
+        "at": "2026-07-30T02:16:20.647Z",
+        "reason": "Reviewed the v1.0.1 corrective implementation, package metadata, current diagrams, evidence, project direction, and affected documentation before release."
       }
     },
     {
       "path": "ARCHITECTURE.md",
-      "fingerprint": "sha256:084aa2b50ab4851fc82352379079a77358003c70c6be8708f4dcf7b066612974",
+      "fingerprint": "sha256:ad40d74e0e544b5ea029438320ce5b1fdff0ac3e7bb9e82100e5985b063db8c4",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T01:04:35.543Z",
-        "reason": "Completed the approved minimal-architecture refactor and reviewed the affected documentation, evidence, and package metadata."
+        "at": "2026-07-30T02:16:20.647Z",
+        "reason": "Reviewed the v1.0.1 corrective implementation, package metadata, current diagrams, evidence, project direction, and affected documentation before release."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:0ae4e3c07d6bf8f8778b6ddfe524e4440b5f4665258db391e726ea0cb547ebe8",
-      "status": "needs-review",
+      "fingerprint": "sha256:27254049334aa8926b3eb148e16ee2d2c1ff16c66b6f11234fc7d8daa5b70e73",
+      "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "package-usage",
@@ -69,13 +69,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T01:04:35.543Z",
-        "reason": "Completed the approved minimal-architecture refactor and reviewed the affected documentation, evidence, and package metadata."
+        "at": "2026-07-30T02:16:20.647Z",
+        "reason": "Reviewed the v1.0.1 corrective implementation, package metadata, current diagrams, evidence, project direction, and affected documentation before release."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:6ddc1e722145ae8d7a8b73e5a9ad2af88a8361e5cde85388781adb1c9283a738",
+      "fingerprint": "sha256:b1c0254b26e39bd758b1a88b995ae20460733481d8952cb1bdbcbae452794ef4",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -88,8 +88,8 @@
         "tests"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T01:07:24.518Z",
-        "reason": "Reviewed the completed refactor, release metadata, project direction, evidence update, and documentation changes."
+        "at": "2026-07-30T02:16:20.647Z",
+        "reason": "Reviewed the v1.0.1 corrective implementation, package metadata, current diagrams, evidence, project direction, and affected documentation before release."
       }
     },
     {
@@ -107,15 +107,15 @@
     },
     {
       "path": "docs/DEVELOPMENT.md",
-      "fingerprint": "sha256:d6bfd475ad12dbdb8e5ed198d3f9a3496c81ec4e173773d923c9b2bd22d1c115",
+      "fingerprint": "sha256:2c391e446aac4f7e08ac8968e5b703348d62be8bd6e38f335a87c7c6eb36339e",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "development-checks"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T01:04:35.543Z",
-        "reason": "Completed the approved minimal-architecture refactor and reviewed the affected documentation, evidence, and package metadata."
+        "at": "2026-07-30T02:16:20.647Z",
+        "reason": "Reviewed the v1.0.1 corrective implementation, package metadata, current diagrams, evidence, project direction, and affected documentation before release."
       }
     }
   ]

@@ -1,5 +1,6 @@
-# Diagram sources
+# Architecture diagrams
 
-- `architecture.png` and `supervisors_context.png` are retained visual source artifacts for the approved minimal architecture.
-- They require regeneration from the approved edit prompts before being presented as a literal current-runtime diagram. The text in `README.md`, `ARCHITECTURE.md`, and `pi-sych-redefined-architecture.md` is authoritative.
+- `architecture.png` presents the minimal public tools, worker capability modes, project-file roles, and human-ownership boundary.
+- `supervisors_context.png` presents the context available at session start, progressive disclosure, and bounded-worker packet.
+- The diagrams are explanatory summaries. `README.md`, `ARCHITECTURE.md`, and the implementation remain authoritative for exact behavior.
 - The former root `refactor_plan.png` was intentionally deleted.
