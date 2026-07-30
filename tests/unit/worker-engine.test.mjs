@@ -49,7 +49,10 @@ function resultFor(spec, status = "complete") {
 }
 
 function git(root, ...args) {
-	return execFileSync("git", args, { cwd: root, encoding: "utf8" });
+	return execFileSync("git", ["-c", "commit.gpgSign=false", ...args], {
+		cwd: root,
+		encoding: "utf8",
+	});
 }
 
 async function initializeGitProject(root) {
