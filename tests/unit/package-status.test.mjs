@@ -102,10 +102,16 @@ test("tool content formatters include bounded worker and plan result details", (
 
 test("public manifest retains the package boundary and developer tooling", () => {
 	assert.equal(packageJson.name, "pi-sych");
-	assert.equal(packageJson.version, "1.1.0");
+	assert.equal(packageJson.version, "1.2.0");
 	assert.equal(PACKAGE_ROOT, process.cwd());
-	assert.equal(packageJson.devDependencies.typescript, "7.0.2");
-	assert.equal(packageJson.devDependencies["@biomejs/biome"], "2.5.6");
+	assert.equal(packageJson.devDependencies.typescript, "latest");
+	assert.equal(packageJson.devDependencies["@biomejs/biome"], "latest");
+	assert.equal(
+		packageJson.devDependencies["@earendil-works/pi-coding-agent"],
+		"latest",
+	);
+	assert.equal(packageJson.dependencies["@plannotator/pi-extension"], "latest");
+	assert.equal(packageJson.dependencies["pi-mcporter"], "latest");
 	assert.deepEqual(packageJson.pi.extensions, [
 		"./extensions/workbench/index.ts",
 	]);
@@ -113,9 +119,10 @@ test("public manifest retains the package boundary and developer tooling", () =>
 	assert.equal(packageJson.files.includes("docs"), true);
 	assert.equal(packageJson.files.includes("AGENTS.md"), true);
 	assert.equal(packageJson.files.includes("ARCHITECTURE.md"), true);
+	assert.equal(packageJson.files.includes("scripts/format-markdown.mjs"), true);
 	assert.equal(
 		packageJson.pi.image,
-		"https://unpkg.com/pi-sych@1.1.0/docs/img/architecture.png",
+		"https://unpkg.com/pi-sych@1.2.0/docs/img/architecture.png",
 	);
 });
 

@@ -31,6 +31,19 @@ async function artifact(root, path, extra = {}) {
 	};
 }
 
+test("check accepts Pandoc-spaced JSON fences in SYNC.md", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-pandoc-sync-"));
+	await writeFile(join(root, "PROJECT.md"), "# Project\n");
+	const fingerprint = await fingerprintFile(join(root, "PROJECT.md"));
+	await writeFile(
+		join(root, "SYNC.md"),
+		`# Project synchronization\n\n\`\`\` json\n${JSON.stringify({ version: 1, confirmedAt: "2026-01-01T00:00:00.000Z", artifacts: [{ path: "PROJECT.md", fingerprint, status: "current" }] }, null, 2)}\n\`\`\`\n`,
+	);
+	const result = await checkProjectStatus(root);
+	assert.equal(result.error, undefined);
+	assert.deepEqual(result.changed, []);
+});
+
 test("check reports missing core files and shallow PROJECT.md validation errors", async () => {
 	const missingRoot = await mkdtemp(join(tmpdir(), "pi-sych-project-status-"));
 	const missing = await checkProjectStatus(missingRoot);

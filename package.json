@@ -1,6 +1,6 @@
 {
   "name": "pi-sych",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "General project and artifact development workbench for Pi",
   "files": [
     "config",
@@ -9,6 +9,7 @@
     "extensions",
     "skills",
     "scripts/bootstrap-worker-agent-dir.mjs",
+    "scripts/format-markdown.mjs",
     "README.md",
     "AGENTS.md",
     "ARCHITECTURE.md",
@@ -39,7 +40,9 @@
     "lint": "biome lint extensions scripts tests",
     "format:check": "biome ci --linter-enabled=false --assist-enabled=false extensions scripts tests",
     "format:fix": "biome check --write extensions scripts tests",
-    "style": "biome ci extensions scripts tests",
+    "markdown:check": "node scripts/format-markdown.mjs",
+    "markdown:fix": "node scripts/format-markdown.mjs --write",
+    "style": "biome ci extensions scripts tests && npm run markdown:check",
     "source:budget": "node scripts/check-source-budget.mjs",
     "build:test": "rm -rf .test-build && tsc --project tsconfig.test.json",
     "test": "npm run test:unit && npm run test:integration",
@@ -58,11 +61,11 @@
     "typebox": "*"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.6",
-    "@earendil-works/pi-coding-agent": "^0.82.1",
-    "@types/node": "24.12.4",
-    "typebox": "1.1.38",
-    "typescript": "7.0.2"
+    "@biomejs/biome": "latest",
+    "@earendil-works/pi-coding-agent": "latest",
+    "@types/node": "latest",
+    "typebox": "latest",
+    "typescript": "latest"
   },
   "pi": {
     "extensions": [
@@ -71,11 +74,11 @@
     "skills": [
       "./skills"
     ],
-    "image": "https://unpkg.com/pi-sych@1.1.0/docs/img/architecture.png"
+    "image": "https://unpkg.com/pi-sych@1.2.0/docs/img/architecture.png"
   },
   "dependencies": {
-    "@plannotator/pi-extension": "^0.25.0",
-    "jiti": "^2.7.0",
+    "@plannotator/pi-extension": "latest",
+    "jiti": "latest",
     "pi-mcporter": "latest"
   }
 }

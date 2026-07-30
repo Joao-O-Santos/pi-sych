@@ -6,6 +6,9 @@ stages:
 
 verify:
   stage: verify
+  before_script:
+    - apt-get update
+    - apt-get install --yes --no-install-recommends pandoc
   script:
     - npm ci
     - npm run typecheck
@@ -19,6 +22,9 @@ verify:
 
 publish-npm:
   stage: release
+  before_script:
+    - apt-get update
+    - apt-get install --yes --no-install-recommends pandoc
   rules:
     - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
   id_tokens:

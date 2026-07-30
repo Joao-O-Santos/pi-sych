@@ -1,3 +1,4 @@
 # Decisions
 
-Record consequential accepted decisions, rationale, alternatives, and dates.
+Record consequential accepted decisions, rationale, alternatives, and
+dates.

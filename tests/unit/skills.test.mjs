@@ -108,7 +108,7 @@ test("TODO.md guidance preserves its bounded task-ledger role", async () => {
 	assert.match(artifactSkill, /`TODO\.md`/);
 	assert.match(artifactSkill, /not evidence, project direction/);
 	assert.match(readme, /## Project files/);
-	assert.match(readme, /If GitLab issues are the operative task tracker/);
+	assert.match(readme, /If\s+GitLab issues are the operative task tracker/);
 });
 
 test("public skills do not retain superseded runtime, controller, provider, or personal-overlay language", async () => {

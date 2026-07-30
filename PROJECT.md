@@ -2,44 +2,73 @@
 
 ## Objective
 
-[accepted] Maintain Pi Sych as a small, reviewable Pi package for serious writing, research, analysis, and code projects.
+{accepted} Maintain Pi Sych as a small, reviewable Pi package for
+serious writing, research, analysis, and code projects.
 
 ## Audience and use
 
-[accepted] Scientific writers, researchers, and maintainers who want explicit project state, bounded delegation, truthful verification, and human-owned consequential decisions.
+{accepted} Scientific writers, researchers, and maintainers who want
+explicit project state, bounded delegation, truthful verification, and
+human-owned consequential decisions.
 
 ## Intended contribution
 
-[accepted] Pi Sych keeps project state and evidence visible, reports changed hashes and declared dependency impact without silently making semantic judgments, and supports bounded workers without claiming that generated prose or automated checks replace human judgment.
+{accepted} Pi Sych keeps project state and evidence visible, reports
+changed hashes and declared dependency impact without silently making
+semantic judgments, and supports bounded workers without claiming that
+generated prose or automated checks replace human judgment.
 
 ## Deliverables
 
-[accepted] The public package, its tests, baseline skills, concise human-facing documentation, and private local configuration outside this repository.
+{accepted} The public package, its tests, baseline skills, concise
+human-facing documentation, and private local configuration outside this
+repository.
 
 ## Constraints
 
-[accepted] Do not expose credentials, add a fixed workflow controller, make sandbox or pseudo-security claims, push or publish without instruction, or let model output stand in for evidence, citations, verification, or final review.
+{accepted} Do not expose credentials, add a fixed workflow controller,
+make sandbox or pseudo-security claims, push or publish without
+instruction, or let model output stand in for evidence, citations,
+verification, or final review.
 
 ## Project rules and preferences
 
-[accepted] Prefer direct and minimal implementations. Keep durable state explicit in `PROJECT.md`, `EVIDENCE.md`, and `SYNC.md`. Give workers exact resources, retain immutable results, report unexpected changes, and require human approval for consequential durable changes.
+{accepted} Prefer direct and minimal implementations. Keep durable state
+explicit in `PROJECT.md`, `EVIDENCE.md`, and `SYNC.md`. Give workers
+exact resources, retain immutable results, report unexpected changes,
+and require human approval for consequential durable changes.
 
 ## Definition of done
 
-[accepted] The package is understandable, tested, and documented; its active behavior matches its documentation; and human users can inspect state, evidence, limits, and verification without relying on hidden agent memory.
+{accepted} The package is understandable, tested, and documented; its
+active behavior matches its documentation; and human users can inspect
+state, evidence, limits, and verification without relying on hidden
+agent memory.
 
 ## Current direction
 
-[accepted] Keep the package small, explicit, and reviewable for human users rather than expanding historical scaffolding or automated workflow machinery.
+{accepted} Keep the package small, explicit, and reviewable for human
+users rather than expanding historical scaffolding or automated workflow
+machinery.
 
 ## Current state
 
-[verified] The package has a minimal supervisor with `dispatch_worker` and `project_status`, a separately bootstrapped worker extension, graph-aware project state, optional remote research through MCPorter, retained Plannotator annotation/review adapters, semantic workflow skills, behavioral worker-lifecycle tests, and opt-in real-Pi acceptance. The rough production TypeScript estimate remains below 2,000 lines.
+{verified} The package has a minimal supervisor with `dispatch_worker`
+and `project_status`, a separately bootstrapped worker extension,
+graph-aware project state, optional remote research through MCPorter,
+retained Plannotator annotation/review adapters, semantic workflow
+skills, behavioral worker-lifecycle tests, and opt-in real-Pi
+acceptance. The rough production TypeScript estimate remains below 2,000
+lines.
 
 ## Previous action
 
-[verified] Implemented the approved skill-layering and opinionated-defaults work on top of the local v1.1.0 commits: layered review skills, writing and scholarly defaults, R/Quarto and Reveal.js defaults, retrospective proposal format, README inspirations, private git-signing skill, and skill-corpus tests.
+{verified} Completed the v1.2.0 release gate on the final dependency
+graph: Markdown/render checks, style, typecheck, dependency check, 40
+unit tests, 3 integration tests, 2 smoke checks, source budget, package
+validation, CI parsing, audit, and one real-Pi workflow.
 
 ## Immediate next step
 
-[accepted] Review the skill corpus changes, then decide whether to fold them into the still-unpublished v1.1.0 release or a later version before tag, push, and publish.
+{accepted} Create the signed v1.2.0 release commit and annotated tag,
+push them, and verify publication.

@@ -1,6 +1,6 @@
 # Project synchronization
 
-```json
+``` json
 {
   "version": 1,
   "confirmedAt": "YYYY-MM-DDTHH:MM:SSZ",

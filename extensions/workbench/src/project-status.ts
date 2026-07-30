@@ -190,7 +190,9 @@ function parseArtifact(value: unknown, index: number): ProjectArtifact {
 export function parseProjectStatusMarkdown(
 	markdown: string,
 ): ProjectStatusManifest {
-	const blocks = [...markdown.matchAll(/^```json\s*\n([\s\S]*?)\n```\s*$/gm)];
+	const blocks = [
+		...markdown.matchAll(/^```[ \t]*json[ \t]*\n([\s\S]*?)\n```[ \t]*$/gm),
+	];
 	if (blocks.length !== 1)
 		throw new Error(
 			`SYNC.md must contain exactly one fenced JSON object; found ${blocks.length}`,

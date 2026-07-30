@@ -339,10 +339,10 @@ export default function piSychWorkbench(pi: ExtensionAPI): void {
 							return;
 						}
 						if (result.feedback?.trim())
-							void pi.sendUserMessage(result.feedback, {
+							return pi.sendUserMessage(result.feedback, {
 								deliverAs: "followUp",
 							});
-						else ctx.ui.notify("Code review closed (no feedback).", "info");
+						ctx.ui.notify("Code review closed (no feedback).", "info");
 					})
 					.catch((error: unknown) => notifyError(ctx, error));
 			} catch (error) {
