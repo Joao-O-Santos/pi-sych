@@ -9,17 +9,30 @@ Make the conceptual contribution, scope conditions, mechanisms, alternatives,
 and implications legible. Use the argument's own sequence rather than IMRaD;
 do not present illustrative claims as empirical findings.
 
-Open with the concrete puzzle or limitation in how a field currently thinks,
-then state the paper's central reorganization or mechanism. Define only the
-constructs readers need, explain why the proposed process produces its claimed
-outcomes, and identify the assumptions that carry the argument. Contrast the
-account with serious alternatives rather than a straw person.
+## Structure
 
-Make the theory generative: state what it predicts, where it should fail, what
-would distinguish it from rival accounts, and what research or practice should
-change if it is useful. Use examples to illuminate the mechanism, not to stand
-in for evidence. End by identifying both what the perspective reveals and what
-it does not capture.
+1. Open with the concrete puzzle or limitation in how a field currently thinks.
+2. State the paper's central reorganization, mechanism, or intellectual move.
+3. Define only the constructs readers need.
+4. Explain why the proposed process produces its claimed outcomes and which
+   assumptions carry the argument.
+5. Contrast the account with serious alternatives rather than a straw person.
+6. Derive implications: what the account predicts, where it should fail, what
+   would distinguish it from rivals, and what research or practice should change
+   if it is useful.
+7. End by identifying both what the perspective reveals and what it does not
+   capture.
+
+Use examples to illuminate the mechanism, not to stand in for evidence. Prefer
+generative conclusions—discriminating tests, boundary conditions, and revised
+questions—over decorative restatement.
+
+## Use with
+
+Pair with `scholarly-manuscript` for manuscript-wide craft and
+`theory-development` for construct and hypothesis generation. Use
+`writing-core` for outlines and prose defaults, and `artifact-review` with
+optional review lenses before `verification`.
 
 ## Optional user examples
 

@@ -9,12 +9,15 @@ All notable changes to Pi Sych are documented here. Versions are immutable npm p
 - Added model-visible worker result details, Plannotator plan feedback, Google-compatible enum schemas, core project-file checks, and shallow `PROJECT.md` validation.
 - Added `Previous action` and an explicit `None at present.` option for a project’s immediate next step.
 - Added companion-skill guidance and selected review/reporting practices informed by an archived skill comparison.
+- Added optional layered review skills `review-structure`, `review-detail`, and `review-copyedit` that compose with `artifact-review` through ordinary multi-skill worker selection.
+- Added package prose and Reveal.js defaults, a portable `templates/revealjs-baseline.css`, selectable verification recipes, decision-memo options, and a README inspirations section for external retrospective tools.
 
 ### Changed
 
 - Rewrote public documentation around people installing and using Pi Sych, while keeping maintainer detail in the architecture and development guides.
 - Made project-status cycle, legacy-status, MCPorter fallback, package-load diagnostics, and opt-in usage-test handling more reliable.
 - Removed stale public references to the intentionally deleted target-architecture and principles documents.
+- Expanded writing, scholarly, R/Quarto, theory, strategy, retrospective, and project-briefing skills with overridable opinionated defaults and non-mutating proposal formats.
 
 ## [1.0.3] - 2026-07-30
 

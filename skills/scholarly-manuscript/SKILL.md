@@ -5,11 +5,19 @@ description: Develop scholarly manuscripts with a visible contribution, evidence
 
 # Scholarly manuscript
 
-Start with the paper's intellectual move, not a generic topic: overturning an
-assumption, reversing a proposed direction, adjudicating accounts, resolving a
-conflict, transferring a mechanism, integrating literatures, or decomposing a
-complex relation. State what the reader should understand differently after
-reading. Do not force IMRaD onto theoretical work.
+Start with the paper's intellectual move, not a generic topic. Name the move
+when useful:
+
+- overturning an assumption
+- reversing a proposed causal or explanatory direction
+- adjudicating among competing accounts
+- resolving a conflict or apparent contradiction
+- transferring a mechanism by analogy across domains
+- integrating complementary literatures
+- decomposing a complex relation into simpler parts
+
+State what the reader should understand differently after reading. Do not force
+IMRaD onto theoretical work.
 
 ## Build the argument
 
@@ -25,9 +33,11 @@ reading. Do not force IMRaD onto theoretical work.
 - Use the literature review to establish the premises the paper needs. Connect
   every theme to the question, design, or argument that follows; do not add
   unprepared literatures only in the discussion.
-- In a discussion, synthesize patterns rather than repeat results, explain
-  implications and alternatives, state meaningful limitations, and end with a
-  calibrated take-home rather than generic calls for more research.
+- In a discussion, synthesize patterns rather than repeat results, interpret
+  findings through more than one serious lens when several fit, state meaningful
+  limitations as what the perspective or design does not capture, give concrete
+  future work or discriminating tests, and end with a calibrated take-home
+  rather than a generic call for more research.
 
 Write the abstract last. It should make the problem, approach, contribution or
 primary result, and implication intelligible on its own; do not introduce
@@ -36,7 +46,10 @@ requirements, evidence strength, and authorial decisions visible throughout.
 
 ## Use with
 
-Pair with `writing-core` for argument and prose decisions. Use `empirical-paper` with `r-quarto` for data-backed manuscripts, or `theoretical-paper` with `theory-development` for theoretical work. Use `verification` before submission.
+Pair with `writing-core` for argument and prose decisions. Use `empirical-paper`
+with `r-quarto` for data-backed manuscripts, or `theoretical-paper` with
+`theory-development` for theoretical work. Use `artifact-review` with optional
+review lenses before `verification` and submission.
 
 ## Optional user examples
 

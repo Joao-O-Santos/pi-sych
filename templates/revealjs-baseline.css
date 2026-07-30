@@ -1,0 +1,55 @@
+/*
+  Portable Reveal.js baseline adapted from the package author's personal talk
+  styles. Copy into the project (for example slides/revealjs-baseline.css) and
+  reference that local path from deck metadata. Override freely.
+
+  Conventions this baseline assumes:
+  - slide titles are level-one headings (# / h1);
+  - Pandoc title-block date may hold conference name, contact, or other title-
+    page metadata rather than a calendar date.
+*/
+
+.reveal section {
+	font-family: Liberation Serif, Times New Roman, serif;
+}
+
+/* Slide titles: keep readable size and do not force all-caps. */
+.reveal section h1 {
+	font-size: 1.2em;
+	text-transform: none;
+}
+
+.reveal section h2,
+.reveal section p,
+.reveal section li,
+.reveal section th,
+.reveal section blockquote {
+	font-size: 0.8em;
+}
+
+.reveal section h3,
+.reveal section tr {
+	font-size: 0.5em;
+}
+
+.reveal section code {
+	font-family: monospace;
+	font-size: 0.8em;
+}
+
+/* Title slide metadata (Pandoc title block). */
+.reveal .title {
+	font-size: 26pt;
+}
+
+.reveal .author {
+	font-size: 14pt;
+}
+
+.reveal .date {
+	font-size: 25pt;
+}
+
+.reveal .small {
+	font-size: 0.5em;
+}

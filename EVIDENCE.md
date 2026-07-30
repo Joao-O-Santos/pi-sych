@@ -30,6 +30,16 @@
 **Limits:** These checks establish only observed connectivity and bounded retrieval at that time. Remote content remains external and non-authoritative until reviewed; OpenAlex uses a third-party rolling `npx` server and full-host execution.
 **Checked:** 2026-07-28
 
+## E-009 — Skill layering and opinionated defaults landed in the public corpus
+
+**Status:** verified
+**Kind:** observed behaviour and package contents
+**Source:** `skills/`, `templates/STYLE.md`, `templates/revealjs-baseline.css`, `README.md`, `tests/unit/skills.test.mjs`, formatter evaluation notes
+**Supports:** multi-skill review composition, overridable package defaults, non-mutating retrospective guidance, and external-inspiration placement claims
+**Evidence:** Public skills now include `review-structure`, `review-detail`, and `review-copyedit`; `artifact-review` documents composition without a controller. Writing, style, scholarly, theory, R/Quarto, slides, verification, strategy, reconcile, retrospective, and project briefing/initialization skills were expanded. Formatter evaluation on a GFM fixture: `pandoc -f gfm -t gfm --wrap=auto --columns=72` reflowed prose/lists while keeping pipe tables and fences (with minor link-wrap and fence-marker spacing); plain `pandoc -t markdown` rewrote tables to grids; Prettier rewrote fences/tables; dprint wrapped prose, left fences intact, and realigned tables. No Markdown formatter dependency was added; Pandoc is documented as the preferred host-side option when installed. Reveal baseline is adapted from the package author's own talk CSS (not third-party), documents `h1` titles and title-block `date` as conference/meta, and requires a project-local copy path. README inspirations are links only; no third-party code or protected prose was copied into the package (Apache-2.0/MIT external tools were inspected only for ideas). This package remains MIT. Skill guidance is not frozen by prose-presence tests beyond existing front-matter/identity checks.
+**Limits:** Corpus guidance does not prove real-model adherence. The private `~/.config/pi/skills/git-signing` skill is user-owned and not packaged. Untracked research dossiers are not package evidence unless later reviewed into the tree.
+**Checked:** 2026-07-30
+
 ## E-008 — v1.1.0 interface, documentation, and skill review passed
 
 **Status:** verified

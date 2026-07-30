@@ -5,12 +5,37 @@ description: Diagnose bounded artifact issues through a selected review lens wit
 
 # Artifact review
 
-Select a lens appropriate to the artifact: argumentative coherence, evidence,
-prose, skeptical review, pedagogy, audience load, grant compliance,
-architecture, maintainability, requirements, or security. Report the problem,
-why it matters, the minimum response, scope, interaction risks, complexity
-effect, and whether it is a defect, tradeoff, robustness issue, or preference.
-Do not redesign the artifact or apply findings independently. When useful, order findings by location and state the problem, why it matters, and the smallest credible response. End with one explicit blind-spot question when the selected lens could miss a material alternative.
+This is the stable review core. Select a lens appropriate to the artifact:
+argumentative coherence, evidence, prose, skeptical review, pedagogy, audience
+load, grant compliance, architecture, maintainability, requirements, or
+security. Optional companion skills refine the pass without replacing this core:
+
+- `review-structure` for organization, contribution visibility, and navigation;
+- `review-detail` for claims, evidence, alternatives, fallacies, and statistics;
+- `review-copyedit` for sentence-level clarity and consistency after structure
+  is sound.
+
+A worker may receive this skill alone or together with one or more companions.
+Composition is optional and supervisor-chosen; this package does not run a
+multi-agent review controller. Useful patterns are: one worker with core plus
+selected lenses, or separate bounded reviews whose visible results a human
+combines.
+
+## Finding form
+
+For each material finding, state:
+
+1. **Location** — section, heading, paragraph, figure, table, file, or interface.
+2. **Concern** — the concrete problem in plain language.
+3. **Why it matters** — effect on reader understanding, validity, safety, or use.
+4. **Minimum response** — the smallest credible fix or decision, not a redesign.
+5. **Kind** — defect, tradeoff, robustness issue, preference, or unresolved
+   alternative, when that distinction helps.
+6. **Confidence or limitation** — only when uncertainty affects the finding.
+
+When useful, order findings by location. End with one explicit blind-spot
+question when the selected lens could miss a material alternative. Do not
+redesign the artifact or apply findings independently.
 
 ## Scholarly skeptical review
 
@@ -32,7 +57,11 @@ citation, a weak inference, an unresolved alternative, and an authorial choice.
 
 ## Use with
 
-Use `strategy` to choose among accepted findings, `verify-change` after an implemented response, and `verification` for a whole-artifact judgment. Use `drift-review` before `reconcile-project` when findings reveal cross-file disagreement.
+Use `strategy` to choose among accepted findings, `verify-change` after an
+implemented response, and `verification` for a whole-artifact judgment. Use
+`drift-review` before `reconcile-project` when findings reveal cross-file
+disagreement. Pair optional `review-structure`, `review-detail`, or
+`review-copyedit` when those lenses match the task.
 
 ## Optional user examples
 

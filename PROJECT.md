@@ -38,8 +38,8 @@
 
 ## Previous action
 
-[verified] Published `v1.0.3`, correcting the architecture-diagram link and publishing the prior cleanup commits.
+[verified] Implemented the approved skill-layering and opinionated-defaults work on top of the local v1.1.0 commits: layered review skills, writing and scholarly defaults, R/Quarto and Reveal.js defaults, retrospective proposal format, README inspirations, private git-signing skill, and skill-corpus tests.
 
 ## Immediate next step
 
-[accepted] None at present.
+[accepted] Review the skill corpus changes, then decide whether to fold them into the still-unpublished v1.1.0 release or a later version before tag, push, and publish.

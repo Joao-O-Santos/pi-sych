@@ -19,3 +19,7 @@
 ## Immediate next step
 
 [accepted] State the next accepted action, or use `None at present.` when no action is currently pending.
+
+## Optional practical constraints
+
+When useful, record venue or audience, length or format limits, deadline, and delivery requirements here or under the objective. These prompts are optional content, not additional required headings for mechanical validation.

@@ -53,9 +53,19 @@ Optional files are useful only when they serve a purpose:
 
 ![](https://unpkg.com/pi-sych@1.1.0/docs/img/supervisors_context.png)
 
-Workers are short-lived Pi sessions used for a clearly bounded task. They receive only the selected project material, not your main conversation. A full-host worker has the same host permissions as Pi, so use it only when that capability is genuinely needed.
+Workers are short-lived Pi sessions used for a clearly bounded task. They receive only the selected project material, not your main conversation. A worker may load several skills at once—for example `artifact-review` plus `review-structure` and `review-detail`—without any fixed multi-agent pipeline. A full-host worker has the same host permissions as Pi, so use it only when that capability is genuinely needed.
 
 For a consequential plan, Pi can open a browser review through Plannotator. Approval does not automatically start work; your feedback and approval notes return to Pi for the next decision.
+
+## Inspirations
+
+Pi Sych is MIT-licensed and independently designed. These public projects are worth knowing about if you care about agent memory and retrospective workflow tooling:
+
+- [Lynskylate/agent-md-management](https://github.com/Lynskylate/agent-md-management) — AGENTS.md audit and approved revision flow.
+- [BayramAnnakov/claude-reflect](https://github.com/BayramAnnakov/claude-reflect) — capture-then-review reflection for Claude workflows.
+- [jo-inc/pi-reflect](https://github.com/jo-inc/pi-reflect) — Pi extension for transcript-driven markdown updates.
+
+They inspired only a cautious, non-mutating retrospective proposal format in this package. Pi Sych does not copy their code, install their hooks, or adopt automatic edits or commits.
 
 ## Contributing and maintenance
 
@@ -67,7 +77,7 @@ Pi Sych is alpha software. Review code and dependencies before relying on it for
 
 ## For supervisors (LLMs)
 
-Use `project_status` to inspect missing core files, changed tracked files, declared dependencies, and cycles. Work directly when practical; use `dispatch_worker` only for an independent bounded task. For every worker, choose its task, expected output, context files, skills, model profile, and a deliberate timeout (90 seconds by default). Use `submit_plan` before an irreversible or otherwise consequential change, and acknowledge only files that were actually reviewed.
+Use `project_status` to inspect missing core files, changed tracked files, declared dependencies, and cycles. Work directly when practical; use `dispatch_worker` only for an independent bounded task. For every worker, choose its task, expected output, context files, skills, model profile, and a deliberate timeout (90 seconds by default). Pass multiple skills when a bounded task needs composition, such as `artifact-review` with `review-structure` or `writing-core` with a genre skill. Use `submit_plan` before an irreversible or otherwise consequential change, and acknowledge only files that were actually reviewed.
 
 Worker modes are `read-only` (inspection), `edit` (inspection and edits), and `full-host` (inspection, edits, and Bash). Every result includes its summary, artifacts, changed files, limitations, result package, and any abnormal process outcome.
 

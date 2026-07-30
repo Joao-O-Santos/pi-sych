@@ -5,7 +5,7 @@ description: Create or refresh a reviewed tracked PROJECT.md from a rough idea o
 
 # Project briefing
 
-Use `/brief` rather than demanding a formal specification. For a new project, restate the likely work, identify the highest-leverage unknown, and ask one focused question at a time. Explain why a non-obvious question matters and offer options when useful. Stop once there is enough to begin useful work.
+Use `/brief` rather than demanding a formal specification. For a new project, restate the likely work, identify the highest-leverage unknown, and ask one focused question at a time. Explain why a non-obvious question matters and offer options when useful. When relevant, surface practical constraints such as venue or audience, length or format, deadline, and delivery requirements as ordinary brief content rather than new required headings. Stop once there is enough to begin useful work.
 
 Keep facts and decisions explicitly labelled `[accepted]`, `[provisional]`, `[inferred]`, or `[unresolved]`. Do not promote an inference or assumption to accepted state. Present the candidate brief for review and save only after approval.
 

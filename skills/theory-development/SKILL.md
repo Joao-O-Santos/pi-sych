@@ -11,35 +11,46 @@ where it should not, and what observation would count against it. Do not let a
 new label substitute for causal explanation or add propositions that merely
 rename one another.
 
-## Generate rather than merely assert
+## McGuire-inspired heuristic catalogue
 
-Use compact McGuire-inspired prompts to create hypotheses and alternatives:
+Use these labelled prompts selectively as a source of alternatives and
+hypotheses. They are generative aids, not evidence and not an automatic
+theory-selection rule. Prefer a few that fit the problem; switch when ideas
+become repetitive.
 
-- What if the contrary is partly true? Could the proposed outcome cause the
-  predictor, or could both reflect a third process?
-- Which moderator, boundary condition, or population would reverse, suppress,
-  or amplify the relation?
-- List several accounts before selecting a preferred one. Could opposing
-  processes yield the observed net effect?
-- What do deviant cases, null cases, observations, or patterns across studies
-  reveal about a candidate mechanism or relation?
-- Test the relation at an extreme or zero condition; vary the operationalization
-  of the putative cause; decompose the outcome into components.
-- Restate an account in plain language, a diagram, a table or matrix, or explicit
-  premises. Use the contrast to find unclear constructs, missing mediators, or
-  discriminating implications.
-- Treat conflicting and complementary studies as prompts for moderators,
-  mediators, alternative accounts, or scope conditions.
-- Look for an analogous mechanism in another domain, then specify where the
-  analogy breaks. Plan a sequence of studies that discriminate accounts rather
-  than a collection of loosely related tests.
+- **Contrary (E10):** What if the contrary is partly true?
+- **Reverse direction (E11):** Could the proposed outcome cause the predictor?
+- **Moderators (E14):** Which moderator, population, or boundary would reverse,
+  suppress, or amplify the relation?
+- **Multiple accounts (H23):** List several explanations before preferring one.
+- **Counterforces (H25):** Could opposing processes yield the observed net effect?
+- **Deviant cases (K35):** What do outliers, null cases, or boundary cases reveal?
+- **Reconcile conflicts (L37):** What moderator or scope condition would make
+  conflicting prior results jointly intelligible?
+- **Extreme or zero condition:** Test the relation when the putative cause is
+  absent, maximal, or outside the usual range.
+- **Re-operationalize:** Vary the measure or manipulation of the putative cause
+  or outcome.
+- **Decompose:** Split the outcome or mechanism into components with distinct
+  implications.
+- **Restate:** Express the account in plain language, a diagram, a matrix, or
+  explicit premises; use the contrast to find missing mediators or unclear
+  constructs.
+- **Analogy:** Borrow a mechanism from another domain, then specify where the
+  analogy breaks.
+- **Study sequence:** Plan discriminating tests rather than a loose collection
+  of related studies.
 
-Use a few prompts selectively, and switch them when the resulting ideas become
-repetitive; they are generative aids, not a mandatory checklist. For each
-proposition, name the constructs, mechanism, scope, rival account, and
-discriminating implication. Present illustrative examples as illustrations, not
-evidence. Retain unresolved theoretical choices rather than hiding them in
-confident prose.
+For each proposition worth keeping, name the constructs, mechanism, scope,
+rival account, and discriminating implication. Present illustrative examples as
+illustrations, not evidence. Retain unresolved theoretical choices rather than
+hiding them in confident prose.
+
+## Use with
+
+Pair with `theoretical-paper` or `empirical-paper` depending on the artifact.
+Use `review-detail` when a skeptical pass should generate alternatives, and
+`strategy` when several candidate accounts compete for limited space.
 
 ## Optional user examples
 

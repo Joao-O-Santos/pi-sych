@@ -9,7 +9,7 @@ Use this skill when a project lacks `PROJECT.md` or `SYNC.md`, when existing sta
 
 ## Greenfield
 
-Ask one focused question at a time. Establish only what is useful to begin: objective, audience, contribution, deliverable, constraints, and completion criteria. Stop once a candidate can be reviewed; do not mechanically exhaust a questionnaire.
+Ask one focused question at a time. Establish only what is useful to begin: objective, audience, contribution, deliverable, constraints, and completion criteria. When relevant, also ask for practical constraints such as venue or audience expectations, length or format limits, deadline, and delivery requirements. Record those under ordinary constraints or deliverables; do not invent new required `PROJECT.md` schema headings for them. Stop once a candidate can be reviewed; do not mechanically exhaust a questionnaire.
 
 Create a grouped candidate for `PROJECT.md`, and create `EVIDENCE.md` only when evidence tracking is relevant. Label each candidate statement `explicit`, `inferred`, or `unresolved` as appropriate. Present the candidate before any write. A user response is explicit input, not accepted durable state until the user approves the candidate.
 
