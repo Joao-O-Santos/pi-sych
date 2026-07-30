@@ -2,6 +2,13 @@
 
 All notable changes to Pi Sych are documented here. Versions are immutable npm publications unless explicitly marked otherwise.
 
+## [1.0.2] - 2026-07-30
+
+### Changed
+
+- Listed the nine design principles verbatim in the README.
+- Updated versioned diagram URLs and removed inline image alt text for broader Markdown-renderer compatibility.
+
 ## [1.0.1] - 2026-07-30
 
 ### Added

@@ -38,4 +38,4 @@
 
 ## Immediate next step
 
-[accepted] Complete the reviewed `v1.0.1` corrective release, then keep the package small and add behavior only when it serves a real user need and can be explained, reviewed, and verified.
+[accepted] Publish the focused `v1.0.2` README compatibility update, then keep the package small and add behavior only when it serves a real user need and can be explained, reviewed, and verified.
