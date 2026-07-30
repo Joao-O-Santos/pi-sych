@@ -6,7 +6,17 @@ Pi Sych is a small Pi package for serious writing, research, analysis, and softw
 
 ## Principles
 
-Pi Sych follows the [design principles](principles.md): humans own consequential decisions and final outputs; supervisors own coordination; important knowledge belongs in visible files; workers are short-lived and receive the smallest complete context; mechanical tools handle mechanical facts; skills and people handle meaning; existing Pi, MCPorter, Plannotator, and project tooling come before new infrastructure; and permanent code should stay small.
+Pi Sych follows nine [design principles](principles.md):
+
+1. Humans remain responsible for consequential decisions and final outputs.
+2. The supervisor owns project coherence and coordination.
+3. Memory is lossy, biased, and unreliable: write it down.
+4. Use short-lived workers for independent review and bounded specialist tasks.
+5. Give every agent the smallest complete context.
+6. Choose the right model for the right task.
+7. Use mechanical tools for mechanical problems; use skills and judgment for semantic problems.
+8. Prefer existing tools and skills to new infrastructure.
+9. Write as little code as possible.
 
 ## Start
 
