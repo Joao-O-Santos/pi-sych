@@ -67,12 +67,8 @@ test("public workbench extension loads without private configuration", async () 
 	assert.equal(stderr, "");
 	const names = commands.map((command) => command.name);
 	assert.deepEqual(names.filter((name) => name.startsWith("pi-sych-")).sort(), [
-		"pi-sych-drift",
-		"pi-sych-init",
 		"pi-sych-mcp",
-		"pi-sych-retro",
 		"pi-sych-status",
-		"pi-sych-sync",
 	]);
 	assert.equal(names.includes("plannotator-annotate"), true);
 	assert.equal(names.includes("plannotator-last"), true);
@@ -100,6 +96,6 @@ test("bootstrapped worker starts with only the worker extension", async () => {
 		commands
 			.map((command) => command.name)
 			.filter((name) => name.startsWith("pi-sych-")),
-		["pi-sych-worker-status"],
+		[],
 	);
 });

@@ -6,12 +6,12 @@ This optional ledger tracks the minimal-architecture refactor. It is not authori
 
 - [ ] R-003 — Replace the supervisor surface with `dispatch_worker`, `project_status`, and optional `submit_plan`.
 - [ ] R-005 — Simplify bounded dispatch with a 90-second default and explicit override.
-- [ ] R-006 — Inject optional project `AGENTS.md` and applicable `STYLE.md` into worker packets.
+- [ ] R-006 — Inject optional project `AGENTS.md` and applicable `STYLE.md` into worker packets; use the approved mode-specific Pi harness tool lists.
 - [ ] R-007 — Move bootstrap, status review, drift, reconciliation, verification, and retrospective procedures into skills.
-- [ ] R-008 — Reduce Plannotator to `submit_plan` and `/plannotator-annotate`.
+- [ ] R-008 — Reduce Plannotator to `submit_plan`, `/plannotator-annotate`, and retained `/plannotator-last`.
 - [ ] R-009 — Remove superseded TypeScript machinery and obsolete commands.
 - [ ] R-010 — Rewrite documentation, templates, and diagrams around the active architecture.
-- [ ] R-011 — Enforce the production TypeScript budget and complete end-to-end acceptance.
+- [ ] R-011 — Enforce the production TypeScript budget, complete end-to-end acceptance, and add opt-in local real-Pi usage tests that inspect artifacts and session JSON.
 
 ## Blocked
 

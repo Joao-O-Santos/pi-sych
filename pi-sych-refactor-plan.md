@@ -80,7 +80,7 @@ Retain unless tests reveal a defect:
 - dedicated verification tool;
 - programmatic semantic drift taxonomy and resolution generation;
 - worker-status command;
-- `/plannotator-last`, unless a demonstrated workflow still requires it;
+- no Plannotator command: retain `/plannotator-last` as an explicitly supported annotation workflow;
 - `/pi-sych-init`, `/pi-sych-drift`, and `/pi-sych-sync` as programmatic workflows;
 - persistent project-local run history unless needed solely for debugging;
 - mutation locking if synchronous dispatch and Pi's single tool-call flow make it redundant;
@@ -311,7 +311,7 @@ Use a compact schema:
    - selected skills;
    - result contract.
 7. Continue to use `--no-context-files` so no unrelated global or project context leaks into the worker.
-8. Keep `read-only`, `edit`, and `full-host` as visible-tool profiles, with explicit non-sandbox language.
+8. Keep `read-only`, `edit`, and `full-host` as visible-tool profiles, with explicit non-sandbox language. In addition to required `submit_artifact`, use the Pi harness tools exactly as follows: `read-only` gets `read`, `grep`, `find`, and `ls`; `edit` adds `edit`; `full-host` gets only `read`, `edit`, and `bash`, because Bash subsumes searching and listing.
 9. Keep MCPorter absent unless `remoteResearch: true`, while preserving its current supported integration when enabled.
 10. Require one structured immutable result.
 11. Prefer a temporary result directory or a disposable `.pi-sych` runtime path excluded from Git. Do not return paths that have already been deleted; return useful result content and durable project artifact paths.
@@ -415,7 +415,7 @@ Move procedural guidance from TypeScript into the appropriate skills. Skills may
 3. Expose only:
    - `submit_plan` to the supervisor;
    - `/plannotator-annotate <file>` to the user.
-4. Remove `/plannotator-last` unless retained by an explicit decision.
+4. Retain `/plannotator-last` as an explicitly supported last-assistant-message annotation command.
 5. Ensure approval does not:
    - start implementation;
    - change the model;
@@ -523,13 +523,18 @@ Available:
 /pi-sych-mcp             if retained
 ```
 
-Absent unless explicitly retained:
+Absent:
 
 ```text
 /pi-sych-retro
 /pi-sych-init
 /pi-sych-drift
 /pi-sych-sync
+```
+
+Retained:
+
+```text
 /plannotator-last
 ```
 
@@ -575,6 +580,12 @@ Absent unless explicitly retained:
    - produces scoped proposals;
    - changes no package or skill file automatically.
 
+8. **Opt-in local usage acceptance**
+   - run real Pi calls against disposable dummy projects only when an explicit local environment flag is set;
+   - inspect project artifacts and resulting session JSON after the run;
+   - require no API keys or network credentials in CI and exclude this suite from default tests;
+   - use it when a real-model validation adds value beyond deterministic tests.
+
 ### Completion definition
 
 The refactor is complete when:
@@ -585,7 +596,7 @@ The refactor is complete when:
 - project status is independent of workers;
 - project conventions reach every artifact-producing agent;
 - documentation matches implementation;
-- tests cover the retained trust boundaries;
+- deterministic tests cover the retained trust boundaries and opt-in local usage tests are available for real Pi/model acceptance;
 - the package is smaller, easier to inspect, and no less useful for real workflows.
 
 ## 6. Recommended commit sequence
@@ -605,5 +616,6 @@ Keep commits reviewable and reversible:
 11. `refactor: remove superseded workflow machinery`
 12. `docs: align package documentation templates and diagrams`
 13. `test: add end-to-end minimal architecture acceptance`
+14. `test: add opt-in local Pi usage acceptance`
 
 Do not combine the removal of old behaviour with the creation of its skill replacement in one opaque commit unless the diff remains easily reviewable.

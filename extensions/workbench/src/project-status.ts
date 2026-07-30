@@ -362,6 +362,38 @@ export async function checkProjectStatus(
 	}
 }
 
+export function formatProjectStatusCheck(state: ProjectStatusCheck): string {
+	const lines = ["Project status", "", `Root: ${state.projectRoot}`];
+	if (state.syncError)
+		return [...lines, "", `State unavailable: ${state.syncError}`].join("\n");
+	if (state.changed.length)
+		lines.push("", "Changed:", ...state.changed.map((path) => `- ${path}`));
+	if (state.missing.length)
+		lines.push("", "Missing:", ...state.missing.map((path) => `- ${path}`));
+	if (state.impacted.length)
+		lines.push(
+			"",
+			"Declared dependents requiring review:",
+			...state.impacted.map(
+				(impact) =>
+					`- ${impact.path} ← ${impact.from.join(", ")}${impact.direct ? "" : " (transitive)"}`,
+			),
+		);
+	if (state.cycles.length)
+		lines.push(
+			"",
+			"Dependency cycles:",
+			...state.cycles.map((cycle) => `- ${cycle.join(" → ")}`),
+		);
+	if (!state.changed.length && !state.missing.length)
+		lines.push("", "All tracked files match their acknowledged hashes.");
+	lines.push(
+		"",
+		"A changed hash establishes changed content, not conceptual drift or authority.",
+	);
+	return lines.join("\n");
+}
+
 export function formatProjectStatusMarkdown(
 	manifest: ProjectStatusManifest,
 ): string {

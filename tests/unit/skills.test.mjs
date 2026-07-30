@@ -29,6 +29,40 @@ test("every public skill has valid progressive-disclosure identity metadata", as
 	}
 });
 
+test("migrated workflow skills preserve the human and mechanical boundary", async () => {
+	const expected = [
+		"bootstrap-project",
+		"project-status-review",
+		"drift-review",
+		"reconcile-project",
+		"verify-change",
+		"workflow-retrospective",
+	];
+	for (const name of expected) {
+		const content = await readFile(`skills/${name}/SKILL.md`, "utf8");
+		assert.match(content, new RegExp(`^name: ${name}$`, "m"), name);
+		assert.doesNotMatch(content, /pi_sych_/i, name);
+	}
+	assert.match(
+		await readFile("skills/project-status-review/SKILL.md", "utf8"),
+		/mechanical facts only/i,
+	);
+	assert.match(
+		await readFile("skills/drift-review/SKILL.md", "utf8"),
+		/Do not choose an authority automatically/i,
+	);
+	assert.match(
+		await readFile("skills/verify-change/SKILL.md", "utf8"),
+		/built-in Bash/i,
+	);
+	const retrospective = await readFile(
+		"skills/workflow-retrospective/SKILL.md",
+		"utf8",
+	);
+	assert.match(retrospective, /^disable-model-invocation: true$/m);
+	assert.match(retrospective, /never edit package code/i);
+});
+
 test("every public skill names its private user-example overlay outside package-managed directories", async () => {
 	const files = await skillFiles();
 	for (const path of files) {
