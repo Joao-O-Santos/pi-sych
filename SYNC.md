@@ -3,7 +3,7 @@
 ```json
 {
   "version": 1,
-  "confirmedAt": "2026-07-30T13:08:05.103Z",
+  "confirmedAt": "2026-07-30T13:18:32.606Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -57,7 +57,7 @@
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:ecce3bb215d90c5e2912b1d8bd426bc68b78bf230d0b1a94120a08ab4f8b9631",
+      "fingerprint": "sha256:eed7ff773f6f6b77e525aeb52dfa8b707933ece2dd693a57aee00121ed3c110d",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -69,8 +69,8 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T13:08:05.103Z",
-        "reason": "Reviewed the approved v1.1.0 interface hardening, project-state template, human-facing documentation, public skill guidance, package boundary, and actual verification evidence."
+        "at": "2026-07-30T13:18:32.606Z",
+        "reason": "Reviewed the approved human-facing README contribution section and moved supervisor-specific guidance to the end."
       }
     },
     {
