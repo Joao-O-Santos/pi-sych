@@ -55,30 +55,6 @@ export interface ResolvedProject {
 	canonical: Record<CanonicalFile, string>;
 }
 
-export const CORE_PROJECT_FILES = ["PROJECT.md", "SYNC.md"] as const;
-export const OPTIONAL_PROJECT_FILES = [
-	"AGENTS.md",
-	"STYLE.md",
-	"EVIDENCE.md",
-	"DECISIONS.md",
-	"TODO.md",
-	"INBOX.md",
-] as const;
-
-export interface DiscoveredProjectFile {
-	name:
-		| (typeof CORE_PROJECT_FILES)[number]
-		| (typeof OPTIONAL_PROJECT_FILES)[number];
-	path: string;
-	exists: boolean;
-	required: boolean;
-}
-
-export interface ProjectDiscovery {
-	root: string;
-	files: DiscoveredProjectFile[];
-}
-
 export interface ProjectValidation {
 	valid: boolean;
 	errors: string[];
@@ -228,43 +204,6 @@ export async function resolveProject(
 			]),
 		) as Record<CanonicalFile, string>,
 	};
-}
-
-export async function locateProjectRoot(startPath: string): Promise<string> {
-	let current = resolve(startPath);
-	try {
-		if (!(await stat(current)).isDirectory()) current = dirname(current);
-	} catch {
-		current = dirname(current);
-	}
-
-	let projectFallback: string | undefined;
-	while (true) {
-		if (await exists(resolve(current, "SYNC.md"))) return current;
-		if (!projectFallback && (await exists(resolve(current, "PROJECT.md"))))
-			projectFallback = current;
-		const parent = dirname(current);
-		if (parent === current) break;
-		current = parent;
-	}
-	return projectFallback ?? resolve(startPath);
-}
-
-export async function discoverProjectFiles(
-	startPath: string,
-): Promise<ProjectDiscovery> {
-	const root = await locateProjectRoot(startPath);
-	const required = new Set<string>(CORE_PROJECT_FILES);
-	const names = [...CORE_PROJECT_FILES, ...OPTIONAL_PROJECT_FILES];
-	const files = await Promise.all(
-		names.map(async (name) => ({
-			name,
-			path: resolve(root, name),
-			exists: await exists(resolve(root, name)),
-			required: required.has(name),
-		})),
-	);
-	return { root, files };
 }
 
 export function validateProjectMarkdown(markdown: string): ProjectValidation {

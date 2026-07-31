@@ -8,7 +8,6 @@ import { promisify } from "node:util";
 
 import {
 	DEFAULT_CANONICAL_PATHS,
-	discoverProjectFiles,
 	parseEvidenceEntries,
 	parseSyncManifest,
 	resolveExistingProjectPath,
@@ -86,46 +85,6 @@ test("resolver falls back to a non-Git working directory", async () => {
 	assert.equal(resolved.workspaceRoot, cwd);
 	assert.equal(resolved.projectRoot, join(cwd, "project"));
 	assert.equal(resolved.manifest?.version, 2);
-});
-
-test("canonical discovery selects the nearest project and reports optional files", async () => {
-	const root = await mkdtemp(join(tmpdir(), "pi-sych-discovery-"));
-	const nested = join(root, "src", "nested");
-	await mkdir(nested, { recursive: true });
-	await writeFile(
-		join(root, "PROJECT.md"),
-		"# Project\n\n## Objective\n\nX\n\n## Current direction\n\nY\n\n## Definition of done\n\nZ\n\n## Previous action\n\nNone yet.\n\n## Immediate next step\n\nNone at present.\n",
-	);
-	await writeFile(join(root, "SYNC.md"), "candidate");
-	await writeFile(join(root, "STYLE.md"), "# Style\n");
-	await writeFile(join(root, "TODO.md"), "# Tasks\n");
-
-	const discovery = await discoverProjectFiles(nested);
-	assert.equal(discovery.root, root);
-	assert.equal(
-		discovery.files.find((file) => file.name === "STYLE.md").exists,
-		true,
-	);
-	assert.equal(
-		discovery.files.find((file) => file.name === "DECISIONS.md").exists,
-		false,
-	);
-	assert.equal(
-		discovery.files.find((file) => file.name === "TODO.md").exists,
-		true,
-	);
-	assert.equal(
-		discovery.files.find((file) => file.name === "TODO.md").required,
-		false,
-	);
-	assert.equal(
-		discovery.files.find((file) => file.name === "EVIDENCE.md").required,
-		false,
-	);
-	assert.equal(
-		discovery.files.find((file) => file.name === "AGENTS.md").required,
-		false,
-	);
 });
 
 test("existing project paths reject symlink escapes", async () => {
