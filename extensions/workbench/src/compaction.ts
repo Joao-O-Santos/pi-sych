@@ -48,19 +48,24 @@ export interface WorkingMemory {
 	relevantFiles: string[];
 }
 
+export type PromotionTarget = (typeof MEMORY_CANONICAL_FILES)[number];
+export type PromotionScope = "project" | "personal" | "ask-user";
+
 export type PromotionProposal =
 	| {
 			operation: "add";
-			targetFile: string;
+			target: PromotionTarget;
 			proposedText: string;
 			rationale: string;
+			recommendedScope?: PromotionScope;
 	  }
 	| {
 			operation: "update";
-			targetFile: string;
+			target: PromotionTarget;
 			existingText: string;
 			proposedText: string;
 			rationale: string;
+			recommendedScope?: PromotionScope;
 	  };
 
 export type PromotionCandidate = PromotionProposal & {
@@ -76,8 +81,26 @@ export interface PromotionInbox {
 export interface CanonicalSnapshot {
 	projectRoot: string;
 	files: Array<{ path: string; content: string; fingerprint: string }>;
-	allowedTargets: string[];
+	targetPaths: Record<PromotionTarget, string>;
 	absentStandardTargets: string[];
+}
+
+export interface CompactionProjectStatus {
+	changed: string[];
+	missing: string[];
+	impacted: Array<{ path: string; from: string[]; direct: boolean }>;
+	cycles: string[][];
+	projectErrors: string[];
+	syncError?: string;
+}
+
+export interface InboxInspection {
+	count?: number;
+	error?: string;
+}
+
+interface InspectedInbox extends InboxInspection {
+	inbox: PromotionInbox;
 }
 
 function text(value: unknown, label: string): string {
@@ -130,10 +153,29 @@ export function validateWorkingMemory(
 
 function proposal(value: unknown): PromotionProposal {
 	const item = record(value, "promotion");
+	const target = text(item.target, "target");
+	if (!MEMORY_CANONICAL_FILES.includes(target as PromotionTarget))
+		throw new Error("promotion.target is not allowed");
+	const recommendedScope =
+		item.recommendedScope === undefined
+			? undefined
+			: text(item.recommendedScope, "recommendedScope");
+	if (
+		recommendedScope !== undefined &&
+		recommendedScope !== "project" &&
+		recommendedScope !== "personal" &&
+		recommendedScope !== "ask-user"
+	)
+		throw new Error("promotion.recommendedScope is not allowed");
+	if (target === "agents" && !recommendedScope)
+		throw new Error("agents promotions require recommendedScope");
 	const base = {
-		targetFile: text(item.targetFile, "targetFile"),
+		target: target as PromotionTarget,
 		proposedText: text(item.proposedText, "proposedText"),
 		rationale: text(item.rationale, "rationale"),
+		...(recommendedScope
+			? { recommendedScope: recommendedScope as PromotionScope }
+			: {}),
 	};
 	if (item.operation === "add") return { operation: "add", ...base };
 	if (item.operation === "update")
@@ -161,7 +203,7 @@ export function parseCompactionModelOutput(value: string): {
 }
 
 export function candidateId(value: PromotionProposal): string {
-	const normalized = `${value.operation}\n${value.targetFile.replace(/^\.\//, "").trim()}\n${value.proposedText.replace(/\s+/g, " ").trim()}`;
+	const normalized = `${value.operation}\n${value.target}\n${value.proposedText.replace(/\s+/g, " ").trim()}`;
 	return `P-${createHash("sha256").update(normalized).digest("hex").slice(0, 12)}`;
 }
 
@@ -219,19 +261,33 @@ export async function readPromotionInbox(
 	}
 }
 
+export async function inspectPromotionInbox(
+	project: Pick<ResolvedProject, "canonical">,
+): Promise<InspectedInbox> {
+	try {
+		const inbox = await readPromotionInbox(project);
+		return { inbox, count: inbox.candidates.length };
+	} catch (error) {
+		return {
+			inbox: { ...EMPTY_INBOX, candidates: [] },
+			error: error instanceof Error ? error.message : String(error),
+		};
+	}
+}
+
 export async function countPromotionCandidates(
 	project: Pick<ResolvedProject, "canonical">,
 ): Promise<number> {
-	return (await readPromotionInbox(project)).candidates.length;
+	return (await inspectPromotionInbox(project)).count ?? 0;
 }
 
 export function validatePromotion(
 	value: PromotionProposal,
-	canonical: Pick<CanonicalSnapshot, "allowedTargets" | "files">,
+	canonical: Pick<CanonicalSnapshot, "targetPaths" | "files">,
 ): PromotionProposal {
-	if (!canonical.allowedTargets.includes(value.targetFile))
-		throw new Error("promotion target is not allowed");
-	const file = canonical.files.find((entry) => entry.path === value.targetFile);
+	const targetPath = canonical.targetPaths[value.target];
+	if (!targetPath) throw new Error("promotion target is not allowed");
+	const file = canonical.files.find((entry) => entry.path === targetPath);
 	if (
 		value.operation === "update" &&
 		!file?.content.includes(value.existingText)
@@ -271,6 +327,7 @@ export async function collectCanonicalSnapshot(
 	project: Pick<ResolvedProject, "canonical">,
 ): Promise<CanonicalSnapshot & { files: SnapshotFile[] }> {
 	const standard = MEMORY_CANONICAL_FILES.map((name) => ({
+		name,
 		path: displayPath(state.projectRoot, project.canonical[name]),
 		absolutePath: project.canonical[name],
 	}));
@@ -290,36 +347,63 @@ export async function collectCanonicalSnapshot(
 	const files: SnapshotFile[] = [];
 	for (const [path, { absolutePath }] of candidates)
 		try {
-			const content = await readFile(absolutePath, "utf8");
-			if (Buffer.byteLength(content) > 32 * 1024) continue;
+			const bytes = await readFile(absolutePath);
+			if (bytes.byteLength > 32 * 1024) continue;
 			files.push({
 				path,
-				content,
-				fingerprint: await fingerprintFile(absolutePath),
+				content: bytes.toString("utf8"),
+				fingerprint: `sha256:${createHash("sha256").update(bytes).digest("hex")}`,
 				absolutePath,
 			});
 		} catch (error) {
 			if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
 		}
-	const allowedTargets = [
-		...standard.map((entry) => entry.path),
-		...declared
-			.filter((entry) => files.some((file) => file.path === entry.path))
-			.map((entry) => entry.path),
-	];
+	const targetPaths = Object.fromEntries(
+		standard.map((entry) => [entry.name, entry.path]),
+	) as Record<PromotionTarget, string>;
 	return {
 		projectRoot: state.projectRoot,
 		files,
-		allowedTargets,
+		targetPaths,
 		absentStandardTargets: standard
 			.filter((entry) => !files.some((file) => file.path === entry.path))
 			.map((entry) => entry.path),
 	};
 }
 
+export function projectStatusProjection(
+	state: Pick<
+		ProjectStatusCheck,
+		| "changed"
+		| "missing"
+		| "impacted"
+		| "cycles"
+		| "projectErrors"
+		| "syncError"
+	>,
+): CompactionProjectStatus {
+	const values = (items: string[]) =>
+		items.slice(0, MAX_ITEMS).map((item) => item.slice(0, MAX_TEXT));
+	return {
+		changed: values(state.changed),
+		missing: values(state.missing),
+		impacted: state.impacted.slice(0, MAX_ITEMS).map((impact) => ({
+			path: impact.path.slice(0, MAX_TEXT),
+			from: values(impact.from),
+			direct: impact.direct,
+		})),
+		cycles: state.cycles.slice(0, MAX_ITEMS).map(values),
+		projectErrors: values(state.projectErrors),
+		...(state.syncError
+			? { syncError: state.syncError.slice(0, MAX_TEXT) }
+			: {}),
+	};
+}
+
 function prompt(
 	event: SessionBeforeCompactEvent,
 	canonical: CanonicalSnapshot,
+	status: CompactionProjectStatus,
 	inbox: PromotionInbox,
 	loadedContextFiles: Array<{ path: string; content: string }>,
 ): string {
@@ -338,16 +422,51 @@ function prompt(
 		path: file.path,
 		content: clip(file.content, 8_000),
 	}));
-	return `Return JSON with workingMemory and at most five promotions. Working memory must name currentTask, completed, successfulApproaches, failedApproaches, inProgress, blockers, criticalContext, nextAction, and relevantFiles. Promotions are add/update proposals only; compare canonical contents and existing candidates, use exact existingText for updates, and do not promote already represented content.\n\nCompaction: reason=${event.reason}; retry=${event.willRetry}.\n\nPrevious summary:\n${clip(event.preparation.previousSummary ?? "none")}\n\nConversation:\n${clip(conversation)}\n\nRecent context:\n${clip(recent)}\n\nLoaded conventions:\n${JSON.stringify(conventions)}\n\nCanonical files:\n${JSON.stringify(
+	return `Return JSON with workingMemory and at most five promotions. Working memory must name currentTask, completed, successfulApproaches, failedApproaches, inProgress, blockers, criticalContext, nextAction, and relevantFiles. Preserve only context needed to continue active work, including task-relevant changed artifacts and impacted dependents from project status. Promotions should normally be empty. A promotion is an add/update proposal with target (one of project, agents, style, evidence, decisions, todo), proposedText, rationale, and existingText for updates. Agents proposals must also include recommendedScope (project, personal, or ask-user). Route settled objectives and constraints to project; stable workflows to agents; stable conventions to style; verified findings to evidence; accepted decisions to decisions; concrete unfinished actions to todo. Do not promote tentative discussion, transient context, one-off requests, or unsupported claims. Compare canonical contents and existing candidates, use exact existingText for updates, and do not promote already represented content.\n\nCompaction: reason=${event.reason}; retry=${event.willRetry}.\n\nPrevious summary:\n${clip(event.preparation.previousSummary ?? "none")}\n\nConversation:\n${clip(conversation)}\n\nRecent context:\n${clip(recent)}\n\nLoaded conventions:\n${JSON.stringify(conventions)}\n\nCanonical files:\n${JSON.stringify(
 		canonical.files.map(({ path, content, fingerprint }) => ({
 			path,
 			content,
 			fingerprint,
 		})),
-	)}\n\nAllowed targets: ${canonical.allowedTargets.join(", ")}\nAbsent standard targets: ${canonical.absentStandardTargets.join(", ") || "none"}\nExisting inbox: ${JSON.stringify(inbox.candidates)}\nInstructions: ${event.customInstructions ?? "none"}`;
+	)}\n\nCanonical target paths: ${JSON.stringify(canonical.targetPaths)}\nAbsent standard targets: ${canonical.absentStandardTargets.join(", ") || "none"}\nProject status: ${JSON.stringify(status)}\nExisting inbox: ${JSON.stringify(inbox.candidates)}\nInstructions: ${event.customInstructions ?? "none"}`;
 }
 
 type Complete = typeof complete;
+
+export interface CompactionFailure {
+	classification:
+		| "unavailable"
+		| "authentication"
+		| "project"
+		| "model-output"
+		| "provider";
+	message: string;
+}
+
+export function classifyCompactionFailure(error: unknown): CompactionFailure {
+	const message = error instanceof Error ? error.message : String(error);
+	if (/credential|api.?key|auth/i.test(message))
+		return { classification: "authentication", message };
+	if (/SYNC\.json|PROJECT\.md|project root|artifact/i.test(message))
+		return { classification: "project", message };
+	if (
+		/workingMemory|promotions|promotion\.|JSON|existingText|target/i.test(
+			message,
+		)
+	)
+		return { classification: "model-output", message };
+	return { classification: "provider", message };
+}
+
+function reportCompactionFailure(
+	event: SessionBeforeCompactEvent,
+	ctx: ExtensionContext,
+	failure: CompactionFailure,
+): void {
+	const detail = `Working-memory compaction failed (${failure.classification}): ${failure.message}`;
+	if (event.reason === "manual") ctx.ui.notify(detail, "error");
+	else console.error(detail);
+}
 
 export async function createWorkingMemoryCompaction(
 	event: SessionBeforeCompactEvent,
@@ -356,13 +475,26 @@ export async function createWorkingMemoryCompaction(
 	dependencies: { complete?: Complete } = {},
 ) {
 	try {
-		if (!ctx.model) return undefined;
+		if (!ctx.model) {
+			reportCompactionFailure(event, ctx, {
+				classification: "unavailable",
+				message: "No model is configured for custom compaction",
+			});
+			return undefined;
+		}
 		const project = await resolveProject(ctx.cwd);
-		const state = await checkProjectStatus(ctx.cwd);
+		const state = await checkProjectStatus(ctx.cwd, project);
 		const canonical = await collectCanonicalSnapshot(state, project);
-		const inbox = await readPromotionInbox(project);
+		const inboxInspection = await inspectPromotionInbox(project);
+		const inbox = inboxInspection.inbox;
 		const auth = await ctx.modelRegistry.getApiKeyAndHeaders(ctx.model);
-		if (!auth.ok || !auth.apiKey) return undefined;
+		if (!auth.ok || !auth.apiKey) {
+			reportCompactionFailure(event, ctx, {
+				classification: "authentication",
+				message: "No API key is available for custom compaction",
+			});
+			return undefined;
+		}
 		const response = await (dependencies.complete ?? complete)(
 			ctx.model,
 			{
@@ -372,7 +504,13 @@ export async function createWorkingMemoryCompaction(
 						content: [
 							{
 								type: "text",
-								text: prompt(event, canonical, inbox, loadedContextFiles),
+								text: prompt(
+									event,
+									canonical,
+									projectStatusProjection(state),
+									inbox,
+									loadedContextFiles,
+								),
 							},
 						],
 						timestamp: Date.now(),
@@ -394,9 +532,15 @@ export async function createWorkingMemoryCompaction(
 			.map((entry) => entry.text)
 			.join("\n");
 		const output = parseCompactionModelOutput(raw);
+		const allowedRelevantFiles = new Set([
+			...Object.values(project.canonical).map((path) =>
+				displayPath(state.projectRoot, path),
+			),
+			...(state.manifest?.artifacts ?? []).map((artifact) => artifact.path),
+		]);
 		const memory = validateWorkingMemory(
 			output.workingMemory,
-			new Set(canonical.files.map((file) => file.path)),
+			allowedRelevantFiles,
 		);
 		const additions = output.promotions
 			.map((entry) => validatePromotion(entry, canonical))
@@ -407,19 +551,23 @@ export async function createWorkingMemoryCompaction(
 			}));
 		const unchanged = await Promise.all(
 			canonical.files.map(
-				async (file) => (await fingerprintFile(file.path)) === file.fingerprint,
+				async (file) =>
+					(await fingerprintFile(
+						resolveProjectPath(state.projectRoot, file.path),
+					)) === file.fingerprint,
 			),
 		);
 		const merged = mergePromotionCandidates(inbox.candidates, additions);
-		if (additions.length && unchanged.every(Boolean))
+		const canPersist =
+			!inboxInspection.error && additions.length && unchanged.every(Boolean);
+		if (canPersist)
 			await writeAtomicFile(
 				project.canonical.inbox,
 				formatPromotionInbox({ version: 1, candidates: merged }),
 			);
-		const pendingPromotions =
-			additions.length && unchanged.every(Boolean)
-				? merged.length
-				: inbox.candidates.length;
+		const pendingPromotions = canPersist
+			? merged.length
+			: (inboxInspection.count ?? 0);
 		ctx.ui.notify(
 			`Working-memory compaction complete. ${displayPath(state.projectRoot, project.canonical.inbox)} has ${pendingPromotions} pending memory proposals.`,
 			"info",
@@ -437,6 +585,11 @@ export async function createWorkingMemoryCompaction(
 					willRetry: event.willRetry,
 					inboxPath: displayPath(state.projectRoot, project.canonical.inbox),
 					pendingPromotions,
+					inbox: {
+						...(inboxInspection.error
+							? { error: inboxInspection.error, persistence: "skipped" }
+							: { persistence: canPersist ? "written" : "unchanged" }),
+					},
 					addedPromotionIds: additions.map((entry) => entry.id),
 					canonicalFingerprints: Object.fromEntries(
 						canonical.files.map((file) => [file.path, file.fingerprint]),
@@ -444,7 +597,8 @@ export async function createWorkingMemoryCompaction(
 				},
 			},
 		};
-	} catch {
+	} catch (error) {
+		reportCompactionFailure(event, ctx, classifyCompactionFailure(error));
 		return undefined;
 	}
 }

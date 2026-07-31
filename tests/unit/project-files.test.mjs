@@ -166,7 +166,7 @@ const workingMemory = {
 
 const add = {
 	operation: "add",
-	targetFile: "TODO.md",
+	target: "todo",
 	proposedText: "Keep accepted tasks in TODO.md.",
 	rationale: "This is durable task state.",
 };
@@ -201,19 +201,16 @@ test("promotion inbox parses and formats one fenced JSON object, and a missing i
 	assert.equal(await countPromotionCandidates(project), 1);
 });
 
-test("candidate IDs normalize targets and deduplicate without reordering existing proposals", async () => {
+test("candidate IDs use canonical roles and deduplicate without reordering existing proposals", async () => {
 	const { candidateId, mergePromotionCandidates } = await compaction();
 	const update = {
 		operation: "update",
-		targetFile: "DECISIONS.md",
+		target: "decisions",
 		existingText: "Candidates are reviewed.",
 		proposedText: "Candidates are reviewed by a human.",
 		rationale: "Record the boundary.",
 	};
-	assert.equal(
-		candidateId(add),
-		candidateId({ ...add, targetFile: "./TODO.md" }),
-	);
+	assert.notEqual(candidateId(add), candidateId({ ...add, target: "project" }));
 	assert.match(candidateId(add), /^P-[a-f0-9]{12}$/);
 	const first = {
 		...add,
@@ -250,6 +247,27 @@ test("model output accepts direct or json-fenced JSON and rejects invalid workin
 			),
 		/currentTask|nextAction/i,
 	);
+	const { target: _target, ...legacyPromotion } = add;
+	assert.throws(
+		() =>
+			parseCompactionModelOutput(
+				JSON.stringify({
+					workingMemory,
+					promotions: [{ ...legacyPromotion, targetFile: "TODO.md" }],
+				}),
+			),
+		/target/i,
+	);
+	assert.throws(
+		() =>
+			parseCompactionModelOutput(
+				JSON.stringify({
+					workingMemory,
+					promotions: [{ ...add, target: "agents" }],
+				}),
+			),
+		/recommendedScope/i,
+	);
 });
 
 test("working memory validates fields, filters absent relevant files, and renders only nonempty sections", async () => {
@@ -274,12 +292,12 @@ test("working memory validates fields, filters absent relevant files, and render
 test("promotion validation requires an allowed target and an exact update excerpt", async () => {
 	const { validatePromotion } = await compaction();
 	const canonical = {
-		allowedTargets: ["TODO.md", "DECISIONS.md"],
+		targetPaths: { todo: "TODO.md", decisions: "DECISIONS.md" },
 		files: [{ path: "DECISIONS.md", content: "Candidates are reviewed.\n" }],
 	};
 	const update = {
 		operation: "update",
-		targetFile: "DECISIONS.md",
+		target: "decisions",
 		existingText: "Candidates are reviewed.",
 		proposedText: "Candidates are reviewed by a human.",
 		rationale: "Record the boundary.",
@@ -291,13 +309,13 @@ test("promotion validation requires an allowed target and an exact update excerp
 		/exact|existingText/i,
 	);
 	assert.throws(
-		() => validatePromotion({ ...add, targetFile: "notes.md" }, canonical),
+		() => validatePromotion({ ...add, target: "notes" }, canonical),
 		/target/i,
 	);
 });
 
 test("canonical snapshots use configured paths and admit only declared authoritative Markdown", async () => {
-	const { collectCanonicalSnapshot } = await compaction();
+	const { collectCanonicalSnapshot, validatePromotion } = await compaction();
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-canonical-"));
 	await writeSync(root, {
 		canonical: {
@@ -321,15 +339,141 @@ test("canonical snapshots use configured paths and admit only declared authorita
 		},
 		project,
 	);
-	assert.deepEqual(snapshot.allowedTargets.slice(0, 6), [
-		"PROJECT.md",
-		"AGENTS.md",
-		"STYLE.md",
-		"EVIDENCE.md",
-		"memory/DECISIONS.md",
-		"planning/TODO.md",
-	]);
+	assert.deepEqual(snapshot.targetPaths, {
+		project: "PROJECT.md",
+		agents: "AGENTS.md",
+		style: "STYLE.md",
+		evidence: "EVIDENCE.md",
+		decisions: "memory/DECISIONS.md",
+		todo: "planning/TODO.md",
+	});
 	assert.ok(snapshot.absentStandardTargets.includes("PROJECT.md"));
-	assert.ok(snapshot.allowedTargets.includes("PLAN.md"));
-	assert.equal(snapshot.allowedTargets.includes("notes.txt"), false);
+	assert.ok(snapshot.files.some((file) => file.path === "PLAN.md"));
+	assert.equal(
+		snapshot.files.some((file) => file.path === "notes.txt"),
+		false,
+	);
+	assert.deepEqual(
+		validatePromotion(
+			{ ...add, target: "decisions", proposedText: "Record a decision." },
+			snapshot,
+		),
+		{ ...add, target: "decisions", proposedText: "Record a decision." },
+	);
+});
+
+test("project status projection is bounded and preserves actionable findings", async () => {
+	const { projectStatusProjection } = await compaction();
+	const projection = projectStatusProjection({
+		changed: Array.from({ length: 14 }, (_, index) => `changed-${index}`),
+		missing: ["missing.md"],
+		impacted: [{ path: "dependent.md", from: ["changed.md"], direct: true }],
+		cycles: [["a.md", "b.md", "a.md"]],
+		projectErrors: ["missing required heading"],
+		syncError: "manifest needs review",
+	});
+	assert.equal(projection.changed.length, 12);
+	assert.deepEqual(projection.missing, ["missing.md"]);
+	assert.deepEqual(projection.impacted, [
+		{ path: "dependent.md", from: ["changed.md"], direct: true },
+	]);
+	assert.equal(projection.syncError, "manifest needs review");
+});
+
+test("malformed inbox inspection reports the error without losing project compaction state", async () => {
+	const { inspectPromotionInbox } = await compaction();
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-bad-inbox-"));
+	await writeSync(root);
+	const project = await resolveProject(root);
+	await writeFile(project.canonical.inbox, "not an inbox");
+	const inspection = await inspectPromotionInbox(project);
+	assert.equal(inspection.count, undefined);
+	assert.match(inspection.error, /JSON fence/);
+});
+
+test("compaction failures have actionable classifications", async () => {
+	const { classifyCompactionFailure } = await compaction();
+	assert.equal(
+		classifyCompactionFailure(new Error("promotions must be an array"))
+			.classification,
+		"model-output",
+	);
+	assert.equal(
+		classifyCompactionFailure(new Error("no credentials available"))
+			.classification,
+		"authentication",
+	);
+	assert.equal(
+		classifyCompactionFailure(new Error("SYNC.json is invalid")).classification,
+		"project",
+	);
+});
+
+test("compaction includes project status and continues when the inbox is malformed", async () => {
+	const { createWorkingMemoryCompaction } = await compaction();
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-compact-inbox-"));
+	await writeSync(root, {
+		artifacts: [
+			{
+				path: "src/app.ts",
+				fingerprint: `sha256:${"0".repeat(64)}`,
+				status: "current",
+			},
+		],
+	});
+	await writeFile(join(root, "INBOX.md"), "malformed inbox");
+	let modelPrompt = "";
+	const result = await createWorkingMemoryCompaction(
+		{
+			preparation: {
+				messagesToSummarize: [],
+				turnPrefixMessages: [],
+				firstKeptEntryId: "keep",
+				tokensBefore: 1,
+			},
+			branchEntries: [],
+			reason: "manual",
+			willRetry: false,
+			signal: new AbortController().signal,
+		},
+		{
+			cwd: root,
+			model: { maxTokens: 4096 },
+			modelRegistry: {
+				getApiKeyAndHeaders: async () => ({
+					ok: true,
+					apiKey: "test",
+					headers: {},
+					env: {},
+				}),
+			},
+			ui: { notify() {} },
+		},
+		[],
+		{
+			complete: async (_model, request) => {
+				modelPrompt = request.messages[0].content[0].text;
+				return {
+					content: [
+						{
+							type: "text",
+							text: JSON.stringify({
+								workingMemory: {
+									...workingMemory,
+									relevantFiles: ["src/app.ts"],
+								},
+								promotions: [],
+							}),
+						},
+					],
+					usage: {},
+				};
+			},
+		},
+	);
+	assert.match(modelPrompt, /Project status:/);
+	assert.match(modelPrompt, /"missingCore"|"projectErrors"/);
+	assert.match(result.compaction.summary, /src\/app\.ts/);
+	assert.match(result.compaction.details.inbox.error, /JSON fence/);
+	assert.equal(result.compaction.details.inbox.persistence, "skipped");
 });

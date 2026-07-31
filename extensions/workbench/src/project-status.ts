@@ -311,10 +311,11 @@ function findCycles(artifacts: ProjectArtifact[]): string[][] {
 
 export async function checkProjectStatus(
 	startPath: string,
+	resolvedProject?: ResolvedProject,
 ): Promise<ProjectStatusCheck> {
 	let project: ResolvedProject;
 	try {
-		project = await resolveProject(startPath);
+		project = resolvedProject ?? (await resolveProject(startPath));
 	} catch (error) {
 		const projectRoot = resolve(startPath);
 		return {
@@ -416,6 +417,7 @@ export async function checkProjectStatus(
 export function formatProjectStatusCheck(
 	state: ProjectStatusCheck,
 	pendingPromotions = 0,
+	inboxError?: string,
 ): string {
 	const lines = ["Project status", "", `Root: ${state.projectRoot}`];
 	if (state.missingCore.length)
@@ -430,6 +432,7 @@ export function formatProjectStatusCheck(
 			"PROJECT.md validation errors:",
 			...state.projectErrors.map((error) => `- ${error}`),
 		);
+	if (inboxError) lines.push("", `Memory promotion inbox error: ${inboxError}`);
 	if (state.syncError) {
 		if (pendingPromotions)
 			lines.push(

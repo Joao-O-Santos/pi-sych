@@ -208,6 +208,10 @@ test("pending promotion status includes the human review command only when nonze
 		formatProjectStatusCheck(state, 2),
 		/\/plannotator-annotate INBOX\.md/,
 	);
+	assert.match(
+		formatProjectStatusCheck(state, 0, "invalid JSON"),
+		/Memory promotion inbox error: invalid JSON/,
+	);
 });
 
 // The compaction boundary is injected so these extension-level cases never

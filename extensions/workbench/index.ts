@@ -9,8 +9,8 @@ import type {
 } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import {
-	countPromotionCandidates,
 	createWorkingMemoryCompaction,
+	inspectPromotionInbox,
 } from "./src/compaction.js";
 import {
 	formatMcporterDiagnostic,
@@ -88,14 +88,14 @@ function boundedToolContent(value: string): string {
 }
 
 async function projectStatusView(cwd: string) {
-	const state = await checkProjectStatus(cwd);
-	const pendingPromotions = await countPromotionCandidates(
-		await resolveProject(cwd),
-	);
+	const project = await resolveProject(cwd);
+	const state = await checkProjectStatus(cwd, project);
+	const inbox = await inspectPromotionInbox(project);
+	const pendingPromotions = inbox.count ?? 0;
 	return {
 		state,
 		pendingPromotions,
-		text: formatProjectStatusCheck(state, pendingPromotions),
+		text: formatProjectStatusCheck(state, pendingPromotions, inbox.error),
 	};
 }
 
