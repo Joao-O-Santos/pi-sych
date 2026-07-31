@@ -1,3 +1,4 @@
+import { execFile as execFileCallback } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { constants } from "node:fs";
 import type { FileHandle } from "node:fs/promises";
@@ -12,6 +13,47 @@ import {
 	stat,
 } from "node:fs/promises";
 import { dirname, isAbsolute, parse, relative, resolve, sep } from "node:path";
+import { promisify } from "node:util";
+
+const execFile = promisify(execFileCallback);
+
+export const CANONICAL_FILES = [
+	"project",
+	"agents",
+	"style",
+	"evidence",
+	"decisions",
+	"todo",
+	"inbox",
+] as const;
+export type CanonicalFile = (typeof CANONICAL_FILES)[number];
+
+export const DEFAULT_CANONICAL_PATHS = {
+	project: "PROJECT.md",
+	agents: "AGENTS.md",
+	style: "STYLE.md",
+	evidence: "EVIDENCE.md",
+	decisions: "DECISIONS.md",
+	todo: "TODO.md",
+	inbox: "INBOX.md",
+} satisfies Record<CanonicalFile, string>;
+
+export interface SyncManifest {
+	version: 2;
+	projectRoot?: string;
+	canonical?: Partial<Record<CanonicalFile, string>>;
+	confirmedAt: string;
+	artifacts: unknown[];
+}
+
+export interface ResolvedProject {
+	cwd: string;
+	workspaceRoot: string;
+	projectRoot: string;
+	syncPath: string;
+	manifest?: SyncManifest;
+	canonical: Record<CanonicalFile, string>;
+}
 
 export const CORE_PROJECT_FILES = ["PROJECT.md", "SYNC.md"] as const;
 export const OPTIONAL_PROJECT_FILES = [
@@ -58,6 +100,134 @@ async function exists(path: string): Promise<boolean> {
 	} catch {
 		return false;
 	}
+}
+
+export function parseSyncManifest(value: string): SyncManifest {
+	let parsed: unknown;
+	try {
+		parsed = JSON.parse(value);
+	} catch (error) {
+		throw new Error(
+			`SYNC.json JSON is invalid: ${error instanceof Error ? error.message : String(error)}`,
+		);
+	}
+	if (!parsed || typeof parsed !== "object" || Array.isArray(parsed))
+		throw new Error("SYNC.json JSON must be an object");
+	const manifest = parsed as Record<string, unknown>;
+	if (manifest.version !== 2) throw new Error("SYNC.json version must be 2");
+	if (typeof manifest.confirmedAt !== "string")
+		throw new Error("SYNC.json confirmedAt must be a string");
+	if (!Array.isArray(manifest.artifacts))
+		throw new Error("SYNC.json artifacts must be an array");
+	if (
+		manifest.projectRoot !== undefined &&
+		typeof manifest.projectRoot !== "string"
+	)
+		throw new Error("SYNC.json projectRoot must be a string");
+	if (
+		manifest.canonical !== undefined &&
+		(!manifest.canonical ||
+			typeof manifest.canonical !== "object" ||
+			Array.isArray(manifest.canonical))
+	)
+		throw new Error("SYNC.json canonical must be an object");
+	if (manifest.canonical) {
+		for (const [name, path] of Object.entries(manifest.canonical)) {
+			if (!CANONICAL_FILES.includes(name as CanonicalFile))
+				throw new Error(`SYNC.json canonical path is not allowed: ${name}`);
+			if (typeof path !== "string" || !path)
+				throw new Error(
+					`SYNC.json canonical.${name} must be a non-empty string`,
+				);
+		}
+	}
+	return {
+		version: 2,
+		...(manifest.projectRoot === undefined
+			? {}
+			: { projectRoot: manifest.projectRoot }),
+		...(manifest.canonical === undefined
+			? {}
+			: {
+					canonical: manifest.canonical as Partial<
+						Record<CanonicalFile, string>
+					>,
+				}),
+		confirmedAt: manifest.confirmedAt,
+		artifacts: manifest.artifacts,
+	};
+}
+
+export function formatSyncManifest(manifest: SyncManifest): string {
+	return `${JSON.stringify(manifest, null, 2)}\n`;
+}
+
+async function directoryPath(path: string): Promise<string> {
+	try {
+		return (await stat(path)).isDirectory()
+			? resolve(path)
+			: dirname(resolve(path));
+	} catch {
+		return dirname(resolve(path));
+	}
+}
+
+async function workspaceRoot(cwd: string): Promise<string> {
+	try {
+		const { stdout } = await execFile("git", ["rev-parse", "--show-toplevel"], {
+			cwd,
+		});
+		return resolve(stdout.trim());
+	} catch {
+		return cwd;
+	}
+}
+
+export async function resolveProject(
+	startPath: string,
+): Promise<ResolvedProject> {
+	const cwd = await directoryPath(startPath);
+	const root = await workspaceRoot(cwd);
+	let current = cwd;
+	while (true) {
+		const syncPath = resolve(current, "SYNC.json");
+		if (await exists(syncPath)) {
+			const manifest = parseSyncManifest(await readFile(syncPath, "utf8"));
+			const projectRoot = resolve(current, manifest.projectRoot ?? ".");
+			const canonical = Object.fromEntries(
+				CANONICAL_FILES.map((name) => {
+					const path =
+						manifest.canonical?.[name] ?? DEFAULT_CANONICAL_PATHS[name];
+					return [name, isAbsolute(path) ? path : resolve(projectRoot, path)];
+				}),
+			) as Record<CanonicalFile, string>;
+			return {
+				cwd,
+				workspaceRoot: root,
+				projectRoot,
+				syncPath,
+				manifest,
+				canonical,
+			};
+		}
+		if (current === root) break;
+		const parent = dirname(current);
+		if (parent === current) break;
+		current = parent;
+		if (relative(root, current).startsWith("..")) break;
+	}
+	return {
+		cwd,
+		workspaceRoot: root,
+		projectRoot: root,
+		syncPath: resolve(root, "SYNC.json"),
+		canonical: Object.fromEntries(
+			CANONICAL_FILES.map((name) => [
+				name,
+				resolve(root, DEFAULT_CANONICAL_PATHS[name]),
+			]),
+		) as Record<CanonicalFile, string>,
+	};
 }
 
 export async function locateProjectRoot(startPath: string): Promise<string> {

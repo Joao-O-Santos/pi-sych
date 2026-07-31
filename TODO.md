@@ -5,7 +5,10 @@ project direction, evidence, or accepted architecture.
 
 ## Active
 
-None at present.
+- [ ] V3-001 --- Implement the approved `SYNC.json` v2 resolver,
+  configured canonical paths, worker terminal-result behavior, compaction
+  status/error routing, skill restoration, and model-facing prompt audit.
+  Validate each phase and publish only after the complete release gate.
 
 ## Blocked
 

@@ -1,16 +1,92 @@
 import assert from "node:assert/strict";
+import { execFile as execFileCallback } from "node:child_process";
 import { mkdir, mkdtemp, readFile, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import { promisify } from "node:util";
 
 import {
+	DEFAULT_CANONICAL_PATHS,
 	discoverProjectFiles,
 	parseEvidenceEntries,
+	parseSyncManifest,
 	resolveExistingProjectPath,
+	resolveProject,
 	validateProjectMarkdown,
 	writeApprovedFile,
 } from "../../.test-build/workbench/src/project-files.js";
+
+const execFile = promisify(execFileCallback);
+
+async function writeSync(directory, overrides = {}) {
+	await writeFile(
+		join(directory, "SYNC.json"),
+		`${JSON.stringify(
+			{
+				version: 2,
+				confirmedAt: "2026-01-01T00:00:00.000Z",
+				artifacts: [],
+				...overrides,
+			},
+			null,
+			2,
+		)}\n`,
+	);
+}
+
+test("resolver selects the nearest v2 manifest and resolves canonical paths", async () => {
+	const workspace = await mkdtemp(join(tmpdir(), "pi-sych-resolve-"));
+	await execFile("git", ["init", "-q", workspace]);
+	const cwd = join(workspace, "packages", "b", "app", "src");
+	await mkdir(cwd, { recursive: true });
+	await writeSync(workspace);
+	await writeSync(join(workspace, "packages", "b"), {
+		projectRoot: "app",
+		canonical: {
+			style: "config/STYLE.md",
+			evidence: join(tmpdir(), "external-evidence.md"),
+		},
+	});
+	const resolved = await resolveProject(cwd);
+	assert.equal(resolved.workspaceRoot, workspace);
+	assert.equal(
+		resolved.syncPath,
+		join(workspace, "packages", "b", "SYNC.json"),
+	);
+	assert.equal(resolved.projectRoot, join(workspace, "packages", "b", "app"));
+	assert.equal(
+		resolved.canonical.style,
+		join(resolved.projectRoot, "config/STYLE.md"),
+	);
+	assert.equal(
+		resolved.canonical.evidence,
+		join(tmpdir(), "external-evidence.md"),
+	);
+	assert.equal(
+		resolved.canonical.project,
+		join(resolved.projectRoot, DEFAULT_CANONICAL_PATHS.project),
+	);
+});
+
+test("v2 manifest rejects malformed canonical paths", () => {
+	assert.throws(
+		() =>
+			parseSyncManifest(
+				'{"version":2,"confirmedAt":"2026-01-01T00:00:00.000Z","artifacts":[],"canonical":{"style":42}}',
+			),
+		/canonical\.style must be a non-empty string/,
+	);
+});
+
+test("resolver falls back to a non-Git working directory", async () => {
+	const cwd = await mkdtemp(join(tmpdir(), "pi-sych-resolve-non-git-"));
+	await writeSync(cwd, { projectRoot: "project" });
+	const resolved = await resolveProject(cwd);
+	assert.equal(resolved.workspaceRoot, cwd);
+	assert.equal(resolved.projectRoot, join(cwd, "project"));
+	assert.equal(resolved.manifest?.version, 2);
+});
 
 test("canonical discovery selects the nearest project and reports optional files", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-discovery-"));
