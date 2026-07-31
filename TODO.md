@@ -7,11 +7,6 @@ project direction, evidence, or accepted architecture.
 
 None at present.
 
-## Follow-up review
-
-- [ ] Confirm the inferred migration of `european-portuguese` into
-  `write/modules/style`; `PLAN.md` omitted this existing skill.
-
 ## Blocked
 
 None at present.
@@ -22,6 +17,9 @@ None at present.
   and `INBOX.md` promotion feature, reuse audit, tests, and release
   gate. Custom compaction retains standard fallback and human promotion
   review.
+- [x] V2-008 --- Approved the inferred `european-portuguese` migration
+  into `write/modules/style`; the guidance and examples retain the
+  pt-PT, pt-BR, register, variant, and preference distinctions.
 - [x] V2-007 --- Completed the approved v2.0.0 refactor: six skills,
   direct modules, browser/file plan review, safe existing-file paths,
   documentation, diagrams, full checks, and independent reviews.
