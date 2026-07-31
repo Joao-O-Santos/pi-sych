@@ -275,12 +275,6 @@ export async function inspectPromotionInbox(
 	}
 }
 
-export async function countPromotionCandidates(
-	project: Pick<ResolvedProject, "canonical">,
-): Promise<number> {
-	return (await inspectPromotionInbox(project)).count ?? 0;
-}
-
 export function validatePromotion(
 	value: PromotionProposal,
 	canonical: Pick<CanonicalSnapshot, "targetPaths" | "files">,

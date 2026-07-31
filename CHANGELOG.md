@@ -3,6 +3,22 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
+## v3.0.1 - 2026-08-01
+
+### Fixed
+
+- Restored graceful `/pi-sych-status` handling of a malformed
+  `SYNC.json` (resolving the manifest before checking status had crashed
+  the tool instead of reporting the unavailable state).
+
+### Removed
+
+- Removed unused production exports (`countPromotionCandidates`,
+  `parseEvidenceEntries`, `EvidenceEntry`) exercised only by tests.
+- Collapsed duplicated worker tool-mode lookup into a single
+  `toolsForMode` source.
+- Removed the redundant `--local` no-op in `/plannotator-review` args.
+
 ## v3.0.0 - 2026-08-01
 
 ### Added

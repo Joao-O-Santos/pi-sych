@@ -8,7 +8,6 @@ import { promisify } from "node:util";
 
 import {
 	DEFAULT_CANONICAL_PATHS,
-	parseEvidenceEntries,
 	parseSyncManifest,
 	resolveExistingProjectPath,
 	resolveProject,
@@ -110,28 +109,6 @@ test("PROJECT.md validation is shallow but requires operative headings", () => {
 	assert.match(invalid.errors.join("\n"), /Immediate next step/);
 });
 
-test("evidence helpers extract bounded entry metadata", () => {
-	const entries = parseEvidenceEntries(
-		`# Evidence\n\n## E-014 — A finding\n\n**Status:** supported\n**Kind:** empirical result\n**Source:** outputs/model.html\n\n## E-015 - A limitation\n\n**Status:** unresolved\n`,
-	);
-	assert.deepEqual(entries, [
-		{
-			id: "E-014",
-			title: "A finding",
-			status: "supported",
-			kind: "empirical result",
-			source: "outputs/model.html",
-		},
-		{
-			id: "E-015",
-			title: "A limitation",
-			status: "unresolved",
-			kind: undefined,
-			source: undefined,
-		},
-	]);
-});
-
 test("approved writes are atomic and unapproved writes do not mutate", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-write-"));
 	const target = join(root, "PROJECT.md");
@@ -174,8 +151,8 @@ const add = {
 test("promotion inbox parses and formats one fenced JSON object, and a missing inbox is empty", async () => {
 	const {
 		candidateId,
-		countPromotionCandidates,
 		formatPromotionInbox,
+		inspectPromotionInbox,
 		parsePromotionInbox,
 		readPromotionInbox,
 	} = await compaction();
@@ -195,10 +172,10 @@ test("promotion inbox parses and formats one fenced JSON object, and a missing i
 		version: 1,
 		candidates: [],
 	});
-	assert.equal(await countPromotionCandidates(project), 0);
+	assert.equal((await inspectPromotionInbox(project)).count, 0);
 	await mkdir(join(root, ".pi-sych"));
 	await writeFile(project.canonical.inbox, markdown);
-	assert.equal(await countPromotionCandidates(project), 1);
+	assert.equal((await inspectPromotionInbox(project)).count, 1);
 });
 
 test("candidate IDs use canonical roles and deduplicate without reordering existing proposals", async () => {

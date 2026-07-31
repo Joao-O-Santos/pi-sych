@@ -179,7 +179,7 @@ export function toolsForRequest(
 	request: Pick<DispatchRequest, "mode" | "remoteResearch">,
 ): readonly string[] {
 	return [
-		...MODE_TOOLS[request.mode],
+		...toolsForMode(request.mode),
 		...(request.remoteResearch ? ["mcporter"] : []),
 	];
 }

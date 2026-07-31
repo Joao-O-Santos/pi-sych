@@ -95,3 +95,17 @@ test("status command reports mechanical state without semantic drift claims", as
 	assert.match(event.message, /match their recorded hashes/);
 	assert.match(event.message, /not conceptual drift/);
 });
+
+test("status command reports a malformed manifest without crashing", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-malformed-"));
+	const agentDir = await mkdtemp(join(tmpdir(), "pi-sych-agent-"));
+	await writeFile(
+		join(root, "PROJECT.md"),
+		"# Project\n\n## Objective\nX\n## Current direction\nY\n## Definition of done\nZ\n## Previous action\nNone yet.\n## Immediate next step\nNone at present.\n",
+	);
+	await writeFile(join(root, "SYNC.json"), "{ not valid json");
+	const { event, stderr } = await invokeStatus(root, agentDir);
+	assert.equal(stderr, "");
+	assert.match(event.message, /Project status/);
+	assert.match(event.message, /State unavailable:/);
+});

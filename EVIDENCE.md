@@ -1,5 +1,24 @@
 # Evidence
 
+## E-014 --- v3.0.1 code-quality audit and malformed-manifest fix
+
+**Status:** verified **Kind:** observed behaviour and independent
+read-only review **Source:** `SYNC.json`, package scripts, unit and
+integration checks, and an independent read-only code audit
+**Supports:** v3.0.1 release readiness **Evidence:** An independent
+read-only audit found and this patch removed dead production exports
+(`countPromotionCandidates`, `parseEvidenceEntries`, `EvidenceEntry`),
+collapsed duplicated `MODE_TOOLS` lookups into `toolsForMode`, removed a
+redundant `--local` no-op, and fixed a regression where
+`projectStatusView` resolved the manifest before `checkProjectStatus`
+could yield its graceful unavailable state, crashing `/pi-sych-status`
+on malformed `SYNC.json`. A new integration test reproduces the
+malformed-manifest path. Typecheck, Biome and Pandoc style, 61 unit
+checks, 5 integration checks, MCPorter dependency check, smoke, source
+budget (2,650/3,000), and whitespace checks passed. **Limits:** Opt-in
+real-model usage was not rerun; the changes are orthogonal to the
+compaction model path and prompts. **Checked:** 2026-08-01
+
 ## E-013 --- v3.0.0 refactor and release gate passed
 
 **Status:** verified **Kind:** observed behaviour and independent

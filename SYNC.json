@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-07-31T02:15:42.295Z",
+  "confirmedAt": "2026-07-31T13:27:11.417Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:be799f799630e9eaf5b8a7a74d6d2c1dfa34a2f6dd8b1ee951f64f466e31eca3",
+      "fingerprint": "sha256:80df98db3cc72edaf590731f3256649f1a1b3f6659783d7a774f1d49b0b215e8",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,13 +15,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T02:15:42.295Z",
-        "reason": "Reviewed the v2.1.1 protected-history release repair: stable SYNC.md Pandoc fence formatting, package version and image URLs, changelog, and retained v2.1 working-memory release evidence and limitations."
+        "at": "2026-07-31T13:19:35.114Z",
+        "reason": "Reconciled v3.0.0 release tree: re-acknowledged documentation, version bump, and release notes after the docs phase."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:43c602569d031db494e77483db83bbb13dda5d0b0a3eda230335e3a3362169f9",
+      "fingerprint": "sha256:5d2108d393c65c9b8d850a286258da141970a442cb45c3bf6746da2cdc53856a",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,26 +35,26 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T02:15:42.295Z",
-        "reason": "Reviewed the v2.1.1 protected-history release repair: stable SYNC.md Pandoc fence formatting, package version and image URLs, changelog, and retained v2.1 working-memory release evidence and limitations."
+        "at": "2026-07-31T13:27:11.417Z",
+        "reason": "v3.0.1 patch: bumped version and image URLs, added changelog and evidence entries after code-quality audit and malformed-manifest fix."
       }
     },
     {
       "path": "ARCHITECTURE.md",
-      "fingerprint": "sha256:a0f41e5d2862367eae14c9658edc096ad38a437b21613857a8923e65d9cfba65",
+      "fingerprint": "sha256:64754af5a84b1dd740252fb1ee30b17dc3890a3dbb3ca74bb1493110410d74f0",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T02:15:42.295Z",
-        "reason": "Reviewed the v2.1.1 protected-history release repair: stable SYNC.md Pandoc fence formatting, package version and image URLs, changelog, and retained v2.1 working-memory release evidence and limitations."
+        "at": "2026-07-31T13:27:11.417Z",
+        "reason": "v3.0.1 patch: bumped version and image URLs, added changelog and evidence entries after code-quality audit and malformed-manifest fix."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:017a9cad2211eefde1a2bf61eff12fc1fe770fbc27ed395e6d365697f46253f9",
+      "fingerprint": "sha256:0bd6cabfd26013ac88f07cb40d37cf04ae17ba49a5843bde2afce967e0035648",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -66,13 +66,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T02:15:42.295Z",
-        "reason": "Reviewed the v2.1.1 protected-history release repair: stable SYNC.md Pandoc fence formatting, package version and image URLs, changelog, and retained v2.1 working-memory release evidence and limitations."
+        "at": "2026-07-31T13:27:11.417Z",
+        "reason": "v3.0.1 patch: bumped version and image URLs, added changelog and evidence entries after code-quality audit and malformed-manifest fix."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:1f32116f0157ea035b9fa4cd59c49ec47e1637c1daeb777ba1f4c5bc2fa94d3f",
+      "fingerprint": "sha256:23a3a4e9d7e169a748f012d9e53dbc38b0e6e2a8228b13f15e7f4a46b7df603e",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -86,8 +86,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T02:15:42.295Z",
-        "reason": "Reviewed the v2.1.1 protected-history release repair: stable SYNC.md Pandoc fence formatting, package version and image URLs, changelog, and retained v2.1 working-memory release evidence and limitations."
+        "at": "2026-07-31T13:27:11.417Z",
+        "reason": "v3.0.1 patch: bumped version and image URLs, added changelog and evidence entries after code-quality audit and malformed-manifest fix."
       }
     },
     {

@@ -61,14 +61,6 @@ export interface ProjectValidation {
 	headings: string[];
 }
 
-export interface EvidenceEntry {
-	id: string;
-	title: string;
-	status?: string;
-	kind?: string;
-	source?: string;
-}
-
 async function exists(path: string): Promise<boolean> {
 	try {
 		await access(path, constants.F_OK);
@@ -235,29 +227,6 @@ export async function readAndValidateProject(
 	projectPath: string,
 ): Promise<ProjectValidation> {
 	return validateProjectMarkdown(await readFile(projectPath, "utf8"));
-}
-
-export function parseEvidenceEntries(markdown: string): EvidenceEntry[] {
-	const headingPattern = /^##\s+(E-[A-Za-z0-9-]+)\s+(?:—|-)\s+(.+?)\s*$/gm;
-	const headings = [...markdown.matchAll(headingPattern)];
-	return headings.map((heading, index) => {
-		const sectionStart = (heading.index ?? 0) + heading[0].length;
-		const sectionEnd = headings[index + 1]?.index ?? markdown.length;
-		const section = markdown.slice(sectionStart, sectionEnd);
-		const field = (name: string): string | undefined => {
-			const match = section.match(
-				new RegExp(`^\\*\\*${name}:\\*\\*\\s*(.+?)\\s*$`, "im"),
-			);
-			return match?.[1]?.trim();
-		};
-		return {
-			id: heading[1],
-			title: heading[2].trim(),
-			status: field("Status"),
-			kind: field("Kind"),
-			source: field("Source"),
-		};
-	});
 }
 
 function assertInside(root: string, path: string, projectPath: string): void {

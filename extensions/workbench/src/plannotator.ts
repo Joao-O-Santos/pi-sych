@@ -147,7 +147,6 @@ export function parseCodeReviewArgs(input = ""): CodeReviewRequest {
 		const token = raw.replace(/^['"]|['"]$/g, "");
 		if (token === "--git") vcsType = "git";
 		else if (token === "--gitbutler") vcsType = "gitbutler";
-		else if (token === "--local") useLocal = true;
 		else if (token === "--no-local") useLocal = false;
 		else if (/^https?:\/\//.test(token) && !prUrl) prUrl = token;
 	}

@@ -88,15 +88,27 @@ function boundedToolContent(value: string): string {
 }
 
 async function projectStatusView(cwd: string) {
-	const project = await resolveProject(cwd);
-	const state = await checkProjectStatus(cwd, project);
-	const inbox = await inspectPromotionInbox(project);
-	const pendingPromotions = inbox.count ?? 0;
-	return {
-		state,
-		pendingPromotions,
-		text: formatProjectStatusCheck(state, pendingPromotions, inbox.error),
-	};
+	try {
+		const project = await resolveProject(cwd);
+		const state = await checkProjectStatus(cwd, project);
+		const inbox = await inspectPromotionInbox(project);
+		const pendingPromotions = inbox.count ?? 0;
+		return {
+			state,
+			pendingPromotions,
+			text: formatProjectStatusCheck(state, pendingPromotions, inbox.error),
+		};
+	} catch {
+		// resolveProject throws on a malformed manifest before checkProjectStatus
+		// can yield its graceful unavailable state; fall back to a direct check
+		// that reports the sync error instead of crashing the tool call.
+		const state = await checkProjectStatus(cwd);
+		return {
+			state,
+			pendingPromotions: 0,
+			text: formatProjectStatusCheck(state, 0),
+		};
+	}
 }
 
 function listContent(label: string, values: string[]): string[] {
