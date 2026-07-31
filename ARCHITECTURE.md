@@ -4,7 +4,7 @@ Pi Sych keeps a small mechanical core for process bounds, files, hashes,
 paths, and immutable worker results. Skills and people own
 interpretation, writing, research, and consequential judgment.
 
-![](https://unpkg.com/pi-sych@2.1.1/docs/img/architecture.png)
+![](https://unpkg.com/pi-sych@3.0.0/docs/img/architecture.png)
 
 ## Runtime
 
@@ -23,10 +23,10 @@ It never loads Plannotator's extension entrypoint, registers
 `worker-engine.ts` validates a compact request, injects applicable
 project conventions, launches a clean Pi worker, applies a 90-second
 default or bounded override, forwards cancellation, and reads one
-immutable result. `project-status.ts` validates `SYNC.md`, fingerprints
-tracked files, and traverses declared dependency edges without deciding
-semantic drift or authority. `project-files.ts` owns safe project-local
-paths and atomic approved writes.
+immutable result. `project-status.ts` validates `SYNC.json`,
+fingerprints tracked files, and traverses declared dependency edges
+without deciding semantic drift or authority. `project-files.ts` owns
+safe project-local paths and atomic approved writes.
 
 `submit_plan` reads an existing project-local Markdown file. It waits
 for Plannotator browser feedback when the optional adapter starts;
@@ -54,7 +54,7 @@ at the installed package root.
 ## Project state
 
 `PROJECT.md` describes purpose, scope, direction, completion, and next
-work. `SYNC.md` holds acknowledged fingerprints and declared
+work. `SYNC.json` holds acknowledged fingerprints and declared
 relationships. Optional `AGENTS.md`, `STYLE.md`, `EVIDENCE.md`,
 `DECISIONS.md`, `TODO.md`, and `INBOX.md` serve specific human purposes.
 Compaction creates task-centred working memory and may append

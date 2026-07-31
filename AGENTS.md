@@ -50,7 +50,7 @@ bounded delegation, and human-owned judgment.
 - Ask the project owner only when a genuinely consequential decision
   remains; otherwise complete the approved work and report limitations.
 - Keep `TODO.md` as task state, not architecture or evidence.
-- Update canonical documentation and `SYNC.md` only after the
+- Update canonical documentation and `SYNC.json` only after the
   implementation and review state they describe is true.
 
 ## Verification

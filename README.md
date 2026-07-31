@@ -5,7 +5,7 @@ and human-owned judgment in writing, research, analysis, and software
 work. It keeps mechanical facts mechanical: a changed hash is not a
 verdict about meaning, quality, or authority.
 
-![](https://unpkg.com/pi-sych@2.1.1/docs/img/architecture.png)
+![](https://unpkg.com/pi-sych@3.0.0/docs/img/architecture.png)
 
 ## Install
 
@@ -39,13 +39,14 @@ skills, then the packaged skill; the first matching copy wins.
 
 ## Project state and review
 
-Keep `PROJECT.md` and `SYNC.md` close to work that benefits from visible
-state. `PROJECT.md` records purpose, direction, completion criteria,
-previous action, and immediate next step. `SYNC.md` records acknowledged
-fingerprints and declared dependencies. Optional `AGENTS.md`,
-`STYLE.md`, `EVIDENCE.md`, `DECISIONS.md`, `TODO.md`, and `INBOX.md`
-serve distinct purposes; `TODO.md` is task state, while `INBOX.md` holds
-unreviewed promotion proposals and is never canonical state.
+Keep `PROJECT.md` and `SYNC.json` close to work that benefits from
+visible state. `PROJECT.md` records purpose, direction, completion
+criteria, previous action, and immediate next step. `SYNC.json` records
+acknowledged fingerprints and declared dependencies. Optional
+`AGENTS.md`, `STYLE.md`, `EVIDENCE.md`, `DECISIONS.md`, `TODO.md`, and
+`INBOX.md` serve distinct purposes; `TODO.md` is task state, while
+`INBOX.md` holds unreviewed promotion proposals and is never canonical
+state.
 
 Use `project_status` or `/pi-sych-status` to inspect mechanical state
 and pending `INBOX.md` proposals. `/compact` and automatic compaction

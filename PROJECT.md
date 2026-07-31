@@ -34,7 +34,7 @@ verification, or final review.
 ## Project rules and preferences
 
 {accepted} Prefer direct and minimal implementations. Keep durable state
-explicit in `PROJECT.md`, `EVIDENCE.md`, and `SYNC.md`. Give workers
+explicit in `PROJECT.md`, `EVIDENCE.md`, and `SYNC.json`. Give workers
 exact resources, retain immutable results, report unexpected changes,
 and require human approval for consequential durable changes.
 
@@ -54,22 +54,26 @@ controller.
 
 ## Current state
 
-{verified} The pending v2.1.1 implementation retains the six-skill
-catalog, bounded workers, graph-aware project state, MCPorter, and
-Plannotator adapters. It adds custom task-centred Pi compaction with
-standard-compactor fallback and optional human-review `INBOX.md`
-promotion proposals. The rough production TypeScript estimate is about
-2,300 lines within the owner-authorized 2,500-line cap.
+{verified} The v3.0.0 implementation migrates synchronization to direct
+`SYNC.json` version 2 with workspace, nearest-manifest, and configured
+canonical-path resolution used throughout status and compaction. It adds
+canonical-role promotion routing, bounded project-status projection into
+working-memory compaction, malformed `INBOX.md` isolation,
+custom-compaction failure classification, and restored v1.2.0
+substantive skill guidance with a migration ledger and real-model
+LLM-judged prompt-quality usage. The rough production TypeScript
+estimate is about 2,650 lines within the owner-authorized 3,000-line
+cap.
 
 ## Previous action
 
-{verified} Completed the v2.1.1 deterministic release gate: 49 unit
-checks, 4 integration checks, 3 smoke checks, style/Markdown/type
-checks, clean install, dependency check, package dry run, source budget,
-and whitespace check. The inherited Pi `brace-expansion` audit advisory
-remains a recorded limitation.
+{verified} Completed the v3.0.0 deterministic release gate: 62 unit
+checks, 4 integration checks, opt-in real-Pi usage, live LLM-judged
+prompt-quality usage, style/Markdown/type checks, source budget, package
+dry run, and whitespace check. The inherited Pi `brace-expansion` audit
+advisory remains a recorded limitation.
 
 ## Immediate next step
 
-{accepted} Obtain final owner authorization for the reviewed v2.1.1
-working tree before creating its signed commit, tag, and npm release.
+{accepted} Approve the reviewed v3.0.0 working tree, then create its
+signed tag and npm release.

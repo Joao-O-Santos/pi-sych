@@ -1,5 +1,24 @@
 # Evidence
 
+## E-013 --- v3.0.0 refactor and release gate passed
+
+**Status:** verified **Kind:** observed behaviour and independent
+reviews **Source:** `PLAN.md`, package scripts, unit/integration/usage
+checks, package dry run, and independent read-only reviews **Supports:**
+`SYNC.json` v2 resolution, canonical-role promotion routing, compaction
+status/error isolation, skill restoration, and v3.0.0 release readiness
+**Evidence:** Typecheck, Biome and Pandoc Markdown style, 62 unit
+checks, 4 integration checks, opt-in real-Pi usage
+(`PI_SYCH_USAGE_TEST=1`), live LLM-judged prompt-quality usage, source
+budget (2,650/3,000), package dry run, and whitespace checks passed.
+Independent reviews identified and the implementation addressed
+non-atomic acknowledgement, malformed-manifest diagnostics, single
+resolved-project threading, single-read canonical fingerprinting,
+tracked-artifact preservation in working memory, v1.2.0 procedure
+restoration, and regex-behavior test honesty. **Limits:** The npm
+release has not been published; inherited advisory retention was not
+rechecked for this entry. **Checked:** 2026-08-01
+
 ## E-012 --- v2.1.1 compaction and release gate passed
 
 **Status:** verified **Kind:** observed behaviour and independent review

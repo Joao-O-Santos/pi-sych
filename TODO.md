@@ -5,11 +5,7 @@ project direction, evidence, or accepted architecture.
 
 ## Active
 
-- [ ] V3-001 --- Implement the approved `SYNC.json` v2 resolver,
-  configured canonical paths, worker terminal-result behavior,
-  compaction status/error routing, skill restoration, and model-facing
-  prompt audit. Validate each phase and publish only after the complete
-  release gate.
+None at present.
 
 ## Blocked
 
@@ -17,6 +13,11 @@ None at present.
 
 ## Done
 
+- [x] V3-001 --- Implemented the approved `SYNC.json` v2 resolver,
+  configured canonical paths, worker terminal-result behavior,
+  compaction status/error routing, skill restoration, and model-facing
+  prompt audit. Validated each phase and published only after the
+  complete release gate.
 - [x] V2-101 --- Completed the approved v2.1.1 working-memory compaction
   and `INBOX.md` promotion feature, reuse audit, tests, and release
   gate. Custom compaction retains standard fallback and human promotion

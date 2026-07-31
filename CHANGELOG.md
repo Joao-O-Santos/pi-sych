@@ -3,6 +3,40 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
+## v3.0.0 - 2026-08-01
+
+### Added
+
+- Added direct `SYNC.json` manifest version 2 with workspace,
+  nearest-manifest, and configured canonical-path resolution.
+- Added configured canonical-path promotion routing by role (`project`,
+  `agents`, `style`, `evidence`, `decisions`, `todo`) under custom
+  paths.
+- Added bounded project-status projection into working-memory
+  compaction, preserving task-relevant changed artifacts, impacted
+  dependents, and actionable findings.
+- Isolated malformed `INBOX.md` parsing so working-memory generation
+  continues and reports the inbox error without losing project state.
+- Added custom-compaction failure classification and concise
+  diagnostics, returning control to Pi's standard compactor on failure.
+- Added real-model, LLM-judged prompt-quality usage acceptance.
+- Restored all v1.2.0 substantive skill guidance under the six umbrella
+  skills with a migration ledger and tag-derived regression test.
+
+### Changed
+
+- Replaced the v1 `SYNC.md` Markdown fence with direct deterministic
+  `SYNC.json`.
+- Consolidated manifest loading, canonical-path resolution, and project
+  discovery into one resolver passed through status and compaction.
+- Raised the production TypeScript budget cap to 3,000 lines for the
+  approved compaction and promotion-routing surface.
+
+### Removed
+
+- Removed legacy fixed-file project discovery and duplicated
+  canonical-path handling.
+
 ## v2.1.1 - 2026-07-31
 
 ### Fixed
