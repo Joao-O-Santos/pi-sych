@@ -3,6 +3,21 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
+## v3.0.2 - 2026-08-01
+
+### Documentation
+
+- Added detailed compaction pipeline description to ARCHITECTURE.md:
+  working-memory construction, status projection, canonical snapshot,
+  promotion routing by role, malformed inbox isolation, failure
+  classification, and native compactor fallback.
+- Added manifest resolution section to ARCHITECTURE.md: workspace walk,
+  nearest SYNC.json selection, projectRoot relocation, canonical path
+  overrides for seven roles.
+- Added project canonical paths section to docs/CONFIGURATION.md:
+  SYNC.json v2 schema, projectRoot and canonical object documentation,
+  role-to-path mapping, artifact declaration structure.
+
 ## v3.0.1 - 2026-08-01
 
 ### Fixed

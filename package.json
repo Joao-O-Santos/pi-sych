@@ -1,6 +1,6 @@
 {
   "name": "pi-sych",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "General project and artifact development workbench for Pi",
   "files": [
     "config",
@@ -74,7 +74,7 @@
     "skills": [
       "./skills"
     ],
-    "image": "https://unpkg.com/pi-sych@3.0.1/docs/img/architecture.png"
+    "image": "https://unpkg.com/pi-sych@3.0.2/docs/img/architecture.png"
   },
   "dependencies": {
     "@plannotator/pi-extension": "latest",

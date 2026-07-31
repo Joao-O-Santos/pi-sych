@@ -111,7 +111,7 @@ test("tool content formatters include bounded worker and plan result details", (
 
 test("public manifest retains the package boundary and developer tooling", () => {
 	assert.equal(packageJson.name, "pi-sych");
-	assert.equal(packageJson.version, "3.0.1");
+	assert.equal(packageJson.version, "3.0.2");
 	assert.equal(PACKAGE_ROOT, process.cwd());
 	assert.equal(packageJson.devDependencies.typescript, "latest");
 	assert.equal(packageJson.devDependencies["@biomejs/biome"], "latest");
@@ -131,7 +131,7 @@ test("public manifest retains the package boundary and developer tooling", () =>
 	assert.equal(packageJson.files.includes("scripts/format-markdown.mjs"), true);
 	assert.equal(
 		packageJson.pi.image,
-		"https://unpkg.com/pi-sych@3.0.1/docs/img/architecture.png",
+		"https://unpkg.com/pi-sych@3.0.2/docs/img/architecture.png",
 	);
 });
 

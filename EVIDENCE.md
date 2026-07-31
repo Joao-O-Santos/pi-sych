@@ -1,5 +1,23 @@
 # Evidence
 
+## E-015 --- v3.0.2 documentation update
+
+**Status:** verified **Kind:** observed behaviour **Source:**
+ARCHITECTURE.md, docs/CONFIGURATION.md, package scripts **Supports:**
+v3.0.2 release readiness **Evidence:** Added detailed compaction
+pipeline description to ARCHITECTURE.md: working-memory construction,
+status projection, canonical snapshot, promotion routing by role,
+malformed inbox isolation, failure classification, and native compactor
+fallback. Added manifest resolution section to ARCHITECTURE.md covering
+workspace walk, nearest SYNC.json selection, projectRoot relocation, and
+canonical path overrides for seven roles. Added project canonical paths
+section to docs/CONFIGURATION.md documenting SYNC.json v2 schema,
+projectRoot and canonical object structure, role-to-path mapping, and
+artifact declaration format. Typecheck, Biome and Pandoc style, 61 unit
+checks, 5 integration checks, MCPorter dependency check, smoke, source
+budget (2,650/3,000), and whitespace checks passed. **Limits:**
+Documentation-only; no behavioral changes. **Checked:** 2026-08-01
+
 ## E-014 --- v3.0.1 code-quality audit and malformed-manifest fix
 
 **Status:** verified **Kind:** observed behaviour and independent
