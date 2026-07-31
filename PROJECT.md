@@ -54,7 +54,7 @@ controller.
 
 ## Current state
 
-{verified} The pending v2.1.0 implementation retains the six-skill
+{verified} The pending v2.1.1 implementation retains the six-skill
 catalog, bounded workers, graph-aware project state, MCPorter, and
 Plannotator adapters. It adds custom task-centred Pi compaction with
 standard-compactor fallback and optional human-review `INBOX.md`
@@ -63,7 +63,7 @@ promotion proposals. The rough production TypeScript estimate is about
 
 ## Previous action
 
-{verified} Completed the v2.1.0 deterministic release gate: 49 unit
+{verified} Completed the v2.1.1 deterministic release gate: 49 unit
 checks, 4 integration checks, 3 smoke checks, style/Markdown/type
 checks, clean install, dependency check, package dry run, source budget,
 and whitespace check. The inherited Pi `brace-expansion` audit advisory
@@ -71,5 +71,5 @@ remains a recorded limitation.
 
 ## Immediate next step
 
-{accepted} Obtain final owner authorization for the reviewed v2.1.0
+{accepted} Obtain final owner authorization for the reviewed v2.1.1
 working tree before creating its signed commit, tag, and npm release.

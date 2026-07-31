@@ -1,12 +1,12 @@
 # Evidence
 
-## E-012 --- v2.1.0 compaction and release gate passed
+## E-012 --- v2.1.1 compaction and release gate passed
 
 **Status:** verified **Kind:** observed behaviour and independent review
 **Source:** `FOLLOW_UP.md`, `REUSE_REDUCTION_PLAN.md`, package scripts,
 unit/integration/smoke checks, package dry run, and dependency audit
 **Supports:** working-memory compaction, human-review `INBOX.md`
-promotions, status visibility, and v2.1.0 release readiness
+promotions, status visibility, and v2.1.1 release readiness
 **Evidence:** Typecheck, Biome/Markdown style checks, clean
 `npm ci --ignore-scripts`, MCPorter dependency validation, 49 unit
 checks, 4 integration checks, 3 smoke checks, package dry run (114
@@ -15,7 +15,7 @@ budget passed. The reuse audit retained Pi's compaction lifecycle,
 message conversion/serialization, model registry, authentication,
 cancellation, and usage accounting; Pi's fixed summary helpers cannot
 implement the one-call working-memory plus promotion contract.
-**Limits:** Opt-in real-Pi usage was not rerun for v2.1.0.
+**Limits:** Opt-in real-Pi usage was not rerun for v2.1.1.
 `npm audit --omit=dev` retains one inherited high-severity
 `brace-expansion` advisory below `@earendil-works/pi-coding-agent`;
 npm's dry-run offered no dependency upgrade. **Checked:** 2026-07-31

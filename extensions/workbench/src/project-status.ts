@@ -457,7 +457,7 @@ export function formatProjectStatusCheck(
 export function formatProjectStatusMarkdown(
 	manifest: ProjectStatusManifest,
 ): string {
-	return `# Project synchronization\n\n\`\`\`json\n${JSON.stringify(manifest, null, 2)}\n\`\`\`\n`;
+	return `# Project synchronization\n\n\`\`\` json\n${JSON.stringify(manifest, null, 2)}\n\`\`\`\n`;
 }
 
 export async function acknowledgeProjectStatus(

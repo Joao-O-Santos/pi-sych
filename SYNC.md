@@ -1,13 +1,13 @@
 # Project synchronization
 
-```json
+``` json
 {
   "version": 1,
-  "confirmedAt": "2026-07-31T02:10:17.841Z",
+  "confirmedAt": "2026-07-31T02:15:42.295Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:a3cdb1932ab3ee95a6e416edb2d5762bfd0e6526f06303aab60b6ac9f6291552",
+      "fingerprint": "sha256:be799f799630e9eaf5b8a7a74d6d2c1dfa34a2f6dd8b1ee951f64f466e31eca3",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -18,13 +18,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T02:10:17.841Z",
-        "reason": "Reviewed the v2.1.0 working-memory compaction, INBOX proposal boundary, reuse reductions, package metadata, documentation, completed deterministic release gate, and recorded inherited audit limitation."
+        "at": "2026-07-31T02:15:42.295Z",
+        "reason": "Reviewed the v2.1.1 protected-history release repair: stable SYNC.md Pandoc fence formatting, package version and image URLs, changelog, and retained v2.1 working-memory release evidence and limitations."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:f1a7cd72d314517b79601c9ca9e26b6c3af4dbde16bc8c7bf3dce4fa943febc0",
+      "fingerprint": "sha256:43c602569d031db494e77483db83bbb13dda5d0b0a3eda230335e3a3362169f9",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -38,26 +38,26 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T02:10:17.841Z",
-        "reason": "Reviewed the v2.1.0 working-memory compaction, INBOX proposal boundary, reuse reductions, package metadata, documentation, completed deterministic release gate, and recorded inherited audit limitation."
+        "at": "2026-07-31T02:15:42.295Z",
+        "reason": "Reviewed the v2.1.1 protected-history release repair: stable SYNC.md Pandoc fence formatting, package version and image URLs, changelog, and retained v2.1 working-memory release evidence and limitations."
       }
     },
     {
       "path": "ARCHITECTURE.md",
-      "fingerprint": "sha256:aae97749ef3480acd196a6425c145ac8df416c72d6e3be16c72df965ccd55a5c",
+      "fingerprint": "sha256:a0f41e5d2862367eae14c9658edc096ad38a437b21613857a8923e65d9cfba65",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T02:10:17.841Z",
-        "reason": "Reviewed the v2.1.0 working-memory compaction, INBOX proposal boundary, reuse reductions, package metadata, documentation, completed deterministic release gate, and recorded inherited audit limitation."
+        "at": "2026-07-31T02:15:42.295Z",
+        "reason": "Reviewed the v2.1.1 protected-history release repair: stable SYNC.md Pandoc fence formatting, package version and image URLs, changelog, and retained v2.1 working-memory release evidence and limitations."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:94ff9ebbd8cce8cb3f04661dcd8e73cdbbb1060a9a61bed69fdf27abad617acb",
+      "fingerprint": "sha256:017a9cad2211eefde1a2bf61eff12fc1fe770fbc27ed395e6d365697f46253f9",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -69,13 +69,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T02:10:17.841Z",
-        "reason": "Reviewed the v2.1.0 working-memory compaction, INBOX proposal boundary, reuse reductions, package metadata, documentation, completed deterministic release gate, and recorded inherited audit limitation."
+        "at": "2026-07-31T02:15:42.295Z",
+        "reason": "Reviewed the v2.1.1 protected-history release repair: stable SYNC.md Pandoc fence formatting, package version and image URLs, changelog, and retained v2.1 working-memory release evidence and limitations."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:f51cea338786744b1548cf10fd0cbe9e407b3c5f633646c29a57501eef5485bc",
+      "fingerprint": "sha256:1f32116f0157ea035b9fa4cd59c49ec47e1637c1daeb777ba1f4c5bc2fa94d3f",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -89,8 +89,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T02:10:17.841Z",
-        "reason": "Reviewed the v2.1.0 working-memory compaction, INBOX proposal boundary, reuse reductions, package metadata, documentation, completed deterministic release gate, and recorded inherited audit limitation."
+        "at": "2026-07-31T02:15:42.295Z",
+        "reason": "Reviewed the v2.1.1 protected-history release repair: stable SYNC.md Pandoc fence formatting, package version and image URLs, changelog, and retained v2.1 working-memory release evidence and limitations."
       }
     },
     {

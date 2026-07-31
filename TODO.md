@@ -18,7 +18,7 @@ None at present.
 
 ## Done
 
-- [x] V2-100 --- Completed the approved v2.1.0 working-memory compaction
+- [x] V2-101 --- Completed the approved v2.1.1 working-memory compaction
   and `INBOX.md` promotion feature, reuse audit, tests, and release
   gate. Custom compaction retains standard fallback and human promotion
   review.

@@ -3,6 +3,12 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
+## v2.1.1 - 2026-07-31
+
+### Fixed
+
+- Kept `SYNC.md` JSON fences stable under the pinned Pandoc formatter.
+
 ## v2.1.0 - 2026-07-31
 
 ### Added
