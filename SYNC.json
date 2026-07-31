@@ -1,8 +1,5 @@
-# Project synchronization
-
-``` json
 {
-  "version": 1,
+  "version": 2,
   "confirmedAt": "2026-07-31T02:15:42.295Z",
   "artifacts": [
     {
@@ -121,4 +118,3 @@
     }
   ]
 }
-```

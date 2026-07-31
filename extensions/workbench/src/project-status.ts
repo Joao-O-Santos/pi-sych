@@ -1,11 +1,14 @@
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { relative, resolve } from "node:path";
 import {
-	CORE_PROJECT_FILES,
-	discoverProjectFiles,
+	formatSyncManifest,
+	parseSyncManifest,
+	type ResolvedProject,
 	readAndValidateProject,
+	resolveProject,
 	resolveProjectPath,
+	type SyncManifest,
 	writeApprovedFile,
 } from "./project-files.js";
 import { nonEmptyString, record, stringArray } from "./validation.js";
@@ -39,9 +42,7 @@ export interface ProjectArtifact {
 	acknowledgement?: Acknowledgement;
 }
 
-export interface ProjectStatusManifest {
-	version: 1;
-	confirmedAt: string;
+export interface ProjectStatusManifest extends Omit<SyncManifest, "artifacts"> {
 	artifacts: ProjectArtifact[];
 }
 
@@ -67,8 +68,35 @@ export interface ProjectStatusCheck {
 	missing: string[];
 	impacted: ImpactedArtifact[];
 	cycles: string[][];
-	missingCore: (typeof CORE_PROJECT_FILES)[number][];
+	missingCore: string[];
 	projectErrors: string[];
+}
+
+const acknowledgementLocks = new Map<string, Promise<void>>();
+
+async function withAcknowledgementLock<T>(
+	syncPath: string,
+	operation: () => Promise<T>,
+): Promise<T> {
+	let release: () => void = () => undefined;
+	const lock = new Promise<void>((resolve) => {
+		release = resolve;
+	});
+	const previous = acknowledgementLocks.get(syncPath);
+	acknowledgementLocks.set(syncPath, lock);
+	await previous;
+	try {
+		return await operation();
+	} finally {
+		release();
+		if (acknowledgementLocks.get(syncPath) === lock)
+			acknowledgementLocks.delete(syncPath);
+	}
+}
+
+function displayProjectPath(projectRoot: string, path: string): string {
+	const display = relative(projectRoot, path);
+	return display && !display.startsWith("..") ? display : path;
 }
 
 function relativePath(value: unknown, label: string): string {
@@ -175,41 +203,22 @@ function parseArtifact(value: unknown, index: number): ProjectArtifact {
 	};
 }
 
-export function parseProjectStatusMarkdown(
-	markdown: string,
+export function parseProjectStatusManifest(
+	value: string | SyncManifest,
 ): ProjectStatusManifest {
-	const blocks = [
-		...markdown.matchAll(/^```[ \t]*json[ \t]*\n([\s\S]*?)\n```[ \t]*$/gm),
-	];
-	if (blocks.length !== 1)
-		throw new Error(
-			`SYNC.md must contain exactly one fenced JSON object; found ${blocks.length}`,
-		);
-	let value: unknown;
-	try {
-		value = JSON.parse(blocks[0][1]);
-	} catch (error) {
-		throw new Error(
-			`SYNC.md JSON is invalid: ${error instanceof Error ? error.message : String(error)}`,
-		);
-	}
-	const manifest = record(value, "SYNC.md JSON");
-	if (manifest.version !== 1) throw new Error("SYNC.md version must be 1");
-	const confirmedAt = nonEmptyString(manifest.confirmedAt, "confirmedAt");
-	if (Number.isNaN(Date.parse(confirmedAt)))
+	const manifest = typeof value === "string" ? parseSyncManifest(value) : value;
+	if (Number.isNaN(Date.parse(manifest.confirmedAt)))
 		throw new Error("confirmedAt must be a valid date-time string");
-	if (!Array.isArray(manifest.artifacts))
-		throw new Error("artifacts must be an array");
 	const artifacts = manifest.artifacts.map(parseArtifact);
 	const paths = new Set<string>();
 	for (const artifact of artifacts) {
 		if (paths.has(artifact.path))
 			throw new Error(
-				`SYNC.md contains duplicate artifact path: ${artifact.path}`,
+				`SYNC.json contains duplicate artifact path: ${artifact.path}`,
 			);
 		paths.add(artifact.path);
 	}
-	return { version: 1, confirmedAt, artifacts };
+	return { ...manifest, artifacts };
 }
 
 export async function fingerprintFile(path: string): Promise<string> {
@@ -303,31 +312,58 @@ function findCycles(artifacts: ProjectArtifact[]): string[][] {
 export async function checkProjectStatus(
 	startPath: string,
 ): Promise<ProjectStatusCheck> {
-	const discovery = await discoverProjectFiles(startPath);
-	const syncPath = resolve(discovery.root, "SYNC.md");
-	const missingCore = CORE_PROJECT_FILES.filter(
-		(name) => !discovery.files.find((file) => file.name === name)?.exists,
-	);
-	const projectFile = discovery.files.find(
-		(file) => file.name === "PROJECT.md",
-	);
-	let projectErrors: string[] = [];
-	if (projectFile?.exists) {
-		try {
-			projectErrors = (await readAndValidateProject(projectFile.path)).errors;
-		} catch (error) {
-			projectErrors = [
-				`PROJECT.md could not be validated: ${error instanceof Error ? error.message : String(error)}`,
-			];
-		}
-	}
+	let project: ResolvedProject;
 	try {
-		const manifest = parseProjectStatusMarkdown(
-			await readFile(syncPath, "utf8"),
-		);
+		project = await resolveProject(startPath);
+	} catch (error) {
+		const projectRoot = resolve(startPath);
+		return {
+			projectRoot,
+			syncPath: resolve(projectRoot, "SYNC.json"),
+			syncError: error instanceof Error ? error.message : String(error),
+			artifacts: [],
+			changed: [],
+			missing: [],
+			impacted: [],
+			cycles: [],
+			missingCore: [],
+			projectErrors: [],
+		};
+	}
+	const projectPath = project.canonical.project;
+	const missingCore = [...(project.manifest ? [] : ["SYNC.json"])];
+	let projectErrors: string[] = [];
+	try {
+		projectErrors = (await readAndValidateProject(projectPath)).errors;
+	} catch (error) {
+		if ((error as NodeJS.ErrnoException).code === "ENOENT")
+			missingCore.unshift(displayProjectPath(project.projectRoot, projectPath));
+		else
+			projectErrors = [
+				`Configured project file could not be validated: ${error instanceof Error ? error.message : String(error)}`,
+			];
+	}
+	if (!project.manifest)
+		return {
+			projectRoot: project.projectRoot,
+			syncPath: project.syncPath,
+			syncError: "SYNC.json is unavailable",
+			artifacts: [],
+			changed: [],
+			missing: [],
+			impacted: [],
+			cycles: [],
+			missingCore,
+			projectErrors,
+		};
+	try {
+		const manifest = parseProjectStatusManifest(project.manifest);
 		const artifacts = await Promise.all(
 			manifest.artifacts.map(async (artifact): Promise<CheckedArtifact> => {
-				const absolutePath = resolveProjectPath(discovery.root, artifact.path);
+				const absolutePath = resolveProjectPath(
+					project.projectRoot,
+					artifact.path,
+				);
 				try {
 					const currentFingerprint = await fingerprintFile(absolutePath);
 					return {
@@ -350,8 +386,8 @@ export async function checkProjectStatus(
 			.filter((artifact) => !artifact.exists)
 			.map((artifact) => artifact.path);
 		return {
-			projectRoot: discovery.root,
-			syncPath,
+			projectRoot: project.projectRoot,
+			syncPath: project.syncPath,
 			manifest,
 			artifacts,
 			changed,
@@ -363,8 +399,8 @@ export async function checkProjectStatus(
 		};
 	} catch (error) {
 		return {
-			projectRoot: discovery.root,
-			syncPath,
+			projectRoot: project.projectRoot,
+			syncPath: project.syncPath,
 			syncError: error instanceof Error ? error.message : String(error),
 			artifacts: [],
 			changed: [],
@@ -450,10 +486,10 @@ export function formatProjectStatusCheck(
 	return lines.join("\n");
 }
 
-export function formatProjectStatusMarkdown(
+export function formatProjectStatusManifest(
 	manifest: ProjectStatusManifest,
 ): string {
-	return `# Project synchronization\n\n\`\`\` json\n${JSON.stringify(manifest, null, 2)}\n\`\`\`\n`;
+	return formatSyncManifest(manifest);
 }
 
 export async function acknowledgeProjectStatus(
@@ -470,56 +506,78 @@ export async function acknowledgeProjectStatus(
 		throw new Error("Acknowledgement requires at least one named tracked file");
 	if (!reason.trim())
 		throw new Error("Acknowledgement requires a non-empty reason");
-	const state = await checkProjectStatus(startPath);
-	if (!state.manifest)
-		throw new Error(state.syncError ?? "SYNC.md is unavailable");
 	const selected = new Set(files.map((file) => relativePath(file, "files[]")));
 	if (selected.size !== files.length)
 		throw new Error("Acknowledgement files must not contain duplicates");
-	const byPath = new Map(
-		state.artifacts.map((artifact) => [artifact.path, artifact]),
-	);
-	for (const path of selected) {
-		const artifact = byPath.get(path);
-		if (!artifact)
-			throw new Error(`Acknowledgement file is not tracked: ${path}`);
-		if (!artifact.exists)
-			throw new Error(`Acknowledgement file is missing: ${path}`);
-	}
-	const at = now.toISOString();
-	const selectedImpacts = impacts(state.manifest.artifacts, selected);
-	const needsReview = selectedImpacts
-		.map((impact) => impact.path)
-		.filter((path) => !selected.has(path));
-	const artifacts = state.manifest.artifacts.map((artifact) => {
-		const checked = byPath.get(artifact.path);
-		if (selected.has(artifact.path))
-			return {
-				...artifact,
-				fingerprint: checked?.currentFingerprint ?? artifact.fingerprint,
-				status: "current" as const,
-				acknowledgement: { at, reason: reason.trim() },
-			};
-		if (needsReview.includes(artifact.path))
-			return { ...artifact, status: "needs-review" as const };
-		return artifact;
+	const project = await resolveProject(startPath);
+	return withAcknowledgementLock(project.syncPath, async () => {
+		const state = await checkProjectStatus(startPath);
+		if (!state.manifest)
+			throw new Error(state.syncError ?? "SYNC.json is unavailable");
+		const byPath = new Map(
+			state.artifacts.map((artifact) => [artifact.path, artifact]),
+		);
+		for (const path of selected) {
+			const artifact = byPath.get(path);
+			if (!artifact)
+				throw new Error(`Acknowledgement file is not tracked: ${path}`);
+			if (!artifact.exists)
+				throw new Error(`Acknowledgement file is missing: ${path}`);
+		}
+		const currentFingerprints = new Map(
+			await Promise.all(
+				[...selected].map(
+					async (path) =>
+						[
+							path,
+							await fingerprintFile(
+								resolveProjectPath(state.projectRoot, path),
+							),
+						] as const,
+				),
+			),
+		);
+		for (const [path, fingerprint] of currentFingerprints) {
+			if (fingerprint !== byPath.get(path)?.currentFingerprint)
+				throw new Error(
+					`Acknowledgement file changed during acknowledgement: ${path}`,
+				);
+		}
+		const at = now.toISOString();
+		const selectedImpacts = impacts(state.manifest.artifacts, selected);
+		const needsReview = selectedImpacts
+			.map((impact) => impact.path)
+			.filter((path) => !selected.has(path));
+		const artifacts = state.manifest.artifacts.map((artifact) => {
+			if (selected.has(artifact.path))
+				return {
+					...artifact,
+					fingerprint:
+						currentFingerprints.get(artifact.path) ?? artifact.fingerprint,
+					status: "current" as const,
+					acknowledgement: { at, reason: reason.trim() },
+				};
+			if (needsReview.includes(artifact.path))
+				return { ...artifact, status: "needs-review" as const };
+			return artifact;
+		});
+		const manifest = { ...state.manifest, confirmedAt: at, artifacts };
+		await writeApprovedFile(
+			state.syncPath,
+			formatProjectStatusManifest(manifest),
+			true,
+		);
+		return {
+			acknowledged: artifacts
+				.filter((artifact) => selected.has(artifact.path))
+				.map((artifact) => ({
+					...artifact,
+					exists: true,
+					currentFingerprint: artifact.fingerprint,
+					changed: false,
+				})),
+			needsReview,
+			at,
+		};
 	});
-	const manifest = { ...state.manifest, confirmedAt: at, artifacts };
-	await writeApprovedFile(
-		state.syncPath,
-		formatProjectStatusMarkdown(manifest),
-		true,
-	);
-	return {
-		acknowledged: artifacts
-			.filter((artifact) => selected.has(artifact.path))
-			.map((artifact) => ({
-				...artifact,
-				exists: true,
-				currentFingerprint: artifact.fingerprint,
-				changed: false,
-			})),
-		needsReview,
-		at,
-	};
 }

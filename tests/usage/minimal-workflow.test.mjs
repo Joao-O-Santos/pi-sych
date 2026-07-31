@@ -41,8 +41,8 @@ test("real Pi can inspect a disposable project and write an artifact", {
 		"# Project\n\n## Objective\nWrite a dummy report.\n\n## Current direction\nKeep it concise.\n\n## Definition of done\nREPORT.md exists.\n\n## Previous action\nNone yet.\n\n## Immediate next step\nNone at present.\n",
 	);
 	await writeFile(
-		join(root, "SYNC.md"),
-		'# Project synchronization\n\n```json\n{"version":1,"confirmedAt":"2026-01-01T00:00:00Z","artifacts":[]}\n```\n',
+		join(root, "SYNC.json"),
+		'{"version":2,"confirmedAt":"2026-01-01T00:00:00Z","artifacts":[]}\n',
 	);
 	const result = await new Promise((resolvePromise, reject) => {
 		let settled = false;
