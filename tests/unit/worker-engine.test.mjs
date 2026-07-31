@@ -93,6 +93,22 @@ test("worker modes expose only the selected tools and explicit remote research a
 		"ls",
 		"submit_artifact",
 	]);
+	assert.deepEqual(toolsForMode("edit"), [
+		"read",
+		"grep",
+		"find",
+		"ls",
+		"edit",
+		"write",
+		"submit_artifact",
+	]);
+	assert.deepEqual(toolsForMode("full-host"), [
+		"read",
+		"edit",
+		"write",
+		"bash",
+		"submit_artifact",
+	]);
 	assert.equal(
 		toolsForRequest({ mode: "read-only", remoteResearch: false }).includes(
 			"mcporter",
@@ -148,7 +164,7 @@ test("dispatch injects optional project conventions and returns one validated re
 	assert.deepEqual(outcome.launch, { exitCode: 0, stdout: "", stderr: "" });
 });
 
-test("dispatch retains a valid result after an abnormal process outcome", async () => {
+test("dispatch rejects a submitted result after an abnormal process outcome", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-worker-outcome-"));
 	await writeFile(join(root, "PROJECT.md"), "# Project\n");
 	const outcome = await dispatchWorker({
@@ -167,8 +183,8 @@ test("dispatch retains a valid result after an abnormal process outcome", async 
 			};
 		},
 	});
-	assert.equal(outcome.result?.status, "complete");
-	assert.equal(outcome.failure, undefined);
+	assert.equal(outcome.result, undefined);
+	assert.equal(outcome.failure?.classification, "timeout");
 	assert.equal(outcome.launch?.classification, "timeout");
 	assert.equal(outcome.launch?.terminationSignal, "SIGKILL");
 });

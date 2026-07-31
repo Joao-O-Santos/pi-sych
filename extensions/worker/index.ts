@@ -46,6 +46,7 @@ export default function piSychWorker(pi: ExtensionAPI): void {
 					{ type: "text", text: `Submitted result for task ${taskId}.` },
 				],
 				details: { taskId, runId },
+				terminate: true,
 			};
 		},
 	});
