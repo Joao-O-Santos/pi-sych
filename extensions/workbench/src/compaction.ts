@@ -15,7 +15,7 @@ import {
 	fingerprintFile,
 	type ProjectStatusCheck,
 } from "./project-status.js";
-import { nonEmptyString, stringArray } from "./validation.js";
+import { nonEmptyString, record, stringArray } from "./validation.js";
 
 const STANDARD_MEMORY_FILES = [
 	"PROJECT.md",
@@ -88,12 +88,6 @@ function list(value: unknown, label: string): string[] {
 	return result;
 }
 
-function object(value: unknown, label: string): Record<string, unknown> {
-	if (!value || typeof value !== "object" || Array.isArray(value))
-		throw new Error(`${label} must be an object`);
-	return value as Record<string, unknown>;
-}
-
 function parseJson(value: string): unknown {
 	const match = value.trim().match(/^```\s*json\s*\n([\s\S]*?)\n```$/i);
 	return JSON.parse(match?.[1] ?? value);
@@ -103,7 +97,7 @@ export function validateWorkingMemory(
 	value: unknown,
 	existingFiles?: Set<string>,
 ): WorkingMemory {
-	const item = object(value, "workingMemory");
+	const item = record(value, "workingMemory");
 	const currentTask = text(item.currentTask, "currentTask");
 	const nextAction = text(item.nextAction, "nextAction");
 	const relevantFiles = list(item.relevantFiles, "relevantFiles").filter(
@@ -129,7 +123,7 @@ export function validateWorkingMemory(
 }
 
 function proposal(value: unknown): PromotionProposal {
-	const item = object(value, "promotion");
+	const item = record(value, "promotion");
 	const base = {
 		targetFile: text(item.targetFile, "targetFile"),
 		proposedText: text(item.proposedText, "proposedText"),
@@ -149,7 +143,7 @@ export function parseCompactionModelOutput(value: string): {
 	workingMemory: WorkingMemory;
 	promotions: PromotionProposal[];
 } {
-	const item = object(parseJson(value), "model output");
+	const item = record(parseJson(value), "model output");
 	if (!Array.isArray(item.promotions))
 		throw new Error("promotions must be an array");
 	if (item.promotions.length > 5)
@@ -182,14 +176,14 @@ export function parsePromotionInbox(markdown: string): PromotionInbox {
 	const fences = [...markdown.matchAll(/```\s*json\s*\n([\s\S]*?)\n```/gi)];
 	if (fences.length !== 1)
 		throw new Error("INBOX.md must contain one JSON fence");
-	const item = object(JSON.parse(fences[0][1]), "INBOX.md");
+	const item = record(JSON.parse(fences[0][1]), "INBOX.md");
 	if (item.version !== 1 || !Array.isArray(item.candidates))
 		throw new Error("INBOX.md must contain version-1 candidates");
 	const candidates = item.candidates.map((value) => {
 		const candidate = {
 			...proposal(value),
-			id: text(object(value, "candidate").id, "id"),
-			createdAt: text(object(value, "candidate").createdAt, "createdAt"),
+			id: text(record(value, "candidate").id, "id"),
+			createdAt: text(record(value, "candidate").createdAt, "createdAt"),
 		};
 		if (candidate.id !== candidateId(candidate))
 			throw new Error("candidate ID does not match content");

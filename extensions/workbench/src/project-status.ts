@@ -8,7 +8,7 @@ import {
 	resolveProjectPath,
 	writeApprovedFile,
 } from "./project-files.js";
-import { nonEmptyString, stringArray } from "./validation.js";
+import { nonEmptyString, record, stringArray } from "./validation.js";
 
 // Keep the legacy version-1 labels readable; acknowledgement only writes current
 // and needs-review, and never assigns semantic meaning to any label.
@@ -109,9 +109,7 @@ function dependencyPaths(artifact: ProjectArtifact): string[] {
 }
 
 function parseArtifact(value: unknown, index: number): ProjectArtifact {
-	if (!value || typeof value !== "object" || Array.isArray(value))
-		throw new Error(`artifacts[${index}] must be an object`);
-	const item = value as Record<string, unknown>;
+	const item = record(value, `artifacts[${index}]`);
 	const status = nonEmptyString(item.status, `artifacts[${index}].status`);
 	if (!PROJECT_STATUSES.includes(status as ProjectStatus))
 		throw new Error(`artifacts[${index}].status is not allowed: ${status}`);
@@ -195,9 +193,7 @@ export function parseProjectStatusMarkdown(
 			`SYNC.md JSON is invalid: ${error instanceof Error ? error.message : String(error)}`,
 		);
 	}
-	if (!value || typeof value !== "object" || Array.isArray(value))
-		throw new Error("SYNC.md JSON must be an object");
-	const manifest = value as Record<string, unknown>;
+	const manifest = record(value, "SYNC.md JSON");
 	if (manifest.version !== 1) throw new Error("SYNC.md version must be 1");
 	const confirmedAt = nonEmptyString(manifest.confirmedAt, "confirmedAt");
 	if (Number.isNaN(Date.parse(confirmedAt)))
