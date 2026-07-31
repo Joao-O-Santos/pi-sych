@@ -15,7 +15,6 @@ export const MARKDOWN_FILES = [
 	"EVIDENCE.md",
 	"PROJECT.md",
 	"README.md",
-	"SYNC.md",
 	"TODO.md",
 	"docs/CONFIGURATION.md",
 	"docs/DEVELOPMENT.md",
@@ -25,7 +24,6 @@ export const MARKDOWN_FILES = [
 	"templates/EVIDENCE.md",
 	"templates/PROJECT.md",
 	"templates/STYLE.md",
-	"templates/SYNC.md",
 ];
 
 const PANDOC_ARGS = [
