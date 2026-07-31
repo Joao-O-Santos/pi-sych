@@ -1,5 +1,19 @@
 # Evidence
 
+## E-016 --- v3.0.3 documentation corrections
+
+**Status:** verified **Kind:** observed behaviour **Source:**
+ARCHITECTURE.md, docs/CONFIGURATION.md, package scripts **Supports:**
+v3.0.3 release readiness **Evidence:** Corrected default `inbox` path in
+CONFIGURATION.md example (`.pi-sych/INBOX.md` → `INBOX.md`) to match
+source defaults. Added motivation for canonical path overrides.
+Clarified ARCHITECTURE.md compaction triggers (manual `/compact`,
+context threshold, overflow recovery) and noted compaction uses
+supervisor's active model, not worker profiles. Typecheck, Biome and
+Pandoc style, 61 unit checks, 5 integration checks, smoke, source budget
+(2,650/3,000), and whitespace checks passed. **Limits:**
+Documentation-only; no behavioral changes. **Checked:** 2026-08-01
+
 ## E-015 --- v3.0.2 documentation update
 
 **Status:** verified **Kind:** observed behaviour **Source:**

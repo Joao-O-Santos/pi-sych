@@ -45,7 +45,7 @@ canonical paths for each role:
     "evidence": "EVIDENCE.md",
     "decisions": "DECISIONS.md",
     "todo": "TODO.md",
-    "inbox": ".pi-sych/INBOX.md"
+    "inbox": "INBOX.md"
   },
   "confirmedAt": "2024-01-01T00:00:00.000Z",
   "artifacts": [
@@ -61,9 +61,11 @@ canonical paths for each role:
 
 `projectRoot` is relative to the manifest directory. Each `canonical`
 path is relative to the project root, or absolute to point outside it.
-The defaults are the names above. Promotion proposals route to the
-configured target for each role. The `inbox` path is where compaction
-appends promotion proposals.
+The defaults are the names above. Override canonical paths when a
+project uses a non-standard layout (for example, a monorepo that keeps
+state in a `state/` subdirectory) or when several workspaces share one
+`INBOX.md`. Promotion proposals route to the configured target for each
+role. The `inbox` path is where compaction appends promotion proposals.
 
 Each artifact in `artifacts` declares its `path`, `fingerprint`,
 `status` (one of `current`, `needs-review`), and optional `dependsOn`

@@ -3,6 +3,19 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
+## v3.0.3 - 2026-08-01
+
+### Documentation
+
+- Corrected default `inbox` path in CONFIGURATION.md example from
+  `.pi-sych/INBOX.md` to `INBOX.md` to match actual source defaults.
+- Added motivation for canonical path overrides (monorepo layouts,
+  shared INBOX across workspaces).
+- Clarified ARCHITECTURE.md compaction section: added explicit triggers
+  (manual `/compact`, context threshold, overflow recovery) and noted
+  compaction uses supervisor's active model, not worker profiles from
+  `models.json`.
+
 ## v3.0.2 - 2026-08-01
 
 ### Documentation

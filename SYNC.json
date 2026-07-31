@@ -21,7 +21,7 @@
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:269c4a9a685260b9d9a9a126e75f38408e09b18f580f5d62e98bb59262542697",
+      "fingerprint": "sha256:6a3318f4d5df539f9679abbc6600bed4f04196adaf663ce64bb97666822506b7",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -37,11 +37,12 @@
       "acknowledgement": {
         "at": "2026-07-31T13:40:12.582Z",
         "reason": "v3.0.2 documentation update: added compaction pipeline description, manifest resolution section, and project canonical paths configuration"
-      }
+      },
+      "lastModified": "2026-07-31T13:49:13.010Z"
     },
     {
       "path": "ARCHITECTURE.md",
-      "fingerprint": "sha256:10e4d8ba9828fd45225c87cacd39895b2003902e490bfc84a9f65eb4df5dd4a6",
+      "fingerprint": "sha256:c555bc649019df9f257ecbfda1bd514f8d095c5ae1c6c6285316b9b19c4d2d14",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
@@ -50,11 +51,12 @@
       "acknowledgement": {
         "at": "2026-07-31T13:40:12.582Z",
         "reason": "v3.0.2 documentation update: added compaction pipeline description, manifest resolution section, and project canonical paths configuration"
-      }
+      },
+      "lastModified": "2026-07-31T13:49:13.010Z"
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:6244dfa1331cc2f2a0685b23685b34ed8ef34e2f9dd9d652185d682e220e9940",
+      "fingerprint": "sha256:bcbb706e486155141b1bda0763260253a3d1617cad341cc88f035bdf5a623ede",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -68,11 +70,12 @@
       "acknowledgement": {
         "at": "2026-07-31T13:40:12.582Z",
         "reason": "v3.0.2 documentation update: added compaction pipeline description, manifest resolution section, and project canonical paths configuration"
-      }
+      },
+      "lastModified": "2026-07-31T13:49:13.010Z"
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:6c2e1f10da568f921b053ce7fd3d3252705a97b8111806c952a5a84de652e01a",
+      "fingerprint": "sha256:620e0ebc654889dbb2ef7514cd5381f32ea752c11d63a22a794be9f8cf930cf1",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -88,11 +91,12 @@
       "acknowledgement": {
         "at": "2026-07-31T13:40:12.583Z",
         "reason": "v3.0.2 documentation update: added compaction pipeline description, manifest resolution section, and project canonical paths configuration"
-      }
+      },
+      "lastModified": "2026-07-31T13:49:13.010Z"
     },
     {
       "path": "docs/CONFIGURATION.md",
-      "fingerprint": "sha256:6db38d62d66e3e792a1746aeb467d3b6e4df3d04c5c307105580241f2df7b34d",
+      "fingerprint": "sha256:57644fa22848c3dd61f32354fecb833616e692eff59424d8d5f3e2ef2be5bc5b",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -101,7 +105,8 @@
       "acknowledgement": {
         "at": "2026-07-31T13:40:12.582Z",
         "reason": "v3.0.2 documentation update: added compaction pipeline description, manifest resolution section, and project canonical paths configuration"
-      }
+      },
+      "lastModified": "2026-07-31T13:49:13.010Z"
     },
     {
       "path": "docs/DEVELOPMENT.md",
@@ -116,5 +121,6 @@
         "reason": "Reviewed the v2.1.0 working-memory compaction, INBOX proposal boundary, reuse reductions, package metadata, documentation, completed deterministic release gate, and recorded inherited audit limitation."
       }
     }
-  ]
+  ],
+  "lastModified": "2026-07-31T13:49:13.010Z"
 }

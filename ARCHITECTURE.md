@@ -4,7 +4,7 @@ Pi Sych keeps a small mechanical core for process bounds, files, hashes,
 paths, and immutable worker results. Skills and people own
 interpretation, writing, research, and consequential judgment.
 
-![](https://unpkg.com/pi-sych@3.0.2/docs/img/architecture.png)
+![](https://unpkg.com/pi-sych@3.0.3/docs/img/architecture.png)
 
 ## Runtime
 
@@ -82,9 +82,11 @@ once per operation.
 
 Pi registers a `session_before_compact` handler that builds task-centred
 working memory instead of relying only on Pi's native compactor. On each
-compaction it resolves the project, checks status, reads the canonical
-files once to derive both content and fingerprints, inspects `INBOX.md`,
-and asks the active model for a JSON `workingMemory` plus at most five
+compaction (triggered by manual `/compact`, context threshold, or
+overflow recovery) it resolves the project, checks status, reads the
+canonical files once to derive both content and fingerprints, inspects
+`INBOX.md`, and asks the supervisor's active model (not a worker profile
+from `models.json`) for a JSON `workingMemory` plus at most five
 promotion proposals. The model is told task-relevant changed artifacts,
 impacted dependents, cycles, errors, and the current inbox.
 
