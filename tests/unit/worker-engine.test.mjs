@@ -189,6 +189,35 @@ test("dispatch rejects a submitted result after an abnormal process outcome", as
 	assert.equal(outcome.launch?.terminationSignal, "SIGKILL");
 });
 
+test("dispatch rejects submitted results after cancellation, signals, and nonzero exits", async () => {
+	for (const [launch, expected] of [
+		[
+			{ exitCode: 0, stdout: "", stderr: "", classification: "cancelled" },
+			"cancelled",
+		],
+		[
+			{ exitCode: null, stdout: "", stderr: "", terminationSignal: "SIGTERM" },
+			"incomplete",
+		],
+		[{ exitCode: 2, stdout: "", stderr: "" }, "incomplete"],
+	]) {
+		const root = await mkdtemp(join(tmpdir(), "pi-sych-worker-outcome-"));
+		await writeFile(join(root, "PROJECT.md"), "# Project\n");
+		const outcome = await dispatchWorker({
+			projectRoot: root,
+			workerAgentDir: join(root, "agent"),
+			request,
+			profiles: { default: ["test/model"] },
+			launcher: async (spec) => {
+				await writeImmutableResult(spec.resultPath, result(spec));
+				return launch;
+			},
+		});
+		assert.equal(outcome.result, undefined);
+		assert.equal(outcome.failure?.classification, expected);
+	}
+});
+
 test("dispatch rejects a result package that is not durable", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-worker-package-"));
 	await writeFile(join(root, "PROJECT.md"), "# Project\n");
