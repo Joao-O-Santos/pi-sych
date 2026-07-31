@@ -1,10 +1,5 @@
 # R Quarto
 
-Use the project’s R and Quarto conventions. Keep code, prose, tables, figures, and rendered output aligned. Run installed formatters or renderers when appropriate; report missing tools rather than installing them automatically.
-## Practice
+Preserve established layout, object names, and conventions unless an approved change requires otherwise. Document inputs and access constraints; record transformations and exclusions; separate confirmatory from exploratory and robustness work; provide an executable runner; and render from the same evidence chain. Do not install tools or invent package availability.
 
-Record the source inputs, transformation choices, and versioned outputs needed for another person to understand the result. Inspect unexpected values and failed diagnostics rather than silently filtering them away. Use sensitivity analysis or alternative interpretations where the task warrants it. Before reporting, compare every number and visual with its code and prose claim. Separate what the analysis shows from what remains a contextual or causal interpretation.
-
-## Limits
-
-Reproducibility is not validity, and a technically correct computation does not establish a claim beyond its design, measurement, and assumptions.
+When installed and relevant, run `r-air` and apply its formatting or fixes, run `jarl`, then project tests, `R CMD` checks, and Quarto render commands; do not seek separate approval merely to format or lint with installed tools. If a preferred tool is absent, report it and use the next best project-native check; never install tools unless explicitly asked. Compare rendered output with source data and computed objects. Before changing prose or code, identify affected tables, figures, methods, and results. Check variable names, conditions, samples, estimates, and interpretations agree everywhere; when a tool/dependency is unavailable preserve the last verified state and never write results from expected output, partial console text, or statistical intuition.

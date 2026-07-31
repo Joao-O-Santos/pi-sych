@@ -1,10 +1,5 @@
 # Theoretical
 
-Define constructs and mechanisms, state assumptions and scope conditions, distinguish alternatives, and derive implications or predictions. Do not present conceptual illustration as empirical evidence.
-## Practice
+Project and user constraints override this module. Organize by the argument’s logic, not IMRaD. Open with a concrete puzzle; state the contribution or mechanism; define only needed constructs; then show how inputs produce outcomes and which assumptions carry the account.
 
-Identify the reader's needed conclusion and the evidence or reasoning that can responsibly support it. Draft a visible through-line before optimizing sentences. At revision, test whether headings, paragraphs, examples, and transitions make that line easier to follow. Preserve useful qualifications and remove only repetition, ambiguity, or unsupported force. Name missing evidence or decisions instead of supplying plausible-looking material.
-
-## Limits
-
-Clear prose cannot repair an unsupported claim, an unresolved design problem, or a missing source. Escalate those matters to the appropriate analysis, research, review, or project module.
+Contrast serious alternatives fairly, specify scope conditions, boundary failures, predictions, and observations that discriminate rivals. Use examples to illuminate mechanisms, never as empirical evidence. End with what the account reveals and cannot capture. Label premises, illustrations, inferences, and unresolved choices; polished prose must not turn a conceptual claim into a finding.

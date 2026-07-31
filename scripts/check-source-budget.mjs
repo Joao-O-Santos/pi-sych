@@ -4,9 +4,10 @@ import { readdir, readFile } from "node:fs/promises";
 import { join, relative } from "node:path";
 
 const root = process.cwd();
-// v2.1 adds the approved working-memory boundary; retain a small,
-// reviewable cap rather than exempting it from the production budget.
-const limit = 2_500;
+// v3 adds the approved compaction status projection, inbox isolation,
+// failure classification, and canonical-role promotion routing. Retain a
+// small, reviewable cap rather than exempting that surface from the budget.
+const limit = 3_000;
 const excluded = new Set([
 	"extensions/workbench/src/mcporter.ts",
 	"extensions/workbench/src/plannotator.ts",

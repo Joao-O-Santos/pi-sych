@@ -1,10 +1,5 @@
 # Detail
 
-Review internal consistency, local defects, edge cases, conceptual precision, and logical or statistical red flags after structural issues. Distinguish confirmed defects from questions.
-## Practice
+Select the review lens that fits: argumentative coherence, evidence, prose, skeptical review, pedagogy, audience load, grant compliance, architecture, maintainability, requirements, or security. Evaluate claims independently; do not optimize for agreement. For each material finding state location, concrete concern, consequence, minimum credible response, kind (defect, trade-off, robustness issue, preference, or unresolved alternative), and confidence or limitation when it changes the finding. Order by location when useful; end with one explicit blind-spot question when the selected lens could miss a material alternative. Do not redesign the artifact or apply findings independently.
 
-Read the artifact and its accepted requirements before collecting findings. Describe the observed problem, its consequence, and the evidence for it; distinguish that from an optional preference. Start with defects that change correctness, credibility, safety, or reader understanding. Recommend a bounded repair and identify the uncertainty that could change the verdict. Keep the review independent of the authoring worker's preferred solution.
-
-## Limits
-
-A review is advisory. It should inform a human decision, not silently create an approval, a new requirement, or an architectural mandate.
+Ask whether reverse causality, common causes, selection, measurement, moderators, counterforces, deviant cases, or omitted nulls could matter. Name fallacies or statistical concerns specifically and explain how they weaken, not disprove, an inference. Distinguish missing citation, weak inference, unresolved alternative, and authorial choice. Frame bias checks as questions about post-hoc hypotheses, exclusions, analyses, selective reporting, or multiplicity.

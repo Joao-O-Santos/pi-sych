@@ -1,10 +1,5 @@
 # Theory
 
-Develop theory through distinctions, mechanisms, counterexamples, alternatives, and testable implications. Retain unresolved tensions instead of forcing premature integration.
-## Practice
+Define constructs only far enough to distinguish neighboring ideas. For each retained proposition state inputs, mechanism, outputs, assumptions, scope, rival account, and discriminating implication. A new label is not an explanation, and illustration is not evidence.
 
-Identify the reader's needed conclusion and the evidence or reasoning that can responsibly support it. Draft a visible through-line before optimizing sentences. At revision, test whether headings, paragraphs, examples, and transitions make that line easier to follow. Preserve useful qualifications and remove only repetition, ambiguity, or unsupported force. Name missing evidence or decisions instead of supplying plausible-looking material.
-
-## Limits
-
-Clear prose cannot repair an unsupported claim, an unresolved design problem, or a missing source. Escalate those matters to the appropriate analysis, research, review, or project module.
+Generate alternatives selectively, not as evidence or an automatic selection rule: **Contrary (E10)** asks whether the contrary is partly true; **Reverse direction (E11)** whether outcome causes predictor; **Moderators (E14)** which population/boundary reverses, suppresses, or amplifies; **Multiple accounts (H23)** for several explanations before preference; **Counterforces (H25)** for opposing net processes; and **Deviant cases (K35)** or **Reconcile conflicts (L37)** for nulls, boundaries, or a moderator that explains conflict. Also test extreme/zero conditions, re-operationalize measures/manipulations, decompose outcomes, restate as prose/diagram/matrix/premises, and use analogies only with their breaking point. Prefer a small sequence of discriminating tests to a loose study list. Keep unresolved tensions visible; do not choose a preferred account without support.

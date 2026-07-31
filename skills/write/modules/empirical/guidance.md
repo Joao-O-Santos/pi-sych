@@ -1,10 +1,5 @@
 # Empirical
 
-Align design, measures, analysis, and claims. Separate observed results from interpretation; address uncertainty, alternatives, limitations, and scope. Do not present planned or illustrative results as findings.
-## Practice
+User and accepted project decisions override this module; evidence limits override pressure for a stronger story. Describe participants or units, materials, procedure, measures, randomization, counterbalancing, factorial structure, carryover control, exclusions, transformations, stopping rule, and analysis decisions as they occurred. Label preregistered, confirmatory, changed, exploratory, and robustness decisions separately. Give the actual sample-size rationale; do not retrofit one.
 
-Identify the reader's needed conclusion and the evidence or reasoning that can responsibly support it. Draft a visible through-line before optimizing sentences. At revision, test whether headings, paragraphs, examples, and transitions make that line easier to follow. Preserve useful qualifications and remove only repetition, ambiguity, or unsupported force. Name missing evidence or decisions instead of supplying plausible-looking material.
-
-## Limits
-
-Clear prose cannot repair an unsupported claim, an unresolved design problem, or a missing source. Escalate those matters to the appropriate analysis, research, review, or project module.
+Lead with the pattern, then its estimate, uncertainty, and necessary statistical evidence. Report effect sizes when useful. Do not give an unqualified main effect when an interaction changes its meaning: report the interaction and relevant simple effects. A non-significant result is not proof of no effect; a threshold statistic is not importance. Trace every number, model, exclusion, table, and figure to output. Separate observation from inference; consider reverse causality, common causes, selection, measurement, moderators, and countervailing processes. State limits and discriminating next tests. Cross-check abstract, methods, results, discussion, prose, tables, and figures. Never invent results.

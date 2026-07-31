@@ -1,10 +1,3 @@
 # Plans
 
-Keep small plans inline. Write long, consequential, or structured plans to a project-local Markdown file and submit them for human review. Submission never authorizes implementation; file review is pending until feedback arrives.
-## Practice
-
-Begin by identifying the concrete artifact and the human decision it must support. Read existing canonical files before proposing new state, and quote uncertainty rather than laundering it into accepted language. Keep mechanical observations separate from interpretation. Finish with the smallest reviewable artifact, the files consulted, what remains unresolved, and the next human action. Do not use a ledger, status label, or generated summary as a substitute for owner review.
-
-## Limits
-
-This guidance coordinates project work; it does not decide truth, reconcile substantive disagreement automatically, or authorize durable consequential change.
+Use the smallest depth justified by risk. For substantive work, use the bounded loop: brief → explore or structure → build → targeted review when justified → integrated strategy → revise → verify → meaningful brief update. Do not force every phase on simple reversible work or create a workflow controller. Reviewers diagnose, strategists choose one coherent response, and verifiers judge; preserve human ownership of architecture, public APIs, central claims, publication, deployment, irreversible changes, security-sensitive behavior, and new dependencies unless explicitly delegated. When findings interact, choose one integrated response, state the implementation order and global constraints, and explicitly identify findings, abstractions, and qualifications not to add. Prefer a simpler coherent revision over locally optimal changes that sprawl. A short decision memo may state options, evidence, trade-offs, unresolved questions, and owner decision, but it is not approval. For consequential multi-file changes, write a concise project-local Markdown plan and submit it through formal `submit_plan` review before implementation; submission never authorizes implementation.

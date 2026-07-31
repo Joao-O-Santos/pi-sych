@@ -1,10 +1,5 @@
 # Quantitative
 
-Define estimands, assumptions, diagnostics, uncertainty, robustness checks, effect interpretation, and claim limits. Do not treat a significant result or software default as an explanation.
-## Practice
+State the estimand, design, assumptions, diagnostics, transformations, missing-data and exclusion rules, multiplicity choices, and claim limits. Distinguish confirmatory, exploratory, and sensitivity analyses. Inspect failures and unexpected values rather than silently filtering them. Report effect sizes, uncertainty, denominators, and practical interpretation; significance is neither causation nor importance, and non-significance is not no effect.
 
-Record the source inputs, transformation choices, and versioned outputs needed for another person to understand the result. Inspect unexpected values and failed diagnostics rather than silently filtering them away. Use sensitivity analysis or alternative interpretations where the task warrants it. Before reporting, compare every number and visual with its code and prose claim. Separate what the analysis shows from what remains a contextual or causal interpretation.
-
-## Limits
-
-Reproducibility is not validity, and a technically correct computation does not establish a claim beyond its design, measurement, and assumptions.
+Keep versioned inputs, code, outputs, tables, figures, and prose traceable. Test model assumptions and alternatives proportionately; state when evidence cannot support a causal interpretation. Never report expected or unexecuted output as a result.

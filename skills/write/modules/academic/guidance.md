@@ -1,10 +1,5 @@
 # Academic
 
-Make the contribution, question, argument, and evidence visible. Give sections distinct functions, keep claims proportional to support, and maintain manuscript-level coherence rather than polishing isolated passages.
-## Practice
+User, venue, and project requirements override this module. State the intellectual move: overturn, reverse, adjudicate, resolve, transfer, integrate, or decompose. Make the reader’s changed understanding and scope conditions explicit. Use a topic-sentence outline before drafting and a reverse outline before a major rewrite; organize reviews by claims or tensions, not author chronology.
 
-Identify the reader's needed conclusion and the evidence or reasoning that can responsibly support it. Draft a visible through-line before optimizing sentences. At revision, test whether headings, paragraphs, examples, and transitions make that line easier to follow. Preserve useful qualifications and remove only repetition, ambiguity, or unsupported force. Name missing evidence or decisions instead of supplying plausible-looking material.
-
-## Limits
-
-Clear prose cannot repair an unsupported claim, an unresolved design problem, or a missing source. Escalate those matters to the appropriate analysis, research, review, or project module.
+Open with a problem, puzzle, or consequence; treat competing perspectives fairly; and make contribution visible early. Distinguish proposition, finding, interpretation, and speculation. Use literature only for premises the argument needs; do not introduce unprepared literatures only in discussion. In discussion, synthesize patterns rather than repeat results; interpret through multiple serious lenses when they fit; identify what the design or perspective cannot capture; give concrete next studies or discriminating tests; and end with a calibrated take-home rather than a generic call for more research. Write the abstract last; it must match the manuscript and introduce no unsupported claim, citation, or method. Do not force empirical structure onto theory.

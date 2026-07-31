@@ -1,10 +1,5 @@
 # Testing
 
-For substantive behavior changes, establish accepted behavior, obtain independent test design or authorship first, confirm expected failure, review tests, implement minimally, and do not weaken accepted tests merely to pass. Small covered refactors need not stage this workflow.
-## Practice
+Before selecting checks, inspect the repository's available scripts, formatter, linter, type checker, build, smoke, and task-specific commands. Choose existing project-native checks that can falsify the changed behavior before adding tests or wrappers. For substantive behavior changes, obtain independently authored test design when available; test normal, error, and boundary paths proportionately. Run exact commands and inspect changed files and outputs afterwards.
 
-State the observable behavior to preserve or change, then inspect the nearest interface and existing tests. Choose the smallest implementation that makes data flow and failure behavior obvious. Add a layer only when it serves a demonstrated boundary or repeated use. Keep tests focused on externally meaningful behavior, run the project checks that fit the change, and report failures or unrun checks plainly.
-
-## Limits
-
-No test suite proves every deployment condition. Security, compatibility, and release decisions need risk-appropriate review rather than generic hardening claims.
+Run selected commands with Pi’s built-in Bash using exact commands and arguments; inspect changed files and relevant outputs afterwards. Report only checks actually run, their exit status, relevant failures, and limitations. Record durable verification support in `EVIDENCE.md`, a decision, or a `project_status` acknowledgement reason only when useful. Passing checks do not prove semantic correctness, approval, or untested behavior. Do not claim verification from inspection alone.

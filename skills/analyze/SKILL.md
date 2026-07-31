@@ -5,7 +5,7 @@ description: Conduct reproducible quantitative, qualitative, statistical, and da
 
 # Analyze
 
-Maintain traceability from inputs through transformations to conclusions. Distinguish exploratory from confirmatory work, state assumptions, and report uncertainty. Align code, prose, tables, figures, and reported numbers. Interpret output rather than repeating software results, and calibrate claims to design and evidence. Use reproducibility proportionate to the task and project conventions. Read the relevant module guidance and examples before specialized work; load only modules that apply. Data analysis belongs here; software-package development belongs under code.
+Project decisions and evidence limits override generic methods. Maintain traceability from inputs to conclusions; distinguish confirmatory, exploratory, observation, inference, and unresolved limitation. Do not treat software output, statistical thresholds, or reproducibility as authority. Run and report only actual work; do not add workflow or tooling beyond the stated task.
 
 ## Modules
 

@@ -5,7 +5,7 @@ description: Draft and revise scholarly, professional, instructional, presentati
 
 # Write
 
-Start with purpose, audience, and intended contribution. Preserve global coherence while making each paragraph or slide do identifiable work. Distinguish evidence, interpretation, inference, and authorial choice. Never invent facts, citations, quotations, requirements, or results. Prefer the smallest complete structure, concrete claims, and calibrated uncertainty. Respect applicable user, project, and genre conventions without erasing voice. Read the relevant module guidance and examples before specialized work; load only the modules that actually apply.
+User, project, and genre requirements override package defaults; evidence limits override pressure for a strong conclusion. State claims with their support and label inference or uncertainty. Do not invent facts, citations, quotations, requirements, or results. Avoid padded LLM prose and formulaic rules. Choose voice by information structure; never mechanically replace passive voice.
 
 ## Modules
 

@@ -5,7 +5,7 @@ description: Retrieve, assess, and synthesize sources with explicit limitations.
 
 # Research
 
-Inspect local material first and retrieve externally only when needed. Distinguish search results from evidence, assess authority and relevance, record important limitations, and cite claims truthfully. Do not overstate coverage, consensus, or what a source establishes. Separate source content from synthesis and interpretation. Stop when further retrieval is unlikely to alter the answer materially. Read only the relevant module guidance and examples: search for retrieval, sources for appraisal, synthesis for comparison, and citations for claim-to-source checking.
+Local evidence, project constraints, and source limits override generic expectations. Separate verified source content, inference, and missing evidence; do not manufacture citations, coverage, consensus, quotations, or retrieval. Retrieve only what can materially alter the answer, state uncertainty and stopping reasons, and report actual access and limitations.
 
 ## Modules
 

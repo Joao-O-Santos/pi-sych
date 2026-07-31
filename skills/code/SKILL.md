@@ -5,7 +5,7 @@ description: Design, implement, test, maintain, and release software.
 
 # Code
 
-Recover or define accepted behavior before implementation. Inspect existing interfaces, constraints, and conventions; then make the smallest coherent change. Preserve working interfaces unless change is intentional. Prefer clear data flow, ordinary files, and existing Pi or platform capabilities over infrastructure. Verify with project-native checks and report only checks actually run. For substantive behavior changes, seek independently authored tests before implementation and independent review afterwards. Read only the relevant module guidance and examples; do not turn a small task into a workflow controller.
+Accepted behavior and project constraints override generic best practice. Implement the smallest complete solution; do not optimize for agreement or speculative extensibility. Prefer deletion, reuse, and ordinary platform features. State assumptions and limitations. Run and report only checks actually performed; passing checks do not equal approval or semantic correctness.
 
 ## Modules
 

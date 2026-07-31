@@ -1,10 +1,3 @@
 # Reconcile
 
-Compare competing files or artifacts against accepted constraints and evidence. State the disagreement, consequences, and options; do not silently choose a winner or rewrite durable state without review.
-## Practice
-
-Begin by identifying the concrete artifact and the human decision it must support. Read existing canonical files before proposing new state, and quote uncertainty rather than laundering it into accepted language. Keep mechanical observations separate from interpretation. Finish with the smallest reviewable artifact, the files consulted, what remains unresolved, and the next human action. Do not use a ledger, status label, or generated summary as a substitute for owner review.
-
-## Limits
-
-This guidance coordinates project work; it does not decide truth, reconcile substantive disagreement automatically, or authorize durable consequential change.
+Use drift findings or direct inspection to state the disagreement precisely: files, passages, uncertainty, and consequences. For non-obvious options, prepare a short decision memo with options, evidence, trade-offs, unresolved questions, and an owner-decision field; it is a proposal, not approval, and must not create durable state before approval. Present viable options and ask the owner when central claims, scope, architecture, publication, deployment, or irreversible state is affected. For consequential multi-file changes, write a concise project-local Markdown plan and submit it through formal `submit_plan` review before implementation. Apply only approved or explicitly authorized changes, run relevant checks, then acknowledge only files actually reviewed with a truthful reason. Never let a clean status, passing command, or approved plan stand in for substantive correctness.

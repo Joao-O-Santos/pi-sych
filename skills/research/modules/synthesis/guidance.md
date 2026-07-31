@@ -1,10 +1,7 @@
 # Synthesis
 
-Compare sources, preserve disagreement and uncertainty, and separate evidence from interpretation. Produce calibrated conclusions rather than a source-by-source recital.
-## Practice
+Separate verified source metadata, source claims, inference, and missing evidence. Start local when available: use the read-only `literature` proxy’s `search` for relevance, `lookup` for a record, `recent` for newly indexed work, and `source` for a root-validated underlying file. The index is a relevance/provenance aid, not proof that metadata or extracted text is complete; record query, coverage, and limits, and inspect the underlying source before a precise empirical claim. If local material cannot answer, use an explicitly assigned `remote-research` worker; connect only needed MCP servers (Context7, OpenAlex, or Scholar Gateway) and report unavailable or failed retrieval. Model background knowledge is not a retrieved source.
 
-Translate the request into answerable subquestions, then make retrieval choices visible enough to assess coverage. Prefer primary material for central claims when practical, and compare sources rather than treating the first plausible result as decisive. Record conflict, uncertainty, and retrieval gaps. In the final synthesis, make clear which statements come from sources and which are your interpretation.
+Declare whether work is a targeted lookup or broader synthesis and state coverage and stopping rule. For a targeted claim, identify the proposition, search a small set of synonyms and competing terms, return concise notes, and stop when adequately covered. For broad questions decompose subquestions, search competing conceptual and methodological angles, deduplicate, map agreement, disagreement, and gaps, and stop when additional search mostly repeats low-relevance material.
 
-## Limits
-
-Search access does not establish completeness. A concise answer should still say when its source base, time window, or terminology leaves material uncertainty.
+For each consequential source record verified title/authors/year/DOI or URL, type, claim, methods or basis, relevance, strength, and caveats. Do not manufacture consensus, quotations, bibliographic fields, access, or retrieval success. Source notes are not manuscript prose; hand off evidence and uncertainty before drafting.

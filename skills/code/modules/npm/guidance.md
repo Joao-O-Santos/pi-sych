@@ -1,10 +1,5 @@
-# Npm
+# npm
 
-Inspect metadata, package contents, versioning, provenance, publication rules, and post-publish resolution. Treat a dry run and registry checks as evidence, not as permission to release.
-## Practice
+Before a release, check intended `package.json` SemVer and annotated tag exactly `v` plus that version, documented project checks, package availability, and `npm pack --dry-run` (or JSON) contents: only intended runtime files, public documentation, and licenses. Keep tokens, recovery codes, OTPs, and credentials out of files, logs, shell history, and chat. For GitLab trusted publishing, configure the exact namespace, project, and root CI path; protect release tags; require tag/package-version matching, meaningful rerun checks, and OIDC provenance publishing. A started pipeline is not publication.
 
-State the observable behavior to preserve or change, then inspect the nearest interface and existing tests. Choose the smallest implementation that makes data flow and failure behavior obvious. Add a layer only when it serves a demonstrated boundary or repeated use. Keep tests focused on externally meaningful behavior, run the project checks that fit the change, and report failures or unrun checks plainly.
-
-## Limits
-
-No test suite proves every deployment condition. Security, compatibility, and release decisions need risk-appropriate review rather than generic hardening claims.
+After publication verify exact `name@version`, tarball contents, provenance when available, and tagged commit. Record failed checks and advisories accurately. Do not republish, retag, or overwrite immutable versions without explicit instruction.

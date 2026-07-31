@@ -1,10 +1,5 @@
 # Bootstrap
 
-Reconstruct only the state needed to begin: purpose, scope, constraints, current direction, and immediate next step. Inspect existing artifacts before creating ledgers. Mark uncertainty rather than inferring acceptance.
-## Practice
+Read applicable `AGENTS.md`, current brief, relevant documentation/files, project memory, and Git evidence before interviewing or refreshing. Inspect existing artifacts, then ask only the next focused question needed to begin; explain a non-obvious question and offer options when useful. Establish objective, audience, contribution, deliverable, constraints, and completion criteria without exhausting a questionnaire; record venue, length/format, deadline, and delivery needs as ordinary constraints. Stop once useful work can begin. Separate direct observations, bounded inferences, and unresolved questions; use `{accepted}`, `{provisional}`, `{inferred}`, or `{unresolved}` when briefing. A user statement is input, not accepted durable state until the owner approves the candidate. Workers may propose updates; only the supervisor writes the brief.
 
-Begin by identifying the concrete artifact and the human decision it must support. Read existing canonical files before proposing new state, and quote uncertainty rather than laundering it into accepted language. Keep mechanical observations separate from interpretation. Finish with the smallest reviewable artifact, the files consulted, what remains unresolved, and the next human action. Do not use a ledger, status label, or generated summary as a substitute for owner review.
-
-## Limits
-
-This guidance coordinates project work; it does not decide truth, reconcile substantive disagreement automatically, or authorize durable consequential change.
+Propose a grouped `PROJECT.md`, `SYNC.json`, and only useful optional `STYLE.md`, `EVIDENCE.md`, `DECISIONS.md`, or `TODO.md` candidates. Use `/pi-sych-status` to inspect or acknowledge reviewed state, `/pi-sych-mcp` only for explicit remote research, and `/plannotator-annotate`, `/plannotator-last`, or `/plannotator-review` for narrow review. Write only after requested review and explicit approval; confirm tracked files and dependencies, then call `project_status` to check and acknowledge only files actually reviewed. Synchronization records reviewed content and dependencies; it neither proves truth nor resolves disagreement.

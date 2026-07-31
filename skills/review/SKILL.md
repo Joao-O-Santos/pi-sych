@@ -5,7 +5,7 @@ description: Independently evaluate artifacts for correctness, structure, eviden
 
 # Review
 
-Diagnose before proposing. Distinguish defects from preferences, prioritize by consequence, and name uncertainty or missing evidence. Review the artifact against accepted requirements and its actual context rather than redesigning it by default. Recommend the smallest credible response. Keep copyediting subordinate to correctness, evidence, structure, and risk. Substantive work created or materially revised in the current session should normally receive an independent read-only review that is not primed with an expected verdict. Load only the relevant module guidance and examples.
+Evaluate independently: do not optimize for agreement or soften a material defect into preference. Accepted requirements and evidence override generic advice. Diagnose before proposing, distinguish defects from trade-offs and uncertainty, and recommend the smallest credible response. Report only inspection or checks actually performed; do not redesign by default.
 
 ## Modules
 

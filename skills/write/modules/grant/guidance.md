@@ -1,10 +1,5 @@
 # Grant
 
-Follow the call exactly. Help reviewers find intellectual contribution, feasibility, work plan, risks, mitigation, and fit. Do not claim resources, approvals, or preliminary results that are not evidenced.
-## Practice
+The call, funder rules, and approved commitments override this module. Build a compliance matrix for eligibility, sections, criteria, page and format limits, budget rules, ethics and data management, attachments, deadline, and portal fields. Treat every item as a condition to check.
 
-Identify the reader's needed conclusion and the evidence or reasoning that can responsibly support it. Draft a visible through-line before optimizing sentences. At revision, test whether headings, paragraphs, examples, and transitions make that line easier to follow. Preserve useful qualifications and remove only repetition, ambiguity, or unsupported force. Name missing evidence or decisions instead of supplying plausible-looking material.
-
-## Limits
-
-Clear prose cannot repair an unsupported claim, an unresolved design problem, or a missing source. Escalate those matters to the appropriate analysis, research, review, or project module.
+Make scoring easy: state problem and beneficiary, aims or work packages, credible distinctive approach, responsible people, resources, milestones, risks, mitigation, and fallback. Align significance, innovation, feasibility, and impact with stated criteria without echoing them mechanically. Separate commitments from proposals and assumptions. Do not invent partners, access, preliminary results, costs, approvals, or impact. Before submission check cross-references, budget/prose agreement, attachments, accessibility, and limits; applicant decisions remain human-owned.

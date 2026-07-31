@@ -1,10 +1,5 @@
 # Artifacts
 
-Move between canonical project state and a manuscript, report, presentation, repository, or other deliverable. Preserve provenance, identify gaps, and ask for review when an artifact would change accepted state.
-## Practice
+Read applicable instructions and the selected artifact. Identify actual paths, title, headings, references, tables, figures, source, and outputs; cite exact paths and mark direct content `explicit`, interpretation `inferred`, and absent high-impact rationale, evidence, scope, or completion criteria `unresolved`. Propose grouped, supported updates only for `PROJECT.md`, `EVIDENCE.md`, `DECISIONS.md`, `STYLE.md`, `TODO.md`, or `SYNC.json`; `TODO.md` is local task state, not evidence, direction, or a replacement for an external tracker. Present candidates for review; never write or turn inference into acceptance without explicit approval. Use `/pi-sych-status` to inspect or acknowledge project state; use `/pi-sych-mcp` only for explicit remote research and `/plannotator-annotate`, `/plannotator-last`, or `/plannotator-review` for review.
 
-Begin by identifying the concrete artifact and the human decision it must support. Read existing canonical files before proposing new state, and quote uncertainty rather than laundering it into accepted language. Keep mechanical observations separate from interpretation. Finish with the smallest reviewable artifact, the files consulted, what remains unresolved, and the next human action. Do not use a ledger, status label, or generated summary as a substitute for owner review.
-
-## Limits
-
-This guidance coordinates project work; it does not decide truth, reconcile substantive disagreement automatically, or authorize durable consequential change.
+When drafting from canonical state, read `PROJECT.md`, relevant `EVIDENCE.md`, `SYNC.json`, optional decisions and style; name constraints, evidence entries/source paths, unresolved assumptions, and dependent artifacts that may become stale. Drafting is a proposal, not an approved durable change; use the applicable prose, analysis, code, or slides guidance rather than creating a second workflow.

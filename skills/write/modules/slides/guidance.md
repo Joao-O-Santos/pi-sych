@@ -1,10 +1,5 @@
 # Slides
 
-Build a narrative sequence with one job per slide, readable density, and deliberate reveals. Use project Reveal.js conventions and render-check the actual presentation rather than trusting source alone.
-## Practice
+Venue, accessibility, and project style override these defaults. Give each slide one communicative job; use hierarchy and speaker-appropriate detail instead of paragraph walls. Prefer Pandoc Reveal.js when available, or Quarto for an existing executable/statistical workflow. If neither can render, report that; source is not a rendered deck.
 
-Identify the reader's needed conclusion and the evidence or reasoning that can responsibly support it. Draft a visible through-line before optimizing sentences. At revision, test whether headings, paragraphs, examples, and transitions make that line easier to follow. Preserve useful qualifications and remove only repetition, ambiguity, or unsupported force. Name missing evidence or decisions instead of supplying plausible-looking material.
-
-## Limits
-
-Clear prose cannot repair an unsupported claim, an unresolved design problem, or a missing source. Escalate those matters to the appropriate analysis, research, review, or project module.
+Absent stronger instructions use Reveal `white`, transition `none`, 16:9, ordinary `h1` titles, and minimal reveals; title-block `date` may hold conference, contact, or other useful title-page metadata. Copy `templates/revealjs-baseline.css` to a project-local path (for example `slides/revealjs-baseline.css`) and reference that actual path, never a package-relative path; do not claim it is active until copied and loaded. Prefer `standalone: true`; use `embed-resources: true` when supported and a single-file deck helps distribution. Do not copy personal logos, assets, or private themes without explicit user provision. Inspect the actual render for figures, code, citations, reveals, labels, contrast, and essential alt text or spoken equivalents. Check timing and cut slides before shrinking type.

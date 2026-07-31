@@ -1,10 +1,5 @@
 # Copyedit
 
-Correct grammar, terminology, sentence clarity, and consistency with the minimum local change. Preserve deliberate voice and do not use copyediting to conceal substantive uncertainty.
-## Practice
+Use after structure and argument are stable. Check grammar, agreement, punctuation, terminology, labels, ambiguous pronouns, modifiers, nominalizations, filler, parallelism, and figure/table callouts. Preserve intentional fragments, dialect, emphasis, and variation unless they obstruct purpose.
 
-Read the artifact and its accepted requirements before collecting findings. Describe the observed problem, its consequence, and the evidence for it; distinguish that from an optional preference. Start with defects that change correctness, credibility, safety, or reader understanding. Recommend a bounded repair and identify the uncertainty that could change the verdict. Keep the review independent of the authoring worker's preferred solution.
-
-## Limits
-
-A review is advisory. It should inform a human decision, not silently create an approval, a new requirement, or an architectural mandate.
+For each material finding state location, concern, why it matters, and minimum local wording or consistency response. Choose voice for information focus. Do not mechanically replace passive voice: retain it when actor is unknown, irrelevant, already established, or backgrounded. Report concrete local drift from controlling style rather than applying generic rules.

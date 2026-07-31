@@ -1,10 +1,7 @@
 # Git
 
-Keep changes atomic, reviewable, and truthful about verification. Follow repository conventions, preserve shared history safely, and use branches only when they clarify collaboration or risk. Do not commit, push, tag, or publish without instruction.
-## Practice
+Inspect working tree, branch, and relevant history before changing refs. Work on `main` unless the user requests isolation or concurrent work needs it. Do not push, publish, open a pull request, alter remotes, rewrite shared history, delete branches, or tag without explicit instruction. Make coherent verified commits only when authorized by project convention.
 
-State the observable behavior to preserve or change, then inspect the nearest interface and existing tests. Choose the smallest implementation that makes data flow and failure behavior obvious. Add a layer only when it serves a demonstrated boundary or repeated use. Keep tests focused on externally meaningful behavior, run the project checks that fit the change, and report failures or unrun checks plainly.
+Use a short imperative commit subject of at most 50 characters unless repository convention differs; use conventional prefixes only when established, and wrap a useful body at 72 characters. Before merging confirm intended commits and target; prefer a true merge unless squash is requested. A private unpushed branch behind `main` may be rebased only with explicit authorization; delete it only after integration and explicit request.
 
-## Limits
-
-No test suite proves every deployment condition. Security, compatibility, and release decisions need risk-appropriate review rather than generic hardening claims.
+For rewrites confirm targets, relationships, working tree, and remote implications. When installed, prefer atomic `git history fixup`, `git history reword`, or `git history split` for the matching simple rewrite; reserve interactive rebase for complex reorganization. Never rewrite shared or pushed history automatically. Prefer the simplest supported operation; do not create branch policy or process theatre for a small change.

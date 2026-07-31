@@ -1,10 +1,7 @@
 # Sections
 
-Give abstracts, introductions, reviews, methods, results, discussions, conclusions, and transitions their appropriate jobs. Use transitions to show why the next move follows, not merely what comes next.
-## Practice
+Before drafting, decide the reader, the section's job, its central claim or decision, available evidence, and remaining uncertainty. Calibrate voice, format, citation practice, and explanation to audience and genre rather than imposing academic conventions. Give every section a job. Draft paragraphs as claim, support, and consequence where that helps; bridges, dialogue, and fragments remain valid when they serve the reader. Test each topic sentence against the paragraph that follows. Use a concrete example or small scenario when it makes an abstract claim legible. Revise globally before locally: argument, structure, paragraph logic, familiar-to-new information flow, main-action placement, end-weight, sentences, then word choice. Preserve citations, placeholders, uncertainty, and authorial variation.
 
-Identify the reader's needed conclusion and the evidence or reasoning that can responsibly support it. Draft a visible through-line before optimizing sentences. At revision, test whether headings, paragraphs, examples, and transitions make that line easier to follow. Preserve useful qualifications and remove only repetition, ambiguity, or unsupported force. Name missing evidence or decisions instead of supplying plausible-looking material.
+For an abstract state problem, approach, contribution or result, and implication without adding content. In discussion synthesize rather than repeat, consider serious alternatives, state concrete limits and next tests, and end with a calibrated take-home. Use titles that foreground a surprising or consequential move without clickbait or false promise. Avoid restating the prompt, padded signposting, and generic declarations of importance.
 
-## Limits
-
-Clear prose cannot repair an unsupported claim, an unresolved design problem, or a missing source. Escalate those matters to the appropriate analysis, research, review, or project module.
+Follow the project's Markdown formatter configuration when it applies. Run it and inspect its diff before reporting formatter work; do not add a formatter dependency solely for prose formatting.

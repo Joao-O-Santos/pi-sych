@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
-import { readdir, readFile } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { access, readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
+import { promisify } from "node:util";
+
+const execFileAsync = promisify(execFile);
 
 const catalog = {
 	project:
@@ -113,6 +117,63 @@ test("modules are one-level non-skills with editable examples", async () => {
 		}
 });
 
+test("migration ledger exactly maps the tagged source skills to existing guidance modules", async () => {
+	const ledger = await readFile("SKILL_MIGRATION_LEDGER.md", "utf8");
+	const { stdout } = await execFileAsync("git", [
+		"ls-tree",
+		"-r",
+		"--name-only",
+		"v1.2.0",
+		"skills",
+	]);
+	const sourceNames = stdout
+		.split("\n")
+		.filter((path) => path.endsWith("/SKILL.md"))
+		.map((path) => path.split("/")[1])
+		.sort();
+	const mappings = ledger
+		.split("\n")
+		.map((line) => line.match(/^\| ([a-z0-9-]+) \| `([^`]+)` \|$/))
+		.filter(Boolean)
+		.map((match) => ({ source: match[1], destination: match[2] }));
+	const mappedNames = mappings.map(({ source }) => source).sort();
+	assert.deepEqual(
+		mappedNames,
+		sourceNames,
+		"ledger rejects missing or extra sources",
+	);
+	assert.equal(
+		new Set(mappedNames).size,
+		mappedNames.length,
+		"ledger rejects duplicate source mappings",
+	);
+	for (const { source, destination } of mappings) {
+		assert.match(destination, /^[a-z]+\/modules\/[a-z-]+$/);
+		for (const file of ["guidance.md", "examples.md"])
+			await access(join("skills", destination, file), undefined).catch(() =>
+				assert.fail(`${source} destination lacks ${destination}/${file}`),
+			);
+	}
+});
+
+test("umbrella prompts state precedence and critical anti-default safeguards", async () => {
+	for (const skill of Object.keys(catalog)) {
+		const content = await readFile(join("skills", skill, "SKILL.md"), "utf8");
+		assert.match(content, /override/i, `${skill} states precedence`);
+		assert.match(
+			content,
+			/uncert|inference|limitation/i,
+			`${skill} qualifies uncertainty`,
+		);
+	}
+	const write = await readFile("skills/write/SKILL.md", "utf8");
+	const code = await readFile("skills/code/SKILL.md", "utf8");
+	const review = await readFile("skills/review/SKILL.md", "utf8");
+	assert.match(write, /never mechanically replace passive voice/i);
+	assert.match(code, /smallest complete solution/i);
+	assert.match(review, /do not optimize for agreement/i);
+});
+
 test("key migrated guidance remains distinct", async () => {
 	const empirical = await readFile(
 		"skills/write/modules/empirical/guidance.md",
@@ -126,11 +187,70 @@ test("key migrated guidance remains distinct", async () => {
 		"skills/write/modules/style/guidance.md",
 		"utf8",
 	);
-	assert.match(empirical, /design|uncertainty|results/i);
-	assert.match(theoretical, /mechanisms|assumptions|alternatives/i);
+	assert.match(empirical, /randomization.*counterbalancing/i);
+	assert.match(empirical, /exclusions.*stopping rule/i);
+	assert.match(empirical, /preregistered.*exploratory/i);
+	assert.match(empirical, /sample-size rationale/i);
+	assert.match(empirical, /interaction.*simple effects/i);
+	assert.match(empirical, /effect sizes/i);
+	assert.match(empirical, /uncertainty/i);
+	assert.match(empirical, /non-significant.*not proof/i);
+	assert.match(empirical, /reverse causality.*common causes/i);
+	assert.match(empirical, /prose, tables, and figures/i);
+	assert.match(theoretical, /mechanism|assumptions|alternatives/i);
 	assert.match(style, /European Portuguese|pt-BR/i);
+	assert.match(
+		await readFile("skills/write/modules/grant/guidance.md", "utf8"),
+		/compliance matrix/i,
+	);
+	assert.match(
+		await readFile("skills/analyze/modules/r-quarto/guidance.md", "utf8"),
+		/rendered output/i,
+	);
+	assert.match(
+		await readFile("skills/review/modules/verification/guidance.md", "utf8"),
+		/Never claim a check ran/i,
+	);
 	assert.match(
 		await readFile("skills/write/SKILL.md", "utf8"),
 		/specific paper section.*empirical.*theoretical/i,
 	);
+});
+
+test("restored procedural anchors remain in their ledger destinations", async () => {
+	const anchors = [
+		["skills/project/modules/bootstrap/guidance.md", /SYNC\.json/],
+		["skills/project/modules/artifacts/guidance.md", /pi-sych-status/],
+		["skills/project/modules/status/guidance.md", /action: "check"/],
+		[
+			"skills/project/modules/reconcile/guidance.md",
+			/decision memo.*options.*evidence.*trade-offs/is,
+		],
+		[
+			"skills/project/modules/plans/guidance.md",
+			/implementation order.*global constraints/i,
+		],
+		[
+			"skills/write/modules/academic/guidance.md",
+			/synthesize patterns.*multiple serious lenses/i,
+		],
+		[
+			"skills/write/modules/style/guidance.md",
+			/gold, silver, and negative examples/i,
+		],
+		[
+			"skills/write/modules/sections/guidance.md",
+			/reader.*section's job.*central claim/i,
+		],
+		[
+			"skills/review/modules/verification/guidance.md",
+			/implementation completeness.*unapproved changes.*maintainability/i,
+		],
+		[
+			"skills/code/modules/testing/guidance.md",
+			/scripts, formatter, linter, type checker, build, smoke/i,
+		],
+	];
+	for (const [path, anchor] of anchors)
+		assert.match(await readFile(path, "utf8"), anchor, path);
 });

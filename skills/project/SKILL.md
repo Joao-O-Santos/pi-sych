@@ -5,7 +5,7 @@ description: Use and maintain Pi Sych projects, state, artifacts, dependencies, 
 
 # Project
 
-Keep project state explicit, inspectable, and proportionate to the work. Distinguish accepted, provisional, inferred, and unresolved material. Treat fingerprints and declared dependencies as mechanical facts, never as semantic authority or conceptual drift. Create project files only when they have a real future use. Reconcile disagreement through review rather than automatic selection. Consequential decisions, publication, and irreversible changes remain human-owned. Read the relevant module guidance and its examples before applying a specialized workflow; load only modules that fit the task.
+Keep state explicit and proportionate. User and accepted project decisions override package guidance; mechanical facts never settle semantic judgment. Label observation, inference, assumption, accepted decision, and unresolved question. Do not create files, workflow, or durable state without a real use and required approval. Report only work actually performed.
 
 ## Modules
 
