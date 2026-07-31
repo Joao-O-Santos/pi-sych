@@ -26,7 +26,10 @@ import {
 	startFileAnnotation,
 	startLastMessageAnnotation,
 } from "./src/plannotator.js";
-import { resolveExistingProjectPath } from "./src/project-files.js";
+import {
+	resolveExistingProjectPath,
+	resolveProject,
+} from "./src/project-files.js";
 import {
 	acknowledgeProjectStatus,
 	checkProjectStatus,
@@ -86,7 +89,9 @@ function boundedToolContent(value: string): string {
 
 async function projectStatusView(cwd: string) {
 	const state = await checkProjectStatus(cwd);
-	const pendingPromotions = await countPromotionCandidates(state.projectRoot);
+	const pendingPromotions = await countPromotionCandidates(
+		await resolveProject(cwd),
+	);
 	return {
 		state,
 		pendingPromotions,

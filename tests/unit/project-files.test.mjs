@@ -230,13 +230,16 @@ test("promotion inbox parses and formats one fenced JSON object, and a missing i
 	assert.match(markdown, /^# Memory promotion inbox/m);
 	assert.deepEqual(parsePromotionInbox(markdown), inbox);
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-inbox-"));
-	assert.deepEqual(await readPromotionInbox(root), {
+	await writeSync(root, { canonical: { inbox: ".pi-sych/INBOX.md" } });
+	const project = await resolveProject(root);
+	assert.deepEqual(await readPromotionInbox(project), {
 		version: 1,
 		candidates: [],
 	});
-	assert.equal(await countPromotionCandidates(root), 0);
-	await writeFile(join(root, "INBOX.md"), markdown);
-	assert.equal(await countPromotionCandidates(root), 1);
+	assert.equal(await countPromotionCandidates(project), 0);
+	await mkdir(join(root, ".pi-sych"));
+	await writeFile(project.canonical.inbox, markdown);
+	assert.equal(await countPromotionCandidates(project), 1);
 });
 
 test("candidate IDs normalize targets and deduplicate without reordering existing proposals", async () => {
@@ -334,27 +337,38 @@ test("promotion validation requires an allowed target and an exact update excerp
 	);
 });
 
-test("canonical snapshots retain standard absent targets but admit only declared authoritative Markdown", async () => {
+test("canonical snapshots use configured paths and admit only declared authoritative Markdown", async () => {
 	const { collectCanonicalSnapshot } = await compaction();
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-canonical-"));
-	await writeFile(join(root, "DECISIONS.md"), "# Decisions\n");
-	await writeFile(join(root, "PLAN.md"), "# Plan\n");
-	const snapshot = await collectCanonicalSnapshot({
-		projectRoot: root,
-		manifest: {
-			artifacts: [
-				{ path: "PLAN.md", role: "plan" },
-				{ path: "notes.txt", role: "notes" },
-			],
+	await writeSync(root, {
+		canonical: {
+			decisions: "memory/DECISIONS.md",
+			todo: "planning/TODO.md",
 		},
 	});
+	await mkdir(join(root, "memory"));
+	await writeFile(join(root, "memory", "DECISIONS.md"), "# Decisions\n");
+	await writeFile(join(root, "PLAN.md"), "# Plan\n");
+	const project = await resolveProject(root);
+	const snapshot = await collectCanonicalSnapshot(
+		{
+			projectRoot: root,
+			manifest: {
+				artifacts: [
+					{ path: "PLAN.md", role: "plan" },
+					{ path: "notes.txt", role: "notes" },
+				],
+			},
+		},
+		project,
+	);
 	assert.deepEqual(snapshot.allowedTargets.slice(0, 6), [
 		"PROJECT.md",
 		"AGENTS.md",
 		"STYLE.md",
 		"EVIDENCE.md",
-		"DECISIONS.md",
-		"TODO.md",
+		"memory/DECISIONS.md",
+		"planning/TODO.md",
 	]);
 	assert.ok(snapshot.absentStandardTargets.includes("PROJECT.md"));
 	assert.ok(snapshot.allowedTargets.includes("PLAN.md"));

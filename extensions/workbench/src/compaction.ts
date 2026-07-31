@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
+import { relative } from "node:path";
 import { uuidv7 } from "@earendil-works/pi-ai";
 import { complete } from "@earendil-works/pi-ai/compat";
 import {
@@ -9,7 +10,12 @@ import {
 	type SessionBeforeCompactEvent,
 	serializeConversation,
 } from "@earendil-works/pi-coding-agent";
-import { resolveProjectPath, writeAtomicFile } from "./project-files.js";
+import {
+	type ResolvedProject,
+	resolveProject,
+	resolveProjectPath,
+	writeAtomicFile,
+} from "./project-files.js";
 import {
 	checkProjectStatus,
 	fingerprintFile,
@@ -17,13 +23,13 @@ import {
 } from "./project-status.js";
 import { nonEmptyString, record, stringArray } from "./validation.js";
 
-const STANDARD_MEMORY_FILES = [
-	"PROJECT.md",
-	"AGENTS.md",
-	"STYLE.md",
-	"EVIDENCE.md",
-	"DECISIONS.md",
-	"TODO.md",
+const MEMORY_CANONICAL_FILES = [
+	"project",
+	"agents",
+	"style",
+	"evidence",
+	"decisions",
+	"todo",
 ] as const;
 const MAX_ITEMS = 12;
 const MAX_TEXT = 1_000;
@@ -202,12 +208,10 @@ export function formatPromotionInbox(inbox: PromotionInbox): string {
 }
 
 export async function readPromotionInbox(
-	projectRoot: string,
+	project: Pick<ResolvedProject, "canonical">,
 ): Promise<PromotionInbox> {
 	try {
-		return parsePromotionInbox(
-			await readFile(resolveProjectPath(projectRoot, "INBOX.md"), "utf8"),
-		);
+		return parsePromotionInbox(await readFile(project.canonical.inbox, "utf8"));
 	} catch (error) {
 		if ((error as NodeJS.ErrnoException).code === "ENOENT")
 			return { ...EMPTY_INBOX, candidates: [] };
@@ -216,9 +220,9 @@ export async function readPromotionInbox(
 }
 
 export async function countPromotionCandidates(
-	projectRoot: string,
+	project: Pick<ResolvedProject, "canonical">,
 ): Promise<number> {
-	return (await readPromotionInbox(projectRoot)).candidates.length;
+	return (await readPromotionInbox(project)).candidates.length;
 }
 
 export function validatePromotion(
@@ -253,46 +257,63 @@ export function renderWorkingMemory(memory: WorkingMemory): string {
 	return `# Working memory\n\n## Current task\n\n${memory.currentTask}${memory.purpose ? `\n\n${memory.purpose}` : ""}\n\n## Current state\n${section("Completed", memory.completed)}${section("Successful approaches", memory.successfulApproaches)}${section("Failed approaches", memory.failedApproaches)}${section("In progress", memory.inProgress)}${section("Blockers", memory.blockers)}\n## Critical context\n${memory.criticalContext.length ? `\n${memory.criticalContext.map((value) => `- ${value}`).join("\n")}\n` : "\nNone recorded.\n"}\n## Continue from here\n\n${memory.nextAction}${memory.relevantFiles.length ? `\n\n## Relevant existing files\n\n${memory.relevantFiles.map((path) => `- ${path}`).join("\n")}` : ""}\n`;
 }
 
+type SnapshotFile = CanonicalSnapshot["files"][number] & {
+	absolutePath: string;
+};
+
+function displayPath(projectRoot: string, path: string): string {
+	const display = relative(projectRoot, path);
+	return display && !display.startsWith("..") ? display : path;
+}
+
 export async function collectCanonicalSnapshot(
 	state: Pick<ProjectStatusCheck, "projectRoot" | "manifest">,
-): Promise<CanonicalSnapshot> {
-	const standard = new Set<string>(STANDARD_MEMORY_FILES);
+	project: Pick<ResolvedProject, "canonical">,
+): Promise<CanonicalSnapshot & { files: SnapshotFile[] }> {
+	const standard = MEMORY_CANONICAL_FILES.map((name) => ({
+		path: displayPath(state.projectRoot, project.canonical[name]),
+		absolutePath: project.canonical[name],
+	}));
 	const declared = (state.manifest?.artifacts ?? [])
 		.filter(
 			(artifact) =>
 				/\.mdx?$/i.test(artifact.path) &&
 				(artifact.role || artifact.authoritativeFor?.length),
 		)
-		.map((artifact) => artifact.path);
-	const files: CanonicalSnapshot["files"] = [];
-	for (const path of new Set([...standard, ...declared]))
+		.map((artifact) => ({
+			path: artifact.path,
+			absolutePath: resolveProjectPath(state.projectRoot, artifact.path),
+		}));
+	const candidates = new Map<string, { absolutePath: string }>();
+	for (const entry of [...standard, ...declared])
+		candidates.set(entry.path, { absolutePath: entry.absolutePath });
+	const files: SnapshotFile[] = [];
+	for (const [path, { absolutePath }] of candidates)
 		try {
-			const content = await readFile(
-				resolveProjectPath(state.projectRoot, path),
-				"utf8",
-			);
+			const content = await readFile(absolutePath, "utf8");
 			if (Buffer.byteLength(content) > 32 * 1024) continue;
 			files.push({
 				path,
 				content,
-				fingerprint: await fingerprintFile(
-					resolveProjectPath(state.projectRoot, path),
-				),
+				fingerprint: await fingerprintFile(absolutePath),
+				absolutePath,
 			});
 		} catch (error) {
 			if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
 		}
 	const allowedTargets = [
-		...standard,
-		...declared.filter((path) => files.some((file) => file.path === path)),
+		...standard.map((entry) => entry.path),
+		...declared
+			.filter((entry) => files.some((file) => file.path === entry.path))
+			.map((entry) => entry.path),
 	];
 	return {
 		projectRoot: state.projectRoot,
 		files,
 		allowedTargets,
-		absentStandardTargets: STANDARD_MEMORY_FILES.filter(
-			(path) => !files.some((file) => file.path === path),
-		),
+		absentStandardTargets: standard
+			.filter((entry) => !files.some((file) => file.path === entry.path))
+			.map((entry) => entry.path),
 	};
 }
 
@@ -317,7 +338,13 @@ function prompt(
 		path: file.path,
 		content: clip(file.content, 8_000),
 	}));
-	return `Return JSON with workingMemory and at most five promotions. Working memory must name currentTask, completed, successfulApproaches, failedApproaches, inProgress, blockers, criticalContext, nextAction, and relevantFiles. Promotions are add/update proposals only; compare canonical contents and existing candidates, use exact existingText for updates, and do not promote already represented content.\n\nCompaction: reason=${event.reason}; retry=${event.willRetry}.\n\nPrevious summary:\n${clip(event.preparation.previousSummary ?? "none")}\n\nConversation:\n${clip(conversation)}\n\nRecent context:\n${clip(recent)}\n\nLoaded conventions:\n${JSON.stringify(conventions)}\n\nCanonical files:\n${JSON.stringify(canonical.files)}\n\nAllowed targets: ${canonical.allowedTargets.join(", ")}\nAbsent standard targets: ${canonical.absentStandardTargets.join(", ") || "none"}\nExisting inbox: ${JSON.stringify(inbox.candidates)}\nInstructions: ${event.customInstructions ?? "none"}`;
+	return `Return JSON with workingMemory and at most five promotions. Working memory must name currentTask, completed, successfulApproaches, failedApproaches, inProgress, blockers, criticalContext, nextAction, and relevantFiles. Promotions are add/update proposals only; compare canonical contents and existing candidates, use exact existingText for updates, and do not promote already represented content.\n\nCompaction: reason=${event.reason}; retry=${event.willRetry}.\n\nPrevious summary:\n${clip(event.preparation.previousSummary ?? "none")}\n\nConversation:\n${clip(conversation)}\n\nRecent context:\n${clip(recent)}\n\nLoaded conventions:\n${JSON.stringify(conventions)}\n\nCanonical files:\n${JSON.stringify(
+		canonical.files.map(({ path, content, fingerprint }) => ({
+			path,
+			content,
+			fingerprint,
+		})),
+	)}\n\nAllowed targets: ${canonical.allowedTargets.join(", ")}\nAbsent standard targets: ${canonical.absentStandardTargets.join(", ") || "none"}\nExisting inbox: ${JSON.stringify(inbox.candidates)}\nInstructions: ${event.customInstructions ?? "none"}`;
 }
 
 type Complete = typeof complete;
@@ -330,9 +357,10 @@ export async function createWorkingMemoryCompaction(
 ) {
 	try {
 		if (!ctx.model) return undefined;
+		const project = await resolveProject(ctx.cwd);
 		const state = await checkProjectStatus(ctx.cwd);
-		const canonical = await collectCanonicalSnapshot(state);
-		const inbox = await readPromotionInbox(state.projectRoot);
+		const canonical = await collectCanonicalSnapshot(state, project);
+		const inbox = await readPromotionInbox(project);
 		const auth = await ctx.modelRegistry.getApiKeyAndHeaders(ctx.model);
 		if (!auth.ok || !auth.apiKey) return undefined;
 		const response = await (dependencies.complete ?? complete)(
@@ -379,16 +407,13 @@ export async function createWorkingMemoryCompaction(
 			}));
 		const unchanged = await Promise.all(
 			canonical.files.map(
-				async (file) =>
-					(await fingerprintFile(
-						resolveProjectPath(state.projectRoot, file.path),
-					)) === file.fingerprint,
+				async (file) => (await fingerprintFile(file.path)) === file.fingerprint,
 			),
 		);
 		const merged = mergePromotionCandidates(inbox.candidates, additions);
 		if (additions.length && unchanged.every(Boolean))
 			await writeAtomicFile(
-				resolveProjectPath(state.projectRoot, "INBOX.md"),
+				project.canonical.inbox,
 				formatPromotionInbox({ version: 1, candidates: merged }),
 			);
 		const pendingPromotions =
@@ -396,7 +421,7 @@ export async function createWorkingMemoryCompaction(
 				? merged.length
 				: inbox.candidates.length;
 		ctx.ui.notify(
-			`Working-memory compaction complete. INBOX.md has ${pendingPromotions} pending memory proposals.`,
+			`Working-memory compaction complete. ${displayPath(state.projectRoot, project.canonical.inbox)} has ${pendingPromotions} pending memory proposals.`,
 			"info",
 		);
 		return {
@@ -410,7 +435,7 @@ export async function createWorkingMemoryCompaction(
 					version: 1,
 					reason: event.reason,
 					willRetry: event.willRetry,
-					inboxPath: "INBOX.md",
+					inboxPath: displayPath(state.projectRoot, project.canonical.inbox),
 					pendingPromotions,
 					addedPromotionIds: additions.map((entry) => entry.id),
 					canonicalFingerprints: Object.fromEntries(
