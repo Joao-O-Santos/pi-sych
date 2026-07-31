@@ -102,9 +102,7 @@ test("Pi discovers exactly the six public skills without exposing modules", asyn
 	assert.equal(stderr, "");
 	assert.deepEqual(
 		commands
-			.filter((command) =>
-				command.sourceInfo.path.startsWith(resolve("skills")),
-			)
+			.filter((command) => command.sourceInfo.path.startsWith(resolve("skills")))
 			.map((command) => command.name)
 			.sort(),
 		[
@@ -130,14 +128,14 @@ test("bootstrapped worker starts with only the worker extension", async () => {
 
 	const { commands, stderr } = await getCommands(
 		["--mode", "rpc", "--no-session", "--no-context-files"],
-		{ PI_CODING_AGENT_DIR: agentDir },
+		{
+			PI_CODING_AGENT_DIR: agentDir,
+		},
 	);
 
 	assert.equal(stderr, "");
 	assert.deepEqual(
-		commands
-			.map((command) => command.name)
-			.filter((name) => name.startsWith("pi-sych-")),
+		commands.map((command) => command.name).filter((name) => name.startsWith("pi-sych-")),
 		[],
 	);
 
@@ -151,9 +149,5 @@ test("bootstrapped worker starts with only the worker extension", async () => {
 		tools.map((tool) => tool.name),
 		["submit_artifact"],
 	);
-	assert.deepEqual(tools[0].parameters.properties.status.enum, [
-		"complete",
-		"partial",
-		"failed",
-	]);
+	assert.deepEqual(tools[0].parameters.properties.status.enum, ["complete", "partial", "failed"]);
 });

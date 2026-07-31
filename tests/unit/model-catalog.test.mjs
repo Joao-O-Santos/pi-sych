@@ -12,10 +12,7 @@ test("model catalog resolves user aliases and preserves ranked profile order", (
 		profiles: { default: ["strong"], code: ["strong", "fast"] },
 	});
 	assert.deepEqual(profiles.default, ["provider/strong"]);
-	assert.deepEqual(profiles.profiles.code, [
-		"provider/strong",
-		"provider/fast",
-	]);
+	assert.deepEqual(profiles.profiles.code, ["provider/strong", "provider/fast"]);
 });
 
 test("model catalog rejects missing defaults and invalid aliases", () => {

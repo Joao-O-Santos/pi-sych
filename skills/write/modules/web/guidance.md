@@ -1,10 +1,13 @@
 # Web
 
-Design content around audience, page purpose, hierarchy, navigation, web prose, and calls to action. Keep information architecture and copy here; implementation, accessibility mechanics, and deployment belong under code.
-## Practice
+Start with the visitor, their task, and the page's one primary action. Give each page a clear purpose,
+place the answer or action before supporting detail, and make navigation labels describe destinations.
+Use headings that let a scanning reader reconstruct the path; write links and calls to action as
+specific outcomes, not “learn more.” Keep information architecture, interface copy, and content
+hierarchy here; route browser behavior, accessibility mechanics, performance, and deployment to
+code/web.
 
-Identify the reader's needed conclusion and the evidence or reasoning that can responsibly support it. Draft a visible through-line before optimizing sentences. At revision, test whether headings, paragraphs, examples, and transitions make that line easier to follow. Preserve useful qualifications and remove only repetition, ambiguity, or unsupported force. Name missing evidence or decisions instead of supplying plausible-looking material.
-
-## Limits
-
-Clear prose cannot repair an unsupported claim, an unresolved design problem, or a missing source. Escalate those matters to the appropriate analysis, research, review, or project module.
+Preserve qualifications that affect a visitor's decision. Test whether the page answers why this
+matters, what happens next, and where to get support. Name missing evidence, policy, or product
+decisions rather than writing plausible filler. Clear copy cannot repair an unsupported claim or an
+unresolved design decision.

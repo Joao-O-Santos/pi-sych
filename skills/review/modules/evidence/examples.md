@@ -1,5 +1,12 @@
 # Evidence examples
 
-Input: a claim cites a review that does not report the underlying result.
+Bad:
 
-Output: flag the mismatch, request the primary or appropriate source, and distinguish missing support from falsehood.
+> The review is persuasive, so the claim is adequately supported.
+
+Better:
+
+> The cited review does not report the underlying result. Request the primary or appropriate source;
+> this is missing support, not proof the claim is false.
+
+Why: independent review reports a material mismatch instead of agreeing with the draft.

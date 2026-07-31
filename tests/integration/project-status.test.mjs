@@ -48,10 +48,7 @@ function invokeStatus(cwd, agentDir) {
 				buffer = buffer.slice(newline + 1);
 				if (!line) continue;
 				const event = JSON.parse(line);
-				if (
-					event.type === "extension_ui_request" &&
-					event.method === "notify"
-				) {
+				if (event.type === "extension_ui_request" && event.method === "notify") {
 					clearTimeout(timeout);
 					child.kill("SIGTERM");
 					resolvePromise({ event, stderr });
@@ -60,9 +57,7 @@ function invokeStatus(cwd, agentDir) {
 			}
 		});
 		child.once("error", reject);
-		child.stdin.write(
-			`${JSON.stringify({ type: "prompt", message: "/pi-sych-status" })}\n`,
-		);
+		child.stdin.write(`${JSON.stringify({ type: "prompt", message: "/pi-sych-status" })}\n`);
 	});
 }
 
@@ -80,9 +75,7 @@ test("status command reports mechanical state without semantic drift claims", as
 			{
 				version: 2,
 				confirmedAt: "2026-07-28T12:00:00Z",
-				artifacts: [
-					{ path: "PROJECT.md", status: "needs-review", fingerprint },
-				],
+				artifacts: [{ path: "PROJECT.md", status: "needs-review", fingerprint }],
 			},
 			null,
 			2,

@@ -1,10 +1,13 @@
 # Web
 
-Use clear frontend/backend boundaries, accessible browser behavior, and project-native build and deployment conventions. Prefer a small direct implementation over an invented framework layer.
-## Practice
+State the browser-visible behavior, supported inputs, loading and failure states, and server boundary
+before changing code. Inspect the nearest route, component, form, API contract, and tests. Preserve
+semantic HTML, keyboard operation, focus handling, labels, error announcements, and useful empty
+states; do not substitute visual success for accessible behavior.
 
-State the observable behavior to preserve or change, then inspect the nearest interface and existing tests. Choose the smallest implementation that makes data flow and failure behavior obvious. Add a layer only when it serves a demonstrated boundary or repeated use. Keep tests focused on externally meaningful behavior, run the project checks that fit the change, and report failures or unrun checks plainly.
-
-## Limits
-
-No test suite proves every deployment condition. Security, compatibility, and release decisions need risk-appropriate review rather than generic hardening claims.
+Use the existing build, routing, data-fetching, and deployment conventions. Prefer the smallest direct
+change that makes request data, validation, authorization, and error handling visible. Add a client or
+server layer only for a demonstrated boundary or repeated use. Test meaningful browser and endpoint
+outcomes, including failure where changed; run fitting project checks and report unrun checks plainly.
+Security, compatibility, and release decisions need risk-appropriate review, not generic hardening
+claims.

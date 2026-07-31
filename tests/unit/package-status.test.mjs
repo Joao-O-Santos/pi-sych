@@ -21,14 +21,11 @@ test("parseCodeReviewArgs accepts provider flags and PR URLs only", () => {
 		vcsType: undefined,
 		useLocal: true,
 	});
-	assert.deepEqual(
-		parseCodeReviewArgs('--gitbutler --no-local "https://example.test/pr/1"'),
-		{
-			prUrl: "https://example.test/pr/1",
-			vcsType: "gitbutler",
-			useLocal: false,
-		},
-	);
+	assert.deepEqual(parseCodeReviewArgs('--gitbutler --no-local "https://example.test/pr/1"'), {
+		prUrl: "https://example.test/pr/1",
+		vcsType: "gitbutler",
+		useLocal: false,
+	});
 	assert.equal(parseCodeReviewArgs("not-a-url --git").prUrl, undefined);
 	assert.equal(parseCodeReviewArgs("not-a-url --git").vcsType, "git");
 });
@@ -91,10 +88,7 @@ test("tool content formatters include bounded worker and plan result details", (
 	assert.match(workerContent, /Changed files:\n- result\.md/);
 	assert.match(workerContent, /Result package: inline/);
 	assert.match(workerContent, /Limitations:\n- No network/);
-	assert.match(
-		workerContent,
-		/Process warning: abnormal exit; exit code 1; signal SIGTERM/,
-	);
+	assert.match(workerContent, /Process warning: abnormal exit; exit code 1; signal SIGTERM/);
 	const planContent = formatSubmitPlanResult(
 		{
 			mode: "browser",
@@ -111,35 +105,24 @@ test("tool content formatters include bounded worker and plan result details", (
 
 test("public manifest retains the package boundary and developer tooling", () => {
 	assert.equal(packageJson.name, "pi-sych");
-	assert.equal(packageJson.version, "3.0.3");
+	assert.equal(packageJson.version, "3.0.4");
 	assert.equal(PACKAGE_ROOT, process.cwd());
 	assert.equal(packageJson.devDependencies.typescript, "latest");
 	assert.equal(packageJson.devDependencies["@biomejs/biome"], "latest");
-	assert.equal(
-		packageJson.devDependencies["@earendil-works/pi-coding-agent"],
-		"latest",
-	);
+	assert.equal(packageJson.devDependencies["@earendil-works/pi-coding-agent"], "latest");
 	assert.equal(packageJson.dependencies["@plannotator/pi-extension"], "latest");
 	assert.equal(packageJson.dependencies["pi-mcporter"], "latest");
-	assert.deepEqual(packageJson.pi.extensions, [
-		"./extensions/workbench/index.ts",
-	]);
+	assert.deepEqual(packageJson.pi.extensions, ["./extensions/workbench/index.ts"]);
 	assert.equal(packageJson.files.includes("CHANGELOG.md"), true);
 	assert.equal(packageJson.files.includes("docs"), true);
 	assert.equal(packageJson.files.includes("AGENTS.md"), true);
 	assert.equal(packageJson.files.includes("ARCHITECTURE.md"), true);
 	assert.equal(packageJson.files.includes("scripts/format-markdown.mjs"), true);
-	assert.equal(
-		packageJson.pi.image,
-		"https://unpkg.com/pi-sych@3.0.3/docs/img/architecture.png",
-	);
+	assert.equal(packageJson.pi.image, "https://unpkg.com/pi-sych@3.0.4/docs/img/architecture.png");
 });
 
 test("release pipeline checks style before publishing", () => {
-	const releaseConfig = readFileSync(
-		new URL("../../.gitlab-ci.yml", import.meta.url),
-		"utf8",
-	);
+	const releaseConfig = readFileSync(new URL("../../.gitlab-ci.yml", import.meta.url), "utf8");
 	assert.match(releaseConfig, /npm run style/);
 	assert.match(releaseConfig, /npm run source:budget/);
 	assert.match(releaseConfig, /npm publish --provenance/);
@@ -196,18 +179,9 @@ test("pending promotion status includes the human review command only when nonze
 		missingCore: [],
 		projectErrors: [],
 	};
-	assert.doesNotMatch(
-		formatProjectStatusCheck(state, 0),
-		/Pending memory proposals/,
-	);
-	assert.match(
-		formatProjectStatusCheck(state, 2),
-		/Pending memory proposals: 2/,
-	);
-	assert.match(
-		formatProjectStatusCheck(state, 2),
-		/\/plannotator-annotate INBOX\.md/,
-	);
+	assert.doesNotMatch(formatProjectStatusCheck(state, 0), /Pending memory proposals/);
+	assert.match(formatProjectStatusCheck(state, 2), /Pending memory proposals: 2/);
+	assert.match(formatProjectStatusCheck(state, 2), /\/plannotator-annotate INBOX\.md/);
 	assert.match(
 		formatProjectStatusCheck(state, 0, "invalid JSON"),
 		/Memory promotion inbox error: invalid JSON/,
@@ -266,17 +240,12 @@ test("custom compaction falls back to Pi's standard compactor when unavailable, 
 		{},
 	);
 	assert.equal(denied, undefined);
-	const malformed = await createWorkingMemoryCompaction(
-		compactEvent(),
-		compactContext(root),
-		[],
-		{
-			complete: async () => ({
-				content: [{ type: "text", text: "not JSON" }],
-				usage: { inputTokens: 1 },
-			}),
-		},
-	);
+	const malformed = await createWorkingMemoryCompaction(compactEvent(), compactContext(root), [], {
+		complete: async () => ({
+			content: [{ type: "text", text: "not JSON" }],
+			usage: { inputTokens: 1 },
+		}),
+	});
 	assert.equal(malformed, undefined);
 });
 
@@ -325,12 +294,6 @@ test("custom compaction retains Pi metadata and reports pending proposals withou
 		"../../.test-build/workbench/src/project-status.js"
 	);
 	const status = await checkProjectStatus(process.cwd());
-	assert.match(
-		formatProjectStatusCheck(status, 2),
-		/Pending memory proposals: 2/,
-	);
-	assert.match(
-		formatProjectStatusCheck(status, 2),
-		/\/plannotator-annotate INBOX\.md/,
-	);
+	assert.match(formatProjectStatusCheck(status, 2), /Pending memory proposals: 2/);
+	assert.match(formatProjectStatusCheck(status, 2), /\/plannotator-annotate INBOX\.md/);
 });

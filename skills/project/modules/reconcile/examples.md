@@ -1,5 +1,5 @@
 # Reconcile examples
 
-Input: `PROJECT.md` and `DECISIONS.md` specify incompatible release audiences.
+Input: configured `project` and `decisions` roles specify incompatible release audiences.
 
-Output: state the conflict, its consequences, available evidence, and the human decision needed.
+Output: state the conflict, its consequences, available evidence, and the owner decision needed.

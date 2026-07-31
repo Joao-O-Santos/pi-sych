@@ -1,5 +1,12 @@
 # Architecture examples
 
-Input: a small feature proposal adds factories, registries, and a plugin layer.
+Bad:
 
-Output: implement the direct path first; identify the concrete second use that would justify an added abstraction.
+> Add factories, registries, and plugins so future integrations are easy.
+
+Better:
+
+> Add the one direct integration. Name the concrete second use and differing boundary required before
+> introducing an abstraction.
+
+Why: speculative extensibility is not a demonstrated design constraint.

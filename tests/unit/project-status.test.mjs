@@ -45,15 +45,40 @@ test("check parses direct v2 SYNC.json deterministically", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-sync-json-"));
 	await writeFile(join(root, "PROJECT.md"), "# Project\n");
 	const fingerprint = await fingerprintFile(join(root, "PROJECT.md"));
-	await writeManifest(root, [
-		{ path: "PROJECT.md", fingerprint, status: "current" },
-	]);
+	await writeManifest(root, [{ path: "PROJECT.md", fingerprint, status: "current" }]);
 	const result = await checkProjectStatus(root);
 	assert.equal(result.syncError, undefined);
 	assert.deepEqual(result.changed, []);
 	assert.equal(
 		await readFile(join(root, "SYNC.json"), "utf8"),
 		formatProjectStatusManifest(result.manifest),
+	);
+});
+
+test("acknowledgement preserves root and artifact lastModified fields", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-project-status-"));
+	await writeFile(join(root, "PROJECT.md"), "project\n");
+	await writeFile(join(root, "guide.md"), "guide\n");
+	await writeManifest(
+		root,
+		[
+			{ ...(await artifact(root, "PROJECT.md")), lastModified: "2026-01-01T00:00:00.000Z" },
+			{ ...(await artifact(root, "guide.md")), lastModified: "2026-01-02T00:00:00.000Z" },
+		],
+		{ lastModified: "2026-01-03T00:00:00.000Z" },
+	);
+	await writeFile(join(root, "PROJECT.md"), "changed project\n");
+	await acknowledgeProjectStatus(
+		root,
+		["PROJECT.md"],
+		"reviewed",
+		new Date("2026-02-01T00:00:00.000Z"),
+	);
+	const manifest = parseProjectStatusManifest(await readFile(join(root, "SYNC.json"), "utf8"));
+	assert.equal(manifest.lastModified, "2026-01-03T00:00:00.000Z");
+	assert.deepEqual(
+		manifest.artifacts.map((item) => item.lastModified),
+		["2026-01-01T00:00:00.000Z", "2026-01-02T00:00:00.000Z"],
 	);
 });
 
@@ -69,10 +94,7 @@ test("check reports missing core files and shallow PROJECT.md validation errors"
 	const invalidRoot = await fixture([]);
 	const invalid = await checkProjectStatus(invalidRoot);
 	assert.match(invalid.projectErrors.join("\n"), /Objective/);
-	assert.match(
-		formatProjectStatusCheck(invalid),
-		/PROJECT\.md validation errors:/,
-	);
+	assert.match(formatProjectStatusCheck(invalid), /PROJECT\.md validation errors:/);
 });
 
 test("check reports malformed SYNC.json without inventing missing core paths", async () => {
@@ -145,13 +167,8 @@ test("acknowledgement updates selected hashes and marks only unselected dependen
 		"reviewed project",
 		new Date("2026-02-01T00:00:00.000Z"),
 	);
-	let manifest = parseProjectStatusManifest(
-		await readFile(join(root, "SYNC.json"), "utf8"),
-	);
-	assert.equal(
-		manifest.artifacts[0].fingerprint,
-		await fingerprintFile(join(root, "PROJECT.md")),
-	);
+	let manifest = parseProjectStatusManifest(await readFile(join(root, "SYNC.json"), "utf8"));
+	assert.equal(manifest.artifacts[0].fingerprint, await fingerprintFile(join(root, "PROJECT.md")));
 	assert.deepEqual(manifest.artifacts[0].acknowledgement, {
 		at: "2026-02-01T00:00:00.000Z",
 		reason: "reviewed project",
@@ -160,10 +177,7 @@ test("acknowledgement updates selected hashes and marks only unselected dependen
 	assert.equal(manifest.artifacts[2].status, "needs-review");
 	assert.equal(manifest.artifacts[1].fingerprint, artifacts[1].fingerprint);
 	const formatted = formatProjectStatusCheck(await checkProjectStatus(root));
-	assert.match(
-		formatted,
-		/Persisted as needing review:\n- guide\.md\n- artifact\.md/,
-	);
+	assert.match(formatted, /Persisted as needing review:\n- guide\.md\n- artifact\.md/);
 	assert.match(formatted, /All tracked files match their recorded hashes/);
 	await acknowledgeProjectStatus(
 		root,
@@ -171,9 +185,7 @@ test("acknowledgement updates selected hashes and marks only unselected dependen
 		"reviewed unchanged dependent",
 		new Date("2026-02-02T00:00:00.000Z"),
 	);
-	manifest = parseProjectStatusManifest(
-		await readFile(join(root, "SYNC.json"), "utf8"),
-	);
+	manifest = parseProjectStatusManifest(await readFile(join(root, "SYNC.json"), "utf8"));
 	assert.equal(manifest.artifacts[1].status, "current");
 	assert.equal(manifest.artifacts[2].status, "needs-review");
 });
@@ -196,10 +208,7 @@ test("concurrent acknowledgements preserve both updates", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-project-status-"));
 	await writeFile(join(root, "PROJECT.md"), "project\n");
 	await writeFile(join(root, "guide.md"), "guide\n");
-	await writeManifest(root, [
-		await artifact(root, "PROJECT.md"),
-		await artifact(root, "guide.md"),
-	]);
+	await writeManifest(root, [await artifact(root, "PROJECT.md"), await artifact(root, "guide.md")]);
 	await Promise.all([
 		acknowledgeProjectStatus(
 			root,
@@ -214,9 +223,7 @@ test("concurrent acknowledgements preserve both updates", async () => {
 			new Date("2026-02-02T00:00:00.000Z"),
 		),
 	]);
-	const manifest = parseProjectStatusManifest(
-		await readFile(join(root, "SYNC.json"), "utf8"),
-	);
+	const manifest = parseProjectStatusManifest(await readFile(join(root, "SYNC.json"), "utf8"));
 	assert.deepEqual(
 		manifest.artifacts.map((item) => item.acknowledgement?.reason),
 		["reviewed project", "reviewed guide"],
@@ -229,18 +236,9 @@ test("acknowledgement requires existing tracked files and a reason", async () =>
 		{ path: "PROJECT.md", fingerprint: hash, status: "current" },
 		{ path: "lost.md", fingerprint: hash, status: "current" },
 	]);
-	await assert.rejects(
-		acknowledgeProjectStatus(root, ["PROJECT.md"], ""),
-		/non-empty reason/,
-	);
-	await assert.rejects(
-		acknowledgeProjectStatus(root, ["missing.md"], "reviewed"),
-		/not tracked/,
-	);
-	await assert.rejects(
-		acknowledgeProjectStatus(root, ["lost.md"], "reviewed"),
-		/is missing/,
-	);
+	await assert.rejects(acknowledgeProjectStatus(root, ["PROJECT.md"], ""), /non-empty reason/);
+	await assert.rejects(acknowledgeProjectStatus(root, ["missing.md"], "reviewed"), /not tracked/);
+	await assert.rejects(acknowledgeProjectStatus(root, ["lost.md"], "reviewed"), /is missing/);
 	await assert.rejects(
 		acknowledgeProjectStatus(root, ["PROJECT.md", "../outside.md"], "reviewed"),
 		/leaves the project root/,
@@ -287,8 +285,7 @@ test("v2 manifests accept reasoned dependencies and report cycles without reject
 	assert.deepEqual(result.cycles, [["PROJECT.md", "guide.md", "PROJECT.md"]]);
 	assert.equal(
 		result.impacted.some(
-			(impact) =>
-				impact.path === "PROJECT.md" && impact.from.includes("PROJECT.md"),
+			(impact) => impact.path === "PROJECT.md" && impact.from.includes("PROJECT.md"),
 		),
 		false,
 	);

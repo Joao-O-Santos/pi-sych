@@ -3,9 +3,13 @@ import { randomUUID } from "node:crypto";
 import { constants, existsSync, statSync } from "node:fs";
 import { access, mkdir, mkdtemp, open, readFile, rm } from "node:fs/promises";
 import { homedir, tmpdir } from "node:os";
-import { dirname, isAbsolute, resolve } from "node:path";
+import { dirname, isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { resolveExistingProjectPath } from "./project-files.js";
+import {
+	type ResolvedProject,
+	resolveExistingProjectPath,
+	resolveProject,
+} from "./project-files.js";
 import { nonEmptyString } from "./validation.js";
 
 export const WORKER_MODES = ["read-only", "edit", "full-host"] as const;
@@ -21,10 +25,7 @@ export const DEFAULT_TIMEOUT_MS = 90_000;
 export const MAX_TIMEOUT_MS = 30 * 60_000;
 const LOG_LIMIT = 8_192;
 
-export const PI_SYCH_PACKAGE_ROOT = resolve(
-	dirname(fileURLToPath(import.meta.url)),
-	"../../..",
-);
+export const PI_SYCH_PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 
 export interface ContextFile {
 	path: string;
@@ -95,20 +96,13 @@ export interface DispatchOutcome {
 	launch?: WorkerLaunchOutcome;
 	result?: WorkerResult;
 	failure?: {
-		classification:
-			| "cancelled"
-			| "timeout"
-			| "spawn-failure"
-			| "invalid-result"
-			| "incomplete";
+		classification: "cancelled" | "timeout" | "spawn-failure" | "invalid-result" | "incomplete";
 		message: string;
 		stderrTail: string;
 	};
 }
 
-export type WorkerLauncher = (
-	spec: WorkerLaunchSpec,
-) => Promise<WorkerLaunchOutcome>;
+export type WorkerLauncher = (spec: WorkerLaunchSpec) => Promise<WorkerLaunchOutcome>;
 
 function bounded(value: string): string {
 	return value.length > LOG_LIMIT ? value.slice(-LOG_LIMIT) : value;
@@ -125,10 +119,8 @@ export function validateDispatchRequest(value: unknown): DispatchRequest {
 		throw new Error("dispatch_worker request must be an object");
 	const request = value as Record<string, unknown>;
 	const mode = nonEmptyString(request.mode, "mode");
-	if (!WORKER_MODES.includes(mode as WorkerMode))
-		throw new Error(`Unknown worker mode: ${mode}`);
-	if (!Array.isArray(request.contextFiles))
-		throw new Error("contextFiles must be an array");
+	if (!WORKER_MODES.includes(mode as WorkerMode)) throw new Error(`Unknown worker mode: ${mode}`);
+	if (!Array.isArray(request.contextFiles)) throw new Error("contextFiles must be an array");
 	const timeoutMs = request.timeoutMs;
 	if (
 		timeoutMs !== undefined &&
@@ -137,9 +129,7 @@ export function validateDispatchRequest(value: unknown): DispatchRequest {
 			timeoutMs <= 0 ||
 			timeoutMs > MAX_TIMEOUT_MS)
 	) {
-		throw new Error(
-			`timeoutMs must be a positive integer no greater than ${MAX_TIMEOUT_MS}`,
-		);
+		throw new Error(`timeoutMs must be a positive integer no greater than ${MAX_TIMEOUT_MS}`);
 	}
 	return {
 		task: nonEmptyString(request.task, "task"),
@@ -154,9 +144,7 @@ export function validateDispatchRequest(value: unknown): DispatchRequest {
 				purpose: nonEmptyString(file.purpose, `contextFiles[${index}].purpose`),
 			};
 		}),
-		...(request.skills === undefined
-			? {}
-			: { skills: strings(request.skills, "skills") }),
+		...(request.skills === undefined ? {} : { skills: strings(request.skills, "skills") }),
 		...(request.modelProfile === undefined
 			? {}
 			: { modelProfile: nonEmptyString(request.modelProfile, "modelProfile") }),
@@ -178,20 +166,14 @@ export function toolsForMode(mode: WorkerMode): readonly string[] {
 export function toolsForRequest(
 	request: Pick<DispatchRequest, "mode" | "remoteResearch">,
 ): readonly string[] {
-	return [
-		...toolsForMode(request.mode),
-		...(request.remoteResearch ? ["mcporter"] : []),
-	];
+	return [...toolsForMode(request.mode), ...(request.remoteResearch ? ["mcporter"] : [])];
 }
 
 export function mcporterConfigPath(
 	environment: NodeJS.ProcessEnv = process.env,
 	userHome = homedir(),
 ): string {
-	return resolve(
-		environment.HOME ?? userHome,
-		".config/pi-sych/mcp/mcporter.json",
-	);
+	return resolve(environment.HOME ?? userHome, ".config/pi-sych/mcp/mcporter.json");
 }
 
 export function resolveSelectedSkillPaths(
@@ -202,15 +184,12 @@ export function resolveSelectedSkillPaths(
 ): string[] {
 	return [...new Set(selectors)].map((selector) => {
 		if (selector.includes("/") || selector.endsWith(".md")) {
-			const selected = isAbsolute(selector)
-				? selector
-				: resolve(projectRoot, selector);
+			const selected = isAbsolute(selector) ? selector : resolve(projectRoot, selector);
 			const path =
 				existsSync(selected) && statSync(selected).isDirectory()
 					? resolve(selected, "SKILL.md")
 					: selected;
-			if (!existsSync(path))
-				throw new Error(`Selected skill does not exist: ${selector}`);
+			if (!existsSync(path)) throw new Error(`Selected skill does not exist: ${selector}`);
 			return path;
 		}
 		const candidates = [
@@ -225,10 +204,7 @@ export function resolveSelectedSkillPaths(
 	});
 }
 
-export function resolveModelProfile(
-	profiles: ModelProfiles,
-	requested?: string,
-): string {
+export function resolveModelProfile(profiles: ModelProfiles, requested?: string): string {
 	const models = requested ? profiles.profiles?.[requested] : profiles.default;
 	if (!Array.isArray(models) || !models[0]?.trim())
 		throw new Error(`Model profile is unavailable: ${requested ?? "default"}`);
@@ -247,31 +223,41 @@ async function readable(path: string): Promise<void> {
 	}
 }
 
+function displayProjectPath(projectRoot: string, path: string): string {
+	const display = relative(projectRoot, path);
+	return display && !display.startsWith("..") ? display : path;
+}
+
 async function conventionContext(
-	projectRoot: string,
+	project: ResolvedProject,
 	request: DispatchRequest,
 ): Promise<ContextFile[]> {
 	const automatic: ContextFile[] = [];
-	const agents = resolve(projectRoot, "AGENTS.md");
-	const style = resolve(projectRoot, "STYLE.md");
-	if (existsSync(agents))
-		automatic.push({ path: "AGENTS.md", purpose: "project conventions" });
-	if (request.mode !== "read-only" && existsSync(style))
-		automatic.push({ path: "STYLE.md", purpose: "artifact conventions" });
+	for (const [role, purpose] of [
+		["agents", "configured project conventions"],
+		["style", "configured artifact conventions"],
+	] as const) {
+		const path = project.canonical[role];
+		if (existsSync(path))
+			automatic.push({
+				path: displayProjectPath(project.projectRoot, path),
+				purpose,
+			});
+	}
 	const selected = [...request.contextFiles, ...automatic];
 	const unique = new Map<string, ContextFile>();
 	for (const file of selected) {
-		const absolute = await resolveExistingProjectPath(projectRoot, file.path);
+		const absolute = await resolveExistingProjectPath(project.projectRoot, file.path);
 		await readable(absolute);
-		unique.set(absolute, { path: file.path, purpose: file.purpose });
+		unique.set(absolute, {
+			path: displayProjectPath(project.projectRoot, absolute),
+			purpose: file.purpose,
+		});
 	}
 	return [...unique.values()];
 }
 
-export function taskPrompt(
-	spec: WorkerLaunchSpec,
-	contextFiles: ContextFile[],
-): string {
+export function taskPrompt(spec: WorkerLaunchSpec, contextFiles: ContextFile[]): string {
 	return [
 		"You are one short-lived Pi Sych worker. You cannot dispatch another worker.",
 		`Task ID: ${spec.taskId}`,
@@ -294,20 +280,13 @@ export function taskPrompt(
 	].join("\n");
 }
 
-export async function writeImmutableResult(
-	path: string,
-	result: WorkerResult,
-): Promise<void> {
+export async function writeImmutableResult(path: string, result: WorkerResult): Promise<void> {
 	await mkdir(dirname(path), { recursive: true });
-	const handle = await open(path, "wx", 0o600).catch(
-		(error: NodeJS.ErrnoException) => {
-			if (error.code === "EEXIST")
-				throw new Error(
-					"Worker result is immutable and has already been submitted",
-				);
-			throw error;
-		},
-	);
+	const handle = await open(path, "wx", 0o600).catch((error: NodeJS.ErrnoException) => {
+		if (error.code === "EEXIST")
+			throw new Error("Worker result is immutable and has already been submitted");
+		throw error;
+	});
 	try {
 		await handle.writeFile(`${JSON.stringify(result, null, 2)}\n`, "utf8");
 		await handle.sync();
@@ -316,15 +295,11 @@ export async function writeImmutableResult(
 	}
 }
 
-export function validateWorkerResult(
-	value: unknown,
-	identity: TaskIdentity,
-): WorkerResult {
+export function validateWorkerResult(value: unknown, identity: TaskIdentity): WorkerResult {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error("Worker result must be an object");
 	const result = value as Record<string, unknown>;
-	if (result.schemaVersion !== 1)
-		throw new Error("Worker result schemaVersion must be 1");
+	if (result.schemaVersion !== 1) throw new Error("Worker result schemaVersion must be 1");
 	if (
 		nonEmptyString(result.taskId, "taskId") !== identity.taskId ||
 		nonEmptyString(result.runId, "runId") !== identity.runId
@@ -333,8 +308,7 @@ export function validateWorkerResult(
 	const status = nonEmptyString(result.status, "status");
 	if (!["complete", "partial", "failed"].includes(status))
 		throw new Error(`Invalid worker result status: ${status}`);
-	if (!Array.isArray(result.artifacts))
-		throw new Error("artifacts must be an array");
+	if (!Array.isArray(result.artifacts)) throw new Error("artifacts must be an array");
 	return {
 		schemaVersion: 1,
 		taskId: identity.taskId,
@@ -361,30 +335,24 @@ async function readWorkerResult(
 	identity: TaskIdentity,
 ): Promise<WorkerResult | undefined> {
 	try {
-		return validateWorkerResult(
-			JSON.parse(await readFile(path, "utf8")),
-			identity,
-		);
+		return validateWorkerResult(JSON.parse(await readFile(path, "utf8")), identity);
 	} catch (error) {
 		if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
 		throw error;
 	}
 }
 
-async function validateResultPackage(
-	projectRoot: string,
-	result: WorkerResult,
-): Promise<void> {
+async function validateResultPackage(projectRoot: string, result: WorkerResult): Promise<void> {
 	if (result.resultPackage === "inline") return;
+	if (isAbsolute(result.resultPackage))
+		throw new Error("resultPackage must be 'inline' or a project-relative path");
 	let path: string;
 	try {
 		path = await resolveExistingProjectPath(projectRoot, result.resultPackage);
 	} catch (error) {
 		if ((error as NodeJS.ErrnoException).code === "ENOENT")
 			throw new Error("resultPackage path is unavailable");
-		throw new Error(
-			"resultPackage must be 'inline' or a project-relative path",
-		);
+		throw new Error("resultPackage must be 'inline' or a project-relative path");
 	}
 	try {
 		await access(path, constants.R_OK);
@@ -435,8 +403,7 @@ export const launchPiWorker: WorkerLauncher = async (spec) =>
 				PI_SYCH_RESULT_PATH: spec.resultPath,
 				...(spec.request.remoteResearch
 					? {
-							MCPORTER_CONFIG:
-								process.env.PI_SYCH_MCPORTER_CONFIG ?? mcporterConfigPath(),
+							MCPORTER_CONFIG: process.env.PI_SYCH_MCPORTER_CONFIG ?? mcporterConfigPath(),
 						}
 					: {}),
 			},
@@ -470,10 +437,7 @@ export const launchPiWorker: WorkerLauncher = async (spec) =>
 		const abort = () => stop("cancelled");
 		if (spec.signal?.aborted) abort();
 		else spec.signal?.addEventListener("abort", abort, { once: true });
-		const timeout = setTimeout(
-			() => stop("timeout"),
-			spec.request.timeoutMs ?? DEFAULT_TIMEOUT_MS,
-		);
+		const timeout = setTimeout(() => stop("timeout"), spec.request.timeoutMs ?? DEFAULT_TIMEOUT_MS);
 		child.once("error", (error) =>
 			finish({
 				exitCode: null,
@@ -494,7 +458,8 @@ export const launchPiWorker: WorkerLauncher = async (spec) =>
 	});
 
 export async function dispatchWorker(options: {
-	projectRoot: string;
+	project?: ResolvedProject;
+	projectRoot?: string;
 	workerAgentDir: string;
 	request: unknown;
 	profiles: ModelProfiles;
@@ -504,10 +469,11 @@ export async function dispatchWorker(options: {
 	signal?: AbortSignal;
 }): Promise<DispatchOutcome> {
 	const request = validateDispatchRequest(options.request);
+	const project = options.project ?? (await resolveProject(options.projectRoot ?? process.cwd()));
 	const identity = createTaskIdentity();
 	const timeoutMs = request.timeoutMs ?? DEFAULT_TIMEOUT_MS;
 	const model = resolveModelProfile(options.profiles, request.modelProfile);
-	const contextFiles = await conventionContext(options.projectRoot, request);
+	const contextFiles = await conventionContext(project, request);
 	const runtime = await mkdtemp(resolve(tmpdir(), "pi-sych-"));
 	const resultPath = resolve(runtime, "result.json");
 	try {
@@ -516,7 +482,7 @@ export async function dispatchWorker(options: {
 			request: { ...request, contextFiles, timeoutMs },
 			workerAgentDir: options.workerAgentDir,
 			resultPath,
-			projectRoot: options.projectRoot,
+			projectRoot: project.projectRoot,
 			model,
 			prompt: "",
 			packageRoot: options.packageRoot ?? PI_SYCH_PACKAGE_ROOT,
@@ -529,17 +495,12 @@ export async function dispatchWorker(options: {
 		let resultError: string | undefined;
 		try {
 			result = await readWorkerResult(resultPath, identity);
-			if (result) await validateResultPackage(options.projectRoot, result);
+			if (result) await validateResultPackage(project.projectRoot, result);
 		} catch (error) {
 			result = undefined;
 			resultError = error instanceof Error ? error.message : String(error);
 		}
-		if (
-			result &&
-			!launch.classification &&
-			!launch.terminationSignal &&
-			launch.exitCode === 0
-		)
+		if (result && !launch.classification && !launch.terminationSignal && launch.exitCode === 0)
 			return { identity, model, attempts: 1, timeoutMs, launch, result };
 		return {
 			identity,
@@ -548,9 +509,7 @@ export async function dispatchWorker(options: {
 			timeoutMs,
 			launch,
 			failure: {
-				classification:
-					launch.classification ??
-					(resultError ? "invalid-result" : "incomplete"),
+				classification: launch.classification ?? (resultError ? "invalid-result" : "incomplete"),
 				message:
 					resultError ??
 					(launch.classification

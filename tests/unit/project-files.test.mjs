@@ -33,6 +33,28 @@ async function writeSync(directory, overrides = {}) {
 	);
 }
 
+test("SYNC.json preserves supported metadata and rejects unknown fields", () => {
+	const parsed = parseSyncManifest(
+		JSON.stringify({
+			version: 2,
+			confirmedAt: "2026-01-01T00:00:00.000Z",
+			lastModified: "2026-01-02T00:00:00.000Z",
+			artifacts: [],
+		}),
+	);
+	assert.equal(parsed.lastModified, "2026-01-02T00:00:00.000Z");
+	assert.throws(
+		() => parseSyncManifest(JSON.stringify({ ...parsed, unsupported: true })),
+		/unknown field/,
+	);
+});
+
+test("resolver rejects unknown artifact fields before entry-point use", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-resolve-artifact-schema-"));
+	await writeSync(root, { artifacts: [{ path: "PROJECT.md", unsupported: true }] });
+	await assert.rejects(resolveProject(root), /artifacts\[0\] has unknown field/);
+});
+
 test("resolver selects the nearest v2 manifest and resolves canonical paths", async () => {
 	const workspace = await mkdtemp(join(tmpdir(), "pi-sych-resolve-"));
 	await execFile("git", ["init", "-q", workspace]);
@@ -48,19 +70,10 @@ test("resolver selects the nearest v2 manifest and resolves canonical paths", as
 	});
 	const resolved = await resolveProject(cwd);
 	assert.equal(resolved.workspaceRoot, workspace);
-	assert.equal(
-		resolved.syncPath,
-		join(workspace, "packages", "b", "SYNC.json"),
-	);
+	assert.equal(resolved.syncPath, join(workspace, "packages", "b", "SYNC.json"));
 	assert.equal(resolved.projectRoot, join(workspace, "packages", "b", "app"));
-	assert.equal(
-		resolved.canonical.style,
-		join(resolved.projectRoot, "config/STYLE.md"),
-	);
-	assert.equal(
-		resolved.canonical.evidence,
-		join(tmpdir(), "external-evidence.md"),
-	);
+	assert.equal(resolved.canonical.style, join(resolved.projectRoot, "config/STYLE.md"));
+	assert.equal(resolved.canonical.evidence, join(tmpdir(), "external-evidence.md"));
 	assert.equal(
 		resolved.canonical.project,
 		join(resolved.projectRoot, DEFAULT_CANONICAL_PATHS.project),
@@ -86,15 +99,13 @@ test("resolver falls back to a non-Git working directory", async () => {
 	assert.equal(resolved.manifest?.version, 2);
 });
 
-test("existing project paths reject symlink escapes", async () => {
+test("existing project paths allow symlinks", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-path-"));
 	const outside = join(tmpdir(), `pi-sych-outside-${Date.now()}.md`);
 	await writeFile(outside, "outside\n");
 	await symlink(outside, join(root, "escape.md"));
-	await assert.rejects(
-		resolveExistingProjectPath(root, "escape.md"),
-		/Project artifact path leaves the project root/,
-	);
+	const resolved = await resolveExistingProjectPath(root, "escape.md");
+	assert.ok(resolved.endsWith("escape.md"));
 });
 
 test("PROJECT.md validation is shallow but requires operative headings", () => {
@@ -113,10 +124,7 @@ test("approved writes are atomic and unapproved writes do not mutate", async () 
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-write-"));
 	const target = join(root, "PROJECT.md");
 	await writeFile(target, "before\n");
-	await assert.rejects(
-		writeApprovedFile(target, "blocked\n", false),
-		/explicit approval/,
-	);
+	await assert.rejects(writeApprovedFile(target, "blocked\n", false), /explicit approval/);
 	assert.equal(await readFile(target, "utf8"), "before\n");
 	await writeApprovedFile(target, "after\n", true);
 	assert.equal(await readFile(target, "utf8"), "after\n");
@@ -158,9 +166,7 @@ test("promotion inbox parses and formats one fenced JSON object, and a missing i
 	} = await compaction();
 	const inbox = {
 		version: 1,
-		candidates: [
-			{ ...add, id: candidateId(add), createdAt: "2026-01-01T00:00:00.000Z" },
-		],
+		candidates: [{ ...add, id: candidateId(add), createdAt: "2026-01-01T00:00:00.000Z" }],
 	};
 	const markdown = formatPromotionInbox(inbox);
 	assert.match(markdown, /^# Memory promotion inbox/m);
@@ -199,10 +205,7 @@ test("candidate IDs use canonical roles and deduplicate without reordering exist
 		id: candidateId(update),
 		createdAt: "2026-01-02T00:00:00.000Z",
 	};
-	assert.deepEqual(mergePromotionCandidates([first], [first, second]), [
-		first,
-		second,
-	]);
+	assert.deepEqual(mergePromotionCandidates([first], [first, second]), [first, second]);
 });
 
 test("model output accepts direct or json-fenced JSON and rejects invalid working memory", async () => {
@@ -213,15 +216,9 @@ test("model output accepts direct or json-fenced JSON and rejects invalid workin
 		parseCompactionModelOutput(`\`\`\`json\n${JSON.stringify(output)}\n\`\`\``),
 		output,
 	);
+	assert.throws(() => parseCompactionModelOutput("```\n{}\n```"), /json fence|JSON/i);
 	assert.throws(
-		() => parseCompactionModelOutput("```\n{}\n```"),
-		/json fence|JSON/i,
-	);
-	assert.throws(
-		() =>
-			parseCompactionModelOutput(
-				JSON.stringify({ workingMemory: {}, promotions: [] }),
-			),
+		() => parseCompactionModelOutput(JSON.stringify({ workingMemory: {}, promotions: [] })),
 		/currentTask|nextAction/i,
 	);
 	const { target: _target, ...legacyPromotion } = add;
@@ -249,10 +246,7 @@ test("model output accepts direct or json-fenced JSON and rejects invalid workin
 
 test("working memory validates fields, filters absent relevant files, and renders only nonempty sections", async () => {
 	const { renderWorkingMemory, validateWorkingMemory } = await compaction();
-	const validated = validateWorkingMemory(
-		workingMemory,
-		new Set(["PROJECT.md"]),
-	);
+	const validated = validateWorkingMemory(workingMemory, new Set(["PROJECT.md"]));
 	assert.deepEqual(validated.relevantFiles, ["PROJECT.md"]);
 	const rendered = renderWorkingMemory(validated);
 	assert.match(rendered, /^# Working memory/m);
@@ -260,8 +254,7 @@ test("working memory validates fields, filters absent relevant files, and render
 	assert.match(rendered, /## Relevant existing files\n\n- PROJECT\.md/);
 	assert.doesNotMatch(rendered, /### Failed approaches|### Blockers/);
 	assert.throws(
-		() =>
-			validateWorkingMemory({ ...workingMemory, nextAction: "" }, new Set()),
+		() => validateWorkingMemory({ ...workingMemory, nextAction: "" }, new Set()),
 		/nextAction/i,
 	);
 });
@@ -285,10 +278,7 @@ test("promotion validation requires an allowed target and an exact update excerp
 		() => validatePromotion({ ...update, existingText: "missing" }, canonical),
 		/exact|existingText/i,
 	);
-	assert.throws(
-		() => validatePromotion({ ...add, target: "notes" }, canonical),
-		/target/i,
-	);
+	assert.throws(() => validatePromotion({ ...add, target: "notes" }, canonical), /target/i);
 });
 
 test("canonical snapshots use configured paths and admit only declared authoritative Markdown", async () => {
@@ -335,8 +325,75 @@ test("canonical snapshots use configured paths and admit only declared authorita
 			{ ...add, target: "decisions", proposedText: "Record a decision." },
 			snapshot,
 		),
-		{ ...add, target: "decisions", proposedText: "Record a decision." },
+		{
+			...add,
+			target: "decisions",
+			proposedText: "Record a decision.",
+		},
 	);
+});
+
+test("compaction rechecks external canonical files by absolute path", async () => {
+	const { createWorkingMemoryCompaction } = await compaction();
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-external-canonical-"));
+	const external = join(tmpdir(), `pi-sych-decisions-${Date.now()}.md`);
+	await writeFile(external, "Old decision.\n");
+	await writeSync(root, { canonical: { decisions: external } });
+	const event = {
+		preparation: {
+			messagesToSummarize: [],
+			turnPrefixMessages: [],
+			firstKeptEntryId: "keep",
+			tokensBefore: 1,
+		},
+		branchEntries: [],
+		reason: "manual",
+		willRetry: false,
+		signal: new AbortController().signal,
+	};
+	const result = await createWorkingMemoryCompaction(
+		event,
+		{
+			cwd: root,
+			model: { maxTokens: 4096 },
+			modelRegistry: {
+				getApiKeyAndHeaders: async () => ({ ok: true, apiKey: "test", headers: {}, env: {} }),
+			},
+			ui: { notify() {} },
+		},
+		[],
+		{
+			complete: async () => {
+				await writeFile(external, "Changed decision.\n");
+				return {
+					content: [
+						{
+							type: "text",
+							text: JSON.stringify({
+								workingMemory,
+								promotions: [
+									{
+										operation: "update",
+										target: "decisions",
+										existingText: "Old decision.",
+										proposedText: "Old decision reviewed.",
+										rationale: "Update the external decision record.",
+									},
+								],
+							}),
+						},
+					],
+					usage: {},
+				};
+			},
+		},
+	);
+	assert.equal(result.compaction.details.inbox.persistence, "skipped");
+	assert.equal(
+		result.compaction.details.inbox.reason,
+		"a canonical file changed during compaction",
+	);
+	assert.deepEqual(result.compaction.details.persistedPromotionIds, []);
 });
 
 test("project status projection is bounded and preserves actionable findings", async () => {
@@ -371,13 +428,11 @@ test("malformed inbox inspection reports the error without losing project compac
 test("compaction failures have actionable classifications", async () => {
 	const { classifyCompactionFailure } = await compaction();
 	assert.equal(
-		classifyCompactionFailure(new Error("promotions must be an array"))
-			.classification,
+		classifyCompactionFailure(new Error("promotions must be an array")).classification,
 		"model-output",
 	);
 	assert.equal(
-		classifyCompactionFailure(new Error("no credentials available"))
-			.classification,
+		classifyCompactionFailure(new Error("no credentials available")).classification,
 		"authentication",
 	);
 	assert.equal(
@@ -439,7 +494,7 @@ test("compaction includes project status and continues when the inbox is malform
 									...workingMemory,
 									relevantFiles: ["src/app.ts"],
 								},
-								promotions: [],
+								promotions: [add],
 							}),
 						},
 					],
@@ -453,4 +508,7 @@ test("compaction includes project status and continues when the inbox is malform
 	assert.match(result.compaction.summary, /src\/app\.ts/);
 	assert.match(result.compaction.details.inbox.error, /JSON fence/);
 	assert.equal(result.compaction.details.inbox.persistence, "skipped");
+	assert.match(result.compaction.details.inbox.error, /JSON fence/);
+	assert.deepEqual(result.compaction.details.persistedPromotionIds, []);
+	assert.equal(result.compaction.details.proposedPromotionIds.length, 1);
 });

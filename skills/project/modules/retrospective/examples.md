@@ -1,5 +1,12 @@
 # Retrospective examples
 
-Input: a completed review found requirements after code was written.
+Bad:
 
-Output: record the observation, evidence, limitation, and a proposed future check without editing AGENTS.md automatically.
+> Add “always inspect requirements first” to shared `agents` after one late discovery.
+
+Better:
+
+> Record the event, evidence, and alternative explanation; propose a local future check for owner
+> review. Ask whether any stable rule belongs in project `agents` or personal Pi instructions.
+
+Why: one transient event is not shared memory; accumulation creates memory rot.

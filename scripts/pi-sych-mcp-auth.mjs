@@ -17,13 +17,11 @@ while (true) {
 		break;
 	}
 	const parent = dirname(current);
-	if (parent === current)
-		throw new Error("pi-mcporter has no resolvable compatible MCPorter CLI");
+	if (parent === current) throw new Error("pi-mcporter has no resolvable compatible MCPorter CLI");
 	current = parent;
 }
 const configPath =
-	process.env.PI_SYCH_MCPORTER_CONFIG ??
-	resolve(homedir(), ".config/pi-sych/mcp/mcporter.json");
+	process.env.PI_SYCH_MCPORTER_CONFIG ?? resolve(homedir(), ".config/pi-sych/mcp/mcporter.json");
 const child = spawn(
 	process.execPath,
 	[

@@ -12,7 +12,7 @@ context threshold, overflow recovery) and noted compaction uses
 supervisor's active model, not worker profiles. Typecheck, Biome and
 Pandoc style, 61 unit checks, 5 integration checks, smoke, source budget
 (2,650/3,000), and whitespace checks passed. **Limits:**
-Documentation-only; no behavioral changes. **Checked:** 2026-08-01
+Documentation-only; no behavioral changes. **Checked:** 2026-07-31
 
 ## E-015 --- v3.0.2 documentation update
 
@@ -30,7 +30,7 @@ projectRoot and canonical object structure, role-to-path mapping, and
 artifact declaration format. Typecheck, Biome and Pandoc style, 61 unit
 checks, 5 integration checks, MCPorter dependency check, smoke, source
 budget (2,650/3,000), and whitespace checks passed. **Limits:**
-Documentation-only; no behavioral changes. **Checked:** 2026-08-01
+Documentation-only; no behavioral changes. **Checked:** 2026-07-31
 
 ## E-014 --- v3.0.1 code-quality audit and malformed-manifest fix
 
@@ -49,7 +49,7 @@ malformed-manifest path. Typecheck, Biome and Pandoc style, 61 unit
 checks, 5 integration checks, MCPorter dependency check, smoke, source
 budget (2,650/3,000), and whitespace checks passed. **Limits:** Opt-in
 real-model usage was not rerun; the changes are orthogonal to the
-compaction model path and prompts. **Checked:** 2026-08-01
+compaction model path and prompts. **Checked:** 2026-07-31
 
 ## E-013 --- v3.0.0 refactor and release gate passed
 
@@ -68,7 +68,7 @@ resolved-project threading, single-read canonical fingerprinting,
 tracked-artifact preservation in working memory, v1.2.0 procedure
 restoration, and regex-behavior test honesty. **Limits:** The npm
 release has not been published; inherited advisory retention was not
-rechecked for this entry. **Checked:** 2026-08-01
+rechecked for this entry. **Checked:** 2026-07-31
 
 ## E-012 --- v2.1.1 compaction and release gate passed
 
@@ -296,3 +296,21 @@ documented in E-008. **Limits:** This is one interactive approval
 observation. It does not establish behavior for every browser, operating
 system, future Plannotator release, or annotation workflow. **Checked:**
 2026-07-28
+
+## E-017 --- v3.0.4 audit completion pass
+
+**Status:** verified **Kind:** observed behaviour and independent review
+**Source:** current source, skills, deterministic tests, live usage
+tests, package scripts, and current diagrams **Supports:** configured
+project-root resolution, strict SYNC.json metadata policy,
+canonical-path compaction rechecks, skill-contract safeguards, and
+v3.0.4 release readiness **Evidence:** Biome at 100 columns, Markdown
+formatting, typecheck, 67 unit checks, 5 integration checks, MCPorter
+dependency validation, smoke checks, source budget (2,550/3,000),
+package dry run, and whitespace checks passed. The live usage acceptance
+passed for a nested Git workspace with `projectRoot` and configured
+canonical paths; the live prompt-quality behavioral smoke test also
+passed. `npm audit --omit=dev` reports the inherited upstream
+`brace-expansion` advisory. **Limits:** Browser-specific review and
+publication remain external operations; the accepted advisory is not a
+Pi Sych dependency change. **Checked:** 2026-07-31

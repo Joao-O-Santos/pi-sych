@@ -19,17 +19,11 @@ test("worker bootstrap loads only the worker extension and links credentials", a
 		packageRoot: process.cwd(),
 		supervisorAgentDir,
 	});
-	const settings = JSON.parse(
-		await readFile(join(agentDir, "settings.json"), "utf8"),
-	);
-	const mcporter = JSON.parse(
-		await readFile(join(agentDir, "mcporter.json"), "utf8"),
-	);
+	const settings = JSON.parse(await readFile(join(agentDir, "settings.json"), "utf8"));
+	const mcporter = JSON.parse(await readFile(join(agentDir, "mcporter.json"), "utf8"));
 
 	assert.deepEqual(settings.packages, []);
-	assert.deepEqual(settings.extensions, [
-		join(process.cwd(), "extensions/worker/index.ts"),
-	]);
+	assert.deepEqual(settings.extensions, [join(process.cwd(), "extensions/worker/index.ts")]);
 	assert.deepEqual(settings.skills, []);
 	assert.deepEqual(mcporter, {
 		version: 1,
@@ -46,8 +40,5 @@ test("worker bootstrap loads only the worker extension and links credentials", a
 	assert.equal(result.linked["auth.json"], true);
 	assert.equal(result.linked["models.json"], false);
 	assert.equal(result.linked["models-store.json"], true);
-	assert.equal(
-		(await lstat(join(agentDir, "auth.json"))).isSymbolicLink(),
-		true,
-	);
+	assert.equal((await lstat(join(agentDir, "auth.json"))).isSymbolicLink(), true);
 });

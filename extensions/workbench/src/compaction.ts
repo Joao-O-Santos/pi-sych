@@ -16,11 +16,7 @@ import {
 	resolveProjectPath,
 	writeAtomicFile,
 } from "./project-files.js";
-import {
-	checkProjectStatus,
-	fingerprintFile,
-	type ProjectStatusCheck,
-} from "./project-status.js";
+import { checkProjectStatus, fingerprintFile, type ProjectStatusCheck } from "./project-status.js";
 import { nonEmptyString, record, stringArray } from "./validation.js";
 
 const MEMORY_CANONICAL_FILES = [
@@ -33,6 +29,7 @@ const MEMORY_CANONICAL_FILES = [
 ] as const;
 const MAX_ITEMS = 12;
 const MAX_TEXT = 1_000;
+const MAX_CANONICAL_PROMPT_BYTES = 32 * 1024;
 const EMPTY_INBOX: PromotionInbox = { version: 1, candidates: [] };
 
 export interface WorkingMemory {
@@ -80,7 +77,13 @@ export interface PromotionInbox {
 
 export interface CanonicalSnapshot {
 	projectRoot: string;
-	files: Array<{ path: string; content: string; fingerprint: string }>;
+	files: Array<{
+		path: string;
+		content: string;
+		fingerprint: string;
+		absolutePath: string;
+		truncated: boolean;
+	}>;
 	targetPaths: Record<PromotionTarget, string>;
 	absentStandardTargets: string[];
 }
@@ -122,10 +125,7 @@ function parseJson(value: string): unknown {
 	return JSON.parse(match?.[1] ?? value);
 }
 
-export function validateWorkingMemory(
-	value: unknown,
-	existingFiles?: Set<string>,
-): WorkingMemory {
+export function validateWorkingMemory(value: unknown, existingFiles?: Set<string>): WorkingMemory {
 	const item = record(value, "workingMemory");
 	const currentTask = text(item.currentTask, "currentTask");
 	const nextAction = text(item.nextAction, "nextAction");
@@ -134,14 +134,9 @@ export function validateWorkingMemory(
 	);
 	return {
 		currentTask,
-		...(item.purpose === undefined
-			? {}
-			: { purpose: text(item.purpose, "purpose") }),
+		...(item.purpose === undefined ? {} : { purpose: text(item.purpose, "purpose") }),
 		completed: list(item.completed, "completed"),
-		successfulApproaches: list(
-			item.successfulApproaches,
-			"successfulApproaches",
-		),
+		successfulApproaches: list(item.successfulApproaches, "successfulApproaches"),
 		failedApproaches: list(item.failedApproaches, "failedApproaches"),
 		inProgress: list(item.inProgress, "inProgress"),
 		blockers: list(item.blockers, "blockers"),
@@ -173,9 +168,7 @@ function proposal(value: unknown): PromotionProposal {
 		target: target as PromotionTarget,
 		proposedText: text(item.proposedText, "proposedText"),
 		rationale: text(item.rationale, "rationale"),
-		...(recommendedScope
-			? { recommendedScope: recommendedScope as PromotionScope }
-			: {}),
+		...(recommendedScope ? { recommendedScope: recommendedScope as PromotionScope } : {}),
 	};
 	if (item.operation === "add") return { operation: "add", ...base };
 	if (item.operation === "update")
@@ -192,10 +185,8 @@ export function parseCompactionModelOutput(value: string): {
 	promotions: PromotionProposal[];
 } {
 	const item = record(parseJson(value), "model output");
-	if (!Array.isArray(item.promotions))
-		throw new Error("promotions must be an array");
-	if (item.promotions.length > 5)
-		throw new Error("promotions has too many items");
+	if (!Array.isArray(item.promotions)) throw new Error("promotions must be an array");
+	if (item.promotions.length > 5) throw new Error("promotions has too many items");
 	return {
 		workingMemory: validateWorkingMemory(item.workingMemory),
 		promotions: item.promotions.map(proposal),
@@ -203,7 +194,13 @@ export function parseCompactionModelOutput(value: string): {
 }
 
 export function candidateId(value: PromotionProposal): string {
-	const normalized = `${value.operation}\n${value.target}\n${value.proposedText.replace(/\s+/g, " ").trim()}`;
+	const normalized = [
+		value.operation,
+		value.target,
+		value.proposedText.replace(/\s+/g, " ").trim(),
+		value.recommendedScope ?? "",
+		value.operation === "update" ? value.existingText.replace(/\s+/g, " ").trim() : "",
+	].join("\n");
 	return `P-${createHash("sha256").update(normalized).digest("hex").slice(0, 12)}`;
 }
 
@@ -214,16 +211,13 @@ export function mergePromotionCandidates(
 	const ids = new Set(existing.map((candidate) => candidate.id));
 	return [
 		...existing,
-		...candidates.filter(
-			(candidate) => !ids.has(candidate.id) && !!ids.add(candidate.id),
-		),
+		...candidates.filter((candidate) => !ids.has(candidate.id) && !!ids.add(candidate.id)),
 	];
 }
 
 export function parsePromotionInbox(markdown: string): PromotionInbox {
 	const fences = [...markdown.matchAll(/```\s*json\s*\n([\s\S]*?)\n```/gi)];
-	if (fences.length !== 1)
-		throw new Error("INBOX.md must contain one JSON fence");
+	if (fences.length !== 1) throw new Error("INBOX.md must contain one JSON fence");
 	const item = record(JSON.parse(fences[0][1]), "INBOX.md");
 	if (item.version !== 1 || !Array.isArray(item.candidates))
 		throw new Error("INBOX.md must contain version-1 candidates");
@@ -237,16 +231,13 @@ export function parsePromotionInbox(markdown: string): PromotionInbox {
 			throw new Error("candidate ID does not match content");
 		return candidate;
 	});
-	if (
-		new Set(candidates.map((candidate) => candidate.id)).size !==
-		candidates.length
-	)
+	if (new Set(candidates.map((candidate) => candidate.id)).size !== candidates.length)
 		throw new Error("INBOX.md contains duplicate candidate IDs");
 	return { version: 1, candidates };
 }
 
-export function formatPromotionInbox(inbox: PromotionInbox): string {
-	return `# Memory promotion inbox\n\n> Unreviewed proposals for possible updates to persistent project files.\n> Review with \`/plannotator-annotate INBOX.md\`.\n\n\`\`\`json\n${JSON.stringify(inbox, null, 2)}\n\`\`\`\n`;
+export function formatPromotionInbox(inbox: PromotionInbox, inboxPath = "INBOX.md"): string {
+	return `# Memory promotion inbox\n\n> Unreviewed proposals for possible updates to persistent project files.\n> Review with \`/plannotator-annotate ${inboxPath}\`.\n\n\`\`\`json\n${JSON.stringify(inbox, null, 2)}\n\`\`\`\n`;
 }
 
 export async function readPromotionInbox(
@@ -282,18 +273,12 @@ export function validatePromotion(
 	const targetPath = canonical.targetPaths[value.target];
 	if (!targetPath) throw new Error("promotion target is not allowed");
 	const file = canonical.files.find((entry) => entry.path === targetPath);
-	if (
-		value.operation === "update" &&
-		!file?.content.includes(value.existingText)
-	)
-		throw new Error(
-			"update existingText must be an exact excerpt from its target",
-		);
+	if (file?.truncated) throw new Error("promotion target is too large to validate safely");
+	if (value.operation === "update" && !file?.content.includes(value.existingText))
+		throw new Error("update existingText must be an exact excerpt from its target");
 	if (
 		value.operation === "add" &&
-		file?.content
-			.replace(/\s+/g, " ")
-			.includes(value.proposedText.replace(/\s+/g, " "))
+		file?.content.replace(/\s+/g, " ").includes(value.proposedText.replace(/\s+/g, " "))
 	)
 		throw new Error("promotion text is already present");
 	return value;
@@ -301,9 +286,7 @@ export function validatePromotion(
 
 export function renderWorkingMemory(memory: WorkingMemory): string {
 	const section = (title: string, values: string[]) =>
-		values.length
-			? `\n### ${title}\n\n${values.map((value) => `- ${value}`).join("\n")}\n`
-			: "";
+		values.length ? `\n### ${title}\n\n${values.map((value) => `- ${value}`).join("\n")}\n` : "";
 	return `# Working memory\n\n## Current task\n\n${memory.currentTask}${memory.purpose ? `\n\n${memory.purpose}` : ""}\n\n## Current state\n${section("Completed", memory.completed)}${section("Successful approaches", memory.successfulApproaches)}${section("Failed approaches", memory.failedApproaches)}${section("In progress", memory.inProgress)}${section("Blockers", memory.blockers)}\n## Critical context\n${memory.criticalContext.length ? `\n${memory.criticalContext.map((value) => `- ${value}`).join("\n")}\n` : "\nNone recorded.\n"}\n## Continue from here\n\n${memory.nextAction}${memory.relevantFiles.length ? `\n\n## Relevant existing files\n\n${memory.relevantFiles.map((path) => `- ${path}`).join("\n")}` : ""}\n`;
 }
 
@@ -328,8 +311,7 @@ export async function collectCanonicalSnapshot(
 	const declared = (state.manifest?.artifacts ?? [])
 		.filter(
 			(artifact) =>
-				/\.mdx?$/i.test(artifact.path) &&
-				(artifact.role || artifact.authoritativeFor?.length),
+				/\.mdx?$/i.test(artifact.path) && (artifact.role || artifact.authoritativeFor?.length),
 		)
 		.map((artifact) => ({
 			path: artifact.path,
@@ -342,12 +324,12 @@ export async function collectCanonicalSnapshot(
 	for (const [path, { absolutePath }] of candidates)
 		try {
 			const bytes = await readFile(absolutePath);
-			if (bytes.byteLength > 32 * 1024) continue;
 			files.push({
 				path,
-				content: bytes.toString("utf8"),
+				content: bytes.subarray(0, MAX_CANONICAL_PROMPT_BYTES).toString("utf8"),
 				fingerprint: `sha256:${createHash("sha256").update(bytes).digest("hex")}`,
 				absolutePath,
+				truncated: bytes.byteLength > MAX_CANONICAL_PROMPT_BYTES,
 			});
 		} catch (error) {
 			if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
@@ -368,12 +350,7 @@ export async function collectCanonicalSnapshot(
 export function projectStatusProjection(
 	state: Pick<
 		ProjectStatusCheck,
-		| "changed"
-		| "missing"
-		| "impacted"
-		| "cycles"
-		| "projectErrors"
-		| "syncError"
+		"changed" | "missing" | "impacted" | "cycles" | "projectErrors" | "syncError"
 	>,
 ): CompactionProjectStatus {
 	const values = (items: string[]) =>
@@ -388,9 +365,7 @@ export function projectStatusProjection(
 		})),
 		cycles: state.cycles.slice(0, MAX_ITEMS).map(values),
 		projectErrors: values(state.projectErrors),
-		...(state.syncError
-			? { syncError: state.syncError.slice(0, MAX_TEXT) }
-			: {}),
+		...(state.syncError ? { syncError: state.syncError.slice(0, MAX_TEXT) } : {}),
 	};
 }
 
@@ -416,11 +391,12 @@ function prompt(
 		path: file.path,
 		content: clip(file.content, 8_000),
 	}));
-	return `Return JSON with workingMemory and at most five promotions. Working memory must name currentTask, completed, successfulApproaches, failedApproaches, inProgress, blockers, criticalContext, nextAction, and relevantFiles. Preserve only context needed to continue active work, including task-relevant changed artifacts and impacted dependents from project status. Promotions should normally be empty. A promotion is an add/update proposal with target (one of project, agents, style, evidence, decisions, todo), proposedText, rationale, and existingText for updates. Agents proposals must also include recommendedScope (project, personal, or ask-user). Route settled objectives and constraints to project; stable workflows to agents; stable conventions to style; verified findings to evidence; accepted decisions to decisions; concrete unfinished actions to todo. Do not promote tentative discussion, transient context, one-off requests, or unsupported claims. Compare canonical contents and existing candidates, use exact existingText for updates, and do not promote already represented content.\n\nCompaction: reason=${event.reason}; retry=${event.willRetry}.\n\nPrevious summary:\n${clip(event.preparation.previousSummary ?? "none")}\n\nConversation:\n${clip(conversation)}\n\nRecent context:\n${clip(recent)}\n\nLoaded conventions:\n${JSON.stringify(conventions)}\n\nCanonical files:\n${JSON.stringify(
-		canonical.files.map(({ path, content, fingerprint }) => ({
+	return `Return JSON with workingMemory and at most five promotions. Working memory must name currentTask, completed, successfulApproaches, failedApproaches, inProgress, blockers, criticalContext, nextAction, and relevantFiles. Preserve only context needed to continue active work, including task-relevant changed artifacts and impacted dependents from project status. Promotions should normally be empty. A promotion is an add/update proposal with target (one of project, agents, style, evidence, decisions, todo), proposedText, rationale, and existingText for updates. Agents proposals must also include recommendedScope (project, personal, or ask-user); the owner must choose scope before promotion because shared project conventions differ from personal Pi preferences, and transient history or obsolete rules cause memory rot. Route goals, scope, constraints, audience, venue, deliverables, definition of done, and accepted direction to project; findings, results, measurements, sources, verification support, and limitations to evidence; accepted consequential choices, rationale, and relevant rejected alternatives to decisions; stable shared tools, commands, workflows, and operating conventions to agents; stable artifact language, presentation, formatting, and coding conventions to style; and concrete unfinished actions to todo. An accepted decision may require both a decision record and a concise project-direction update without duplicating the full entry. Do not promote tentative discussion, transient context, one-off requests, or unsupported claims. Compare canonical contents and existing candidates, use exact existingText for updates, and do not promote already represented content.\n\nCompaction: reason=${event.reason}; retry=${event.willRetry}.\n\nPrevious summary:\n${clip(event.preparation.previousSummary ?? "none")}\n\nConversation:\n${clip(conversation)}\n\nRecent context:\n${clip(recent)}\n\nLoaded conventions:\n${JSON.stringify(conventions)}\n\nCanonical files:\n${JSON.stringify(
+		canonical.files.map(({ path, content, fingerprint, truncated }) => ({
 			path,
-			content,
+			content: truncated ? `${content}\n[truncated]` : content,
 			fingerprint,
+			truncated,
 		})),
 	)}\n\nCanonical target paths: ${JSON.stringify(canonical.targetPaths)}\nAbsent standard targets: ${canonical.absentStandardTargets.join(", ") || "none"}\nProject status: ${JSON.stringify(status)}\nExisting inbox: ${JSON.stringify(inbox.candidates)}\nInstructions: ${event.customInstructions ?? "none"}`;
 }
@@ -428,12 +404,7 @@ function prompt(
 type Complete = typeof complete;
 
 export interface CompactionFailure {
-	classification:
-		| "unavailable"
-		| "authentication"
-		| "project"
-		| "model-output"
-		| "provider";
+	classification: "unavailable" | "authentication" | "project" | "model-output" | "provider";
 	message: string;
 }
 
@@ -443,11 +414,7 @@ export function classifyCompactionFailure(error: unknown): CompactionFailure {
 		return { classification: "authentication", message };
 	if (/SYNC\.json|PROJECT\.md|project root|artifact/i.test(message))
 		return { classification: "project", message };
-	if (
-		/workingMemory|promotions|promotion\.|JSON|existingText|target/i.test(
-			message,
-		)
-	)
+	if (/workingMemory|promotions|promotion\.|JSON|existingText|target/i.test(message))
 		return { classification: "model-output", message };
 	return { classification: "provider", message };
 }
@@ -527,15 +494,10 @@ export async function createWorkingMemoryCompaction(
 			.join("\n");
 		const output = parseCompactionModelOutput(raw);
 		const allowedRelevantFiles = new Set([
-			...Object.values(project.canonical).map((path) =>
-				displayPath(state.projectRoot, path),
-			),
+			...Object.values(project.canonical).map((path) => displayPath(state.projectRoot, path)),
 			...(state.manifest?.artifacts ?? []).map((artifact) => artifact.path),
 		]);
-		const memory = validateWorkingMemory(
-			output.workingMemory,
-			allowedRelevantFiles,
-		);
+		const memory = validateWorkingMemory(output.workingMemory, allowedRelevantFiles);
 		const additions = output.promotions
 			.map((entry) => validatePromotion(entry, canonical))
 			.map((entry) => ({
@@ -545,25 +507,33 @@ export async function createWorkingMemoryCompaction(
 			}));
 		const unchanged = await Promise.all(
 			canonical.files.map(
-				async (file) =>
-					(await fingerprintFile(
-						resolveProjectPath(state.projectRoot, file.path),
-					)) === file.fingerprint,
+				async (file) => (await fingerprintFile(file.absolutePath)) === file.fingerprint,
 			),
 		);
 		const merged = mergePromotionCandidates(inbox.candidates, additions);
-		const canPersist =
-			!inboxInspection.error && additions.length && unchanged.every(Boolean);
-		if (canPersist)
+		const persistence = inboxInspection.error
+			? { status: "skipped" as const, reason: "the inbox is malformed" }
+			: !additions.length
+				? { status: "none" as const }
+				: !unchanged.every(Boolean)
+					? { status: "skipped" as const, reason: "a canonical file changed during compaction" }
+					: { status: "written" as const };
+		if (persistence.status === "written")
 			await writeAtomicFile(
 				project.canonical.inbox,
-				formatPromotionInbox({ version: 1, candidates: merged }),
+				formatPromotionInbox(
+					{ version: 1, candidates: merged },
+					displayPath(state.projectRoot, project.canonical.inbox),
+				),
 			);
-		const pendingPromotions = canPersist
-			? merged.length
-			: (inboxInspection.count ?? 0);
+		const pendingPromotions =
+			persistence.status === "written" ? merged.length : (inboxInspection.count ?? 0);
+		const persistenceNote =
+			persistence.status === "skipped"
+				? ` Proposed promotions were not saved because ${persistence.reason}.`
+				: "";
 		ctx.ui.notify(
-			`Working-memory compaction complete. ${displayPath(state.projectRoot, project.canonical.inbox)} has ${pendingPromotions} pending memory proposals.`,
+			`Working-memory compaction complete. ${displayPath(state.projectRoot, project.canonical.inbox)} has ${pendingPromotions} pending memory proposals.${persistenceNote}`,
 			"info",
 		);
 		return {
@@ -580,11 +550,13 @@ export async function createWorkingMemoryCompaction(
 					inboxPath: displayPath(state.projectRoot, project.canonical.inbox),
 					pendingPromotions,
 					inbox: {
-						...(inboxInspection.error
-							? { error: inboxInspection.error, persistence: "skipped" }
-							: { persistence: canPersist ? "written" : "unchanged" }),
+						persistence: persistence.status,
+						...(persistence.status === "skipped" ? { reason: persistence.reason } : {}),
+						...(inboxInspection.error ? { error: inboxInspection.error } : {}),
 					},
-					addedPromotionIds: additions.map((entry) => entry.id),
+					proposedPromotionIds: additions.map((entry) => entry.id),
+					persistedPromotionIds:
+						persistence.status === "written" ? additions.map((entry) => entry.id) : [],
 					canonicalFingerprints: Object.fromEntries(
 						canonical.files.map((file) => [file.path, file.fingerprint]),
 					),

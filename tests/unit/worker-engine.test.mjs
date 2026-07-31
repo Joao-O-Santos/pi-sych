@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { chmod, mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { chmod, mkdir, mkdtemp, readFile, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -75,10 +75,7 @@ function launchWithPi(path, spec) {
 test("dispatch validates a compact request and uses the 90-second default", () => {
 	assert.deepEqual(validateDispatchRequest(request), request);
 	assert.equal(DEFAULT_TIMEOUT_MS, 90_000);
-	assert.throws(
-		() => validateDispatchRequest({ ...request, timeoutMs: 0 }),
-		/timeoutMs/,
-	);
+	assert.throws(() => validateDispatchRequest({ ...request, timeoutMs: 0 }), /timeoutMs/);
 	assert.throws(
 		() => validateDispatchRequest({ ...request, contextFiles: [{}] }),
 		/contextFiles\[0\]\.path/,
@@ -86,13 +83,7 @@ test("dispatch validates a compact request and uses the 90-second default", () =
 });
 
 test("worker modes expose only the selected tools and explicit remote research adds MCPorter", () => {
-	assert.deepEqual(toolsForMode("read-only"), [
-		"read",
-		"grep",
-		"find",
-		"ls",
-		"submit_artifact",
-	]);
+	assert.deepEqual(toolsForMode("read-only"), ["read", "grep", "find", "ls", "submit_artifact"]);
 	assert.deepEqual(toolsForMode("edit"), [
 		"read",
 		"grep",
@@ -102,23 +93,13 @@ test("worker modes expose only the selected tools and explicit remote research a
 		"write",
 		"submit_artifact",
 	]);
-	assert.deepEqual(toolsForMode("full-host"), [
-		"read",
-		"edit",
-		"write",
-		"bash",
-		"submit_artifact",
-	]);
+	assert.deepEqual(toolsForMode("full-host"), ["read", "edit", "write", "bash", "submit_artifact"]);
 	assert.equal(
-		toolsForRequest({ mode: "read-only", remoteResearch: false }).includes(
-			"mcporter",
-		),
+		toolsForRequest({ mode: "read-only", remoteResearch: false }).includes("mcporter"),
 		false,
 	);
 	assert.equal(
-		toolsForRequest({ mode: "read-only", remoteResearch: true }).includes(
-			"mcporter",
-		),
+		toolsForRequest({ mode: "read-only", remoteResearch: true }).includes("mcporter"),
 		true,
 	);
 });
@@ -128,10 +109,7 @@ test("immutable results are identity-bound and reject a second submission", asyn
 	const path = join(root, "result.json");
 	const identity = { taskId: "task", runId: "run" };
 	const value = { ...result(identity), taskId: "task", runId: "run" };
-	assert.equal(
-		validateWorkerResult(value, identity).summary,
-		"Completed bounded work.",
-	);
+	assert.equal(validateWorkerResult(value, identity).summary, "Completed bounded work.");
 	await writeImmutableResult(path, value);
 	await assert.rejects(writeImmutableResult(path, value), /immutable/);
 	await assert.rejects(
@@ -157,8 +135,8 @@ test("dispatch injects optional project conventions and returns one validated re
 			return { exitCode: 0, stdout: "", stderr: "" };
 		},
 	});
-	assert.match(prompt, /AGENTS\.md \(project conventions\)/);
-	assert.match(prompt, /STYLE\.md \(artifact conventions\)/);
+	assert.match(prompt, /AGENTS\.md \(configured project conventions\)/);
+	assert.match(prompt, /STYLE\.md \(configured artifact conventions\)/);
 	assert.equal(outcome.timeoutMs, DEFAULT_TIMEOUT_MS);
 	assert.equal(outcome.result?.status, "complete");
 	assert.deepEqual(outcome.launch, { exitCode: 0, stdout: "", stderr: "" });
@@ -191,14 +169,8 @@ test("dispatch rejects a submitted result after an abnormal process outcome", as
 
 test("dispatch rejects submitted results after cancellation, signals, and nonzero exits", async () => {
 	for (const [launch, expected] of [
-		[
-			{ exitCode: 0, stdout: "", stderr: "", classification: "cancelled" },
-			"cancelled",
-		],
-		[
-			{ exitCode: null, stdout: "", stderr: "", terminationSignal: "SIGTERM" },
-			"incomplete",
-		],
+		[{ exitCode: 0, stdout: "", stderr: "", classification: "cancelled" }, "cancelled"],
+		[{ exitCode: null, stdout: "", stderr: "", terminationSignal: "SIGTERM" }, "incomplete"],
 		[{ exitCode: 2, stdout: "", stderr: "" }, "incomplete"],
 	]) {
 		const root = await mkdtemp(join(tmpdir(), "pi-sych-worker-outcome-"));
@@ -235,10 +207,7 @@ test("dispatch rejects a result package that is not durable", async () => {
 		},
 	});
 	assert.equal(outcome.failure?.classification, "invalid-result");
-	assert.match(
-		outcome.failure?.message ?? "",
-		/resultPackage path is unavailable/,
-	);
+	assert.match(outcome.failure?.message ?? "", /resultPackage path is unavailable/);
 });
 
 test("result packages may be readable project directories", async () => {
@@ -260,6 +229,27 @@ test("result packages may be readable project directories", async () => {
 	assert.equal(outcome.result?.resultPackage, ".");
 });
 
+test("result packages may use symlinked project directories", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-worker-symlink-directory-"));
+	const outside = await mkdtemp(join(tmpdir(), "pi-sych-worker-result-directory-"));
+	await writeFile(join(root, "PROJECT.md"), "# Project\n");
+	await symlink(outside, join(root, "result-dir"));
+	const outcome = await dispatchWorker({
+		projectRoot: root,
+		workerAgentDir: join(root, "agent"),
+		request,
+		profiles: { default: ["test/model"] },
+		launcher: async (spec) => {
+			await writeImmutableResult(spec.resultPath, {
+				...result(spec),
+				resultPackage: "result-dir",
+			});
+			return { exitCode: 0, stdout: "", stderr: "" };
+		},
+	});
+	assert.equal(outcome.result?.resultPackage, "result-dir");
+});
+
 test("MCPorter defaults to homedir when HOME is absent", () => {
 	assert.equal(
 		mcporterConfigPath({}, "/test-home"),
@@ -268,10 +258,7 @@ test("MCPorter defaults to homedir when HOME is absent", () => {
 });
 
 test("timeout sends SIGTERM and force-kills a non-responsive worker", async () => {
-	const marker = join(
-		await mkdtemp(join(tmpdir(), "pi-sych-timeout-")),
-		"signals.txt",
-	);
+	const marker = join(await mkdtemp(join(tmpdir(), "pi-sych-timeout-")), "signals.txt");
 	const executable = await fakePi(
 		`import { appendFileSync } from "node:fs"; process.on("SIGTERM", () => appendFileSync(${JSON.stringify(marker)}, "SIGTERM\\n")); setInterval(() => {}, 1000);`,
 	);
@@ -284,25 +271,16 @@ test("timeout sends SIGTERM and force-kills a non-responsive worker", async () =
 	assert.equal(outcome.exitCode, null);
 	assert.equal(outcome.terminationSignal, "SIGKILL");
 	assert.match(await readFile(marker, "utf8"), /SIGTERM/);
-	assert.ok(
-		Date.now() - started >= 1_900,
-		"worker was not given the kill grace period",
-	);
+	assert.ok(Date.now() - started >= 1_900, "worker was not given the kill grace period");
 });
 
 test("cancellation sends SIGTERM and preserves the cancelled classification", async () => {
-	const marker = join(
-		await mkdtemp(join(tmpdir(), "pi-sych-cancel-")),
-		"signals.txt",
-	);
+	const marker = join(await mkdtemp(join(tmpdir(), "pi-sych-cancel-")), "signals.txt");
 	const executable = await fakePi(
 		`import { appendFileSync } from "node:fs"; process.on("SIGTERM", () => { appendFileSync(${JSON.stringify(marker)}, "SIGTERM\\n"); process.exit(0); }); setInterval(() => {}, 1000);`,
 	);
 	const controller = new AbortController();
-	const pending = launchWithPi(
-		executable.path,
-		launchSpec({ signal: controller.signal }),
-	);
+	const pending = launchWithPi(executable.path, launchSpec({ signal: controller.signal }));
 	setTimeout(() => controller.abort(), 100);
 	const outcome = await pending;
 	assert.equal(outcome.classification, "cancelled");
@@ -339,29 +317,16 @@ test("skill resolution and worker prompts use only selected resources", async ()
 	await writeFile(join(userSkills, "project", "SKILL.md"), "# User project\n");
 	assert.match(
 		await readFile(
-			resolveSelectedSkillPaths(
-				["project"],
-				root,
-				process.cwd(),
-				userSkills,
-			)[0],
+			resolveSelectedSkillPaths(["project"], root, process.cwd(), userSkills)[0],
 			"utf8",
 		),
 		/# User project/,
 	);
 	await mkdir(join(root, ".pi", "skills", "project"), { recursive: true });
-	await writeFile(
-		join(root, ".pi", "skills", "project", "SKILL.md"),
-		"# Project override\n",
-	);
+	await writeFile(join(root, ".pi", "skills", "project", "SKILL.md"), "# Project override\n");
 	assert.match(
 		await readFile(
-			resolveSelectedSkillPaths(
-				["project"],
-				root,
-				process.cwd(),
-				userSkills,
-			)[0],
+			resolveSelectedSkillPaths(["project"], root, process.cwd(), userSkills)[0],
 			"utf8",
 		),
 		/# Project override/,

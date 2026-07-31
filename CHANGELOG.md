@@ -3,6 +3,18 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
+## v3.0.4 - 2026-07-31
+
+### Correctness and release completion
+
+- Completed configured project-root and canonical-path handling across
+  workers, status, compaction, and human review paths.
+- Added strict `SYNC.json` metadata validation, external canonical-path
+  rechecks, symlink coverage, and explicit promotion persistence
+  results.
+- Refined skill contracts, qualitative guidance, and live acceptance
+  tests.
+
 ## v3.0.3 - 2026-08-01
 
 ### Documentation

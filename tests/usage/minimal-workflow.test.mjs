@@ -1,11 +1,14 @@
 import assert from "node:assert/strict";
-import { spawn } from "node:child_process";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { execFile as execFileCallback, spawn } from "node:child_process";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { homedir, tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { promisify } from "node:util";
 
 import { bootstrapWorkerAgentDir } from "../../scripts/bootstrap-worker-agent-dir.mjs";
+
+const execFile = promisify(execFileCallback);
 
 test("real Pi can inspect a disposable project and write an artifact", {
 	skip:
@@ -14,35 +17,54 @@ test("real Pi can inspect a disposable project and write an artifact", {
 			: "set PI_SYCH_USAGE_TEST=1 to run real-model usage acceptance",
 }, async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-usage-"));
+	await execFile("git", ["init", "-q", root]);
 	const session = join(root, "session.jsonl");
 	const agentDir = await mkdtemp(join(tmpdir(), "pi-sych-usage-agent-"));
-	const workerAgentDir = await mkdtemp(
-		join(tmpdir(), "pi-sych-usage-worker-agent-"),
-	);
+	const workerAgentDir = await mkdtemp(join(tmpdir(), "pi-sych-usage-worker-agent-"));
 	t.after(() =>
 		Promise.all(
-			[root, agentDir, workerAgentDir].map((path) =>
-				rm(path, { recursive: true, force: true }),
-			),
+			[root, agentDir, workerAgentDir].map((path) => rm(path, { recursive: true, force: true })),
 		),
 	);
-	const supervisorAgentDir =
-		process.env.PI_CODING_AGENT_DIR ?? join(homedir(), ".config/pi");
+	const supervisorAgentDir = process.env.PI_CODING_AGENT_DIR ?? join(homedir(), ".config/pi");
 	const modelCatalog =
-		process.env.PI_SYCH_MODEL_CATALOG ??
-		join(supervisorAgentDir, "pi-sych/models.json");
+		process.env.PI_SYCH_MODEL_CATALOG ?? join(supervisorAgentDir, "pi-sych/models.json");
 	await bootstrapWorkerAgentDir({
 		agentDir: workerAgentDir,
 		packageRoot: process.cwd(),
 		supervisorAgentDir,
 	});
+	const projectRoot = join(root, "workspace");
+	const launchRoot = join(projectRoot, "src");
+	await mkdir(join(projectRoot, "state"), { recursive: true });
+	await mkdir(launchRoot, { recursive: true });
 	await writeFile(
-		join(root, "PROJECT.md"),
-		"# Project\n\n## Objective\nWrite a dummy report.\n\n## Current direction\nKeep it concise.\n\n## Definition of done\nREPORT.md exists.\n\n## Previous action\nNone yet.\n\n## Immediate next step\nNone at present.\n",
+		join(projectRoot, "state", "PROJECT-BRIEF.md"),
+		"# Project\n\n## Objective\nWrite a dummy report.\n\n## Current direction\nKeep it concise.\n\n## Definition of done\nsrc/REPORT.md exists.\n\n## Previous action\nNone yet.\n\n## Immediate next step\nNone at present.\n",
 	);
 	await writeFile(
+		join(projectRoot, "state", "PROJECT-AGENTS.md"),
+		"Use the configured project root.\n",
+	);
+	await writeFile(join(projectRoot, "state", "WRITING-STYLE.md"), "Keep reports concise.\n");
+	await writeFile(
 		join(root, "SYNC.json"),
-		'{"version":2,"confirmedAt":"2026-01-01T00:00:00Z","artifacts":[]}\n',
+		`${JSON.stringify(
+			{
+				version: 2,
+				projectRoot: "workspace",
+				canonical: {
+					project: "state/PROJECT-BRIEF.md",
+					agents: "state/PROJECT-AGENTS.md",
+					style: "state/WRITING-STYLE.md",
+					inbox: "state/INBOX.md",
+				},
+				confirmedAt: "2026-01-01T00:00:00Z",
+				artifacts: [],
+			},
+			null,
+			2,
+		)}\n`,
 	);
 	const result = await new Promise((resolvePromise, reject) => {
 		let settled = false;
@@ -50,9 +72,7 @@ test("real Pi can inspect a disposable project and write an artifact", {
 		let outerTimeout;
 		let killTimeout;
 		const timeoutError = () =>
-			new Error(
-				`Pi usage test timed out\nstdout:\n${stdout}\nstderr:\n${stderr}`,
-			);
+			new Error(`Pi usage test timed out\nstdout:\n${stdout}\nstderr:\n${stderr}`);
 		const settle = (callback, value) => {
 			if (settled) return;
 			settled = true;
@@ -77,10 +97,10 @@ test("real Pi can inspect a disposable project and write an artifact", {
 				"--no-context-files",
 				"--tools",
 				"read,write,project_status,dispatch_worker",
-				"Do these steps in order. First call project_status with action check. Second call dispatch_worker once with task 'Read PROJECT.md and report its objective.', mode 'read-only', expectedOutput 'One sentence stating the project objective.', contextFiles containing PROJECT.md with purpose 'dummy project direction', and modelProfile 'fast'. Wait for its result. Third read PROJECT.md and write REPORT.md containing exactly: Dummy project checked. Then stop.",
+				"Do these steps in order. First call project_status with action check. Second call dispatch_worker once with task 'Read the configured project brief and report its objective.', mode 'read-only', expectedOutput 'One sentence stating the project objective.', contextFiles containing state/PROJECT-BRIEF.md with purpose 'dummy project direction', and modelProfile 'fast'. Wait for its result. Third read state/PROJECT-BRIEF.md and write REPORT.md containing exactly: Dummy project checked. Then stop.",
 			],
 			{
-				cwd: root,
+				cwd: launchRoot,
 				env: {
 					...process.env,
 					PI_CODING_AGENT_DIR: agentDir,
@@ -110,14 +130,12 @@ test("real Pi can inspect a disposable project and write an artifact", {
 		});
 		child.once("error", (error) => settle(reject, error));
 		child.once("close", (code) =>
-			timedOut
-				? settle(reject, timeoutError())
-				: settle(resolvePromise, { code, stdout, stderr }),
+			timedOut ? settle(reject, timeoutError()) : settle(resolvePromise, { code, stdout, stderr }),
 		);
 	});
 	assert.equal(result.code, 0, result.stderr);
 	assert.equal(
-		await readFile(join(root, "REPORT.md"), "utf8"),
+		await readFile(join(projectRoot, "src", "REPORT.md"), "utf8"),
 		"Dummy project checked.",
 	);
 	const sessionJson = await readFile(session, "utf8");
@@ -125,5 +143,5 @@ test("real Pi can inspect a disposable project and write an artifact", {
 	assert.match(sessionJson, /dispatch_worker/);
 	assert.match(sessionJson, /Worker status: complete/);
 	assert.match(sessionJson, /Result package: inline/);
-	assert.match(sessionJson, /REPORT\.md/);
+	assert.match(sessionJson, /src\/REPORT\.md/);
 });

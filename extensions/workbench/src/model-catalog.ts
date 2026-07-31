@@ -19,9 +19,7 @@ function profileEntries(value: unknown, name: string): string[] {
 		value.length === 0 ||
 		value.some((entry) => typeof entry !== "string" || !entry.trim())
 	) {
-		throw new Error(
-			`Model profile '${name}' must be a non-empty array of model names`,
-		);
+		throw new Error(`Model profile '${name}' must be a non-empty array of model names`);
 	}
 	return value.map((entry) => entry.trim());
 }
@@ -44,8 +42,7 @@ export function parseModelProfiles(value: unknown): ModelProfiles {
 					}
 				: {}),
 		};
-	if (!catalog.profiles)
-		throw new Error("Model catalog must define profiles.default");
+	if (!catalog.profiles) throw new Error("Model catalog must define profiles.default");
 	const aliases = catalog.models ?? {};
 	const resolveEntry = (entry: string): string => {
 		const definition = aliases[entry];
@@ -60,22 +57,15 @@ export function parseModelProfiles(value: unknown): ModelProfiles {
 			profileEntries(entries, name).map(resolveEntry),
 		]),
 	);
-	if (!profiles.default)
-		throw new Error("Model catalog must define profiles.default");
+	if (!profiles.default) throw new Error("Model catalog must define profiles.default");
 	return { default: profiles.default, profiles };
 }
 
-export function loadModelProfiles(
-	env: NodeJS.ProcessEnv = process.env,
-): ModelProfiles {
-	if (env.PI_SYCH_MODEL_PROFILES)
-		return parseModelProfiles(JSON.parse(env.PI_SYCH_MODEL_PROFILES));
+export function loadModelProfiles(env: NodeJS.ProcessEnv = process.env): ModelProfiles {
+	if (env.PI_SYCH_MODEL_PROFILES) return parseModelProfiles(JSON.parse(env.PI_SYCH_MODEL_PROFILES));
 	const path =
 		env.PI_SYCH_MODEL_CATALOG ??
-		resolve(
-			env.PI_CODING_AGENT_DIR ?? resolve(homedir(), ".config/pi"),
-			"pi-sych/models.json",
-		);
+		resolve(env.PI_CODING_AGENT_DIR ?? resolve(homedir(), ".config/pi"), "pi-sych/models.json");
 	try {
 		return parseModelProfiles(JSON.parse(readFileSync(path, "utf8")));
 	} catch (error) {

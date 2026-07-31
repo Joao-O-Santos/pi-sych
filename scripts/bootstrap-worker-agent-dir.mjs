@@ -31,12 +31,9 @@ export async function linkIfPresent(source, target) {
 export async function bootstrapWorkerAgentDir({
 	agentDir,
 	packageRoot = scriptRoot,
-	supervisorAgentDir = process.env.PI_CODING_AGENT_DIR ??
-		resolve(homedir(), ".pi/agent"),
+	supervisorAgentDir = process.env.PI_CODING_AGENT_DIR ?? resolve(homedir(), ".pi/agent"),
 } = {}) {
-	const resolvedAgentDir = expandHome(
-		agentDir ?? "~/.cache/pi/pi-sych/worker-agent",
-	);
+	const resolvedAgentDir = expandHome(agentDir ?? "~/.cache/pi/pi-sych/worker-agent");
 	const resolvedPackageRoot = resolve(packageRoot);
 	const resolvedSupervisorDir = expandHome(supervisorAgentDir);
 
@@ -74,7 +71,9 @@ export async function bootstrapWorkerAgentDir({
 	await writeFile(
 		resolve(resolvedAgentDir, "mcporter.json"),
 		`${JSON.stringify(mcporter, null, 2)}\n`,
-		{ mode: 0o600 },
+		{
+			mode: 0o600,
+		},
 	);
 
 	const linked = {};
@@ -111,20 +110,14 @@ function parseArguments(argv) {
 		const value = argv[index + 1];
 		if (arg === "--agent-dir" && value) options.agentDir = value;
 		else if (arg === "--package-root" && value) options.packageRoot = value;
-		else if (arg === "--supervisor-agent-dir" && value)
-			options.supervisorAgentDir = value;
+		else if (arg === "--supervisor-agent-dir" && value) options.supervisorAgentDir = value;
 		else throw new Error(`Unknown or incomplete argument: ${arg}`);
 		index += 1;
 	}
 	return options;
 }
 
-if (
-	process.argv[1] &&
-	resolve(process.argv[1]) === fileURLToPath(import.meta.url)
-) {
-	const result = await bootstrapWorkerAgentDir(
-		parseArguments(process.argv.slice(2)),
-	);
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+	const result = await bootstrapWorkerAgentDir(parseArguments(process.argv.slice(2)));
 	process.stdout.write(`${JSON.stringify(result)}\n`);
 }

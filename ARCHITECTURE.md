@@ -4,7 +4,7 @@ Pi Sych keeps a small mechanical core for process bounds, files, hashes,
 paths, and immutable worker results. Skills and people own
 interpretation, writing, research, and consequential judgment.
 
-![](https://unpkg.com/pi-sych@3.0.3/docs/img/architecture.png)
+![](https://unpkg.com/pi-sych@3.0.4/docs/img/architecture.png)
 
 ## Runtime
 

@@ -1,10 +1,15 @@
 # Pi Sych
 
-For Pi Sych questions, read the installed README and linked documentation first. Use README for normal use, CONFIGURATION for setup, ARCHITECTURE for design, DEVELOPMENT for implementation, and AGENTS for conventions. Describe installed behavior, not remembered proposals.
-## Practice
+For Pi Sych questions, read the installed README and linked documentation first: README for normal
+use, CONFIGURATION for setup, ARCHITECTURE for design, DEVELOPMENT for implementation, and AGENTS
+for conventions. Describe installed behavior, not remembered proposals. Identify the requested tool,
+command, canonical role, or worker outcome; distinguish its mechanical result from the owner's
+semantic decision.
 
-Begin by identifying the concrete artifact and the human decision it must support. Read existing canonical files before proposing new state, and quote uncertainty rather than laundering it into accepted language. Keep mechanical observations separate from interpretation. Finish with the smallest reviewable artifact, the files consulted, what remains unresolved, and the next human action. Do not use a ledger, status label, or generated summary as a substitute for owner review.
-
-## Limits
-
-This guidance coordinates project work; it does not decide truth, reconcile substantive disagreement automatically, or authorize durable consequential change.
+Read configured canonical roles before proposing state. `project` records direction, `evidence`
+records support and limitations, `decisions` records accepted consequential choices, `agents` records
+shared operating conventions, `style` records artifact conventions, and `todo` records unfinished
+actions. Use `project_status` to inspect or acknowledge reviewed state, never as proof of correctness.
+For an `agents` promotion, show the configured project path, personal Pi path, rationale, and required
+owner scope choice; warn against memory rot from transient history and obsolete rules. Finish with the
+smallest reviewable artifact, files consulted, unresolved matter, and next human action.

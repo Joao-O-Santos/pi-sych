@@ -14,8 +14,7 @@ export interface McporterDependencyInfo {
 }
 
 function packageVersion(path: string): string {
-	return (JSON.parse(readFileSync(path, "utf8")) as { version: string })
-		.version;
+	return (JSON.parse(readFileSync(path, "utf8")) as { version: string }).version;
 }
 
 export function resolveMcporterDependencies(): McporterDependencyInfo {
@@ -23,14 +22,10 @@ export function resolveMcporterDependencies(): McporterDependencyInfo {
 	try {
 		piMcporterEntry = require.resolve("pi-mcporter/dist/index.js");
 	} catch {
-		throw new Error(
-			"pi-mcporter is not installed; run npm install pi-mcporter@latest",
-		);
+		throw new Error("pi-mcporter is not installed; run npm install pi-mcporter@latest");
 	}
 	const piMcporterRoot = dirname(dirname(piMcporterEntry));
-	const piMcporterVersion = packageVersion(
-		resolve(piMcporterRoot, "package.json"),
-	);
+	const piMcporterVersion = packageVersion(resolve(piMcporterRoot, "package.json"));
 	let current = piMcporterRoot;
 	let mcporterRoot: string | undefined;
 	while (true) {
@@ -44,14 +39,10 @@ export function resolveMcporterDependencies(): McporterDependencyInfo {
 		current = parent;
 	}
 	if (!mcporterRoot)
-		throw new Error(
-			"pi-mcporter does not have a resolvable compatible MCPorter runtime",
-		);
+		throw new Error("pi-mcporter does not have a resolvable compatible MCPorter runtime");
 	const mcporterCliEntry = resolve(mcporterRoot, "dist", "cli.js");
 	if (!existsSync(mcporterCliEntry))
-		throw new Error(
-			"pi-mcporter's compatible MCPorter runtime has no CLI entry",
-		);
+		throw new Error("pi-mcporter's compatible MCPorter runtime has no CLI entry");
 	const mcporterVersion = packageVersion(resolve(mcporterRoot, "package.json"));
 	return {
 		piMcporterEntry,
@@ -112,9 +103,7 @@ export function inspectMcporter(
 	}
 }
 
-export function formatMcporterDiagnostic(
-	diagnostic: McporterDiagnostic,
-): string {
+export function formatMcporterDiagnostic(diagnostic: McporterDiagnostic): string {
 	const { dependency } = diagnostic;
 	return [
 		"Pi Sych MCPorter diagnostics",

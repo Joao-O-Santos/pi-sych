@@ -44,8 +44,7 @@ function verifyPandoc() {
 		throw new Error(
 			`Pandoc ${PANDOC_VERSION} is required for Markdown checks; install that release on a contributor host.`,
 		);
-	if (result.error)
-		throw new Error(`Unable to inspect Pandoc: ${result.error.message}`);
+	if (result.error) throw new Error(`Unable to inspect Pandoc: ${result.error.message}`);
 	const actual = result.stdout.match(/^pandoc\s+(\S+)/)?.[1];
 	if (result.status !== 0 || actual !== PANDOC_VERSION)
 		throw new Error(
@@ -60,10 +59,7 @@ export function formatMarkdown(path) {
 		encoding: "utf8",
 		maxBuffer: 10 * 1024 * 1024,
 	});
-	if (result.error)
-		throw new Error(
-			`Unable to run Pandoc for ${path}: ${result.error.message}`,
-		);
+	if (result.error) throw new Error(`Unable to run Pandoc for ${path}: ${result.error.message}`);
 	if (result.status !== 0)
 		throw new Error(
 			`Pandoc failed for ${path}: ${result.stderr?.trim() || `exit ${result.status}`}`,

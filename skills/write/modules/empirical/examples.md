@@ -1,5 +1,12 @@
 # Empirical examples
 
-Input: a discussion treats a non-significant result as proof of no effect.
+Bad:
 
-Output: separate the observed estimate from the interpretation, add uncertainty and design limits, and propose calibrated wording.
+> The null result proves the intervention has no effect.
+
+Better:
+
+> The estimate was imprecise and did not reach the stated threshold; this study does not establish an
+> effect, and it does not prove none exists.
+
+Why: report estimate and uncertainty; non-significance is not proof of no effect.

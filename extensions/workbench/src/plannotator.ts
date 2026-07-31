@@ -50,10 +50,7 @@ export interface CodeReviewRequest {
 }
 
 type PlannotatorModule = {
-	startPlanReviewBrowserSession(
-		ctx: ExtensionContext,
-		planContent: string,
-	): Promise<ReviewSession>;
+	startPlanReviewBrowserSession(ctx: ExtensionContext, planContent: string): Promise<ReviewSession>;
 	startMarkdownAnnotationSession(
 		ctx: ExtensionContext,
 		filePath: string,
@@ -74,9 +71,7 @@ type PlannotatorModule = {
 const jiti = createJiti(import.meta.url, { interopDefault: true });
 
 export function plannotatorUnavailable(): Error {
-	return new Error(
-		"Plannotator unavailable; ensure its integration is installed",
-	);
+	return new Error("Plannotator unavailable; ensure its integration is installed");
 }
 
 async function loadPlannotator(): Promise<PlannotatorModule> {
@@ -95,10 +90,7 @@ export async function startPlanReview(
 	ctx: ExtensionContext,
 	planContent: string,
 ): Promise<ReviewSession> {
-	return (await loadPlannotator()).startPlanReviewBrowserSession(
-		ctx,
-		planContent,
-	);
+	return (await loadPlannotator()).startPlanReviewBrowserSession(ctx, planContent);
 }
 
 export async function openPlanReview(
@@ -132,9 +124,7 @@ export async function startLastMessageAnnotation(
 ): Promise<AnnotationSession | undefined> {
 	const plannotator = await loadPlannotator();
 	const text = plannotator.getLastAssistantMessageText(ctx);
-	return text
-		? plannotator.startLastMessageAnnotationSession(ctx, text)
-		: undefined;
+	return text ? plannotator.startLastMessageAnnotationSession(ctx, text) : undefined;
 }
 
 /** Parse `/plannotator-review` args without loading Plannotator plan-mode code. */

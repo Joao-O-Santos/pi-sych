@@ -1,5 +1,12 @@
 # Artifacts examples
 
-Input: a report says the method changed while PROJECT.md says nothing.
+Bad:
 
-Output: identify the gap, trace its source, and propose a reviewed project-state update rather than silently promoting the report.
+> Put the changed method in `decisions` because it appears in the report.
+
+Better:
+
+> Record supporting method details and limitations in `evidence`; if the owner accepted a consequential
+> choice, add its rationale to `decisions` and a concise current-direction update to `project`.
+
+Why: evidence supports claims; decisions record accepted choices without duplicating their full text.

@@ -5,7 +5,7 @@ and human-owned judgment in writing, research, analysis, and software
 work. It keeps mechanical facts mechanical: a changed hash is not a
 verdict about meaning, quality, or authority.
 
-![](https://unpkg.com/pi-sych@3.0.3/docs/img/architecture.png)
+![](https://unpkg.com/pi-sych@3.0.4/docs/img/architecture.png)
 
 ## Install
 

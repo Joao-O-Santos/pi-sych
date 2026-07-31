@@ -39,14 +39,12 @@ async function askModel(prompt, skill) {
 		child.once("error", reject);
 		child.once("close", (code) => {
 			clearTimeout(timer);
-			code === 0
-				? resolve(stdout)
-				: reject(new Error(stderr || `Pi exited ${code}`));
+			code === 0 ? resolve(stdout) : reject(new Error(stderr || `Pi exited ${code}`));
 		});
 	});
 }
 
-test("live model follows and independently judges prompt-quality usage fixtures", {
+test("live model behavioral smoke test for prompt-quality fixtures", {
 	skip:
 		process.env.PI_SYCH_USAGE_TEST === "1"
 			? false
@@ -56,16 +54,11 @@ test("live model follows and independently judges prompt-quality usage fixtures"
 		await readFile("tests/fixtures/prompt-quality-fixtures.json", "utf8"),
 	);
 	const responses = [];
-	for (const fixture of fixtures)
-		responses.push(await askModel(fixture.input, fixture.target));
+	for (const fixture of fixtures) responses.push(await askModel(fixture.input, fixture.target));
 	for (const [index, fixture] of fixtures.entries()) {
 		const judgment = await askModel(
-			`You are an independent, strict human-equivalent evaluator. Judge this response against the scenario and decision rule. A required property must be materially present and a prohibited property materially absent. Do not infer compliance from the guidance. Reply exactly PASS if it complies; otherwise reply FAIL: followed by one short reason.\n\n${JSON.stringify({ ...fixture, response: responses[index] })}`,
+			`Judge this response against the scenario and decision rule as a second model pass. A required property must be materially present and a prohibited property materially absent. Do not infer compliance from the guidance. Reply exactly PASS if it complies; otherwise reply FAIL: followed by one short reason.\n\n${JSON.stringify({ ...fixture, response: responses[index] })}`,
 		);
-		assert.match(
-			judgment.trim(),
-			/^PASS\b/,
-			`${fixture.temptation}: ${judgment}`,
-		);
+		assert.match(judgment.trim(), /^PASS\b/, `${fixture.temptation}: ${judgment}`);
 	}
 });
