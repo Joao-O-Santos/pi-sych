@@ -1,11 +1,15 @@
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { createJiti } from "jiti";
 
-export interface PlanReviewDecision {
+export interface BrowserPlanReviewDecision {
 	approved: boolean;
 	feedback?: string;
 	savedPath?: string;
 }
+
+export type PlanReviewDecision =
+	| ({ mode: "browser" } & BrowserPlanReviewDecision)
+	| { mode: "file"; pending: true; savedPath: string };
 
 export interface AnnotationDecision {
 	feedback: string;
@@ -22,8 +26,12 @@ export interface CodeReviewDecision {
 
 export interface ReviewSession {
 	url: string;
-	waitForDecision(): Promise<PlanReviewDecision>;
+	waitForDecision(): Promise<BrowserPlanReviewDecision>;
 }
+
+export type OpenPlanReview =
+	| { mode: "browser"; session: ReviewSession }
+	| Extract<PlanReviewDecision, { mode: "file" }>;
 
 export interface AnnotationSession {
 	url: string;
@@ -65,12 +73,22 @@ type PlannotatorModule = {
 
 const jiti = createJiti(import.meta.url, { interopDefault: true });
 
+export function plannotatorUnavailable(): Error {
+	return new Error(
+		"Plannotator unavailable; ensure its integration is installed",
+	);
+}
+
 async function loadPlannotator(): Promise<PlannotatorModule> {
 	// The dependency ships TypeScript Pi-extension sources rather than Node-consumable JavaScript.
 	// Load its documented subpath only when a review is requested; this never calls its entrypoint.
-	return jiti.import(
-		"@plannotator/pi-extension/plannotator-events.ts",
-	) as Promise<PlannotatorModule>;
+	try {
+		return (await jiti.import(
+			"@plannotator/pi-extension/plannotator-events.ts",
+		)) as PlannotatorModule;
+	} catch {
+		throw plannotatorUnavailable();
+	}
 }
 
 export async function startPlanReview(
@@ -81,6 +99,19 @@ export async function startPlanReview(
 		ctx,
 		planContent,
 	);
+}
+
+export async function openPlanReview(
+	ctx: ExtensionContext,
+	planContent: string,
+	savedPath: string,
+	start = startPlanReview,
+): Promise<OpenPlanReview> {
+	try {
+		return { mode: "browser", session: await start(ctx, planContent) };
+	} catch {
+		return { mode: "file", pending: true, savedPath };
+	}
 }
 
 export async function startFileAnnotation(

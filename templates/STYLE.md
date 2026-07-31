@@ -3,7 +3,7 @@
 State applicable prose, documentation, code, presentation, and testing
 conventions.
 
-Style sources follow package `style-application` precedence: explicit
+Style sources follow package `write/modules/style` precedence: explicit
 user instruction, this file, approved project profile, private user
 style, artifact or genre defaults, then package writing defaults.
 

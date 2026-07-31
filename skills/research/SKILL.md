@@ -1,50 +1,24 @@
 ---
 name: research
-description: Conduct local-first, evidence-aware research with transparent retrieval limits, source notes, and calibrated synthesis.
+description: Retrieve, assess, and synthesize sources with explicit limitations.
 ---
 
 # Research
 
-Separate verified sources, source claims, inference, and missing evidence.
-Never invent a citation, bibliographic field, finding, quotation, access path,
-or successful search.
+Inspect local material first and retrieve externally only when needed. Distinguish search results from evidence, assess authority and relevance, record important limitations, and cite claims truthfully. Do not overstate coverage, consensus, or what a source establishes. Separate source content from synthesis and interpretation. Stop when further retrieval is unlikely to alter the answer materially. Read only the relevant module guidance and examples: search for retrieval, sources for appraisal, synthesis for comparison, and citations for claim-to-source checking.
 
-## Local first, then scoped remote retrieval
+## Modules
 
-When available, begin with the read-only `literature` proxy: use `search` for
-relevance, `lookup` for a record, `recent` for newly indexed work, and `source`
-for a root-validated underlying file. The configured index is a relevance and
-provenance aid, not proof that its metadata or extracted text is complete.
-Record the query, coverage, and limitations; inspect the underlying source
-before making a precise empirical claim.
+- `search`: `modules/search/guidance.md` and `modules/search/examples.md`.
+- `sources`: `modules/sources/guidance.md` and `modules/sources/examples.md`.
+- `synthesis`: `modules/synthesis/guidance.md` and `modules/synthesis/examples.md`.
+- `citations`: `modules/citations/guidance.md` and `modules/citations/examples.md`.
 
-If the local collection cannot answer the question, use an explicitly assigned
-`remote-research` worker. Its MCP access is limited to Context7, OpenAlex, and
-Scholar Gateway; it must connect only the needed server and report failed or
-unavailable retrieval honestly. Do not treat a model's background knowledge as
-a retrieved source.
+## Choose modules
 
-## Scale the search to the question
-
-Label the intended coverage as **lookup** for a targeted proposition or **synthesis** for a broad, fragmented, or disputed question. The label describes the work performed; it is not a claim of exhaustiveness.
-
-For a targeted claim, identify the exact proposition, search a small set of
-synonyms and competing terms, return concise source notes, and stop when the
-claim is adequately covered. For a fragmented, disputed, or systematic
-question, decompose it into subquestions; search multiple conceptual and
-methodological angles; deduplicate; map agreement, disagreement, and gaps; and
-stop when new searches mostly repeat low-relevance results.
-
-For every source used, distinguish title/authors/year/DOI or URL when verified,
-source type, claim, basis or methods, relevance, evidence strength, and
-caveats. A research memo should state its scope and coverage level. Retrieval
-is not manuscript drafting: hand off evidence and uncertainty before turning it
-into prose.
-
-## Use with
-
-Use `scholarly-manuscript` or `canonical-to-artifact` when turning reviewed source notes into an artifact. Use `artifact-review` to scrutinize a claim and `verification` before publication-facing use.
-
-## Optional user examples
-
-If `~/.config/pi/skills/research/examples.md` exists, read it before applying this skill. Use it as illustrative preference, not as evidence or project requirements.
+| If the task is… | Read… |
+| --- | --- |
+| queries and stopping rule | `search` |
+| authority and relevance | `sources` |
+| comparison and conclusion | `synthesis` |
+| claim/source checking | `citations` |

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { chmod, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { chmod, mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -269,11 +269,7 @@ test("cancellation sends SIGTERM and preserves the cancelled classification", as
 test("skill resolution and worker prompts use only selected resources", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-worker-"));
 	await writeFile(join(root, "PROJECT.md"), "# Project\n");
-	const paths = resolveSelectedSkillPaths(
-		["artifact-workflow"],
-		root,
-		process.cwd(),
-	);
+	const paths = resolveSelectedSkillPaths(["project"], root, process.cwd());
 	assert.equal(paths.length, 1);
 	const prompt = taskPrompt(
 		{
@@ -292,5 +288,53 @@ test("skill resolution and worker prompts use only selected resources", async ()
 	);
 	assert.match(prompt, /PROJECT\.md/);
 	assert.doesNotMatch(prompt, /supervisor conversation/i);
-	assert.match(await readFile(paths[0], "utf8"), /Artifact workflow/);
+	assert.match(await readFile(paths[0], "utf8"), /# Project/);
+	const userSkills = join(root, "user-skills");
+	await mkdir(join(userSkills, "project"), { recursive: true });
+	await writeFile(join(userSkills, "project", "SKILL.md"), "# User project\n");
+	assert.match(
+		await readFile(
+			resolveSelectedSkillPaths(
+				["project"],
+				root,
+				process.cwd(),
+				userSkills,
+			)[0],
+			"utf8",
+		),
+		/# User project/,
+	);
+	await mkdir(join(root, ".pi", "skills", "project"), { recursive: true });
+	await writeFile(
+		join(root, ".pi", "skills", "project", "SKILL.md"),
+		"# Project override\n",
+	);
+	assert.match(
+		await readFile(
+			resolveSelectedSkillPaths(
+				["project"],
+				root,
+				process.cwd(),
+				userSkills,
+			)[0],
+			"utf8",
+		),
+		/# Project override/,
+	);
+	await assert.rejects(
+		dispatchWorker({
+			projectRoot: root,
+			workerAgentDir: root,
+			packageRoot: process.cwd(),
+			profiles: { default: ["test/model"] },
+			request: {
+				...request,
+				contextFiles: [{ path: "../outside.md", purpose: "invalid" }],
+			},
+			launcher: async () => {
+				throw new Error("launcher must not run");
+			},
+		}),
+		/Project artifact path leaves the project root/,
+	);
 });

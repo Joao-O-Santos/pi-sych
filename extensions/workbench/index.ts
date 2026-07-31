@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { homedir } from "node:os";
-import { dirname, extname, isAbsolute, relative, resolve } from "node:path";
+import { dirname, extname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { StringEnum } from "@earendil-works/pi-ai";
 import type {
@@ -9,6 +9,10 @@ import type {
 } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import {
+	countPromotionCandidates,
+	createWorkingMemoryCompaction,
+} from "./src/compaction.js";
+import {
 	formatMcporterDiagnostic,
 	inspectMcporter,
 	remoteResearchExtensionPaths,
@@ -16,18 +20,24 @@ import {
 import { loadModelProfiles } from "./src/model-catalog.js";
 import type { PlanReviewDecision } from "./src/plannotator.js";
 import {
+	openPlanReview,
 	parseCodeReviewArgs,
 	startCodeReview,
 	startFileAnnotation,
 	startLastMessageAnnotation,
-	startPlanReview,
 } from "./src/plannotator.js";
+import { resolveExistingProjectPath } from "./src/project-files.js";
 import {
 	acknowledgeProjectStatus,
 	checkProjectStatus,
 	formatProjectStatusCheck,
 } from "./src/project-status.js";
-import { type DispatchOutcome, dispatchWorker } from "./src/worker-engine.js";
+import {
+	type DispatchOutcome,
+	dispatchWorker,
+	MAX_TIMEOUT_MS,
+	WORKER_MODES,
+} from "./src/worker-engine.js";
 
 export const PACKAGE_ROOT = resolve(
 	dirname(fileURLToPath(import.meta.url)),
@@ -35,18 +45,19 @@ export const PACKAGE_ROOT = resolve(
 );
 
 export const SUPERVISOR_GUIDANCE = [
-	"Pi Sych is a small mechanical substrate: use skills and human judgment for semantic work.",
-	"Work directly by default; use dispatch_worker only for a bounded independent task.",
-	"Use project_status for hashes, declared dependencies, and acknowledgement. A changed hash is not conceptual drift.",
-	"Read applicable project conventions before creating or revising artifacts.",
-	"dispatch_worker defaults to 90 seconds. Set a deliberate bounded timeout for longer work.",
-	"Use submit_plan for consequential plans; approval never starts implementation automatically.",
-	"Worker tool modes are not sandboxes. Do not claim checks, retrieval, or approval that did not occur.",
+	"Pi Sych is a small mechanical substrate; skills and humans own semantic judgment.",
+	"Keep replies concise. Put consequential or lengthy plans in a project-local Markdown file and call submit_plan.",
+	"Work directly unless an independent context would materially improve the result. Substantive review defaults to an independent read-only worker; do not prime its verdict.",
+	"Parallel workers need independent tasks; workers sharing a checkout do not edit concurrently.",
+	"Use project_status for mechanical state; changed content is not conceptual drift. Read applicable project conventions before editing.",
+	`For Pi Sych questions, read ${PACKAGE_ROOT}/README.md and its linked documentation.`,
+	"dispatch_worker defaults to 90 seconds; choose context, skills, model, and timeout deliberately. Worker modes are not sandboxes. Report only work actually performed.",
+	"Treat INBOX.md as human-review proposal state: report its pending count through project_status and read it only when the user requests inbox review.",
 ].join("\n");
 
 const dispatchParameters = Type.Object({
 	task: Type.String(),
-	mode: StringEnum(["read-only", "edit", "full-host"] as const),
+	mode: StringEnum(WORKER_MODES),
 	expectedOutput: Type.String(),
 	contextFiles: Type.Array(
 		Type.Object({ path: Type.String(), purpose: Type.String() }),
@@ -54,7 +65,9 @@ const dispatchParameters = Type.Object({
 	skills: Type.Optional(Type.Array(Type.String())),
 	modelProfile: Type.Optional(Type.String()),
 	remoteResearch: Type.Optional(Type.Boolean()),
-	timeoutMs: Type.Optional(Type.Integer({ minimum: 1, maximum: 1_800_000 })),
+	timeoutMs: Type.Optional(
+		Type.Integer({ minimum: 1, maximum: MAX_TIMEOUT_MS }),
+	),
 });
 
 const statusParameters = Type.Object({
@@ -69,6 +82,16 @@ function boundedToolContent(value: string): string {
 	return value.length > TOOL_CONTENT_LIMIT
 		? `${value.slice(0, TOOL_CONTENT_LIMIT - 15)}\n[truncated]`
 		: value;
+}
+
+async function projectStatusView(cwd: string) {
+	const state = await checkProjectStatus(cwd);
+	const pendingPromotions = await countPromotionCandidates(state.projectRoot);
+	return {
+		state,
+		pendingPromotions,
+		text: formatProjectStatusCheck(state, pendingPromotions),
+	};
 }
 
 function listContent(label: string, values: string[]): string[] {
@@ -113,6 +136,8 @@ export function formatSubmitPlanResult(
 	result: PlanReviewDecision,
 	savedPath: string | undefined,
 ): string {
+	if (result.mode === "file")
+		return `Plan ready at ${result.savedPath}. Review or edit it, then reply with your comments and @${result.savedPath}.`;
 	return boundedToolContent(
 		[
 			result.approved ? "Plan approved." : "Plan requires revision.",
@@ -122,15 +147,16 @@ export function formatSubmitPlanResult(
 	);
 }
 
-function projectFile(cwd: string, path: string): string | undefined {
+async function projectFile(
+	cwd: string,
+	path: string,
+): Promise<string | undefined> {
 	if (!path.trim()) return undefined;
-	const absolute = resolve(cwd, path);
-	const rel = relative(cwd, absolute);
-	return rel === ".." ||
-		rel.startsWith(`..${process.platform === "win32" ? "\\" : "/"}`) ||
-		isAbsolute(rel)
-		? undefined
-		: absolute;
+	try {
+		return await resolveExistingProjectPath(cwd, path);
+	} catch {
+		return undefined;
+	}
 }
 
 function notifyError(ctx: ExtensionCommandContext, error: unknown): void {
@@ -158,9 +184,14 @@ function annotationFeedback(
 }
 
 export default function piSychWorkbench(pi: ExtensionAPI): void {
-	pi.on("before_agent_start", (event) => ({
-		systemPrompt: `${event.systemPrompt}\n\n${SUPERVISOR_GUIDANCE}`,
-	}));
+	let loadedContextFiles: Array<{ path: string; content: string }> = [];
+	pi.on("before_agent_start", (event) => {
+		loadedContextFiles = event.systemPromptOptions.contextFiles ?? [];
+		return { systemPrompt: `${event.systemPrompt}\n\n${SUPERVISOR_GUIDANCE}` };
+	});
+	pi.on("session_before_compact", (event, ctx) =>
+		createWorkingMemoryCompaction(event, ctx, loadedContextFiles),
+	);
 
 	pi.registerTool({
 		name: "dispatch_worker",
@@ -197,10 +228,10 @@ export default function piSychWorkbench(pi: ExtensionAPI): void {
 		parameters: statusParameters,
 		async execute(_id, params, _signal, _update, ctx) {
 			if (params.action === "check") {
-				const state = await checkProjectStatus(ctx.cwd);
+				const view = await projectStatusView(ctx.cwd);
 				return {
-					content: [{ type: "text", text: formatProjectStatusCheck(state) }],
-					details: state,
+					content: [{ type: "text", text: view.text }],
+					details: { ...view.state, pendingPromotions: view.pendingPromotions },
 				};
 			}
 			const result = await acknowledgeProjectStatus(
@@ -237,19 +268,34 @@ export default function piSychWorkbench(pi: ExtensionAPI): void {
 			"Submit an existing project-local Markdown plan for explicit human review.",
 		parameters: Type.Object({ filePath: Type.String() }),
 		async execute(_id, params, signal, update, ctx) {
-			const path = projectFile(ctx.cwd, params.filePath);
+			const path = await projectFile(ctx.cwd, params.filePath);
 			if (!path || ![".md", ".mdx"].includes(extname(path).toLowerCase()))
 				throw new Error("Plan must be a project-local Markdown file");
 			if (signal?.aborted) throw new Error("Plan review was cancelled");
 			const content = readFileSync(path, "utf8");
 			if (!content.trim()) throw new Error("Plan file is empty");
-			const session = await startPlanReview(ctx, content);
+			const savedPath = relative(ctx.cwd, path);
+			const review = await openPlanReview(ctx, content, savedPath);
+			if (review.mode === "file") {
+				if (signal?.aborted) throw new Error("Plan review was cancelled");
+				return {
+					content: [
+						{
+							type: "text",
+							text: formatSubmitPlanResult(review, review.savedPath),
+						},
+					],
+					details: review,
+				};
+			}
 			update?.({
-				content: [{ type: "text", text: `Plan review opened: ${session.url}` }],
-				details: { pending: true, url: session.url },
+				content: [
+					{ type: "text", text: `Plan review opened: ${review.session.url}` },
+				],
+				details: { pending: true, url: review.session.url },
 			});
-			const result = await session.waitForDecision();
-			const savedPath = result.savedPath ?? relative(ctx.cwd, path);
+			const decision = await review.session.waitForDecision();
+			const result: PlanReviewDecision = { ...decision, mode: "browser" };
 			return {
 				content: [
 					{ type: "text", text: formatSubmitPlanResult(result, savedPath) },
@@ -263,10 +309,7 @@ export default function piSychWorkbench(pi: ExtensionAPI): void {
 		description: "Show mechanical project status",
 		handler: async (_args, ctx) => {
 			try {
-				ctx.ui.notify(
-					formatProjectStatusCheck(await checkProjectStatus(ctx.cwd)),
-					"info",
-				);
+				ctx.ui.notify((await projectStatusView(ctx.cwd)).text, "info");
 			} catch (error) {
 				notifyError(ctx, error);
 			}
@@ -303,7 +346,7 @@ export default function piSychWorkbench(pi: ExtensionAPI): void {
 		description: "Open a project-local file in Plannotator",
 		handler: async (args, ctx) => {
 			try {
-				const path = projectFile(ctx.cwd, args);
+				const path = await projectFile(ctx.cwd, args);
 				if (!path)
 					throw new Error("Usage: /plannotator-annotate <project-local-file>");
 				const session = await startFileAnnotation(

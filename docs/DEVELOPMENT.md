@@ -4,7 +4,9 @@ This guide is for package contributors. Pi Sych favors the smallest
 implementation that makes project state, delegation, review, and
 verification inspectable. Add a focused function or tool only when
 existing Pi, Plannotator, or MCPorter interfaces cannot provide the
-behavior.
+behavior. For substantive behavior changes, establish accepted external
+behavior and independently authored tests before implementation; then
+review the result independently.
 
 ## Checks
 
@@ -65,6 +67,9 @@ Biome, not XO.
 - No generic workflow DAG, fixed agent pipeline, compatibility matrix,
   or duplicate MCP/review implementation. Project-declared dependency
   edges are a flexible mechanical graph, not a workflow engine.
+- Prefer direct, composable, inspectable components. Do not add an
+  abstraction without a demonstrated second use; simplify or delete
+  before expanding.
 - No command/path pseudo-security or sandbox claims.
 - Keep provider choices, credentials, model ranking, and personal
   examples in private configuration.

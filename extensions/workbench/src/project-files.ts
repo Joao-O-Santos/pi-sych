@@ -6,11 +6,12 @@ import {
 	mkdir,
 	open,
 	readFile,
+	realpath,
 	rename,
 	rm,
 	stat,
 } from "node:fs/promises";
-import { dirname, isAbsolute, parse, relative, resolve } from "node:path";
+import { dirname, isAbsolute, parse, relative, resolve, sep } from "node:path";
 
 export const CORE_PROJECT_FILES = ["PROJECT.md", "SYNC.md"] as const;
 export const OPTIONAL_PROJECT_FILES = [
@@ -19,6 +20,7 @@ export const OPTIONAL_PROJECT_FILES = [
 	"EVIDENCE.md",
 	"DECISIONS.md",
 	"TODO.md",
+	"INBOX.md",
 ] as const;
 
 export interface DiscoveredProjectFile {
@@ -149,6 +151,14 @@ export function parseEvidenceEntries(markdown: string): EvidenceEntry[] {
 	});
 }
 
+function assertInside(root: string, path: string, projectPath: string): void {
+	const rel = relative(root, path);
+	if (rel === ".." || rel.startsWith(`..${sep}`) || isAbsolute(rel))
+		throw new Error(
+			`Project artifact path leaves the project root: ${projectPath}`,
+		);
+}
+
 export function resolveProjectPath(
 	projectRoot: string,
 	projectPath: string,
@@ -156,26 +166,27 @@ export function resolveProjectPath(
 	if (!projectPath || isAbsolute(projectPath))
 		throw new Error(`Project artifact path must be relative: ${projectPath}`);
 	const absolute = resolve(projectRoot, projectPath);
-	const rel = relative(projectRoot, absolute);
-	if (
-		rel === ".." ||
-		rel.startsWith(`..${parse(projectRoot).root === "/" ? "/" : "\\"}`) ||
-		isAbsolute(rel)
-	) {
-		throw new Error(
-			`Project artifact path leaves the project root: ${projectPath}`,
-		);
-	}
+	assertInside(projectRoot, absolute, projectPath);
 	return absolute;
 }
 
-export async function writeApprovedFile(
+/** Resolve an existing project file without following a symlink outside it. */
+export async function resolveExistingProjectPath(
+	projectRoot: string,
+	projectPath: string,
+): Promise<string> {
+	const [root, path] = await Promise.all([
+		realpath(projectRoot),
+		realpath(resolveProjectPath(projectRoot, projectPath)),
+	]);
+	assertInside(root, path, projectPath);
+	return path;
+}
+
+export async function writeAtomicFile(
 	path: string,
 	content: string,
-	approved: boolean,
 ): Promise<void> {
-	if (!approved)
-		throw new Error("Durable file write requires explicit approval");
 	const parent = dirname(path);
 	await mkdir(parent, { recursive: true });
 	const temporary = resolve(parent, `.${parse(path).base}.${randomUUID()}.tmp`);
@@ -192,4 +203,14 @@ export async function writeApprovedFile(
 		await rm(temporary, { force: true }).catch(() => undefined);
 		throw error;
 	}
+}
+
+export async function writeApprovedFile(
+	path: string,
+	content: string,
+	approved: boolean,
+): Promise<void> {
+	if (!approved)
+		throw new Error("Durable file write requires explicit approval");
+	await writeAtomicFile(path, content);
 }

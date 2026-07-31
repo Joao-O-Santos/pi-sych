@@ -3,150 +3,134 @@ import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
 
-const root = "skills";
+const catalog = {
+	project:
+		"Use and maintain Pi Sych projects, state, artifacts, dependencies, and decisions.",
+	write:
+		"Draft and revise scholarly, professional, instructional, presentation, and web content.",
+	analyze:
+		"Conduct reproducible quantitative, qualitative, statistical, and data-centred analysis.",
+	code: "Design, implement, test, maintain, and release software.",
+	review:
+		"Independently evaluate artifacts for correctness, structure, evidence, clarity, and risk.",
+	research:
+		"Retrieve, assess, and synthesize sources with explicit limitations.",
+};
 
-async function skillFiles() {
-	const entries = await readdir(root, { withFileTypes: true });
-	return entries
+const modules = {
+	project: [
+		"bootstrap",
+		"artifacts",
+		"status",
+		"reconcile",
+		"plans",
+		"pi-sych",
+		"retrospective",
+	],
+	write: [
+		"academic",
+		"empirical",
+		"theoretical",
+		"theory",
+		"sections",
+		"style",
+		"book",
+		"grant",
+		"slides",
+		"web",
+	],
+	analyze: ["quantitative", "qualitative", "r-quarto", "reporting"],
+	code: ["architecture", "testing", "git", "npm", "web"],
+	review: [
+		"structure",
+		"evidence",
+		"detail",
+		"copyedit",
+		"code",
+		"analysis",
+		"response",
+		"verification",
+	],
+	research: ["search", "sources", "synthesis", "citations"],
+};
+
+async function directories(path) {
+	return (await readdir(path, { withFileTypes: true }))
 		.filter((entry) => entry.isDirectory())
-		.map((entry) => join(root, entry.name, "SKILL.md"));
+		.map((entry) => entry.name)
+		.sort();
 }
 
-test("every public skill has valid progressive-disclosure identity metadata", async () => {
-	const files = await skillFiles();
-	assert.ok(files.length >= 20);
-	for (const path of files) {
-		const content = await readFile(path, "utf8");
-		const frontMatter = content.match(/^---\n([\s\S]*?)\n---/);
-		assert.ok(frontMatter, path);
-		assert.match(frontMatter[1], /^name:\s+[a-z0-9-]+$/m, path);
-		const description = frontMatter[1].match(/^description:\s+(.+)$/m)?.[1];
+test("the visible skill catalog is exactly the accepted six names and descriptions", async () => {
+	assert.deepEqual(await directories("skills"), Object.keys(catalog).sort());
+	for (const [name, description] of Object.entries(catalog)) {
+		const content = await readFile(join("skills", name, "SKILL.md"), "utf8");
+		assert.match(content, new RegExp(`^name: ${name}$`, "m"));
+		assert.match(content, new RegExp(`^description: ${description}$`, "m"));
+	}
+});
+
+test("umbrella skills retain direct invariant guidance and route only accepted modules", async () => {
+	for (const [skill, expected] of Object.entries(modules)) {
+		const root = join("skills", skill);
+		const content = await readFile(join(root, "SKILL.md"), "utf8");
+		const guidance = content.replace(/^---\n[\s\S]*?\n---\n?/, "");
+		assert.match(content, /^#\s+\S/m, `${skill}/SKILL.md`);
 		assert.ok(
-			description && description.length > 20 && description.length <= 1024,
-			path,
+			guidance.split(/\s+/).length >= 75,
+			`${skill} needs invariant guidance`,
 		);
-		assert.match(content, /^#\s+\S/m, path);
+		assert.deepEqual(
+			await directories(join(root, "modules")),
+			[...expected].sort(),
+		);
+		for (const module of expected)
+			assert.match(content, new RegExp(`modules/${module}/guidance\\.md`));
 	}
 });
 
-test("migrated workflow skills preserve the human and mechanical boundary", async () => {
-	const expected = [
-		"bootstrap-project",
-		"project-status-review",
-		"drift-review",
-		"reconcile-project",
-		"verify-change",
-		"workflow-retrospective",
-	];
-	for (const name of expected) {
-		const content = await readFile(`skills/${name}/SKILL.md`, "utf8");
-		assert.match(content, new RegExp(`^name: ${name}$`, "m"), name);
-		assert.doesNotMatch(content, /pi_sych_/i, name);
-	}
-	assert.match(
-		await readFile("skills/project-status-review/SKILL.md", "utf8"),
-		/mechanical facts only/i,
-	);
-	assert.match(
-		await readFile("skills/drift-review/SKILL.md", "utf8"),
-		/Do not choose an authority automatically/i,
-	);
-	assert.match(
-		await readFile("skills/verify-change/SKILL.md", "utf8"),
-		/built-in Bash/i,
-	);
-	const retrospective = await readFile(
-		"skills/workflow-retrospective/SKILL.md",
+test("modules are one-level non-skills with editable examples", async () => {
+	for (const [skill, expected] of Object.entries(modules))
+		for (const module of expected) {
+			const root = join("skills", skill, "modules", module);
+			const entries = await readdir(root, { withFileTypes: true });
+			assert.deepEqual(entries.map((entry) => entry.name).sort(), [
+				"examples.md",
+				"guidance.md",
+			]);
+			assert.equal(
+				entries.some((entry) => entry.isDirectory()),
+				false,
+			);
+			for (const file of ["guidance.md", "examples.md"]) {
+				const content = await readFile(join(root, file), "utf8");
+				assert.doesNotMatch(content, /^---\s*$/m);
+				assert.doesNotMatch(
+					content,
+					/modules\/[a-z0-9-]+\/(?:guidance|examples)\.md/i,
+				);
+			}
+		}
+});
+
+test("key migrated guidance remains distinct", async () => {
+	const empirical = await readFile(
+		"skills/write/modules/empirical/guidance.md",
 		"utf8",
 	);
-	assert.match(retrospective, /^disable-model-invocation: true$/m);
-	assert.match(retrospective, /never edit package code/i);
-});
-
-test("every public skill names its private user-example overlay outside package-managed directories", async () => {
-	const files = await skillFiles();
-	for (const path of files) {
-		const name = path.split("/")[1];
-		const content = await readFile(path, "utf8");
-		assert.match(
-			content,
-			new RegExp(`~/.config/pi/skills/${name}/examples\\.md`),
-			path,
-		);
-		assert.match(
-			content,
-			/illustrative preference, not as evidence or project requirements/i,
-			path,
-		);
-	}
-	assert.match(
-		await readFile("docs/CONFIGURATION.md", "utf8"),
-		/~\/.config\/pi\/skills\/<skill-name>\/examples\.md/,
-	);
-});
-
-test("git workflow skill defaults to main while respecting repository conventions", async () => {
-	const content = await readFile("skills/git-workflow/SKILL.md", "utf8");
-	assert.match(content, /Work directly on `main` unless/);
-	assert.match(content, /imperative subject of at most 50 characters unless/);
-	assert.match(content, /repository’s established convention/);
-	assert.match(content, /Prefer a true merge over a squash merge/);
-	assert.match(
-		content,
-		/private, unpushed branch behind `main` may be rebased/,
-	);
-	assert.match(content, /git history fixup/);
-	assert.doesNotMatch(content, /Do not use conventional-commit prefixes/);
-});
-
-test("TODO.md guidance preserves its bounded task-ledger role", async () => {
-	const artifactSkill = await readFile(
-		"skills/artifact-to-project/SKILL.md",
-		"utf8",
-	);
-	const readme = await readFile("README.md", "utf8");
-	assert.match(artifactSkill, /`TODO\.md`/);
-	assert.match(artifactSkill, /not evidence, project direction/);
-	assert.match(readme, /## Project files/);
-	assert.match(readme, /If\s+GitLab issues are the operative task tracker/);
-});
-
-test("public skills do not retain superseded runtime, controller, provider, or personal-overlay language", async () => {
-	const files = await skillFiles();
-	const forbidden =
-		/Magic Context|magic-context|\bAFT\b|cortexkit|pi-vcc|OpenCode|opencode|openai-codex|gpt-\d|claude-|mistral-|named-agent hierarchy/i;
-	for (const path of files)
-		assert.equal(forbidden.test(await readFile(path, "utf8")), false, path);
-});
-
-test("empirical and theoretical guidance remain substantively distinct", async () => {
-	const empirical = await readFile("skills/empirical-paper/SKILL.md", "utf8");
 	const theoretical = await readFile(
-		"skills/theoretical-paper/SKILL.md",
+		"skills/write/modules/theoretical/guidance.md",
 		"utf8",
 	);
-	assert.match(empirical, /participants|randomization|analysis|uncertainty/i);
-	assert.match(
-		empirical,
-		/Separate observed results from their interpretation/,
+	const style = await readFile(
+		"skills/write/modules/style/guidance.md",
+		"utf8",
 	);
-	assert.match(theoretical, /mechanism|assumptions|alternatives|predictions/i);
+	assert.match(empirical, /design|uncertainty|results/i);
+	assert.match(theoretical, /mechanisms|assumptions|alternatives/i);
+	assert.match(style, /European Portuguese|pt-BR/i);
 	assert.match(
-		theoretical,
-		/do not present illustrative claims as empirical findings/i,
+		await readFile("skills/write/SKILL.md", "utf8"),
+		/specific paper section.*empirical.*theoretical/i,
 	);
-	assert.doesNotMatch(theoretical, /randomization|sample size|participants/i);
-});
-
-test("evidence discipline appears in relevant scientific and artifact skills", async () => {
-	for (const path of [
-		"skills/research/SKILL.md",
-		"skills/r-quarto/SKILL.md",
-		"skills/empirical-paper/SKILL.md",
-		"skills/scholarly-manuscript/SKILL.md",
-		"skills/verification/SKILL.md",
-	]) {
-		const content = await readFile(path, "utf8");
-		assert.match(content, /evidence|source|claim|output/i, path);
-	}
 });

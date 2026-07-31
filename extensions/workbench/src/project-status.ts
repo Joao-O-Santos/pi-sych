@@ -8,6 +8,7 @@ import {
 	resolveProjectPath,
 	writeApprovedFile,
 } from "./project-files.js";
+import { nonEmptyString, stringArray } from "./validation.js";
 
 // Keep the legacy version-1 labels readable; acknowledgement only writes current
 // and needs-review, and never assigns semantic meaning to any label.
@@ -70,29 +71,18 @@ export interface ProjectStatusCheck {
 	projectErrors: string[];
 }
 
-function requireString(value: unknown, label: string): string {
-	if (typeof value !== "string" || value.trim() === "")
-		throw new Error(`${label} must be a non-empty string`);
-	return value;
-}
-
 function relativePath(value: unknown, label: string): string {
-	const path = requireString(value, label);
+	const path = nonEmptyString(value, label);
 	// Resolve against a harmless root so the same strict path rule applies before IO.
 	resolveProjectPath("/project", path);
 	return path;
 }
 
 function fingerprint(value: unknown, label: string): string {
-	const result = requireString(value, label);
+	const result = nonEmptyString(value, label);
 	if (!/^sha256:[a-f0-9]{64}$/i.test(result))
 		throw new Error(`${label} must be a SHA-256 fingerprint`);
 	return result;
-}
-
-function stringArray(value: unknown, label: string): string[] {
-	if (!Array.isArray(value)) throw new Error(`${label} must be an array`);
-	return value.map((item, index) => requireString(item, `${label}[${index}]`));
 }
 
 function dependency(value: unknown, label: string): Dependency {
@@ -102,7 +92,7 @@ function dependency(value: unknown, label: string): Dependency {
 	const item = value as Record<string, unknown>;
 	return {
 		path: relativePath(item.path, `${label}.path`),
-		reason: requireString(item.reason, `${label}.reason`),
+		reason: nonEmptyString(item.reason, `${label}.reason`),
 	};
 }
 
@@ -122,7 +112,7 @@ function parseArtifact(value: unknown, index: number): ProjectArtifact {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error(`artifacts[${index}] must be an object`);
 	const item = value as Record<string, unknown>;
-	const status = requireString(item.status, `artifacts[${index}].status`);
+	const status = nonEmptyString(item.status, `artifacts[${index}].status`);
 	if (!PROJECT_STATUSES.includes(status as ProjectStatus))
 		throw new Error(`artifacts[${index}].status is not allowed: ${status}`);
 	const acknowledgement = item.acknowledgement;
@@ -145,7 +135,7 @@ function parseArtifact(value: unknown, index: number): ProjectArtifact {
 		status: status as ProjectStatus,
 		...(item.role === undefined
 			? {}
-			: { role: requireString(item.role, `artifacts[${index}].role`) }),
+			: { role: nonEmptyString(item.role, `artifacts[${index}].role`) }),
 		...(item.authoritativeFor === undefined
 			? {}
 			: {
@@ -174,11 +164,11 @@ function parseArtifact(value: unknown, index: number): ProjectArtifact {
 			? {}
 			: {
 					acknowledgement: {
-						at: requireString(
+						at: nonEmptyString(
 							parsedAcknowledgement.at,
 							`artifacts[${index}].acknowledgement.at`,
 						),
-						reason: requireString(
+						reason: nonEmptyString(
 							parsedAcknowledgement.reason,
 							`artifacts[${index}].acknowledgement.reason`,
 						),
@@ -209,7 +199,7 @@ export function parseProjectStatusMarkdown(
 		throw new Error("SYNC.md JSON must be an object");
 	const manifest = value as Record<string, unknown>;
 	if (manifest.version !== 1) throw new Error("SYNC.md version must be 1");
-	const confirmedAt = requireString(manifest.confirmedAt, "confirmedAt");
+	const confirmedAt = nonEmptyString(manifest.confirmedAt, "confirmedAt");
 	if (Number.isNaN(Date.parse(confirmedAt)))
 		throw new Error("confirmedAt must be a valid date-time string");
 	if (!Array.isArray(manifest.artifacts))
@@ -391,7 +381,10 @@ export async function checkProjectStatus(
 	}
 }
 
-export function formatProjectStatusCheck(state: ProjectStatusCheck): string {
+export function formatProjectStatusCheck(
+	state: ProjectStatusCheck,
+	pendingPromotions = 0,
+): string {
 	const lines = ["Project status", "", `Root: ${state.projectRoot}`];
 	if (state.missingCore.length)
 		lines.push(
@@ -405,8 +398,15 @@ export function formatProjectStatusCheck(state: ProjectStatusCheck): string {
 			"PROJECT.md validation errors:",
 			...state.projectErrors.map((error) => `- ${error}`),
 		);
-	if (state.syncError)
+	if (state.syncError) {
+		if (pendingPromotions)
+			lines.push(
+				"",
+				`Pending memory proposals: ${pendingPromotions}`,
+				"Review: /plannotator-annotate INBOX.md",
+			);
 		return [...lines, "", `State unavailable: ${state.syncError}`].join("\n");
+	}
 	if (state.changed.length)
 		lines.push("", "Changed:", ...state.changed.map((path) => `- ${path}`));
 	if (state.missing.length)
@@ -441,6 +441,12 @@ export function formatProjectStatusCheck(state: ProjectStatusCheck): string {
 		);
 	if (!state.changed.length && !state.missing.length)
 		lines.push("", "All tracked files match their recorded hashes.");
+	if (pendingPromotions)
+		lines.push(
+			"",
+			`Pending memory proposals: ${pendingPromotions}`,
+			"Review: /plannotator-annotate INBOX.md",
+		);
 	lines.push(
 		"",
 		"A changed hash establishes changed content, not conceptual drift or authority.",

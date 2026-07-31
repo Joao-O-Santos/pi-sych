@@ -48,27 +48,28 @@ agent memory.
 ## Current direction
 
 {accepted} Keep the package small, explicit, and reviewable for human
-users rather than expanding historical scaffolding or automated workflow
-machinery.
+users: six umbrella skills with direct one-level modules, bounded
+workers, independent substantive review, and no automated workflow
+controller.
 
 ## Current state
 
-{verified} The package has a minimal supervisor with `dispatch_worker`
-and `project_status`, a separately bootstrapped worker extension,
-graph-aware project state, optional remote research through MCPorter,
-retained Plannotator annotation/review adapters, semantic workflow
-skills, behavioral worker-lifecycle tests, and opt-in real-Pi
-acceptance. The rough production TypeScript estimate remains below 2,000
-lines.
+{verified} The pending v2.1.0 implementation retains the six-skill
+catalog, bounded workers, graph-aware project state, MCPorter, and
+Plannotator adapters. It adds custom task-centred Pi compaction with
+standard-compactor fallback and optional human-review `INBOX.md`
+promotion proposals. The rough production TypeScript estimate is about
+2,300 lines within the owner-authorized 2,500-line cap.
 
 ## Previous action
 
-{verified} Completed the v1.2.0 release gate on the final dependency
-graph: Markdown/render checks, style, typecheck, dependency check, 40
-unit tests, 3 integration tests, 2 smoke checks, source budget, package
-validation, CI parsing, audit, and one real-Pi workflow.
+{verified} Completed the v2.1.0 deterministic release gate: 49 unit
+checks, 4 integration checks, 3 smoke checks, style/Markdown/type
+checks, clean install, dependency check, package dry run, source budget,
+and whitespace check. The inherited Pi `brace-expansion` audit advisory
+remains a recorded limitation.
 
 ## Immediate next step
 
-{accepted} Create the signed v1.2.0 release commit and annotated tag,
-push them, and verify publication.
+{accepted} Obtain final owner authorization for the reviewed v2.1.0
+working tree before creating its signed commit, tag, and npm release.

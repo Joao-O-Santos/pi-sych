@@ -3,6 +3,36 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
+## v2.1.0 - 2026-07-31
+
+### Added
+
+- Added task-centred custom compaction with standard-compactor fallback.
+- Added human-review `INBOX.md` promotion proposals and pending-count
+  project-status visibility.
+
+## v2.0.0 - 2026-07-30
+
+### Added
+
+- Replaced the visible skill catalog with six umbrella skills and direct
+  one-level guidance and editable example modules.
+- Added installed-documentation routing, independent substantive review,
+  independent test-first coding guidance, and Unix-oriented minimal
+  architecture defaults.
+- Added `submit_plan` file-review fallback when Plannotator cannot
+  start.
+
+### Changed
+
+- Simplified the always-visible supervisor guidance and consolidated
+  duplicated runtime string validation and project-local path handling.
+
+### Removed
+
+- Removed superseded indexed skill names; their unique guidance is
+  consolidated under the six umbrella skills.
+
 ## v1.2.0 - 2026-07-30
 
 ### Added

@@ -8,7 +8,11 @@ import piSychWorkbench, {
 	PACKAGE_ROOT,
 	SUPERVISOR_GUIDANCE,
 } from "../../.test-build/workbench/index.js";
-import { parseCodeReviewArgs } from "../../.test-build/workbench/src/plannotator.js";
+import {
+	openPlanReview,
+	parseCodeReviewArgs,
+	plannotatorUnavailable,
+} from "../../.test-build/workbench/src/plannotator.js";
 import packageJson from "../../package.json" with { type: "json" };
 
 test("parseCodeReviewArgs accepts provider flags and PR URLs only", () => {
@@ -92,7 +96,12 @@ test("tool content formatters include bounded worker and plan result details", (
 		/Process warning: abnormal exit; exit code 1; signal SIGTERM/,
 	);
 	const planContent = formatSubmitPlanResult(
-		{ approved: false, savedPath: "plans/revised.md", feedback: "Add checks." },
+		{
+			mode: "browser",
+			approved: false,
+			savedPath: "plans/revised.md",
+			feedback: "Add checks.",
+		},
 		"plans/revised.md",
 	);
 	assert.match(planContent, /Plan requires revision/);
@@ -102,7 +111,7 @@ test("tool content formatters include bounded worker and plan result details", (
 
 test("public manifest retains the package boundary and developer tooling", () => {
 	assert.equal(packageJson.name, "pi-sych");
-	assert.equal(packageJson.version, "1.2.0");
+	assert.equal(packageJson.version, "2.1.0");
 	assert.equal(PACKAGE_ROOT, process.cwd());
 	assert.equal(packageJson.devDependencies.typescript, "latest");
 	assert.equal(packageJson.devDependencies["@biomejs/biome"], "latest");
@@ -122,7 +131,7 @@ test("public manifest retains the package boundary and developer tooling", () =>
 	assert.equal(packageJson.files.includes("scripts/format-markdown.mjs"), true);
 	assert.equal(
 		packageJson.pi.image,
-		"https://unpkg.com/pi-sych@1.2.0/docs/img/architecture.png",
+		"https://unpkg.com/pi-sych@2.1.0/docs/img/architecture.png",
 	);
 });
 
@@ -134,4 +143,190 @@ test("release pipeline checks style before publishing", () => {
 	assert.match(releaseConfig, /npm run style/);
 	assert.match(releaseConfig, /npm run source:budget/);
 	assert.match(releaseConfig, /npm publish --provenance/);
+});
+
+test("supervisor guidance stays concise and states the accepted routing policies", () => {
+	assert.ok(SUPERVISOR_GUIDANCE.split(/\s+/).length <= 140);
+	assert.ok(SUPERVISOR_GUIDANCE.includes(`${PACKAGE_ROOT}/README.md`));
+	assert.match(SUPERVISOR_GUIDANCE, /independent read-only worker/i);
+	assert.match(SUPERVISOR_GUIDANCE, /long|lengthy|consequential/i);
+	assert.match(SUPERVISOR_GUIDANCE, /submit_plan/i);
+	assert.match(SUPERVISOR_GUIDANCE, /do not edit concurrently/i);
+});
+
+test("Plannotator commands use a concise unavailable error", () => {
+	assert.equal(
+		plannotatorUnavailable().message,
+		"Plannotator unavailable; ensure its integration is installed",
+	);
+});
+
+test("file plan review remains pending and tells the user how to resume", async () => {
+	const fallback = await openPlanReview({}, "# Plan", "PLAN.md", async () => {
+		throw new Error("Plannotator unavailable");
+	});
+	assert.deepEqual(fallback, {
+		mode: "file",
+		pending: true,
+		savedPath: "PLAN.md",
+	});
+	const content = formatSubmitPlanResult(
+		{ mode: "file", pending: true, savedPath: "PLAN.md" },
+		"PLAN.md",
+	);
+	assert.match(
+		content,
+		/Plan ready at PLAN\.md\. Review or edit it, then reply with your comments and @PLAN\.md\./,
+	);
+	assert.doesNotMatch(content, /requires revision|approved/i);
+});
+
+test("pending promotion status includes the human review command only when nonzero", async () => {
+	const { formatProjectStatusCheck } = await import(
+		"../../.test-build/workbench/src/project-status.js"
+	);
+	const state = {
+		projectRoot: "/project",
+		syncPath: "/project/SYNC.md",
+		artifacts: [],
+		changed: [],
+		missing: [],
+		impacted: [],
+		cycles: [],
+		missingCore: [],
+		projectErrors: [],
+	};
+	assert.doesNotMatch(
+		formatProjectStatusCheck(state, 0),
+		/Pending memory proposals/,
+	);
+	assert.match(
+		formatProjectStatusCheck(state, 2),
+		/Pending memory proposals: 2/,
+	);
+	assert.match(
+		formatProjectStatusCheck(state, 2),
+		/\/plannotator-annotate INBOX\.md/,
+	);
+});
+
+// The compaction boundary is injected so these extension-level cases never
+// contact a provider or depend on browser/authentication configuration.
+function compactEvent() {
+	return {
+		preparation: {
+			messagesToSummarize: [],
+			turnPrefixMessages: [],
+			previousSummary: "Earlier state.",
+			firstKeptEntryId: "keep-1",
+			tokensBefore: 99,
+		},
+		branchEntries: [],
+		customInstructions: "Keep it concise.",
+		reason: "manual",
+		willRetry: false,
+		signal: new AbortController().signal,
+	};
+}
+
+function compactContext(
+	root,
+	auth = async () => ({ ok: true, apiKey: "fake", headers: {}, env: {} }),
+) {
+	return {
+		cwd: root,
+		model: { maxTokens: 4096 },
+		modelRegistry: { getApiKeyAndHeaders: auth },
+		ui: { notify() {} },
+	};
+}
+
+test("custom compaction falls back to Pi's standard compactor when unavailable, authentication fails, or output is malformed", async () => {
+	const { createWorkingMemoryCompaction } = await import(
+		"../../.test-build/workbench/src/compaction.js"
+	);
+	const root = process.cwd();
+	const unavailable = await createWorkingMemoryCompaction(
+		compactEvent(),
+		{ ...compactContext(root), model: undefined },
+		[],
+		{},
+	);
+	assert.equal(unavailable, undefined);
+	const denied = await createWorkingMemoryCompaction(
+		compactEvent(),
+		compactContext(root, async () => {
+			throw new Error("no credentials");
+		}),
+		[],
+		{},
+	);
+	assert.equal(denied, undefined);
+	const malformed = await createWorkingMemoryCompaction(
+		compactEvent(),
+		compactContext(root),
+		[],
+		{
+			complete: async () => ({
+				content: [{ type: "text", text: "not JSON" }],
+				usage: { inputTokens: 1 },
+			}),
+		},
+	);
+	assert.equal(malformed, undefined);
+});
+
+test("custom compaction retains Pi metadata and reports pending proposals without a browser", async () => {
+	const { createWorkingMemoryCompaction } = await import(
+		"../../.test-build/workbench/src/compaction.js"
+	);
+	const result = await createWorkingMemoryCompaction(
+		compactEvent(),
+		compactContext(process.cwd()),
+		[],
+		{
+			complete: async () => ({
+				content: [
+					{
+						type: "text",
+						text: JSON.stringify({
+							workingMemory: {
+								currentTask: "Continue testing.",
+								completed: [],
+								successfulApproaches: [],
+								failedApproaches: [],
+								inProgress: [],
+								blockers: [],
+								criticalContext: [],
+								nextAction: "Run tests.",
+								relevantFiles: [],
+							},
+							promotions: [],
+						}),
+					},
+				],
+				usage: { inputTokens: 7, outputTokens: 3 },
+			}),
+		},
+	);
+	assert.equal(result.compaction.firstKeptEntryId, "keep-1");
+	assert.equal(result.compaction.tokensBefore, 99);
+	assert.deepEqual(result.compaction.usage, {
+		inputTokens: 7,
+		outputTokens: 3,
+	});
+	assert.equal(result.compaction.details.pendingPromotions, 0);
+
+	const { checkProjectStatus, formatProjectStatusCheck } = await import(
+		"../../.test-build/workbench/src/project-status.js"
+	);
+	const status = await checkProjectStatus(process.cwd());
+	assert.match(
+		formatProjectStatusCheck(status, 2),
+		/Pending memory proposals: 2/,
+	);
+	assert.match(
+		formatProjectStatusCheck(status, 2),
+		/\/plannotator-annotate INBOX\.md/,
+	);
 });

@@ -3,8 +3,10 @@ import { randomUUID } from "node:crypto";
 import { constants, existsSync, statSync } from "node:fs";
 import { access, mkdir, mkdtemp, open, readFile, rm } from "node:fs/promises";
 import { homedir, tmpdir } from "node:os";
-import { dirname, isAbsolute, relative, resolve } from "node:path";
+import { dirname, isAbsolute, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveExistingProjectPath } from "./project-files.js";
+import { nonEmptyString } from "./validation.js";
 
 export const WORKER_MODES = ["read-only", "edit", "full-host"] as const;
 export type WorkerMode = (typeof WORKER_MODES)[number];
@@ -112,12 +114,6 @@ function bounded(value: string): string {
 	return value.length > LOG_LIMIT ? value.slice(-LOG_LIMIT) : value;
 }
 
-function string(value: unknown, name: string): string {
-	if (typeof value !== "string" || !value.trim())
-		throw new Error(`${name} must be a non-empty string`);
-	return value.trim();
-}
-
 function strings(value: unknown, name: string): string[] {
 	if (!Array.isArray(value) || value.some((item) => typeof item !== "string"))
 		throw new Error(`${name} must be an array of strings`);
@@ -128,7 +124,7 @@ export function validateDispatchRequest(value: unknown): DispatchRequest {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error("dispatch_worker request must be an object");
 	const request = value as Record<string, unknown>;
-	const mode = string(request.mode, "mode");
+	const mode = nonEmptyString(request.mode, "mode");
 	if (!WORKER_MODES.includes(mode as WorkerMode))
 		throw new Error(`Unknown worker mode: ${mode}`);
 	if (!Array.isArray(request.contextFiles))
@@ -146,16 +142,16 @@ export function validateDispatchRequest(value: unknown): DispatchRequest {
 		);
 	}
 	return {
-		task: string(request.task, "task"),
+		task: nonEmptyString(request.task, "task"),
 		mode: mode as WorkerMode,
-		expectedOutput: string(request.expectedOutput, "expectedOutput"),
+		expectedOutput: nonEmptyString(request.expectedOutput, "expectedOutput"),
 		contextFiles: request.contextFiles.map((entry, index) => {
 			if (!entry || typeof entry !== "object" || Array.isArray(entry))
 				throw new Error(`contextFiles[${index}] must be an object`);
 			const file = entry as Record<string, unknown>;
 			return {
-				path: string(file.path, `contextFiles[${index}].path`),
-				purpose: string(file.purpose, `contextFiles[${index}].purpose`),
+				path: nonEmptyString(file.path, `contextFiles[${index}].path`),
+				purpose: nonEmptyString(file.purpose, `contextFiles[${index}].purpose`),
 			};
 		}),
 		...(request.skills === undefined
@@ -163,7 +159,7 @@ export function validateDispatchRequest(value: unknown): DispatchRequest {
 			: { skills: strings(request.skills, "skills") }),
 		...(request.modelProfile === undefined
 			? {}
-			: { modelProfile: string(request.modelProfile, "modelProfile") }),
+			: { modelProfile: nonEmptyString(request.modelProfile, "modelProfile") }),
 		...(request.remoteResearch === undefined
 			? {}
 			: typeof request.remoteResearch === "boolean"
@@ -202,11 +198,8 @@ export function resolveSelectedSkillPaths(
 	selectors: string[] = [],
 	projectRoot: string,
 	packageRoot: string,
+	userSkillRoot = resolve(homedir(), ".pi/agent/skills"),
 ): string[] {
-	const userSkillRoot = resolve(
-		process.env.PI_CODING_AGENT_DIR ?? resolve(homedir(), ".config/pi"),
-		"skills",
-	);
 	return [...new Set(selectors)].map((selector) => {
 		if (selector.includes("/") || selector.endsWith(".md")) {
 			const selected = isAbsolute(selector)
@@ -223,8 +216,8 @@ export function resolveSelectedSkillPaths(
 		const candidates = [
 			resolve(projectRoot, ".pi/skills", selector, "SKILL.md"),
 			resolve(projectRoot, ".agents/skills", selector, "SKILL.md"),
-			resolve(packageRoot, "skills", selector, "SKILL.md"),
 			resolve(userSkillRoot, selector, "SKILL.md"),
+			resolve(packageRoot, "skills", selector, "SKILL.md"),
 		];
 		const path = candidates.find(existsSync);
 		if (!path) throw new Error(`Selected skill is unavailable: ${selector}`);
@@ -268,14 +261,9 @@ async function conventionContext(
 	const selected = [...request.contextFiles, ...automatic];
 	const unique = new Map<string, ContextFile>();
 	for (const file of selected) {
-		const absolute = isAbsolute(file.path)
-			? file.path
-			: resolve(projectRoot, file.path);
+		const absolute = await resolveExistingProjectPath(projectRoot, file.path);
 		await readable(absolute);
-		unique.set(absolute, {
-			path: isAbsolute(file.path) ? absolute : file.path,
-			purpose: file.purpose,
-		});
+		unique.set(absolute, { path: file.path, purpose: file.purpose });
 	}
 	return [...unique.values()];
 }
@@ -338,11 +326,11 @@ export function validateWorkerResult(
 	if (result.schemaVersion !== 1)
 		throw new Error("Worker result schemaVersion must be 1");
 	if (
-		string(result.taskId, "taskId") !== identity.taskId ||
-		string(result.runId, "runId") !== identity.runId
+		nonEmptyString(result.taskId, "taskId") !== identity.taskId ||
+		nonEmptyString(result.runId, "runId") !== identity.runId
 	)
 		throw new Error("Worker result identity does not match dispatch");
-	const status = string(result.status, "status");
+	const status = nonEmptyString(result.status, "status");
 	if (!["complete", "partial", "failed"].includes(status))
 		throw new Error(`Invalid worker result status: ${status}`);
 	if (!Array.isArray(result.artifacts))
@@ -352,19 +340,19 @@ export function validateWorkerResult(
 		taskId: identity.taskId,
 		runId: identity.runId,
 		status: status as WorkerResult["status"],
-		summary: string(result.summary, "summary"),
+		summary: nonEmptyString(result.summary, "summary"),
 		artifacts: result.artifacts.map((artifact, index) => {
 			if (!artifact || typeof artifact !== "object" || Array.isArray(artifact))
 				throw new Error(`artifacts[${index}] must be an object`);
 			const item = artifact as Record<string, unknown>;
 			return {
-				path: string(item.path, `artifacts[${index}].path`),
-				kind: string(item.kind, `artifacts[${index}].kind`),
+				path: nonEmptyString(item.path, `artifacts[${index}].path`),
+				kind: nonEmptyString(item.kind, `artifacts[${index}].kind`),
 			};
 		}),
 		changedFiles: strings(result.changedFiles ?? [], "changedFiles"),
 		limitations: strings(result.limitations ?? [], "limitations"),
-		resultPackage: string(result.resultPackage, "resultPackage"),
+		resultPackage: nonEmptyString(result.resultPackage, "resultPackage"),
 	};
 }
 
@@ -388,16 +376,16 @@ async function validateResultPackage(
 	result: WorkerResult,
 ): Promise<void> {
 	if (result.resultPackage === "inline") return;
-	const path = resolve(projectRoot, result.resultPackage);
-	const rel = relative(projectRoot, path);
-	if (
-		rel === ".." ||
-		rel.startsWith(`..${process.platform === "win32" ? "\\" : "/"}`) ||
-		isAbsolute(rel)
-	)
+	let path: string;
+	try {
+		path = await resolveExistingProjectPath(projectRoot, result.resultPackage);
+	} catch (error) {
+		if ((error as NodeJS.ErrnoException).code === "ENOENT")
+			throw new Error("resultPackage path is unavailable");
 		throw new Error(
 			"resultPackage must be 'inline' or a project-relative path",
 		);
+	}
 	try {
 		await access(path, constants.R_OK);
 	} catch {

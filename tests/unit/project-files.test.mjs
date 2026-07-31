@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -7,6 +7,7 @@ import test from "node:test";
 import {
 	discoverProjectFiles,
 	parseEvidenceEntries,
+	resolveExistingProjectPath,
 	validateProjectMarkdown,
 	writeApprovedFile,
 } from "../../.test-build/workbench/src/project-files.js";
@@ -48,6 +49,17 @@ test("canonical discovery selects the nearest project and reports optional files
 	assert.equal(
 		discovery.files.find((file) => file.name === "AGENTS.md").required,
 		false,
+	);
+});
+
+test("existing project paths reject symlink escapes", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-path-"));
+	const outside = join(tmpdir(), `pi-sych-outside-${Date.now()}.md`);
+	await writeFile(outside, "outside\n");
+	await symlink(outside, join(root, "escape.md"));
+	await assert.rejects(
+		resolveExistingProjectPath(root, "escape.md"),
+		/Project artifact path leaves the project root/,
 	);
 });
 
@@ -96,4 +108,179 @@ test("approved writes are atomic and unapproved writes do not mutate", async () 
 	assert.equal(await readFile(target, "utf8"), "before\n");
 	await writeApprovedFile(target, "after\n", true);
 	assert.equal(await readFile(target, "utf8"), "after\n");
+});
+
+// Characterization cases for the approved v2.1.0 compaction helpers. These
+// remain deliberately at the file/model boundary; no credentials are needed.
+async function compaction() {
+	return import("../../.test-build/workbench/src/compaction.js");
+}
+
+const workingMemory = {
+	currentTask: "Add working-memory compaction.",
+	purpose: "Preserve current task state.",
+	completed: ["Read the approved plan."],
+	successfulApproaches: ["Use bounded structured state."],
+	failedApproaches: [],
+	inProgress: ["Write characterization tests."],
+	blockers: [],
+	criticalContext: ["INBOX.md remains human-review proposal state."],
+	nextAction: "Implement compact helpers.",
+	relevantFiles: ["PROJECT.md", "missing.md"],
+};
+
+const add = {
+	operation: "add",
+	targetFile: "TODO.md",
+	proposedText: "Keep accepted tasks in TODO.md.",
+	rationale: "This is durable task state.",
+};
+
+test("promotion inbox parses and formats one fenced JSON object, and a missing inbox is empty", async () => {
+	const {
+		candidateId,
+		countPromotionCandidates,
+		formatPromotionInbox,
+		parsePromotionInbox,
+		readPromotionInbox,
+	} = await compaction();
+	const inbox = {
+		version: 1,
+		candidates: [
+			{ ...add, id: candidateId(add), createdAt: "2026-01-01T00:00:00.000Z" },
+		],
+	};
+	const markdown = formatPromotionInbox(inbox);
+	assert.match(markdown, /^# Memory promotion inbox/m);
+	assert.deepEqual(parsePromotionInbox(markdown), inbox);
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-inbox-"));
+	assert.deepEqual(await readPromotionInbox(root), {
+		version: 1,
+		candidates: [],
+	});
+	assert.equal(await countPromotionCandidates(root), 0);
+	await writeFile(join(root, "INBOX.md"), markdown);
+	assert.equal(await countPromotionCandidates(root), 1);
+});
+
+test("candidate IDs normalize targets and deduplicate without reordering existing proposals", async () => {
+	const { candidateId, mergePromotionCandidates } = await compaction();
+	const update = {
+		operation: "update",
+		targetFile: "DECISIONS.md",
+		existingText: "Candidates are reviewed.",
+		proposedText: "Candidates are reviewed by a human.",
+		rationale: "Record the boundary.",
+	};
+	assert.equal(
+		candidateId(add),
+		candidateId({ ...add, targetFile: "./TODO.md" }),
+	);
+	assert.match(candidateId(add), /^P-[a-f0-9]{12}$/);
+	const first = {
+		...add,
+		id: candidateId(add),
+		createdAt: "2026-01-01T00:00:00.000Z",
+	};
+	const second = {
+		...update,
+		id: candidateId(update),
+		createdAt: "2026-01-02T00:00:00.000Z",
+	};
+	assert.deepEqual(mergePromotionCandidates([first], [first, second]), [
+		first,
+		second,
+	]);
+});
+
+test("model output accepts direct or json-fenced JSON and rejects invalid working memory", async () => {
+	const { parseCompactionModelOutput } = await compaction();
+	const output = { workingMemory, promotions: [add] };
+	assert.deepEqual(parseCompactionModelOutput(JSON.stringify(output)), output);
+	assert.deepEqual(
+		parseCompactionModelOutput(`\`\`\`json\n${JSON.stringify(output)}\n\`\`\``),
+		output,
+	);
+	assert.throws(
+		() => parseCompactionModelOutput("```\n{}\n```"),
+		/json fence|JSON/i,
+	);
+	assert.throws(
+		() =>
+			parseCompactionModelOutput(
+				JSON.stringify({ workingMemory: {}, promotions: [] }),
+			),
+		/currentTask|nextAction/i,
+	);
+});
+
+test("working memory validates fields, filters absent relevant files, and renders only nonempty sections", async () => {
+	const { renderWorkingMemory, validateWorkingMemory } = await compaction();
+	const validated = validateWorkingMemory(
+		workingMemory,
+		new Set(["PROJECT.md"]),
+	);
+	assert.deepEqual(validated.relevantFiles, ["PROJECT.md"]);
+	const rendered = renderWorkingMemory(validated);
+	assert.match(rendered, /^# Working memory/m);
+	assert.match(rendered, /### Completed\n\n- Read the approved plan\./);
+	assert.match(rendered, /## Relevant existing files\n\n- PROJECT\.md/);
+	assert.doesNotMatch(rendered, /### Failed approaches|### Blockers/);
+	assert.throws(
+		() =>
+			validateWorkingMemory({ ...workingMemory, nextAction: "" }, new Set()),
+		/nextAction/i,
+	);
+});
+
+test("promotion validation requires an allowed target and an exact update excerpt", async () => {
+	const { validatePromotion } = await compaction();
+	const canonical = {
+		allowedTargets: ["TODO.md", "DECISIONS.md"],
+		files: [{ path: "DECISIONS.md", content: "Candidates are reviewed.\n" }],
+	};
+	const update = {
+		operation: "update",
+		targetFile: "DECISIONS.md",
+		existingText: "Candidates are reviewed.",
+		proposedText: "Candidates are reviewed by a human.",
+		rationale: "Record the boundary.",
+	};
+	assert.deepEqual(validatePromotion(add, canonical), add);
+	assert.deepEqual(validatePromotion(update, canonical), update);
+	assert.throws(
+		() => validatePromotion({ ...update, existingText: "missing" }, canonical),
+		/exact|existingText/i,
+	);
+	assert.throws(
+		() => validatePromotion({ ...add, targetFile: "notes.md" }, canonical),
+		/target/i,
+	);
+});
+
+test("canonical snapshots retain standard absent targets but admit only declared authoritative Markdown", async () => {
+	const { collectCanonicalSnapshot } = await compaction();
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-canonical-"));
+	await writeFile(join(root, "DECISIONS.md"), "# Decisions\n");
+	await writeFile(join(root, "PLAN.md"), "# Plan\n");
+	const snapshot = await collectCanonicalSnapshot({
+		projectRoot: root,
+		manifest: {
+			artifacts: [
+				{ path: "PLAN.md", role: "plan" },
+				{ path: "notes.txt", role: "notes" },
+			],
+		},
+	});
+	assert.deepEqual(snapshot.allowedTargets.slice(0, 6), [
+		"PROJECT.md",
+		"AGENTS.md",
+		"STYLE.md",
+		"EVIDENCE.md",
+		"DECISIONS.md",
+		"TODO.md",
+	]);
+	assert.ok(snapshot.absentStandardTargets.includes("PROJECT.md"));
+	assert.ok(snapshot.allowedTargets.includes("PLAN.md"));
+	assert.equal(snapshot.allowedTargets.includes("notes.txt"), false);
 });

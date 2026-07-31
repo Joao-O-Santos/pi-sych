@@ -1,5 +1,25 @@
 # Evidence
 
+## E-012 --- v2.1.0 compaction and release gate passed
+
+**Status:** verified **Kind:** observed behaviour and independent review
+**Source:** `FOLLOW_UP.md`, `REUSE_REDUCTION_PLAN.md`, package scripts,
+unit/integration/smoke checks, package dry run, and dependency audit
+**Supports:** working-memory compaction, human-review `INBOX.md`
+promotions, status visibility, and v2.1.0 release readiness
+**Evidence:** Typecheck, Biome/Markdown style checks, clean
+`npm ci --ignore-scripts`, MCPorter dependency validation, 49 unit
+checks, 4 integration checks, 3 smoke checks, package dry run (114
+files), whitespace check, and the 2,300/2,500 production TypeScript
+budget passed. The reuse audit retained Pi's compaction lifecycle,
+message conversion/serialization, model registry, authentication,
+cancellation, and usage accounting; Pi's fixed summary helpers cannot
+implement the one-call working-memory plus promotion contract.
+**Limits:** Opt-in real-Pi usage was not rerun for v2.1.0.
+`npm audit --omit=dev` retains one inherited high-severity
+`brace-expansion` advisory below `@earendil-works/pi-coding-agent`;
+npm's dry-run offered no dependency upgrade. **Checked:** 2026-07-31
+
 ## E-001 --- Deterministic package checks pass
 
 **Status:** verified **Kind:** observed behaviour **Source:**
@@ -10,6 +30,24 @@ integration, and smoke checks; the current deterministic suites pass
 with 40 unit tests, 3 integration tests, and 2 smoke checks. **Limits:**
 A passing local check does not establish host-wide security, real-model
 usage, or prove all scientific workflows. **Checked:** 2026-07-29
+
+## E-011 --- v2.0.0 refactor verification passed
+
+**Status:** verified **Kind:** observed behaviour and independent review
+**Source:** package scripts, unit/integration/smoke/usage tests, package
+dry run, CI YAML parse, `MIGRATION_LEDGER.md`, and three independent
+read-only reviews **Supports:** v2.0.0 implementation readiness
+**Evidence:** Typecheck, Biome lint/format, Pandoc Markdown check,
+MCPorter dependency check, 40 unit tests, 4 integration tests, 3 smoke
+checks, opt-in real-Pi usage, source budget (\~1850/2000), package dry
+run (113 files), CI YAML parsing, and whitespace checks passed. Reviews
+identified and the implementation addressed skeletal module routing and
+examples, canonical existing-file symlink escape, documented skill
+precedence, plan fallback coverage, concise unavailable errors, section
+routing, stale documentation, and diagram layout. **Limits:** The npm
+release has not been created or published; the production audit retains
+the inherited high-severity `brace-expansion` advisory through Pi.
+**Checked:** 2026-07-31
 
 ## E-010 --- v1.2.0 Markdown, dependency, and release gate passed
 
@@ -43,14 +81,19 @@ audit still reports the inherited high-severity `brace-expansion`
 advisory through Pi. Renderer checks establish literal brace handling,
 not identical styling in every Markdown host. **Checked:** 2026-07-30
 
-## E-002 --- Public skill corpus is separated from private overlay
+## E-002 --- Six-skill corpus has direct module structure
 
-**Status:** verified **Kind:** observed behaviour **Source:**
-`tests/unit/skills.test.mjs` **Supports:** public/private separation and
-skill-corpus claims **Evidence:** The skill tests check front matter and
-reject superseded integration, provider, and personal-overlay language.
-**Limits:** Static corpus checks do not assess the quality of every
-future skill revision. **Checked:** 2026-07-28
+**Status:** verified **Kind:** observed behaviour **Source:** `skills/`,
+`tests/unit/skills.test.mjs`, and
+`tests/integration/package-load.test.mjs` **Supports:** the public
+six-skill catalog, one-level guidance/example modules, and Pi discovery
+claims **Evidence:** Unit tests verify exactly six accepted names and
+descriptions, direct module routes, and non-skill module files. The RPC
+integration test loaded the corpus through Pi and found only `project`,
+`write`, `analyze`, `code`, `review`, and `research`. **Limits:**
+Structural tests and successful discovery do not establish model
+adherence or the quality of every future skill revision. **Checked:**
+2026-07-30
 
 ## E-003 --- Configured remote-research transports passed bounded live checks
 
@@ -66,21 +109,20 @@ content remains external and non-authoritative until reviewed; OpenAlex
 uses a third-party rolling `npx` server and full-host execution.
 **Checked:** 2026-07-28
 
-## E-009 --- Skill layering and opinionated defaults landed in the public corpus
+## E-009 --- Historical v1.2 skill-layering evidence (superseded)
 
-**Status:** verified **Kind:** observed behaviour and package contents
-**Source:** `skills/`, `templates/STYLE.md`,
+**Status:** superseded **Kind:** historical observed behaviour and
+package contents **Source:** `skills/`, `templates/STYLE.md`,
 `templates/revealjs-baseline.css`, `README.md`,
 `tests/unit/skills.test.mjs`, formatter evaluation notes **Supports:**
-multi-skill review composition, overridable package defaults,
-non-mutating retrospective guidance, and external-inspiration placement
-claims **Evidence:** Public skills now include `review-structure`,
-`review-detail`, and `review-copyedit`; `artifact-review` documents
-composition without a controller. Writing, style, scholarly, theory,
-R/Quarto, slides, verification, strategy, reconcile, retrospective, and
-project briefing/initialization skills were expanded. Formatter
-evaluation: preferred host command is Pandoc Markdown with pipe tables
-retained and grid/simple/multiline tables disabled
+historical v1.2 review composition and package-default claims only
+**Evidence:** This entry records the v1.2 corpus that was replaced by
+the v2.0 six-skill architecture. See E-002 for the current skill
+surface. The former writing, style, scholarly, theory, R/Quarto, slides,
+verification, strategy, reconcile, retrospective, and project
+briefing/initialization guidance was consolidated during that migration.
+Formatter evaluation: preferred host command is Pandoc Markdown with
+pipe tables retained and grid/simple/multiline tables disabled
 (`-f markdown -t markdown+pipe_tables-simple_tables-multiline_tables-grid_tables --wrap=auto --columns=72`);
 bare `-t markdown` rewrote tables to grids; GFM mode was evaluated but
 not preferred; Prettier rewrote fences/tables; dprint wrapped prose and

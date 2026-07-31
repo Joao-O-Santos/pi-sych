@@ -1,13 +1,13 @@
 # Project synchronization
 
-``` json
+```json
 {
   "version": 1,
-  "confirmedAt": "2026-07-30T19:08:14.650Z",
+  "confirmedAt": "2026-07-31T02:10:17.841Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:c30e106c3eeebdd66c359049bec1b9beb774f991d0ab3b58ea7b9b8c34059bfe",
+      "fingerprint": "sha256:a3cdb1932ab3ee95a6e416edb2d5762bfd0e6526f06303aab60b6ac9f6291552",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -18,13 +18,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T18:50:12.097Z",
-        "reason": "Reviewed the final v1.2.0 project state, evidence, architecture, human documentation, latest-dependency manifest, Pandoc formatting workflow, and completed release-gate results."
+        "at": "2026-07-31T02:10:17.841Z",
+        "reason": "Reviewed the v2.1.0 working-memory compaction, INBOX proposal boundary, reuse reductions, package metadata, documentation, completed deterministic release gate, and recorded inherited audit limitation."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:9744b8d140e0800c66400550c3fe35b34fea4a52cc4f794b15852ed232114cf8",
+      "fingerprint": "sha256:f1a7cd72d314517b79601c9ca9e26b6c3af4dbde16bc8c7bf3dce4fa943febc0",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -38,26 +38,26 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T19:07:46.286Z",
-        "reason": "Reviewed the v1.2.0 Pandoc 3.10.1 CI correction, corrected release-gate evidence, packaged formatter script dependency, and final development guidance."
+        "at": "2026-07-31T02:10:17.841Z",
+        "reason": "Reviewed the v2.1.0 working-memory compaction, INBOX proposal boundary, reuse reductions, package metadata, documentation, completed deterministic release gate, and recorded inherited audit limitation."
       }
     },
     {
       "path": "ARCHITECTURE.md",
-      "fingerprint": "sha256:c93f947b6756576dfd3ec9eeb47bebf75125e1677a5f8166ce00ca3390809dc1",
+      "fingerprint": "sha256:aae97749ef3480acd196a6425c145ac8df416c72d6e3be16c72df965ccd55a5c",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T18:50:12.097Z",
-        "reason": "Reviewed the final v1.2.0 project state, evidence, architecture, human documentation, latest-dependency manifest, Pandoc formatting workflow, and completed release-gate results."
+        "at": "2026-07-31T02:10:17.841Z",
+        "reason": "Reviewed the v2.1.0 working-memory compaction, INBOX proposal boundary, reuse reductions, package metadata, documentation, completed deterministic release gate, and recorded inherited audit limitation."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:704bf3b16de8c9b788b4ef03811745663ffd9d43e18c6377962428612571ecaa",
+      "fingerprint": "sha256:94ff9ebbd8cce8cb3f04661dcd8e73cdbbb1060a9a61bed69fdf27abad617acb",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -69,13 +69,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T19:08:14.650Z",
-        "reason": "Reviewed README compatibility with the final v1.2.0 package metadata, latest-dependency policy, versioned assets, and packaged Pandoc formatter."
+        "at": "2026-07-31T02:10:17.841Z",
+        "reason": "Reviewed the v2.1.0 working-memory compaction, INBOX proposal boundary, reuse reductions, package metadata, documentation, completed deterministic release gate, and recorded inherited audit limitation."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:690b6723a29ae4ed0346b5e7e7551b02e956f47bea56f20eabc4df4c632ae277",
+      "fingerprint": "sha256:f51cea338786744b1548cf10fd0cbe9e407b3c5f633646c29a57501eef5485bc",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -89,34 +89,34 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T19:07:46.286Z",
-        "reason": "Reviewed the v1.2.0 Pandoc 3.10.1 CI correction, corrected release-gate evidence, packaged formatter script dependency, and final development guidance."
+        "at": "2026-07-31T02:10:17.841Z",
+        "reason": "Reviewed the v2.1.0 working-memory compaction, INBOX proposal boundary, reuse reductions, package metadata, documentation, completed deterministic release gate, and recorded inherited audit limitation."
       }
     },
     {
       "path": "docs/CONFIGURATION.md",
-      "fingerprint": "sha256:8775ffd8afabaeb77783eba22cca41c26568d0f1bd3eba0f3de3a242799434a0",
+      "fingerprint": "sha256:60bf1c6bfaf564e17d8e84c30c86d1f226212e135b456d20fd0f50305a6c1f4c",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T18:50:12.097Z",
-        "reason": "Reviewed the final v1.2.0 project state, evidence, architecture, human documentation, latest-dependency manifest, Pandoc formatting workflow, and completed release-gate results."
+        "at": "2026-07-31T02:10:17.841Z",
+        "reason": "Reviewed the v2.1.0 working-memory compaction, INBOX proposal boundary, reuse reductions, package metadata, documentation, completed deterministic release gate, and recorded inherited audit limitation."
       }
     },
     {
       "path": "docs/DEVELOPMENT.md",
-      "fingerprint": "sha256:c7cd6471f8de9325ee8487d770147d91d70d2e8898b26895ed71952fc9d2946b",
+      "fingerprint": "sha256:133399e880b30ce84d2993f61315e6352d8bb0a867fab9e89aa5be4919e3bb29",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "development-checks"
       ],
       "acknowledgement": {
-        "at": "2026-07-30T19:07:46.286Z",
-        "reason": "Reviewed the v1.2.0 Pandoc 3.10.1 CI correction, corrected release-gate evidence, packaged formatter script dependency, and final development guidance."
+        "at": "2026-07-31T02:10:17.841Z",
+        "reason": "Reviewed the v2.1.0 working-memory compaction, INBOX proposal boundary, reuse reductions, package metadata, documentation, completed deterministic release gate, and recorded inherited audit limitation."
       }
     }
   ]

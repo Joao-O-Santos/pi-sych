@@ -4,7 +4,9 @@ import { readdir, readFile } from "node:fs/promises";
 import { join, relative } from "node:path";
 
 const root = process.cwd();
-const limit = 2_000;
+// v2.1 adds the approved working-memory boundary; retain a small,
+// reviewable cap rather than exempting it from the production budget.
+const limit = 2_500;
 const excluded = new Set([
 	"extensions/workbench/src/mcporter.ts",
 	"extensions/workbench/src/plannotator.ts",

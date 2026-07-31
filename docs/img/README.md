@@ -1,9 +1,9 @@
 # Architecture diagrams
 
-- `architecture.png` presents the minimal public tools, worker
-  capability modes, project-file roles, and human-ownership boundary.
-- `supervisors_context.png` presents the context available at session
-  start, progressive disclosure, and bounded-worker packet.
+- `architecture.png` presents the minimal public tools, six-skill
+  surface, project-file roles, explicit adapters, and human boundary.
+- `supervisors_context.png` presents session-start context, selected
+  umbrella/module disclosure, independent review, and worker packets.
 - The diagrams are explanatory summaries. `README.md`,
   `ARCHITECTURE.md`, and the implementation remain authoritative for
   exact behavior.

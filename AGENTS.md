@@ -15,9 +15,9 @@ bounded delegation, and human-owned judgment.
 
 - Keep mechanically decidable behavior in TypeScript: process bounds,
   schemas, safe paths, hashes, dependency traversal, atomic
-  acknowledgement, and immutable worker results.
-- Keep semantic interpretation in skills and normal supervisor/user
-  conversation.
+  acknowledgement, immutable worker results, and review fallback state.
+- Keep semantic interpretation in the six umbrella skills and normal
+  supervisor/user conversation.
 - A hash mismatch proves only that content changed after
   acknowledgement.
 - Preserve MCPorter for explicit remote research and Plannotator as a
@@ -45,7 +45,8 @@ bounded delegation, and human-owned judgment.
   establishes another convention.
 - Do not push, tag, publish, or release without separate instruction.
 - Consequential architecture and synchronization decisions require an
-  approved plan.
+  approved plan. Long or consequential plans stay in project-local
+  Markdown and wait for browser or file review.
 - Ask the project owner only when a genuinely consequential decision
   remains; otherwise complete the approved work and report limitations.
 - Keep `TODO.md` as task state, not architecture or evidence.
@@ -54,6 +55,8 @@ bounded delegation, and human-owned judgment.
 
 ## Verification
 
-Run the repository's formatter, type checker, tests, smoke checks,
-package validation, production audit, and source-budget check as
-applicable. Report actual outcomes and known upstream limitations.
+For substantive behavior changes, obtain independent test design before
+implementation and an independent read-only review afterwards. Run the
+repository's formatter, type checker, tests, smoke checks, package
+validation, production audit, and source-budget check as applicable.
+Report actual outcomes and known upstream limitations.

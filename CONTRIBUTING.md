@@ -8,7 +8,9 @@ code or prose is correct.
 
 - Work directly on `main` unless isolation is genuinely needed.
 - Keep each change focused, reviewable, and truthful about what was
-  checked.
+  checked. For substantive behavior changes, obtain independent test
+  design before implementation and independent read-only review after
+  it.
 - Do not add credentials, personal configuration, generated runtime
   state, or unverified claims.
 - Follow existing repository conventions. Do not push, alter remotes,
@@ -28,8 +30,10 @@ git diff --check
 ```
 
 Pi extensions and skills run with the local user's permissions. They are
-not a sandbox. See Pi's [security](https://pi.dev/docs/latest/security)
-and [containerization](https://pi.dev/docs/latest/containerization)
+not a sandbox. Keep long or consequential plans in project-local
+Markdown and wait for browser or file review before implementation. See
+Pi's [security](https://pi.dev/docs/latest/security) and
+[containerization](https://pi.dev/docs/latest/containerization)
 documentation when isolation is needed.
 
 ## Releases

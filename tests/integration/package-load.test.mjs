@@ -86,6 +86,38 @@ test("public workbench extension loads without private configuration", async () 
 	assert.equal(names.includes("plannotator"), false);
 });
 
+test("Pi discovers exactly the six public skills without exposing modules", async () => {
+	const { commands, stderr } = await getCommands([
+		"--mode",
+		"rpc",
+		"--no-session",
+		"--no-extensions",
+		"--no-skills",
+		"--skill",
+		resolve("skills"),
+		"--no-prompt-templates",
+		"--no-themes",
+		"--no-context-files",
+	]);
+	assert.equal(stderr, "");
+	assert.deepEqual(
+		commands
+			.filter((command) =>
+				command.sourceInfo.path.startsWith(resolve("skills")),
+			)
+			.map((command) => command.name)
+			.sort(),
+		[
+			"skill:analyze",
+			"skill:code",
+			"skill:project",
+			"skill:research",
+			"skill:review",
+			"skill:write",
+		],
+	);
+});
+
 test("bootstrapped worker starts with only the worker extension", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-worker-load-"));
 	const agentDir = join(root, "agent");

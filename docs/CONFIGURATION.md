@@ -1,26 +1,11 @@
 # Configuration
 
-Most people need only a private model-profile file before using workers.
-Pi Sych keeps provider choices, credentials, model ranking, and personal
-examples outside the public package.
+Pi Sych keeps credentials, providers, model ranking, and personal skill
+customization outside the public package.
 
-## Public package
+## Worker models
 
-`package.json` loads the main Pi extension. Workers and MCPorter load
-only for an explicitly requested task.
-
-Pi Sych declares `@plannotator/pi-extension` as a runtime dependency but
-never loads its extension entrypoint. The workbench imports documented
-lazy browser helpers for `submit_plan`, `/plannotator-annotate`,
-`/plannotator-last`, and `/plannotator-review`. It does not register
-Plannotator plan-mode, `/plannotator`, or related planning obligations.
-Do not separately install or configure Plannotator as a Pi extension for
-this package.
-
-## Models and worker runtime
-
-Create `~/.config/pi/pi-sych/models.json` with model metadata and
-user-ranked profiles:
+Create `~/.config/pi/pi-sych/models.json` with ranked private profiles:
 
 ``` json
 {
@@ -38,48 +23,38 @@ user-ranked profiles:
 }
 ```
 
-When you ask Pi to dispatch a worker, `dispatch_worker` selects the
-first model in the requested profile. `PI_SYCH_MODEL_CATALOG` selects
-another catalog; `PI_SYCH_MODEL_PROFILES` is a direct JSON override for
-automation. Workers default to 90 seconds; set a deliberate bounded
-`timeoutMs` override for longer work.
+`dispatch_worker` selects the first model in its requested profile and
+defaults to 90 seconds. `PI_SYCH_MODEL_CATALOG` selects another catalog;
+`PI_SYCH_MODEL_PROFILES` supplies a direct JSON override for automation;
+and `PI_SYCH_WORKER_AGENT_DIR` selects the worker runtime directory.
 
-`PI_SYCH_WORKER_AGENT_DIR` chooses the worker runtime directory.
-`PI_SYCH_PI_BIN` selects the Pi executable for development tests. The
-bootstrap helper writes worker-only settings and an MCPorter exposure
-policy, and symlinks available auth/model files rather than copying
-them:
+## Skill customization
 
-``` sh
-node scripts/bootstrap-worker-agent-dir.mjs \
-  --agent-dir ~/.cache/pi/pi-sych/worker-agent \
-  --package-root /path/to/pi-sych \
-  --supervisor-agent-dir ~/.config/pi
-```
-
-## Private skill examples
-
-A user-owned example overlay for a package skill belongs at:
+Pi Sych exposes six umbrella skills. To customize examples durably, copy
+one umbrella directory into either:
 
 ``` text
-~/.config/pi/skills/<skill-name>/examples.md
+~/.pi/agent/skills/
+.pi/skills/
+.agents/skills/
 ```
 
-The matching package skill reads it when present. Examples express
-preference; they are not evidence or project requirements.
+For named worker selection, `.pi/skills/` wins over `.agents/skills/`,
+which wins over user and packaged skills. Edit its
+`modules/*/examples.md` files. Leave `guidance.md` intact unless you
+intentionally want to change behavioral guidance. User or project skills
+can add language- and framework-specific specialization without
+modifying Pi Sych.
 
-## Remote research
+## Optional integrations
 
-Set `remoteResearch: true` only for an assigned `dispatch_worker` call.
-It receives the `pi-mcporter` proxy and the explicit `MCPORTER_CONFIG`;
-ordinary workers receive neither. The generated worker policy exposes
-Context7, OpenAlex, and Scholar Gateway. `PI_SYCH_MCPORTER_CONFIG`
-selects the private transport configuration and otherwise defaults to
-`~/.config/pi-sych/mcp/mcporter.json`.
+Plannotator is a runtime dependency but Pi Sych loads only its
+documented lazy browser helpers. `submit_plan` falls back to file review
+when those helpers cannot start. Do not separately enable Plannotator's
+extension or plan mode for Pi Sych.
 
-Configure only intended MCP servers and use `"imports": []` when the
-installed MCPorter supports it. `/pi-sych-mcp` reports bridge/runtime
-versions and configuration presence without printing credentials.
-`node scripts/pi-sych-mcp-auth.mjs [--no-browser]` starts Scholar
-Gateway OAuth. MCPorter owns credential storage; never put credentials
-in this package, worker artifacts, or logs.
+Set `remoteResearch: true` only for an assigned worker call. It receives
+MCPorter and explicit private configuration; ordinary workers do not.
+`PI_SYCH_MCPORTER_CONFIG` otherwise defaults to
+`~/.config/pi-sych/mcp/mcporter.json`. `/pi-sych-mcp` reports diagnostic
+status without printing credentials.
