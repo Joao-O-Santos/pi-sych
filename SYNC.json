@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-01T14:40:59.764Z",
+  "confirmedAt": "2026-08-01T14:43:01.837Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -105,15 +105,15 @@
     },
     {
       "path": "docs/DEVELOPMENT.md",
-      "fingerprint": "sha256:133399e880b30ce84d2993f61315e6352d8bb0a867fab9e89aa5be4919e3bb29",
+      "fingerprint": "sha256:2454f89648e382cc42b68c76f94622d77e1fd94ab21f000a6b1bbe0c80d7b1b8",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "development-checks"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T02:10:17.841Z",
-        "reason": "Reviewed the v2.1.0 working-memory compaction, INBOX proposal boundary, reuse reductions, package metadata, documentation, completed deterministic release gate, and recorded inherited audit limitation."
+        "at": "2026-08-01T14:43:01.837Z",
+        "reason": "Reviewed the completed contributor documentation rewrite and the successful v4.0.3 release gate; its current fingerprint is now recorded."
       }
     }
   ]
