@@ -328,6 +328,7 @@ checks, 5 integration checks, two opt-in live usage checks, MCPorter
 dependency check, smoke check, source budget (1,550/2,000), package dry
 run, and whitespace check passed. **Limits:** `npm audit --omit=dev`
 reports one inherited high-severity `brace-expansion` advisory below
-Pi's dependency tree; it is not a Pi Sych dependency change.
-Browser-mediated Plannotator behavior remains external. **Checked:**
+Pi's dependency tree; it is not a Pi Sych dependency change. The signed
+commit and signed `v4.0.0` tag were pushed to `origin`. Browser-mediated
+Plannotator behavior and npm publication remain external. **Checked:**
 2026-08-01

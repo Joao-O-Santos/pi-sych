@@ -63,12 +63,12 @@ TypeScript is about 1,550 lines within the 2,000-line cap.
 
 ## Previous action
 
-{verified} Completed the simplification implementation and deterministic
-checks: style/Markdown/type checks, 20 unit checks, 5 integration
-checks, and the 2,000-line source budget. Live usage, package
-validation, and production audit remain release-gate work.
+{verified} Released the breaking simplification as signed Git commit
+`0e70feb` and signed tag `v4.0.0`, both pushed to `origin`. The release
+gate passed style/Markdown/type checks, 21 unit checks, 5 integration
+checks, two live usage checks, dependency and smoke checks, source
+budget, package dry run, production audit, and whitespace checks.
 
 ## Immediate next step
 
-{accepted} Complete release checks for the simplification tree, then
-create its signed patch tag and release.
+{accepted} Publish `v4.0.0` to npm only with separate owner instruction.

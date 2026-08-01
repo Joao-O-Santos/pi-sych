@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-01T12:28:44.085Z",
+  "confirmedAt": "2026-08-01T12:48:28.797Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:80df98db3cc72edaf590731f3256649f1a1b3f6659783d7a774f1d49b0b215e8",
+      "fingerprint": "sha256:a7f7bef997e8324c99b24260938a18e0ca9994275458c2db720cfe7199c40ff3",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,13 +15,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T13:19:35.114Z",
-        "reason": "Reconciled v3.0.0 release tree: re-acknowledged documentation, version bump, and release notes after the docs phase."
+        "at": "2026-08-01T12:48:28.797Z",
+        "reason": "Reviewed the completed v4.0.0 Git release, current release documentation, verification evidence, and package metadata; npm publication remains pending owner instruction."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:34c416d93f79c5ec97aa4b65d55a599a1c7f045373be507c7f6e71c22d8df580",
+      "fingerprint": "sha256:25382f4d1a672b936925aba022bfdab5b206cab02153e97889d2edc3c57eca72",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,26 +35,26 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T12:28:44.085Z",
-        "reason": "Reviewed v3.0.5 simplification implementation, release documentation, verification evidence, and package metadata after the complete release gate."
+        "at": "2026-08-01T12:48:28.797Z",
+        "reason": "Reviewed the completed v4.0.0 Git release, current release documentation, verification evidence, and package metadata; npm publication remains pending owner instruction."
       }
     },
     {
       "path": "ARCHITECTURE.md",
-      "fingerprint": "sha256:46db58c547d1c760070f4e69331e37b0bd36e5e9b07b204dce3b09cccaab9b55",
+      "fingerprint": "sha256:b6a7ea273a62d9fbeb4580bee32131f0c31f2a0c7f5f22307292525335adfbbe",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T12:28:44.085Z",
-        "reason": "Reviewed v3.0.5 simplification implementation, release documentation, verification evidence, and package metadata after the complete release gate."
+        "at": "2026-08-01T12:48:28.797Z",
+        "reason": "Reviewed the completed v4.0.0 Git release, current release documentation, verification evidence, and package metadata; npm publication remains pending owner instruction."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:7c24acac0a9170671beba7835e12f4e08cf2a1a5dd973cef339769ca4ca948c0",
+      "fingerprint": "sha256:8d34455f6cdaaf12b51b470e922bdf7f05ab08f12bd35648480939165a516ea9",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -66,13 +66,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T12:28:44.085Z",
-        "reason": "Reviewed v3.0.5 simplification implementation, release documentation, verification evidence, and package metadata after the complete release gate."
+        "at": "2026-08-01T12:48:28.797Z",
+        "reason": "Reviewed the completed v4.0.0 Git release, current release documentation, verification evidence, and package metadata; npm publication remains pending owner instruction."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:c6ec8249a0c853851fdd2038f299df0c270e973534f20c2e40ba224eb02076c3",
+      "fingerprint": "sha256:6c88df2f9a39da839892a7794475c182197dc7688c762ee323d1f51c829d1916",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -86,8 +86,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T12:28:44.085Z",
-        "reason": "Reviewed v3.0.5 simplification implementation, release documentation, verification evidence, and package metadata after the complete release gate."
+        "at": "2026-08-01T12:48:28.797Z",
+        "reason": "Reviewed the completed v4.0.0 Git release, current release documentation, verification evidence, and package metadata; npm publication remains pending owner instruction."
       }
     },
     {
@@ -99,8 +99,8 @@
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T12:28:44.085Z",
-        "reason": "Reviewed v3.0.5 simplification implementation, release documentation, verification evidence, and package metadata after the complete release gate."
+        "at": "2026-08-01T12:48:28.797Z",
+        "reason": "Reviewed the completed v4.0.0 Git release, current release documentation, verification evidence, and package metadata; npm publication remains pending owner instruction."
       }
     },
     {
