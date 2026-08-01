@@ -3,7 +3,14 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
-## v4.0.0 - 2026-08-01
+## v4.0.2 - 2026-08-01
+
+### Packaging
+
+- Point the Pi package manifest and README image at the published patch
+  release rather than the unpublished `4.0.0` package.
+
+## v4.0.1 - 2026-08-01
 
 ### CI
 

@@ -73,4 +73,9 @@ budget, package dry run, production audit, and whitespace checks.
 
 {verified} Released the CI fix as signed commit `7b50a12` and signed tag
 `v4.0.1`, both pushed to `origin`. GitLab pipelines passed for `main`
-and `v4.0.1`; publishing remains handled outside this repository.
+and `v4.0.1`.
+
+## Immediate next step
+
+{accepted} Release `v4.0.2` to repair the package-manifest image URL;
+publishing remains handled by GitLab CI.
