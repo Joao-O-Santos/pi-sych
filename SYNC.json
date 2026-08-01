@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-01T12:48:28.797Z",
+  "confirmedAt": "2026-08-01T13:00:43.147Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:a7f7bef997e8324c99b24260938a18e0ca9994275458c2db720cfe7199c40ff3",
+      "fingerprint": "sha256:d5ddc6a39ee04f0f577114264f6a52c5d50e5e25b9e8f9c52d4805bd07da8b81",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,13 +15,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T12:48:28.797Z",
-        "reason": "Reviewed the completed v4.0.0 Git release, current release documentation, verification evidence, and package metadata; npm publication remains pending owner instruction."
+        "at": "2026-08-01T13:00:43.147Z",
+        "reason": "Reviewed the successful v4.0.1 GitLab pipelines, signed patch tag, current release metadata, and CI repair evidence; external publication is handled by GitLab/OCI."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:25382f4d1a672b936925aba022bfdab5b206cab02153e97889d2edc3c57eca72",
+      "fingerprint": "sha256:2e8f5a600e57647d335d9fb64e5319ca8edf059faa312a19fb7965d9eb526dcf",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,8 +35,8 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T12:48:28.797Z",
-        "reason": "Reviewed the completed v4.0.0 Git release, current release documentation, verification evidence, and package metadata; npm publication remains pending owner instruction."
+        "at": "2026-08-01T13:00:43.147Z",
+        "reason": "Reviewed the successful v4.0.1 GitLab pipelines, signed patch tag, current release metadata, and CI repair evidence; external publication is handled by GitLab/OCI."
       }
     },
     {
@@ -48,8 +48,8 @@
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T12:48:28.797Z",
-        "reason": "Reviewed the completed v4.0.0 Git release, current release documentation, verification evidence, and package metadata; npm publication remains pending owner instruction."
+        "at": "2026-08-01T13:00:43.147Z",
+        "reason": "Reviewed the successful v4.0.1 GitLab pipelines, signed patch tag, current release metadata, and CI repair evidence; external publication is handled by GitLab/OCI."
       }
     },
     {
@@ -66,13 +66,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T12:48:28.797Z",
-        "reason": "Reviewed the completed v4.0.0 Git release, current release documentation, verification evidence, and package metadata; npm publication remains pending owner instruction."
+        "at": "2026-08-01T13:00:43.147Z",
+        "reason": "Reviewed the successful v4.0.1 GitLab pipelines, signed patch tag, current release metadata, and CI repair evidence; external publication is handled by GitLab/OCI."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:6c88df2f9a39da839892a7794475c182197dc7688c762ee323d1f51c829d1916",
+      "fingerprint": "sha256:6e98f145d59a489250f27271e7d24a56c0271611b33d5b1ee27669b94058a9b2",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -86,8 +86,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T12:48:28.797Z",
-        "reason": "Reviewed the completed v4.0.0 Git release, current release documentation, verification evidence, and package metadata; npm publication remains pending owner instruction."
+        "at": "2026-08-01T13:00:43.147Z",
+        "reason": "Reviewed the successful v4.0.1 GitLab pipelines, signed patch tag, current release metadata, and CI repair evidence; external publication is handled by GitLab/OCI."
       }
     },
     {
@@ -99,8 +99,8 @@
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T12:48:28.797Z",
-        "reason": "Reviewed the completed v4.0.0 Git release, current release documentation, verification evidence, and package metadata; npm publication remains pending owner instruction."
+        "at": "2026-08-01T13:00:43.147Z",
+        "reason": "Reviewed the successful v4.0.1 GitLab pipelines, signed patch tag, current release metadata, and CI repair evidence; external publication is handled by GitLab/OCI."
       }
     },
     {

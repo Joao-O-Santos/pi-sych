@@ -315,6 +315,19 @@ passed. `npm audit --omit=dev` reports the inherited upstream
 publication remain external operations; the accepted advisory is not a
 Pi Sych dependency change. **Checked:** 2026-07-31
 
+## E-019 --- v4.0.1 CI repair release
+
+**Status:** verified **Kind:** observed CI behavior and release
+verification **Source:** GitLab pipelines #52 (`main`) and #51
+(`v4.0.1`), current source, and deterministic checks **Supports:** the
+full-history checkout makes the tagged skill-migration corpus available
+to the ledger test, and the signed patch release passes GitLab CI.
+**Evidence:** both pipelines succeeded after setting `GIT_DEPTH: "0"`;
+local style and Markdown checks, typecheck, 21 unit checks, 5
+integration checks, dependency and smoke checks, source budget, package
+dry run, and whitespace check passed. **Limits:** external publication
+was not performed here. **Checked:** 2026-08-01
+
 ## E-018 --- v4.0.0 simplification release gate
 
 **Status:** verified **Kind:** observed behavior and release
