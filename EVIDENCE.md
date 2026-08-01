@@ -3,19 +3,21 @@
 ## E-020 --- v4.0.3 correctness and documentation pass
 
 **Status:** verified **Kind:** observed behavior, deterministic tests,
-and release preparation **Source:** current source, focused unit and
-integration tests, package scripts, and package dry run **Supports:**
-bounded compaction, inbox exclusion, visible project validation errors,
-acknowledgement rechecks, worker-reported path validation, lazy model
-configuration, explicit worker bootstrap, project-local symlink
-behavior, fixture-based migration validation, and audience-specific
-documentation. **Evidence:** typecheck, Biome and Pandoc checks, 29 unit
-checks, 5 integration checks, dependency validation, source budget,
-package dry run, and whitespace checks passed for the final release
-candidate. **Limits:** The signed `v4.0.3` tag and GitLab publication
-pipeline remain pending; real-model usage and browser-mediated
-Plannotator behavior were not required for these deterministic changes.
-**Checked:** 2026-08-01
+GitLab CI, and release verification **Source:** current source, focused
+unit and integration tests, package scripts, and package dry run
+**Supports:** bounded compaction, inbox exclusion, visible project
+validation errors, acknowledgement rechecks, worker-reported path
+validation, lazy model configuration, explicit worker bootstrap,
+project-local symlink behavior, fixture-based migration validation, and
+audience-specific documentation. **Evidence:** typecheck, Biome and
+Pandoc checks, 29 unit checks, 5 integration checks, dependency
+validation, source budget, package dry run, and whitespace checks passed
+for the final release candidate. GitLab pipelines #56 (`main`) and #57
+(`v4.0.3`) passed; the signed tag was verified, npm reports `4.0.3` as
+latest, and the published manifest image returns HTTP 200 from unpkg.
+**Limits:** Real-model usage and browser-mediated Plannotator behavior
+were not required for these deterministic changes. **Checked:**
+2026-08-01
 
 ## E-016 --- v3.0.3 documentation corrections
 

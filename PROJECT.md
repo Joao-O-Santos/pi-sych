@@ -72,5 +72,6 @@ The deterministic gate passed 27 unit checks and 5 integration checks.
 
 ## Immediate next step
 
-{accepted} Release signed patch `v4.0.3` through GitLab CI after the
-full release gate passes. Existing public tags remain immutable.
+{verified} Released signed patch `v4.0.3` as commit `79b9851` and tag
+`v4.0.3`, without moving any existing public tag. GitLab pipelines #56
+(`main`) and #57 (`v4.0.3`) passed; npm now reports `4.0.3` as latest.

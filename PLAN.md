@@ -503,6 +503,6 @@ Implemented for the `v4.0.3` release candidate:
   discovery; and
 - rewritten user, supervisor, and contributor documentation.
 
-Existing release tags remain immutable. The remaining release action is
-for the maintainer to run the final gate and publish the signed patch
-through the configured GitLab pipeline.
+Existing release tags remain immutable. The final gate passed, signed
+`v4.0.3` was pushed, GitLab published the matching npm version, and the
+published package image now resolves.
