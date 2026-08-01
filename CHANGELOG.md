@@ -5,6 +5,13 @@ immutable npm publications unless explicitly marked otherwise.
 
 ## v4.0.0 - 2026-08-01
 
+### CI
+
+- Fetch full Git history and tags in GitLab CI so the skill-migration
+  ledger test can inspect its tagged source corpus.
+
+## v4.0.0 - 2026-08-01
+
 ### Simplification
 
 - Reduced the complete extension TypeScript surface below the 2,000-line

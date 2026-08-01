@@ -71,4 +71,5 @@ budget, package dry run, production audit, and whitespace checks.
 
 ## Immediate next step
 
-{accepted} Publish `v4.0.0` to npm only with separate owner instruction.
+{accepted} Release the CI fix as signed `v4.0.1`; npm publication
+remains handled outside this repository.

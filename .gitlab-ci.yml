@@ -1,6 +1,7 @@
 image: node:24-bookworm
 
 variables:
+  GIT_DEPTH: "0"
   PANDOC_VERSION: "3.10.1"
 
 before_script:
