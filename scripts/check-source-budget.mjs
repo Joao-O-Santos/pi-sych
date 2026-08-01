@@ -4,14 +4,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { join, relative } from "node:path";
 
 const root = process.cwd();
-// v3 adds the approved compaction status projection, inbox isolation,
-// failure classification, and canonical-role promotion routing. Retain a
-// small, reviewable cap rather than exempting that surface from the budget.
-const limit = 3_000;
-const excluded = new Set([
-	"extensions/workbench/src/mcporter.ts",
-	"extensions/workbench/src/plannotator.ts",
-]);
+const limit = 2_000;
 
 async function files(path) {
 	const entries = await readdir(path, { withFileTypes: true });
@@ -24,9 +17,7 @@ async function files(path) {
 	return nested.flat();
 }
 
-const sources = (await files(join(root, "extensions"))).filter(
-	(path) => path.endsWith(".ts") && !excluded.has(relative(root, path)),
-);
+const sources = (await files(join(root, "extensions"))).filter((path) => path.endsWith(".ts"));
 const counts = await Promise.all(
 	sources.map(async (path) => ({
 		path: relative(root, path),

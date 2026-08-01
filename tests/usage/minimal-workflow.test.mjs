@@ -27,8 +27,14 @@ test("real Pi can inspect a disposable project and write an artifact", {
 		),
 	);
 	const supervisorAgentDir = process.env.PI_CODING_AGENT_DIR ?? join(homedir(), ".config/pi");
-	const modelCatalog =
-		process.env.PI_SYCH_MODEL_CATALOG ?? join(supervisorAgentDir, "pi-sych/models.json");
+	const modelCatalog = join(root, "models.json");
+	await writeFile(
+		modelCatalog,
+		JSON.stringify({
+			default: "fast-draft",
+			models: { "fast-draft": { model: "openai-codex/gpt-5.6-luna" } },
+		}),
+	);
 	await bootstrapWorkerAgentDir({
 		agentDir: workerAgentDir,
 		packageRoot: process.cwd(),
@@ -97,7 +103,7 @@ test("real Pi can inspect a disposable project and write an artifact", {
 				"--no-context-files",
 				"--tools",
 				"read,write,project_status,dispatch_worker",
-				"Do these steps in order. First call project_status with action check. Second call dispatch_worker once with task 'Read the configured project brief and report its objective.', mode 'read-only', expectedOutput 'One sentence stating the project objective.', contextFiles containing state/PROJECT-BRIEF.md with purpose 'dummy project direction', and modelProfile 'fast'. Wait for its result. Third read state/PROJECT-BRIEF.md and write REPORT.md containing exactly: Dummy project checked. Then stop.",
+				"Do these steps in order. First call project_status with action check. Second call dispatch_worker once with task 'Read the configured project brief and report its objective.', mode 'read-only', expectedOutput 'One sentence stating the project objective.', contextFiles containing state/PROJECT-BRIEF.md with purpose 'dummy project direction', and modelRole 'fast-draft'. Wait for its result. Third read state/PROJECT-BRIEF.md and write REPORT.md containing exactly: Dummy project checked. Then stop.",
 			],
 			{
 				cwd: launchRoot,
@@ -142,6 +148,6 @@ test("real Pi can inspect a disposable project and write an artifact", {
 	assert.match(sessionJson, /project_status/);
 	assert.match(sessionJson, /dispatch_worker/);
 	assert.match(sessionJson, /Worker status: complete/);
-	assert.match(sessionJson, /Result package: inline/);
-	assert.match(sessionJson, /src\/REPORT\.md/);
+	assert.match(sessionJson, /Summary: The project objective/);
+	assert.match(sessionJson, /Files: none/);
 });

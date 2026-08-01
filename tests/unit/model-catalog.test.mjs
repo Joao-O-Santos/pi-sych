@@ -1,31 +1,16 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { parseModelCatalog } from "../../.test-build/workbench/src/model-catalog.js";
 
-import { parseModelProfiles } from "../../.test-build/workbench/src/model-catalog.js";
-
-test("model catalog resolves user aliases and preserves ranked profile order", () => {
-	const profiles = parseModelProfiles({
-		models: {
-			strong: { ref: "provider/strong", strength: "deep" },
-			fast: { ref: "provider/fast", strength: "fast" },
-		},
-		profiles: { default: ["strong"], code: ["strong", "fast"] },
+test("model catalog uses exact user-defined roles", () => {
+	const catalog = parseModelCatalog({
+		default: "mid coder",
+		models: { "mid coder": { model: "provider/mid", cost: "low", notes: "routine" } },
 	});
-	assert.deepEqual(profiles.default, ["provider/strong"]);
-	assert.deepEqual(profiles.profiles.code, ["provider/strong", "provider/fast"]);
-});
-
-test("model catalog rejects missing defaults and invalid aliases", () => {
+	assert.equal(catalog.models[catalog.default].model, "provider/mid");
+	assert.throws(() => parseModelCatalog({ default: "missing", models: {} }), /Unknown default/);
 	assert.throws(
-		() => parseModelProfiles({ profiles: { code: ["provider/model"] } }),
-		/profiles\.default/,
-	);
-	assert.throws(
-		() =>
-			parseModelProfiles({
-				models: { broken: {} },
-				profiles: { default: ["broken"] },
-			}),
-		/non-empty ref/,
+		() => parseModelCatalog({ default: "x", models: { x: { ref: "old" } } }),
+		/must define a model/,
 	);
 });

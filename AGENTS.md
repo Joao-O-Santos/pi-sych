@@ -28,8 +28,7 @@ bounded delegation, and human-owned judgment.
 
 ## Public runtime target
 
-- Agent tools: `dispatch_worker`, `project_status`, and optional
-  `submit_plan`.
+- Agent tools: `dispatch_worker` and `project_status`.
 - Commands: `/pi-sych-status`, `/pi-sych-mcp`,
   `/plannotator-annotate <file>`, `/plannotator-last`,
   `/plannotator-review`. No `/plannotator` plan-mode toggle.

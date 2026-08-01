@@ -1,13 +1,21 @@
-import { execFile as execFileCallback } from "node:child_process";
+import { execFile as exec } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { constants } from "node:fs";
-import type { FileHandle } from "node:fs/promises";
-import { access, mkdir, open, readFile, rename, rm, stat } from "node:fs/promises";
+import {
+	access,
+	type FileHandle,
+	mkdir,
+	open,
+	readFile,
+	realpath,
+	rename,
+	rm,
+	stat,
+} from "node:fs/promises";
 import { dirname, isAbsolute, parse, relative, resolve, sep } from "node:path";
 import { promisify } from "node:util";
 
-const execFile = promisify(execFileCallback);
-
+const execFile = promisify(exec);
 export const CANONICAL_FILES = [
 	"project",
 	"agents",
@@ -18,7 +26,6 @@ export const CANONICAL_FILES = [
 	"inbox",
 ] as const;
 export type CanonicalFile = (typeof CANONICAL_FILES)[number];
-
 export const DEFAULT_CANONICAL_PATHS = {
 	project: "PROJECT.md",
 	agents: "AGENTS.md",
@@ -28,17 +35,14 @@ export const DEFAULT_CANONICAL_PATHS = {
 	todo: "TODO.md",
 	inbox: "INBOX.md",
 } satisfies Record<CanonicalFile, string>;
-
 export interface SyncManifest {
-	$schema?: string;
 	version: 2;
 	projectRoot?: string;
 	canonical?: Partial<Record<CanonicalFile, string>>;
 	confirmedAt: string;
 	artifacts: unknown[];
-	lastModified?: string;
+	[key: string]: unknown;
 }
-
 export interface ResolvedProject {
 	cwd: string;
 	workspaceRoot: string;
@@ -47,246 +51,153 @@ export interface ResolvedProject {
 	manifest?: SyncManifest;
 	canonical: Record<CanonicalFile, string>;
 }
-
 export interface ProjectValidation {
 	valid: boolean;
 	errors: string[];
 	headings: string[];
 }
-
-async function exists(path: string): Promise<boolean> {
-	try {
-		await access(path, constants.F_OK);
-		return true;
-	} catch {
-		return false;
-	}
-}
-
+const exists = async (path: string) =>
+	access(path, constants.F_OK)
+		.then(() => true)
+		.catch(() => false);
+export const showPath = (root: string, path: string) => {
+	const display = relative(root, path);
+	return display && !display.startsWith("..") ? display : path;
+};
 export function parseSyncManifest(value: string): SyncManifest {
 	let parsed: unknown;
 	try {
 		parsed = JSON.parse(value);
 	} catch (error) {
-		throw new Error(
-			`SYNC.json JSON is invalid: ${error instanceof Error ? error.message : String(error)}`,
-		);
+		throw new Error(`SYNC.json JSON is invalid: ${String(error)}`);
 	}
 	if (!parsed || typeof parsed !== "object" || Array.isArray(parsed))
 		throw new Error("SYNC.json JSON must be an object");
-	const manifest = parsed as Record<string, unknown>;
-	for (const key of Object.keys(manifest))
-		if (
-			![
-				"$schema",
-				"version",
-				"projectRoot",
-				"canonical",
-				"confirmedAt",
-				"artifacts",
-				"lastModified",
-			].includes(key)
-		)
-			throw new Error(`SYNC.json has unknown field: ${key}`);
-
-	if (manifest.$schema !== undefined && typeof manifest.$schema !== "string")
-		throw new Error("SYNC.json $schema must be a string");
-	if (manifest.version !== 2) throw new Error("SYNC.json version must be 2");
-	if (typeof manifest.confirmedAt !== "string")
+	const item = parsed as Record<string, unknown>;
+	if (item.version !== 2) throw new Error("SYNC.json version must be 2");
+	if (typeof item.confirmedAt !== "string")
 		throw new Error("SYNC.json confirmedAt must be a string");
-	if (manifest.lastModified !== undefined && typeof manifest.lastModified !== "string")
-		throw new Error("SYNC.json lastModified must be a string");
-	if (!Array.isArray(manifest.artifacts)) throw new Error("SYNC.json artifacts must be an array");
-	for (const [index, value] of manifest.artifacts.entries()) {
-		if (!value || typeof value !== "object" || Array.isArray(value))
-			throw new Error(`SYNC.json artifacts[${index}] must be an object`);
-		const artifact = value as Record<string, unknown>;
-		for (const key of Object.keys(artifact))
-			if (
-				![
-					"path",
-					"fingerprint",
-					"status",
-					"role",
-					"authoritativeFor",
-					"updateFrom",
-					"dependsOn",
-					"acknowledgement",
-					"lastModified",
-				].includes(key)
-			)
-				throw new Error(`SYNC.json artifacts[${index}] has unknown field: ${key}`);
-		if (artifact.lastModified !== undefined && typeof artifact.lastModified !== "string")
-			throw new Error(`SYNC.json artifacts[${index}].lastModified must be a string`);
-	}
-	if (manifest.projectRoot !== undefined && typeof manifest.projectRoot !== "string")
+	if (!Array.isArray(item.artifacts)) throw new Error("SYNC.json artifacts must be an array");
+	if (item.projectRoot !== undefined && typeof item.projectRoot !== "string")
 		throw new Error("SYNC.json projectRoot must be a string");
 	if (
-		manifest.canonical !== undefined &&
-		(!manifest.canonical ||
-			typeof manifest.canonical !== "object" ||
-			Array.isArray(manifest.canonical))
+		item.canonical !== undefined &&
+		(!item.canonical || typeof item.canonical !== "object" || Array.isArray(item.canonical))
 	)
 		throw new Error("SYNC.json canonical must be an object");
-	if (manifest.canonical) {
-		for (const [name, path] of Object.entries(manifest.canonical)) {
-			if (!CANONICAL_FILES.includes(name as CanonicalFile))
-				throw new Error(`SYNC.json canonical path is not allowed: ${name}`);
-			if (typeof path !== "string" || !path)
-				throw new Error(`SYNC.json canonical.${name} must be a non-empty string`);
-		}
+	for (const [role, path] of Object.entries((item.canonical ?? {}) as Record<string, unknown>)) {
+		if (!CANONICAL_FILES.includes(role as CanonicalFile))
+			throw new Error(`SYNC.json canonical path is not allowed: ${role}`);
+		if (typeof path !== "string" || !path)
+			throw new Error(`SYNC.json canonical.${role} must be a non-empty string`);
 	}
-	return {
-		...(manifest.$schema === undefined ? {} : { $schema: manifest.$schema }),
-		version: 2,
-		...(manifest.projectRoot === undefined ? {} : { projectRoot: manifest.projectRoot }),
-		...(manifest.canonical === undefined
-			? {}
-			: {
-					canonical: manifest.canonical as Partial<Record<CanonicalFile, string>>,
-				}),
-		confirmedAt: manifest.confirmedAt,
-		...(typeof manifest.lastModified === "string" ? { lastModified: manifest.lastModified } : {}),
-		artifacts: manifest.artifacts,
-	};
+	return item as SyncManifest;
 }
-
-export function formatSyncManifest(manifest: SyncManifest): string {
-	return `${JSON.stringify(manifest, null, 2)}\n`;
-}
-
-async function directoryPath(path: string): Promise<string> {
+export const formatSyncManifest = (manifest: SyncManifest) =>
+	`${JSON.stringify(manifest, null, 2)}\n`;
+async function directory(path: string) {
 	try {
 		return (await stat(path)).isDirectory() ? resolve(path) : dirname(resolve(path));
 	} catch {
 		return dirname(resolve(path));
 	}
 }
-
-async function workspaceRoot(cwd: string): Promise<string> {
+async function workspace(cwd: string) {
 	try {
-		const { stdout } = await execFile("git", ["rev-parse", "--show-toplevel"], {
-			cwd,
-		});
-		return resolve(stdout.trim());
+		return resolve(
+			(await execFile("git", ["rev-parse", "--show-toplevel"], { cwd })).stdout.trim(),
+		);
 	} catch {
 		return cwd;
 	}
 }
-
+const canonicalPaths = (root: string, manifest?: SyncManifest) =>
+	Object.fromEntries(
+		CANONICAL_FILES.map((role) => {
+			const path = manifest?.canonical?.[role] ?? DEFAULT_CANONICAL_PATHS[role];
+			return [role, isAbsolute(path) ? path : resolve(root, path)];
+		}),
+	) as Record<CanonicalFile, string>;
 export async function resolveProject(startPath: string): Promise<ResolvedProject> {
-	const cwd = await directoryPath(startPath);
-	const root = await workspaceRoot(cwd);
+	const cwd = await directory(startPath),
+		workspaceRoot = await workspace(cwd);
 	let current = cwd;
 	while (true) {
 		const syncPath = resolve(current, "SYNC.json");
 		if (await exists(syncPath)) {
 			const manifest = parseSyncManifest(await readFile(syncPath, "utf8"));
 			const projectRoot = resolve(current, manifest.projectRoot ?? ".");
-			const canonical = Object.fromEntries(
-				CANONICAL_FILES.map((name) => {
-					const path = manifest.canonical?.[name] ?? DEFAULT_CANONICAL_PATHS[name];
-					return [name, isAbsolute(path) ? path : resolve(projectRoot, path)];
-				}),
-			) as Record<CanonicalFile, string>;
 			return {
 				cwd,
-				workspaceRoot: root,
+				workspaceRoot,
 				projectRoot,
 				syncPath,
 				manifest,
-				canonical,
+				canonical: canonicalPaths(projectRoot, manifest),
 			};
 		}
-		if (current === root) break;
+		if (current === workspaceRoot) break;
 		const parent = dirname(current);
-		if (parent === current) break;
+		if (parent === current || relative(workspaceRoot, parent).startsWith("..")) break;
 		current = parent;
-		if (relative(root, current).startsWith("..")) break;
 	}
 	return {
 		cwd,
-		workspaceRoot: root,
-		projectRoot: root,
-		syncPath: resolve(root, "SYNC.json"),
-		canonical: Object.fromEntries(
-			CANONICAL_FILES.map((name) => [name, resolve(root, DEFAULT_CANONICAL_PATHS[name])]),
-		) as Record<CanonicalFile, string>,
+		workspaceRoot,
+		projectRoot: workspaceRoot,
+		syncPath: resolve(workspaceRoot, "SYNC.json"),
+		canonical: canonicalPaths(workspaceRoot),
 	};
 }
-
 export function validateProjectMarkdown(markdown: string): ProjectValidation {
-	const headings = [...markdown.matchAll(/^#{1,6}\s+(.+?)\s*$/gm)].map((match) => match[1].trim());
-	const errors: string[] = [];
+	const headings = [...markdown.matchAll(/^#{1,6}\s+(.+?)\s*$/gm)].map((match) => match[1].trim()),
+		errors: string[] = [];
 	if (!/^#\s+\S/m.test(markdown)) errors.push("PROJECT.md must contain a level-one title");
-	for (const required of [
+	for (const name of [
 		"Objective",
 		"Current direction",
 		"Definition of done",
 		"Previous action",
 		"Immediate next step",
-	]) {
-		if (!headings.some((heading) => heading.toLowerCase() === required.toLowerCase())) {
-			errors.push(`PROJECT.md is missing the '${required}' heading`);
-		}
-	}
-	return { valid: errors.length === 0, errors, headings };
+	])
+		if (!headings.some((heading) => heading.toLowerCase() === name.toLowerCase()))
+			errors.push(`PROJECT.md is missing the '${name}' heading`);
+	return { valid: !errors.length, errors, headings };
 }
-
-export async function readAndValidateProject(projectPath: string): Promise<ProjectValidation> {
-	return validateProjectMarkdown(await readFile(projectPath, "utf8"));
-}
-
-function assertInside(root: string, path: string, projectPath: string): void {
+export const readAndValidateProject = async (path: string) =>
+	validateProjectMarkdown(await readFile(path, "utf8"));
+function inside(root: string, path: string, input: string) {
 	const rel = relative(root, path);
 	if (rel === ".." || rel.startsWith(`..${sep}`) || isAbsolute(rel))
-		throw new Error(`Project artifact path leaves the project root: ${projectPath}`);
+		throw new Error(`Project artifact path leaves the project root: ${input}`);
 }
-
-export function resolveProjectPath(projectRoot: string, projectPath: string): string {
-	if (!projectPath || isAbsolute(projectPath))
-		throw new Error(`Project artifact path must be relative: ${projectPath}`);
-	const absolute = resolve(projectRoot, projectPath);
-	assertInside(projectRoot, absolute, projectPath);
+export function resolveProjectPath(root: string, path: string) {
+	if (!path || isAbsolute(path)) throw new Error(`Project artifact path must be relative: ${path}`);
+	const absolute = resolve(root, path);
+	inside(root, absolute, path);
 	return absolute;
 }
-
-/** Resolve an existing path after lexical project-path validation. */
-export async function resolveExistingProjectPath(
-	projectRoot: string,
-	projectPath: string,
-): Promise<string> {
-	const path = isAbsolute(projectPath)
-		? resolve(projectPath)
-		: resolveProjectPath(projectRoot, projectPath);
-	await access(path, constants.R_OK);
-	return path;
+export async function resolveExistingProjectPath(root: string, path: string) {
+	const absolute = isAbsolute(path) ? resolve(path) : resolveProjectPath(root, path);
+	await access(absolute, constants.R_OK);
+	const [resolvedRoot, resolvedPath] = await Promise.all([realpath(root), realpath(absolute)]);
+	inside(resolvedRoot, resolvedPath, path);
+	return resolvedPath;
 }
-
-export async function writeAtomicFile(path: string, content: string): Promise<void> {
-	const parent = dirname(path);
+export async function writeAtomicFile(path: string, content: string) {
+	const parent = dirname(path),
+		temporary = resolve(parent, `.${parse(path).base}.${randomUUID()}.tmp`);
 	await mkdir(parent, { recursive: true });
-	const temporary = resolve(parent, `.${parse(path).base}.${randomUUID()}.tmp`);
 	let handle: FileHandle | undefined;
 	try {
 		handle = await open(temporary, "wx", 0o600);
-		await handle.writeFile(content, "utf8");
+		await handle.writeFile(content);
 		await handle.sync();
 		await handle.close();
-		handle = undefined;
 		await rename(temporary, path);
 	} catch (error) {
 		await handle?.close().catch(() => undefined);
 		await rm(temporary, { force: true }).catch(() => undefined);
 		throw error;
 	}
-}
-
-export async function writeApprovedFile(
-	path: string,
-	content: string,
-	approved: boolean,
-): Promise<void> {
-	if (!approved) throw new Error("Durable file write requires explicit approval");
-	await writeAtomicFile(path, content);
 }
