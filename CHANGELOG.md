@@ -3,6 +3,17 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
+## v4.0.0 - 2026-08-01
+
+### Simplification
+
+- Reduced the complete extension TypeScript surface below the 2,000-line
+  cap.
+- Removed plan submission, structured promotion storage, rigid model
+  profiles, and redundant worker-result metadata.
+- Kept project hashes, dependency impact, bounded workers, atomic
+  manifest replacement, and explicit human acknowledgement.
+
 ## v3.0.4 - 2026-07-31
 
 ### Correctness and release completion

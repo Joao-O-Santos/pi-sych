@@ -54,26 +54,21 @@ controller.
 
 ## Current state
 
-{verified} The v3.0.0 implementation migrates synchronization to direct
-`SYNC.json` version 2 with workspace, nearest-manifest, and configured
-canonical-path resolution used throughout status and compaction. It adds
-canonical-role promotion routing, bounded project-status projection into
-working-memory compaction, malformed `INBOX.md` isolation,
-custom-compaction failure classification, and restored v1.2.0
-substantive skill guidance with a migration ledger and real-model
-LLM-judged prompt-quality usage. The rough production TypeScript
-estimate is about 2,650 lines within the owner-authorized 3,000-line
-cap.
+{verified} The current implementation keeps direct `SYNC.json` version 2
+resolution, SHA-256 status checks, declared dependency impact, bounded
+workers, and explicit acknowledgement. It uses a small working-memory
+summary, append-only human-review proposals in `INBOX.md`, direct named
+model roles, and narrow MCPorter and Plannotator adapters. Production
+TypeScript is about 1,550 lines within the 2,000-line cap.
 
 ## Previous action
 
-{verified} Completed the v3.0.0 deterministic release gate: 62 unit
-checks, 4 integration checks, opt-in real-Pi usage, live LLM-judged
-prompt-quality usage, style/Markdown/type checks, source budget, package
-dry run, and whitespace check. The inherited Pi `brace-expansion` audit
-advisory remains a recorded limitation.
+{verified} Completed the simplification implementation and deterministic
+checks: style/Markdown/type checks, 20 unit checks, 5 integration
+checks, and the 2,000-line source budget. Live usage, package
+validation, and production audit remain release-gate work.
 
 ## Immediate next step
 
-{accepted} Approve the reviewed v3.0.0 working tree, then create its
-signed tag and npm release.
+{accepted} Complete release checks for the simplification tree, then
+create its signed patch tag and release.

@@ -5,7 +5,7 @@ and human-owned judgment in writing, research, analysis, and software
 work. It keeps mechanical facts mechanical: a changed hash is not a
 verdict about meaning, quality, or authority.
 
-![](https://unpkg.com/pi-sych@3.0.4/docs/img/architecture.png)
+![](https://unpkg.com/pi-sych@4.0.0/docs/img/architecture.png)
 
 ## Install
 
@@ -13,7 +13,7 @@ verdict about meaning, quality, or authority.
 pi install npm:pi-sych
 ```
 
-Configure private worker model profiles as described in
+Configure a private named worker model catalog as described in
 [configuration](docs/CONFIGURATION.md). Pi Sych does not contain your
 credentials or provider choices.
 
@@ -62,20 +62,13 @@ Workers are short-lived Pi sessions for one bounded task. They receive
 only selected context, never the supervisor transcript. Tool modes limit
 visible Pi tools, not host permissions.
 
-## Plans and Plannotator
+## Plannotator
 
-Put consequential or long plans in project-local Markdown and call
-`submit_plan`. Browser review is used when Plannotator is available. If
-it cannot start, Pi returns a pending file-review result:
-
-``` text
-Plan ready at PLAN.md. Review or edit it, then reply with your comments and @PLAN.md.
-```
-
-Submission or approval never starts implementation automatically.
-`/plannotator-annotate <file>`, `/plannotator-last`, and
-`/plannotator-review` remain human commands. Pi Sych does not register
-Plannotator plan mode or `/plannotator`.
+`/plannotator-last` returns feedback to the conversation.
+`/plannotator-annotate <file>` writes `<file>.feedback.md`, and
+`/plannotator-review` writes `PLANNOTATOR_REVIEW.md`. These remain human
+commands; Pi Sych does not register Plannotator plan mode or a plan
+submission tool.
 
 ## For maintainers
 

@@ -1,118 +1,55 @@
 # Architecture
 
-Pi Sych keeps a small mechanical core for process bounds, files, hashes,
-paths, and immutable worker results. Skills and people own
-interpretation, writing, research, and consequential judgment.
+Pi Sych is a small mechanical layer for project paths, hashes, bounded
+workers, and explicit human review.
 
-![](https://unpkg.com/pi-sych@3.0.4/docs/img/architecture.png)
+![](https://unpkg.com/pi-sych@4.0.0/docs/img/architecture.png)
 
 ## Runtime
 
-The supervisor extension registers three agent tools:
+The workbench provides `dispatch_worker` and `project_status`, plus
+`/pi-sych-status`, `/pi-sych-mcp`, `/plannotator-last`,
+`/plannotator-annotate`, and `/plannotator-review`. It does not register
+plan-review tooling.
 
-- `dispatch_worker` --- one bounded clean-context worker call;
-- `project_status` --- mechanical check or explicit acknowledgement; and
-- `submit_plan` --- human browser review with a pending file-review
-  fallback.
+Workers receive a resolved project, an explicit model role, selected
+context and skills, and a bounded timeout. They may submit exactly one
+immutable result with status, summary, files, and limitations. Tool
+modes control visible Pi tools, not host permissions.
 
-It also registers `/pi-sych-status`, `/pi-sych-mcp`,
-`/plannotator-annotate`, `/plannotator-last`, and `/plannotator-review`.
-It never loads Plannotator's extension entrypoint, registers
-`/plannotator`, or enables plan-mode obligations.
-
-`worker-engine.ts` validates a compact request, injects applicable
-project conventions, launches a clean Pi worker, applies a 90-second
-default or bounded override, forwards cancellation, and reads one
-immutable result. `project-files.ts` owns safe project-local paths,
-atomic approved writes, and the shared `resolveProject` manifest
-resolver used by status, acknowledgement, and compaction.
-`project-status.ts` validates `SYNC.json`, fingerprints tracked files,
-and traverses declared dependency edges without deciding semantic drift
-or authority.
-
-`submit_plan` reads an existing project-local Markdown file. It waits
-for Plannotator browser feedback when the optional adapter starts;
-otherwise it returns file-review pending state and does not implement
-the plan.
-
-## Skills
-
-``` text
-six visible umbrella skills
-        ↓
-invariant SKILL.md
-        ↓
-selected module guidance + editable examples
-        ↓
-bounded worker with explicit project context
-```
-
-Only `project`, `write`, `analyze`, `code`, `review`, and `research` are
-indexed skills. Each points directly to one-level modules. Modules are
-plain guidance and example files, so they do not enlarge the initial
-catalog. The `project` Pi Sych module directs answers to documentation
-at the installed package root.
-
-## Project state
-
-`PROJECT.md` describes purpose, scope, direction, completion, and next
-work. `SYNC.json` holds acknowledged fingerprints and declared
-relationships. Optional `AGENTS.md`, `STYLE.md`, `EVIDENCE.md`,
-`DECISIONS.md`, `TODO.md`, and `INBOX.md` serve specific human purposes.
-Compaction creates task-centred working memory and may append
-deduplicated semantic promotion proposals to `INBOX.md`; proposals
-remain human-review state until a reviewed edit promotes them. A hash
-mismatch records changed content after acknowledgement; it does not
-resolve disagreement or replace review.
-
-## Manifest resolution
-
-`SYNC.json` is a version-2 JSON manifest. `resolveProject` walks from
-the working directory to the workspace root for the nearest `SYNC.json`;
-if none is found it falls back to the workspace root with default
-canonical paths. An optional `projectRoot` relocates the tracked
-artifacts, and an optional `canonical` object overrides the default path
-for each role --- `project`, `agents`, `style`, `evidence`, `decisions`,
-`todo`, `inbox`. Absolute configured paths are used as-is; relative
-paths resolve against the project root. One resolved project is threaded
-through status, acknowledgement, and compaction so the manifest is read
-once per operation.
+`SYNC.json` version 2 records tracked file hashes and dependency paths.
+`project_status` reports missing or changed hashes and declared
+dependency impact without deciding semantic drift. Acknowledgement
+updates named reviewed files atomically and marks affected dependents
+for review.
 
 ## Compaction
 
-Pi registers a `session_before_compact` handler that builds task-centred
-working memory instead of relying only on Pi's native compactor. On each
-compaction (triggered by manual `/compact`, context threshold, or
-overflow recovery) it resolves the project, checks status, reads the
-canonical files once to derive both content and fingerprints, inspects
-`INBOX.md`, and asks the supervisor's active model (not a worker profile
-from `models.json`) for a JSON `workingMemory` plus at most five
-promotion proposals. The model is told task-relevant changed artifacts,
-impacted dependents, cycles, errors, and the current inbox.
+Compaction reads the prior summary, compacted conversation, canonical
+project files, and project status. The active supervisor model returns a
+small working memory: task, constraints, active work, blockers, next
+step, and relevant files. It may append up to five unreviewed proposals
+as plain lines in `INBOX.md`, for example
+`- {todo} Update the architecture diagram.` Pending proposals are
+counted from the file and remain human-review state.
 
-Working memory is validated to named fields; `relevantFiles` is filtered
-to declared canonical and artifact paths. Promotions are validated
-against canonical contents (exact `existingText` for updates, no
-already-present adds) and routed by role --- `project`, `agents`,
-`style`, `evidence`, `decisions`, `todo` --- to their configured target
-paths. `agents` proposals also carry a `recommendedScope` of `project`,
-`personal`, or `ask-user`. Accepted proposals are deduplicated against
-the existing inbox and written atomically only when canonical
-fingerprints are unchanged.
+## Models and skills
 
-A malformed `INBOX.md` is isolated: compaction continues, the inbox
-error is surfaced in the result and in `/pi-sych-status`, and no
-proposals are persisted. If any step throws, the failure is classified
-(`unavailable`, `authentication`, `project`, `model-output`, `provider`)
-and reported, and the handler returns nothing so Pi falls back to its
-native compactor. Proposals stay human-review state in `INBOX.md` until
-a reviewed edit promotes them; `/plannotator-annotate INBOX.md` supports
-that review.
+Private `models.json` is a user-defined catalog. Each named role maps
+directly to one model and may include free-form cost and notes. The
+supervisor selects a role; the runtime performs only exact lookup.
 
-## Boundaries
+Only six umbrella skills are public: `project`, `write`, `analyze`,
+`code`, `review`, and `research`. Their one-level modules provide
+selected guidance and examples without enlarging the initial skill
+catalog.
 
-Workers are short-lived calls, not autonomous agents. Tool modes control
-visible Pi tools, not host permissions. Independent review is advisory;
-human owners retain consequential decisions, publication, deployment,
-and irreversible changes. MCPorter remains an explicit remote-research
-adapter.
+## MCPorter and Plannotator
+
+MCPorter is enabled only for explicitly requested remote research.
+Diagnostics report extension availability, configuration
+location/presence, and configured server names.
+
+Plannotator remains a narrow human review adapter. Last-message feedback
+enters the conversation. File annotation writes `<input>.feedback.md`;
+code-review feedback writes `PLANNOTATOR_REVIEW.md`.

@@ -1,32 +1,30 @@
 # Configuration
 
-Pi Sych keeps credentials, providers, model ranking, and personal skill
+Pi Sych keeps credentials, providers, model choices, and personal skill
 customization outside the public package.
 
 ## Worker models
 
-Create `~/.config/pi/pi-sych/models.json` with ranked private profiles:
+Create `~/.config/pi/pi-sych/models.json` with user-defined roles:
 
 ``` json
 {
+  "default": "mid coder",
   "models": {
-    "strong-reviewer": {
-      "ref": "provider/model",
-      "strength": "deep",
-      "suitableFor": ["methods review", "architecture review"]
+    "mid coder": {
+      "model": "provider/model",
+      "cost": "low",
+      "notes": "Routine edits and tests."
     }
-  },
-  "profiles": {
-    "default": ["strong-reviewer"],
-    "review": ["strong-reviewer"]
   }
 }
 ```
 
-`dispatch_worker` selects the first model in its requested profile and
-defaults to 90 seconds. `PI_SYCH_MODEL_CATALOG` selects another catalog;
-`PI_SYCH_MODEL_PROFILES` supplies a direct JSON override for automation;
-and `PI_SYCH_WORKER_AGENT_DIR` selects the worker runtime directory.
+`dispatch_worker` uses an exact requested `modelRole`, or `default`, and
+defaults to 90 seconds. Cost and notes are free-form context for the
+supervisor; the runtime does not rank or interpret them.
+`PI_SYCH_MODEL_CATALOG` selects another catalog and
+`PI_SYCH_WORKER_AGENT_DIR` selects the worker runtime directory.
 
 ## Project canonical paths
 
@@ -94,9 +92,9 @@ modifying Pi Sych.
 ## Optional integrations
 
 Plannotator is a runtime dependency but Pi Sych loads only its
-documented lazy browser helpers. `submit_plan` falls back to file review
-when those helpers cannot start. Do not separately enable Plannotator's
-extension or plan mode for Pi Sych.
+documented lazy browser helpers. File annotation writes
+`<input>.feedback.md` and code review writes `PLANNOTATOR_REVIEW.md`. Do
+not separately enable Plannotator's extension or plan mode for Pi Sych.
 
 Set `remoteResearch: true` only for an assigned worker call. It receives
 MCPorter and explicit private configuration; ordinary workers do not.

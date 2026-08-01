@@ -314,3 +314,20 @@ passed. `npm audit --omit=dev` reports the inherited upstream
 `brace-expansion` advisory. **Limits:** Browser-specific review and
 publication remain external operations; the accepted advisory is not a
 Pi Sych dependency change. **Checked:** 2026-07-31
+
+## E-018 --- v4.0.0 simplification release gate
+
+**Status:** verified **Kind:** observed behavior and release
+verification **Source:** current source, deterministic tests, live Pi
+usage, package scripts, and package dry run **Supports:** the
+sub-2,000-line simplification release, reduced worker result and
+model-role catalog, append-only promotion inbox, retained
+path/hash/dependency/acknowledgement invariants, and current package
+readiness **Evidence:** style and Markdown checks, typecheck, 21 unit
+checks, 5 integration checks, two opt-in live usage checks, MCPorter
+dependency check, smoke check, source budget (1,550/2,000), package dry
+run, and whitespace check passed. **Limits:** `npm audit --omit=dev`
+reports one inherited high-severity `brace-expansion` advisory below
+Pi's dependency tree; it is not a Pi Sych dependency change.
+Browser-mediated Plannotator behavior remains external. **Checked:**
+2026-08-01

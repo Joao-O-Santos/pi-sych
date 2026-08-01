@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-07-31T13:40:12.583Z",
+  "confirmedAt": "2026-08-01T12:28:44.085Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -21,7 +21,7 @@
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:6a3318f4d5df539f9679abbc6600bed4f04196adaf663ce64bb97666822506b7",
+      "fingerprint": "sha256:34c416d93f79c5ec97aa4b65d55a599a1c7f045373be507c7f6e71c22d8df580",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,28 +35,26 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T13:40:12.582Z",
-        "reason": "v3.0.2 documentation update: added compaction pipeline description, manifest resolution section, and project canonical paths configuration"
-      },
-      "lastModified": "2026-07-31T13:49:13.010Z"
+        "at": "2026-08-01T12:28:44.085Z",
+        "reason": "Reviewed v3.0.5 simplification implementation, release documentation, verification evidence, and package metadata after the complete release gate."
+      }
     },
     {
       "path": "ARCHITECTURE.md",
-      "fingerprint": "sha256:c555bc649019df9f257ecbfda1bd514f8d095c5ae1c6c6285316b9b19c4d2d14",
+      "fingerprint": "sha256:46db58c547d1c760070f4e69331e37b0bd36e5e9b07b204dce3b09cccaab9b55",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T13:40:12.582Z",
-        "reason": "v3.0.2 documentation update: added compaction pipeline description, manifest resolution section, and project canonical paths configuration"
-      },
-      "lastModified": "2026-07-31T13:49:13.010Z"
+        "at": "2026-08-01T12:28:44.085Z",
+        "reason": "Reviewed v3.0.5 simplification implementation, release documentation, verification evidence, and package metadata after the complete release gate."
+      }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:bcbb706e486155141b1bda0763260253a3d1617cad341cc88f035bdf5a623ede",
+      "fingerprint": "sha256:7c24acac0a9170671beba7835e12f4e08cf2a1a5dd973cef339769ca4ca948c0",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -68,14 +66,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T13:40:12.582Z",
-        "reason": "v3.0.2 documentation update: added compaction pipeline description, manifest resolution section, and project canonical paths configuration"
-      },
-      "lastModified": "2026-07-31T13:49:13.010Z"
+        "at": "2026-08-01T12:28:44.085Z",
+        "reason": "Reviewed v3.0.5 simplification implementation, release documentation, verification evidence, and package metadata after the complete release gate."
+      }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:620e0ebc654889dbb2ef7514cd5381f32ea752c11d63a22a794be9f8cf930cf1",
+      "fingerprint": "sha256:c6ec8249a0c853851fdd2038f299df0c270e973534f20c2e40ba224eb02076c3",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -89,24 +86,22 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T13:40:12.583Z",
-        "reason": "v3.0.2 documentation update: added compaction pipeline description, manifest resolution section, and project canonical paths configuration"
-      },
-      "lastModified": "2026-07-31T13:49:13.010Z"
+        "at": "2026-08-01T12:28:44.085Z",
+        "reason": "Reviewed v3.0.5 simplification implementation, release documentation, verification evidence, and package metadata after the complete release gate."
+      }
     },
     {
       "path": "docs/CONFIGURATION.md",
-      "fingerprint": "sha256:57644fa22848c3dd61f32354fecb833616e692eff59424d8d5f3e2ef2be5bc5b",
+      "fingerprint": "sha256:cb90ce02cabe117987423d06d202ee784dff58b1f72cc91bc007d85dd7995a43",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-07-31T13:40:12.582Z",
-        "reason": "v3.0.2 documentation update: added compaction pipeline description, manifest resolution section, and project canonical paths configuration"
-      },
-      "lastModified": "2026-07-31T13:49:13.010Z"
+        "at": "2026-08-01T12:28:44.085Z",
+        "reason": "Reviewed v3.0.5 simplification implementation, release documentation, verification evidence, and package metadata after the complete release gate."
+      }
     },
     {
       "path": "docs/DEVELOPMENT.md",
@@ -121,6 +116,5 @@
         "reason": "Reviewed the v2.1.0 working-memory compaction, INBOX proposal boundary, reuse reductions, package metadata, documentation, completed deterministic release gate, and recorded inherited audit limitation."
       }
     }
-  ],
-  "lastModified": "2026-07-31T13:49:13.010Z"
+  ]
 }
