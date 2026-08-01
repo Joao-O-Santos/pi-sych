@@ -1,11 +1,7 @@
 import assert from "node:assert/strict";
-import { execFile } from "node:child_process";
 import { access, readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
-import { promisify } from "node:util";
-
-const execFileAsync = promisify(execFile);
 
 const catalog = {
 	project: "Use and maintain Pi Sych projects, state, artifacts, dependencies, and decisions.",
@@ -94,20 +90,11 @@ test("modules are one-level non-skills with editable examples", async () => {
 		}
 });
 
-test("migration ledger exactly maps the tagged source skills to existing guidance modules", async () => {
+test("migration ledger exactly maps the historical source skills to existing guidance modules", async () => {
 	const ledger = await readFile("SKILL_MIGRATION_LEDGER.md", "utf8");
-	const { stdout } = await execFileAsync("git", [
-		"ls-tree",
-		"-r",
-		"--name-only",
-		"v1.2.0",
-		"skills",
-	]);
-	const sourceNames = stdout
-		.split("\n")
-		.filter((path) => path.endsWith("/SKILL.md"))
-		.map((path) => path.split("/")[1])
-		.sort();
+	const sourceNames = JSON.parse(
+		await readFile("tests/fixtures/source-skill-names.json", "utf8"),
+	).sort();
 	const mappings = ledger
 		.split("\n")
 		.map((line) => line.match(/^\| ([a-z0-9-]+) \| `([^`]+)` \|$/))

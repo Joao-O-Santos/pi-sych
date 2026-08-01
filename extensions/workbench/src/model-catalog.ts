@@ -42,13 +42,29 @@ export function parseModelCatalog(value: unknown): ModelCatalog {
 	return { default: catalog.default, models };
 }
 
-export function loadModelCatalog(env: NodeJS.ProcessEnv = process.env): ModelCatalog {
-	const path =
+export function modelCatalogPath(env: NodeJS.ProcessEnv = process.env): string {
+	return (
 		env.PI_SYCH_MODEL_CATALOG ??
-		resolve(env.PI_CODING_AGENT_DIR ?? resolve(homedir(), ".config/pi"), "pi-sych/models.json");
+		resolve(env.PI_CODING_AGENT_DIR ?? resolve(homedir(), ".config/pi"), "pi-sych/models.json")
+	);
+}
+export function loadModelCatalog(env: NodeJS.ProcessEnv = process.env): ModelCatalog {
+	const path = modelCatalogPath(env);
 	try {
 		return parseModelCatalog(JSON.parse(readFileSync(path, "utf8")));
 	} catch (error) {
 		throw new Error(`Worker model catalog is unavailable or invalid at ${path}: ${String(error)}`);
 	}
+}
+export function loadOptionalModelCatalog(
+	env: NodeJS.ProcessEnv = process.env,
+): ModelCatalog | undefined {
+	const path = modelCatalogPath(env);
+	try {
+		readFileSync(path);
+	} catch (error) {
+		if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
+		throw new Error(`Worker model catalog is unavailable at ${path}: ${String(error)}`);
+	}
+	return loadModelCatalog(env);
 }

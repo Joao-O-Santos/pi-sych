@@ -267,6 +267,10 @@ export function formatProjectStatusCheck(
 	const lines = ["Project status", "", `Root: ${state.projectRoot}`];
 	if (state.syncError) lines.push("", `State unavailable: ${state.syncError}`);
 	else {
+		if (state.missingCore.length)
+			lines.push("", "Missing project files:", ...state.missingCore.map((path) => `- ${path}`));
+		if (state.projectErrors.length)
+			lines.push("", "Project-file problems:", ...state.projectErrors.map((error) => `- ${error}`));
 		if (state.changed.length)
 			lines.push("", "Changed:", ...state.changed.map((path) => `- ${path}`));
 		if (state.missing.length)
@@ -290,7 +294,12 @@ export function formatProjectStatusCheck(
 					(item) => `- ${item.path} ← ${item.from.join(", ")}${item.direct ? "" : " (transitive)"}`,
 				),
 			);
-		if (!state.changed.length && !state.missing.length)
+		if (
+			!state.changed.length &&
+			!state.missing.length &&
+			!state.missingCore.length &&
+			!state.projectErrors.length
+		)
 			lines.push("", "All tracked files match their recorded hashes.");
 	}
 	if (pending)
@@ -301,6 +310,19 @@ export function formatProjectStatusCheck(
 		);
 	lines.push("", "A changed hash establishes changed content, not conceptual drift or authority.");
 	return lines.join("\n");
+}
+export async function verifyAcknowledgementObservation(
+	state: ProjectStatusCheck,
+	selected: Set<string>,
+) {
+	for (const file of selected) {
+		const observed = state.artifacts.find((item) => item.path === file)?.currentFingerprint;
+		const current = await fingerprintFile(
+			await resolveExistingProjectPath(state.projectRoot, file),
+		);
+		if (current !== observed)
+			throw new Error(`Acknowledgement aborted because ${file} changed during review`);
+	}
 }
 export async function acknowledgeProjectStatus(
 	startPath: string,
@@ -318,6 +340,7 @@ export async function acknowledgeProjectStatus(
 		if (!artifact) throw new Error(`Acknowledgement file is not tracked: ${file}`);
 		if (!artifact.exists) throw new Error(`Acknowledgement file is missing: ${file}`);
 	}
+	await verifyAcknowledgementObservation(state, selected);
 	const at = now.toISOString(),
 		needsReview = impacts(state.manifest.artifacts, selected)
 			.map((item) => item.path)

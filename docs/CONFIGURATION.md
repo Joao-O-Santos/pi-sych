@@ -1,11 +1,13 @@
 # Configuration
 
-Pi Sych keeps credentials, providers, model choices, and personal skill
-customization outside the public package.
+Pi Sych keeps credentials, provider choices, model identifiers, and
+personal examples outside the public package. That separation is a
+feature: the package can describe its mechanics without pretending to
+know your accounts, costs, or risk tolerance.
 
 ## Worker models
 
-Create `~/.config/pi/pi-sych/models.json` with user-defined roles:
+Create a private catalog such as `~/.config/pi/pi-sych/models.json`:
 
 ``` json
 {
@@ -20,17 +22,37 @@ Create `~/.config/pi/pi-sych/models.json` with user-defined roles:
 }
 ```
 
-`dispatch_worker` uses an exact requested `modelRole`, or `default`, and
-defaults to 90 seconds. Cost and notes are free-form context for the
-supervisor; the runtime does not rank or interpret them.
-`PI_SYCH_MODEL_CATALOG` selects another catalog and
-`PI_SYCH_WORKER_AGENT_DIR` selects the worker runtime directory.
+`dispatch_worker` looks up the exact requested `modelRole`, or the
+catalog's `default` role. Cost and notes are context for the supervisor;
+the runtime does not rank models or invent fallbacks.
+
+The model catalog is needed when a worker is dispatched, not merely to
+start Pi Sych for direct project work. Set `PI_SYCH_MODEL_CATALOG` to
+use a different file. `PI_SYCH_WORKER_AGENT_DIR` selects the isolated
+worker runtime directory.
+
+## Initialize the worker runtime
+
+Run the packaged bootstrap script once for the directory selected by
+`PI_SYCH_WORKER_AGENT_DIR` (or the default directory):
+
+``` sh
+node /path/to/pi-sych/scripts/bootstrap-worker-agent-dir.mjs
+```
+
+The script writes a small `settings.json`, loads only the Pi Sych worker
+extension, and symlinks available authentication/model files from the
+supervisor directory. It does not copy credentials. If the directory is
+missing, `dispatch_worker` reports the exact bootstrap command it needs.
+
+Remote research has a separate opt-in configuration. The worker
+bootstrap does not create or guess that configuration.
 
 ## Project canonical paths
 
-`SYNC.json` (version 2) defines tracked artifacts and their
-dependencies. It may relocate the project root and override the default
-canonical paths for each role:
+`SYNC.json` version 2 records tracked artifacts, fingerprints, and
+explicit dependency edges. It may relocate the project root and override
+canonical paths:
 
 ``` json
 {
@@ -57,24 +79,26 @@ canonical paths for each role:
 }
 ```
 
-`projectRoot` is relative to the manifest directory. Each `canonical`
-path is relative to the project root, or absolute to point outside it.
-The defaults are the names above. Override canonical paths when a
-project uses a non-standard layout (for example, a monorepo that keeps
-state in a `state/` subdirectory) or when several workspaces share one
-`INBOX.md`. Promotion proposals route to the configured target for each
-role. The `inbox` path is where compaction appends promotion proposals.
+`projectRoot` is relative to the manifest directory. Artifact paths must
+be relative and remain lexically inside the project root. Symlinks are
+ordinary project files and are not treated as a security boundary. This
+protects path interpretation without claiming to sandbox processes.
 
-Each artifact in `artifacts` declares its `path`, `fingerprint`,
-`status` (one of `current`, `needs-review`), and optional `dependsOn`
-edges. The resolver walks from the working directory to the workspace
-root for the nearest `SYNC.json`; if none is found it falls back to the
-workspace root with default canonical paths.
+Configured canonical paths are different: they are explicit project
+configuration and may be absolute, outside the project root, or reached
+through a symlink. Pi Sych checks that they exist and are readable, then
+uses the configured target. Use this deliberately; a canonical
+instruction file outside the project is trusted because you declared it.
+
+The resolver walks upward from the working directory to the workspace
+root and uses the nearest `SYNC.json`. Without one, it falls back to the
+workspace root and default canonical names. `INBOX.md` is review state,
+not canonical instruction state.
 
 ## Skill customization
 
 Pi Sych exposes six umbrella skills. To customize examples durably, copy
-one umbrella directory into either:
+one umbrella directory into one of:
 
 ``` text
 ~/.pi/agent/skills/
@@ -83,21 +107,21 @@ one umbrella directory into either:
 ```
 
 For named worker selection, `.pi/skills/` wins over `.agents/skills/`,
-which wins over user and packaged skills. Edit its
-`modules/*/examples.md` files. Leave `guidance.md` intact unless you
-intentionally want to change behavioral guidance. User or project skills
-can add language- and framework-specific specialization without
-modifying Pi Sych.
+which wins over user and packaged skills. Edit `modules/*/examples.md`.
+Leave `guidance.md` intact unless you intentionally want to change
+behavioral guidance.
 
 ## Optional integrations
 
-Plannotator is a runtime dependency but Pi Sych loads only its
-documented lazy browser helpers. File annotation writes
-`<input>.feedback.md` and code review writes `PLANNOTATOR_REVIEW.md`. Do
-not separately enable Plannotator's extension or plan mode for Pi Sych.
+Plannotator is loaded lazily through its documented browser helpers.
+File annotation writes `<input>.feedback.md`; code-review feedback is
+written at the resolved project root as `PLANNOTATOR_REVIEW.md`.
+Plannotator remains a human review adapter; Pi Sych does not enable its
+plan mode.
 
-Set `remoteResearch: true` only for an assigned worker call. It receives
-MCPorter and explicit private configuration; ordinary workers do not.
-`PI_SYCH_MCPORTER_CONFIG` otherwise defaults to
-`~/.config/pi-sych/mcp/mcporter.json`. `/pi-sych-mcp` reports diagnostic
-status without printing credentials.
+Set `remoteResearch: true` only for an assigned worker call. That worker
+receives MCPorter and the explicit configuration below; ordinary workers
+do not. `PI_SYCH_MCPORTER_CONFIG` defaults to
+`~/.config/pi-sych/mcp/mcporter.json`. `/pi-sych-mcp` reports whether
+the extension and configuration are available without printing
+credentials.

@@ -10,7 +10,7 @@ import {
 	inspectMcporter,
 	remoteResearchExtensionPaths,
 } from "./src/mcporter.js";
-import { loadModelCatalog } from "./src/model-catalog.js";
+import { loadModelCatalog, loadOptionalModelCatalog } from "./src/model-catalog.js";
 import {
 	parseCodeReviewArgs,
 	startCodeReview,
@@ -68,6 +68,21 @@ export function formatDispatchWorkerOutcome(outcome: DispatchOutcome) {
 }
 const notifyError = (ctx: ExtensionCommandContext, error: unknown) =>
 	ctx.ui.notify(error instanceof Error ? error.message : String(error), "error");
+export async function configuredSupervisorInstructions(cwd: string, existing = "") {
+	try {
+		const project = await resolveProject(cwd),
+			instructions = await readFile(project.canonical.agents, "utf8").catch(
+				(error: NodeJS.ErrnoException) => {
+					if (error.code === "ENOENT") return "";
+					throw error;
+				},
+			);
+		if (!instructions.trim() || existing.includes(instructions.trim())) return undefined;
+		return `Configured project instructions (${showPath(project.projectRoot, project.canonical.agents)}):\n${instructions.trim()}`;
+	} catch {
+		return undefined;
+	}
+}
 async function projectFile(cwd: string, input: string) {
 	if (!input.trim() || isAbsolute(input)) throw new Error("Path must be a project-local file");
 	const project = await resolveProject(cwd),
@@ -107,16 +122,20 @@ function annotationResult(
 }
 export default function piSychWorkbench(pi: ExtensionAPI): void {
 	pi.on("before_agent_start", async (event) => {
-		const catalog = loadModelCatalog();
-		const models = Object.entries(catalog.models)
-			.map(
-				([role, entry]) =>
-					`- ${role}: ${entry.cost ?? "cost unspecified"}; ${entry.notes ?? "no notes"}`,
-			)
-			.join("\n");
-		return {
-			systemPrompt: `${event.systemPrompt}\n\n${SUPERVISOR_GUIDANCE}\n\nWorker model catalog (choose a role by judgment):\n${models}`,
-		};
+		const sections = [event.systemPrompt, SUPERVISOR_GUIDANCE],
+			instructions = await configuredSupervisorInstructions(process.cwd(), event.systemPrompt);
+		if (instructions) sections.push(instructions);
+		const catalog = loadOptionalModelCatalog();
+		if (catalog) {
+			const models = Object.entries(catalog.models)
+				.map(
+					([role, entry]) =>
+						`- ${role}: ${entry.cost ?? "cost unspecified"}; ${entry.notes ?? "no notes"}`,
+				)
+				.join("\n");
+			sections.push(`Worker model catalog (choose a role by judgment):\n${models}`);
+		}
+		return { systemPrompt: sections.join("\n\n") };
 	});
 	pi.on("session_before_compact", compact);
 	pi.registerTool({
@@ -226,7 +245,8 @@ export default function piSychWorkbench(pi: ExtensionAPI): void {
 			try {
 				const session = await startCodeReview(ctx, parseCodeReviewArgs(args));
 				ctx.ui.notify(`Plannotator code review opened: ${session.url}`, "info");
-				annotationResult(pi, ctx, session, resolve(ctx.cwd, "PLANNOTATOR_REVIEW.md"));
+				const project = await resolveProject(ctx.cwd);
+				annotationResult(pi, ctx, session, resolve(project.projectRoot, "PLANNOTATOR_REVIEW.md"));
 			} catch (error) {
 				notifyError(ctx, error);
 			}

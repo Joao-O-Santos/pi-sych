@@ -20,23 +20,11 @@ test("worker bootstrap loads only the worker extension and links credentials", a
 		supervisorAgentDir,
 	});
 	const settings = JSON.parse(await readFile(join(agentDir, "settings.json"), "utf8"));
-	const mcporter = JSON.parse(await readFile(join(agentDir, "mcporter.json"), "utf8"));
 
 	assert.deepEqual(settings.packages, []);
 	assert.deepEqual(settings.extensions, [join(process.cwd(), "extensions/worker/index.ts")]);
 	assert.deepEqual(settings.skills, []);
-	assert.deepEqual(mcporter, {
-		version: 1,
-		defaultExposure: "index",
-		callTimeoutMs: 60000,
-		discoveryTimeoutMs: 3000,
-		maxMatchedTools: 5,
-		servers: {
-			context7: { exposure: "index" },
-			openalex: { exposure: "index" },
-			"scholar-gateway": { exposure: "index" },
-		},
-	});
+	await assert.rejects(readFile(join(agentDir, "mcporter.json"), "utf8"), { code: "ENOENT" });
 	assert.equal(result.linked["auth.json"], true);
 	assert.equal(result.linked["models.json"], false);
 	assert.equal(result.linked["models-store.json"], true);

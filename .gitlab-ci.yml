@@ -1,7 +1,6 @@
 image: node:24-bookworm
 
 variables:
-  GIT_DEPTH: "0"
   PANDOC_VERSION: "3.10.1"
 
 before_script:
@@ -22,7 +21,6 @@ verify:
     - npm run source:budget
     - npm run test:deps
     - npm test
-    - npm run smoke
     - npm pack --dry-run
     - git diff --check
 
@@ -49,7 +47,6 @@ publish-npm:
     - npm run source:budget
     - npm run test:deps
     - npm test
-    - npm run smoke
     - npm pack --dry-run
     - |
       package_name="$(node -p 'require("./package.json").name')"

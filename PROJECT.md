@@ -63,19 +63,14 @@ TypeScript is about 1,550 lines within the 2,000-line cap.
 
 ## Previous action
 
-{verified} Released the breaking simplification as signed Git commit
-`0e70feb` and signed tag `v4.0.0`, both pushed to `origin`. The release
-gate passed style/Markdown/type checks, 21 unit checks, 5 integration
-checks, two live usage checks, dependency and smoke checks, source
-budget, package dry run, production audit, and whitespace checks.
+{verified} Completed the focused v4 correctness pass and documentation
+rewrite. The implementation now bounds compaction, preserves explicit
+symlink behavior, surfaces project validation errors, rechecks files
+before acknowledgement, validates worker-reported paths, loads model
+configuration lazily, and keeps bootstrap/MCPorter boundaries explicit.
+The deterministic gate passed 27 unit checks and 5 integration checks.
 
 ## Immediate next step
 
-{verified} Released the CI fix as signed commit `7b50a12` and signed tag
-`v4.0.1`, both pushed to `origin`. GitLab pipelines passed for `main`
-and `v4.0.1`.
-
-## Immediate next step
-
-{accepted} Release `v4.0.2` to repair the package-manifest image URL;
-publishing remains handled by GitLab CI.
+{accepted} Release signed patch `v4.0.3` through GitLab CI after the
+full release gate passes. Existing public tags remain immutable.

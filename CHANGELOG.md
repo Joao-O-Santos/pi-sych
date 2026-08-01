@@ -3,6 +3,21 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
+## v4.0.3 - 2026-08-01
+
+### Correctness and documentation
+
+- Bound compaction snapshots, exclude unreviewed inbox contents, and
+  count actual proposal lines.
+- Make project validation errors visible, recheck files before
+  acknowledgement, and validate worker-reported paths.
+- Load supervisor instructions and worker model roles at the right time;
+  keep worker bootstrap and MCPorter configuration explicit.
+- Remove the duplicate smoke command and replace Git-history-dependent
+  migration discovery with a checked-in fixture.
+- Clarify user, supervisor, and contributor documentation, including the
+  deliberate limits of path handling and worker modes.
+
 ## v4.0.2 - 2026-08-01
 
 ### Packaging

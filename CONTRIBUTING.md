@@ -1,50 +1,73 @@
 # Contributing
 
-Pi Sych is alpha software. It was developed with substantial AI
-assistance; review every proposed change rather than assuming generated
-code or prose is correct.
+Pi Sych is alpha software and was developed with substantial AI
+assistance. That makes review more important, not less: inspect the
+source, tests, package contents, and claims in every proposed change.
 
-## Development
+## Issues
 
-- Work directly on `main` unless isolation is genuinely needed.
-- Keep each change focused, reviewable, and truthful about what was
-  checked. For substantive behavior changes, obtain independent test
-  design before implementation and independent read-only review after
-  it.
-- Do not add credentials, personal configuration, generated runtime
-  state, or unverified claims.
-- Follow existing repository conventions. Do not push, alter remotes,
-  rewrite shared history, or delete branches without explicit
-  authorization.
+A useful issue answers four questions:
 
-Before committing, run:
+1.  What were you trying to do?
+2.  What did you expect?
+3.  What happened instead, including the command or human command used?
+4.  What environment, package version, and reproducible evidence can you
+    share?
+
+For a status or synchronization problem, include the relevant sanitized
+`PROJECT.md`/`SYNC.json` shape and distinguish changed content from your
+interpretation of that change. Never attach credentials, provider
+tokens, private model catalogs, or sensitive project material.
+
+## Pull requests
+
+Work directly on `main` only when that is the established local
+convention; otherwise use a focused branch. Keep each PR reviewable and
+truthful about what was checked. Explain the user-facing behavior, the
+mechanical invariant, the regression test, and any known limitations.
+
+Before requesting review, run:
 
 ``` sh
 npm run typecheck
 npm run style
 npm run test:deps
+npm run source:budget
 npm test
-npm run smoke
 npm pack --dry-run
 git diff --check
 ```
 
-Pi extensions and skills run with the local user's permissions. They are
-not a sandbox. Keep long or consequential plans in project-local
-Markdown and wait for browser or file review before implementation. See
-Pi's [security](https://pi.dev/docs/latest/security) and
-[containerization](https://pi.dev/docs/latest/containerization)
-documentation when isolation is needed.
+Use deterministic temporary fixtures for process and filesystem tests.
+Use live model tests only when they add evidence that deterministic
+tests cannot provide, and report their cost and limitations. Do not
+alter remotes, rewrite shared history, delete branches, or publish from
+a contributor change without explicit authorization.
+
+## Documentation contributions
+
+Write general documentation for users: begin with the task they want to
+complete, state prerequisites, and show a small working example. Write
+supervisor-facing sections for model-visible contracts, boundaries, and
+failure handling. Write developer documentation for contributors other
+than the owner: explain the reasoning needed to file issues, make PRs,
+run checks, and understand limits.
+
+Prefer accessible headings, meaningful link text, short paragraphs,
+concrete commands, and plain language. Be engaging enough to make the
+risk boundary memorable, but never use confidence or drama to conceal an
+unverified claim.
 
 ## Releases
 
 Most contributions do not need release work. When a maintainer requests
-a release, prepare a focused changelog entry, confirm the intended
-version, run the documented checks, and inspect `npm pack --dry-run` so
-the package contains only intended public files.
+one, prepare a focused changelog entry, verify the next patch version
+from Git tags and package metadata rather than trusting a stale
+document, and run the complete documented gate. Inspect
+`npm pack --dry-run` so the package contains only intended public files.
 
 Maintainers create the signed release commit and annotated `v<version>`
-tag after explicit authorization. The configured GitLab tag pipeline
-reruns the release checks and publishes a new matching npm version with
-provenance. Contributors do not need an npm token or access to
-publishing credentials.
+tag after explicit authorization. The GitLab tag pipeline reruns checks
+and publishes the matching npm version with provenance through the
+project's configured credentials. Contributors do not need an npm token
+or publish directly.

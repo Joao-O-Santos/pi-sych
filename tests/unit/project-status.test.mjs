@@ -7,11 +7,44 @@ import test from "node:test";
 import {
 	acknowledgeProjectStatus,
 	checkProjectStatus,
+	formatProjectStatusCheck,
+	verifyAcknowledgementObservation,
 } from "../../.test-build/workbench/src/project-status.js";
 
 const hash = (value) => `sha256:${createHash("sha256").update(value).digest("hex")}`;
 const project =
 	"# Project\n## Objective\n## Current direction\n## Definition of done\n## Previous action\n## Immediate next step\n";
+test("status exposes missing core files and project validation problems", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-errors-"));
+	await writeFile(join(root, "PROJECT.md"), "# Project\n\n## Objective\nIncomplete\n");
+	await writeFile(
+		join(root, "SYNC.json"),
+		JSON.stringify({ version: 2, confirmedAt: "now", artifacts: [] }),
+	);
+	const state = await checkProjectStatus(root);
+	assert.deepEqual(state.missingCore, []);
+	assert.ok(state.projectErrors.length > 0);
+	assert.match(formatProjectStatusCheck(state), /Project-file problems:/);
+});
+test("acknowledgement recheck rejects content changed after the status read", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-race-"));
+	await writeFile(join(root, "PROJECT.md"), project);
+	await writeFile(join(root, "A.md"), "before");
+	await writeFile(
+		join(root, "SYNC.json"),
+		JSON.stringify({
+			version: 2,
+			confirmedAt: "now",
+			artifacts: [{ path: "A.md", fingerprint: hash("before"), status: "current" }],
+		}),
+	);
+	const state = await checkProjectStatus(root);
+	await writeFile(join(root, "A.md"), "after");
+	await assert.rejects(
+		verifyAcknowledgementObservation(state, new Set(["A.md"])),
+		/changed during review/,
+	);
+});
 test("status fingerprints files and traverses declared dependencies", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-"));
 	await writeFile(join(root, "PROJECT.md"), project);

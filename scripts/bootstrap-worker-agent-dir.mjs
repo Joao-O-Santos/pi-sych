@@ -56,26 +56,6 @@ export async function bootstrapWorkerAgentDir({
 		},
 	);
 
-	const mcporter = {
-		version: 1,
-		defaultExposure: "index",
-		callTimeoutMs: 60000,
-		discoveryTimeoutMs: 3000,
-		maxMatchedTools: 5,
-		servers: {
-			context7: { exposure: "index" },
-			openalex: { exposure: "index" },
-			"scholar-gateway": { exposure: "index" },
-		},
-	};
-	await writeFile(
-		resolve(resolvedAgentDir, "mcporter.json"),
-		`${JSON.stringify(mcporter, null, 2)}\n`,
-		{
-			mode: 0o600,
-		},
-	);
-
 	const linked = {};
 	for (const file of ["auth.json", "models.json", "models-store.json"]) {
 		linked[file] = await linkIfPresent(
@@ -89,6 +69,7 @@ export async function bootstrapWorkerAgentDir({
 		"",
 		"Generated runtime configuration. It loads only the Pi Sych worker extension from the selected package.",
 		"Credential and model files are symlinked when present; they are never copied.",
+		"For remote research, configure MCPorter at ~/.config/pi-sych/mcp/mcporter.json.",
 		"",
 	].join("\n");
 	await writeFile(resolve(resolvedAgentDir, "README.md"), readme, {

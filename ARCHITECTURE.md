@@ -1,55 +1,99 @@
 # Architecture
 
-Pi Sych is a small mechanical layer for project paths, hashes, bounded
-workers, and explicit human review.
+This section is for the supervisor model and for contributors who need
+to understand the runtime boundary. Pi Sych is deliberately a small
+mechanical layer: it tracks paths and hashes, launches bounded workers,
+and preserves explicit human review. Skills and humans own semantic
+judgment.
 
-![](https://unpkg.com/pi-sych@4.0.0/docs/img/architecture.png)
+![Pi Sych architecture: supervisor, project state, workers, and
+review](https://unpkg.com/pi-sych@4.0.3/docs/img/architecture.png)
 
-## Runtime
+## Supervisor contract
 
-The workbench provides `dispatch_worker` and `project_status`, plus
-`/pi-sych-status`, `/pi-sych-mcp`, `/plannotator-last`,
-`/plannotator-annotate`, and `/plannotator-review`. It does not register
-plan-review tooling.
+The supervisor sees two agent tools:
 
-Workers receive a resolved project, an explicit model role, selected
-context and skills, and a bounded timeout. They may submit exactly one
-immutable result with status, summary, files, and limitations. Tool
-modes control visible Pi tools, not host permissions.
+- `project_status` checks or acknowledges mechanical project state;
+- `dispatch_worker` runs one short-lived clean-context worker.
+
+Human commands are separate: `/pi-sych-status`, `/pi-sych-mcp`,
+`/plannotator-last`, `/plannotator-annotate`, and `/plannotator-review`.
+There is no plan controller, worker registry, semantic reconciliation
+tool, or automatic promotion mechanism.
+
+When a turn starts, Pi Sych adds its static guidance and, when present,
+the configured project `agents` file. The private model catalog is
+loaded lazily: direct project work does not require worker setup, while
+a worker dispatch requires a valid exact-role catalog.
+
+The supervisor should pass the smallest complete worker packet: task,
+expected output, capability mode, context files, selected skills, model
+role, and a bounded timeout. Workers receive no supervisor transcript.
+Tool modes control visible Pi tools; they are not sandboxes and do not
+remove host permissions.
+
+## Worker lifecycle
+
+A worker is a clean Pi process with one terminal result. The launcher:
+
+1.  resolves the project and selected context;
+2.  checks that the worker agent directory was explicitly bootstrapped;
+3.  creates a temporary result directory;
+4.  starts Pi with the selected tools, skills, model, and optional
+    MCPorter extension;
+5.  stops it on cancellation or timeout, escalating from `SIGTERM` to
+    `SIGKILL`; and
+6.  accepts a result only when it is valid, immutable, complete, and the
+    process exits normally.
+
+Reported files must be relative, remain inside the project root, and
+exist when the result is accepted. The temporary result directory is
+removed whether the worker succeeds or fails.
+
+## Project state
 
 `SYNC.json` version 2 records tracked file hashes and dependency paths.
-`project_status` reports missing or changed hashes and declared
-dependency impact without deciding semantic drift. Acknowledgement
-updates named reviewed files atomically and marks affected dependents
-for review.
+`project_status` reports missing files, changed hashes, persisted
+statuses, project-brief validation problems, and direct or transitive
+dependency impact. It never decides semantic drift, authority, quality,
+or correctness.
+
+Acknowledgement is atomic and rechecks selected files immediately before
+writing. If a file changed during the review window, acknowledgement
+aborts instead of recording an obsolete fingerprint. A changed hash
+proves only that content changed after acknowledgement.
+
+Artifact paths are project-local by lexical path, while symlinks remain
+ordinary project files and are not treated as a security boundary.
+Explicit canonical paths are configuration: they may be absolute or
+external and are checked for readability rather than treated as a
+sandbox boundary.
 
 ## Compaction
 
-Compaction reads the prior summary, compacted conversation, canonical
-project files, and project status. The active supervisor model returns a
-small working memory: task, constraints, active work, blockers, next
-step, and relevant files. It may append up to five unreviewed proposals
-as plain lines in `INBOX.md`, for example
-`- {todo} Update the architecture diagram.` Pending proposals are
-counted from the file and remain human-review state.
+Compaction sends the previous summary, compacted conversation, a concise
+status projection, and a bounded snapshot of `PROJECT.md`, `TODO.md`,
+and `DECISIONS.md` when present. It retains relevant artifact paths
+without loading every artifact. `INBOX.md` is intentionally excluded
+because it contains unreviewed proposals.
 
-## Models and skills
+Text snapshots are capped per file and in total. Truncation is reported
+to the model. At most five validated proposals may be appended to the
+configured inbox, which is created as needed and counted by proposal
+lines, not by newline accidents.
 
-Private `models.json` is a user-defined catalog. Each named role maps
-directly to one model and may include free-form cost and notes. The
-supervisor selects a role; the runtime performs only exact lookup.
+## Skills, MCPorter, and Plannotator
 
 Only six umbrella skills are public: `project`, `write`, `analyze`,
 `code`, `review`, and `research`. Their one-level modules provide
-selected guidance and examples without enlarging the initial skill
+focused guidance and editable examples without enlarging the initial
 catalog.
 
-## MCPorter and Plannotator
-
-MCPorter is enabled only for explicitly requested remote research.
-Diagnostics report extension availability, configuration
-location/presence, and configured server names.
+MCPorter is enabled only for explicitly requested remote research. Its
+configuration is not generated by worker bootstrap. Diagnostics report
+availability, configuration presence, and server names without printing
+credentials.
 
 Plannotator remains a narrow human review adapter. Last-message feedback
 enters the conversation. File annotation writes `<input>.feedback.md`;
-code-review feedback writes `PLANNOTATOR_REVIEW.md`.
+code-review feedback writes `<projectRoot>/PLANNOTATOR_REVIEW.md`.

@@ -1,4 +1,5 @@
-import { appendFile, readFile } from "node:fs/promises";
+import { appendFile, mkdir, readFile } from "node:fs/promises";
+import { dirname } from "node:path";
 import { uuidv7 } from "@earendil-works/pi-ai";
 import { complete } from "@earendil-works/pi-ai/compat";
 import {
@@ -7,7 +8,12 @@ import {
 	type SessionBeforeCompactEvent,
 	serializeConversation,
 } from "@earendil-works/pi-coding-agent";
-import { type ResolvedProject, resolveProject, showPath } from "./project-files.js";
+import {
+	type ResolvedProject,
+	resolveProject,
+	resolveProjectPath,
+	showPath,
+} from "./project-files.js";
 import { checkProjectStatus } from "./project-status.js";
 
 export interface Memory {
@@ -87,44 +93,75 @@ export function renderWorkingMemory(memory: Memory): string {
 		values.length ? `\n## ${name}\n\n${values.map((value) => `- ${value}`).join("\n")}\n` : "";
 	return `# Working memory\n\n## Task\n\n${memory.task}${section("Constraints", memory.constraints)}${section("Active work", memory.active)}${section("Blockers", memory.blockers)}\n## Next\n\n${memory.next}${section("Files", memory.files)}`;
 }
+export const COMPACTION_FILE_BYTE_LIMIT = 16 * 1024;
+export const COMPACTION_TOTAL_BYTE_LIMIT = 48 * 1024;
+const SNAPSHOT_ROLES = ["project", "todo", "decisions"] as const;
+const proposalLine = /^- \{(?:project|agents|personal-agents|style|evidence|decisions|todo)\}\s+/;
+
 export async function pendingPromotions(
 	project: Pick<ResolvedProject, "canonical">,
 ): Promise<number> {
 	try {
-		return (await readFile(project.canonical.inbox, "utf8")).split("\n").length - 1;
+		return (await readFile(project.canonical.inbox, "utf8"))
+			.split("\n")
+			.filter((line) => proposalLine.test(line)).length;
 	} catch (error) {
 		if ((error as NodeJS.ErrnoException).code === "ENOENT") return 0;
 		throw error;
 	}
 }
-async function canonical(
+function clipped(value: string, limit: number) {
+	const bytes = Buffer.byteLength(value, "utf8");
+	if (bytes <= limit) return value;
+	const marker = `\n[truncated after ${limit} bytes]`,
+		available = Math.max(0, limit - Buffer.byteLength(marker, "utf8"));
+	return `${Buffer.from(value).subarray(0, available).toString("utf8")}${marker}`;
+}
+export async function compactionSnapshot(
 	project: ResolvedProject,
 	state: Awaited<ReturnType<typeof checkProjectStatus>>,
 ) {
-	const paths = new Set<string>(),
-		files: Array<{ path: string; content: string }> = [];
-	for (const path of [
-		...Object.values(project.canonical),
-		...(state.manifest?.artifacts ?? [])
-			.map((item) => (item as { path?: string }).path)
-			.filter(Boolean)
-			.map((path) => `${project.projectRoot}/${path}`),
-	]) {
+	const files: Array<{ path: string; content: string }> = [],
+		paths = new Set<string>(),
+		candidates = SNAPSHOT_ROLES.map((role) => project.canonical[role]),
+		artifactPaths = (state.manifest?.artifacts ?? []).map((artifact) =>
+			showPath(project.projectRoot, resolveProjectPath(project.projectRoot, artifact.path)),
+		);
+	let total = 0;
+	for (const path of candidates) {
 		const display = showPath(project.projectRoot, path);
 		if (paths.has(display)) continue;
 		paths.add(display);
 		try {
-			files.push({ path: display, content: await readFile(path, "utf8") });
+			const content = await readFile(path, "utf8"),
+				remaining = Math.max(0, COMPACTION_TOTAL_BYTE_LIMIT - total),
+				limit = Math.min(COMPACTION_FILE_BYTE_LIMIT, remaining);
+			if (!limit) break;
+			const snapshot = clipped(content, limit);
+			files.push({ path: display, content: snapshot });
+			total += Buffer.byteLength(snapshot, "utf8");
 		} catch (error) {
 			if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
 		}
 	}
-	return files;
+	return { files, paths: [...new Set([...paths, ...artifactPaths])] };
+}
+function statusProjection(status: Awaited<ReturnType<typeof checkProjectStatus>>) {
+	return {
+		projectRoot: status.projectRoot,
+		syncError: status.syncError,
+		changed: status.changed,
+		missing: status.missing,
+		impacted: status.impacted,
+		cycles: status.cycles,
+		missingCore: status.missingCore,
+		projectErrors: status.projectErrors,
+	};
 }
 function prompt(
 	event: SessionBeforeCompactEvent,
-	files: Array<{ path: string; content: string }>,
-	status: unknown,
+	snapshot: Awaited<ReturnType<typeof compactionSnapshot>>,
+	status: Awaited<ReturnType<typeof checkProjectStatus>>,
 ) {
 	const conversation = serializeConversation(
 		convertToLlm([
@@ -132,14 +169,14 @@ function prompt(
 			...event.preparation.turnPrefixMessages,
 		]),
 	);
-	return `Return JSON with workingMemory {task,constraints,active,blockers,next,files} and at most five promotions {target,proposal}. Preserve only information needed to continue. Promotions are usually empty and are unreviewed lines in INBOX.md.\nPrevious summary:\n${event.preparation.previousSummary ?? "none"}\nConversation:\n${conversation}\nCanonical files:\n${JSON.stringify(files)}\nProject status:\n${JSON.stringify(status)}`;
+	return `Return JSON with workingMemory {task,constraints,active,blockers,next,files} and at most five promotions {target,proposal}. Preserve only information needed to continue. Promotions are usually empty and are unreviewed lines in INBOX.md.\nPrevious summary:\n${event.preparation.previousSummary ?? "none"}\nConversation:\n${conversation}\nRelevant project files (bounded text snapshot; INBOX is intentionally excluded):\n${JSON.stringify(snapshot.files)}\nRelevant artifact paths (contents are not included):\n${JSON.stringify(snapshot.paths)}\nProject status:\n${JSON.stringify(statusProjection(status))}`;
 }
 export async function compact(event: SessionBeforeCompactEvent, ctx: ExtensionContext) {
 	try {
 		if (!ctx.model) return undefined;
 		const project = await resolveProject(ctx.cwd),
 			status = await checkProjectStatus(ctx.cwd, project),
-			files = await canonical(project, status),
+			snapshot = await compactionSnapshot(project, status),
 			auth = await ctx.modelRegistry.getApiKeyAndHeaders(ctx.model);
 		if (!auth.ok || !auth.apiKey) return undefined;
 		const response = await complete(
@@ -148,7 +185,7 @@ export async function compact(event: SessionBeforeCompactEvent, ctx: ExtensionCo
 				messages: [
 					{
 						role: "user",
-						content: [{ type: "text", text: prompt(event, files, status) }],
+						content: [{ type: "text", text: prompt(event, snapshot, status) }],
 						timestamp: Date.now(),
 					},
 				],
@@ -168,13 +205,21 @@ export async function compact(event: SessionBeforeCompactEvent, ctx: ExtensionCo
 				.map((part) => part.text)
 				.join("\n"),
 			output = parseCompactionModelOutput(raw),
-			allowed = new Set(files.map((file) => file.path)),
+			allowed = new Set(snapshot.paths),
 			memory = validateWorkingMemory(output.workingMemory, allowed);
-		if (output.promotions.length)
+		if (output.promotions.length) {
+			await mkdir(dirname(project.canonical.inbox), { recursive: true });
+			const prefix = await readFile(project.canonical.inbox, "utf8").catch(
+				(error: NodeJS.ErrnoException) => {
+					if (error.code === "ENOENT") return "";
+					throw error;
+				},
+			);
 			await appendFile(
 				project.canonical.inbox,
-				`${output.promotions.map((item) => `- {${item.target}} ${item.proposal}`).join("\n")}\n`,
+				`${prefix && !prefix.endsWith("\n") ? "\n" : ""}${output.promotions.map((item) => `- {${item.target}} ${item.proposal}`).join("\n")}\n`,
 			);
+		}
 		const pending = await pendingPromotions(project);
 		ctx.ui.notify(
 			`Working-memory compaction complete. ${showPath(project.projectRoot, project.canonical.inbox)} has ${pending} pending memory proposals.`,

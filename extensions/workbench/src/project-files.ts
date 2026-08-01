@@ -1,17 +1,7 @@
 import { execFile as exec } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { constants } from "node:fs";
-import {
-	access,
-	type FileHandle,
-	mkdir,
-	open,
-	readFile,
-	realpath,
-	rename,
-	rm,
-	stat,
-} from "node:fs/promises";
+import { access, type FileHandle, mkdir, open, readFile, rename, rm, stat } from "node:fs/promises";
 import { dirname, isAbsolute, parse, relative, resolve, sep } from "node:path";
 import { promisify } from "node:util";
 
@@ -177,12 +167,15 @@ export function resolveProjectPath(root: string, path: string) {
 	inside(root, absolute, path);
 	return absolute;
 }
-export async function resolveExistingProjectPath(root: string, path: string) {
-	const absolute = isAbsolute(path) ? resolve(path) : resolveProjectPath(root, path);
+export async function resolveConfiguredPath(path: string) {
+	const absolute = resolve(path);
 	await access(absolute, constants.R_OK);
-	const [resolvedRoot, resolvedPath] = await Promise.all([realpath(root), realpath(absolute)]);
-	inside(resolvedRoot, resolvedPath, path);
-	return resolvedPath;
+	return absolute;
+}
+export async function resolveExistingProjectPath(root: string, path: string) {
+	const absolute = resolveProjectPath(root, path);
+	await access(absolute, constants.R_OK);
+	return absolute;
 }
 export async function writeAtomicFile(path: string, content: string) {
 	const parent = dirname(path),

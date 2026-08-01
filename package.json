@@ -1,6 +1,6 @@
 {
   "name": "pi-sych",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "General project and artifact development workbench for Pi",
   "files": [
     "config",
@@ -50,8 +50,7 @@
     "test:integration": "node --test tests/integration/*.test.mjs",
     "test:usage": "node --test tests/usage/*.test.mjs",
     "test:deps": "node scripts/check-mcporter-dependencies.mjs",
-    "deps:latest": "npm update pi-mcporter && npm run test:deps && npm test",
-    "smoke": "node scripts/smoke-test.mjs"
+    "deps:latest": "npm update pi-mcporter && npm run test:deps && npm test"
   },
   "peerDependencies": {
     "@earendil-works/pi-agent-core": "*",
@@ -74,7 +73,7 @@
     "skills": [
       "./skills"
     ],
-    "image": "https://unpkg.com/pi-sych@4.0.2/docs/img/architecture.png"
+    "image": "https://unpkg.com/pi-sych@4.0.3/docs/img/architecture.png"
   },
   "dependencies": {
     "@plannotator/pi-extension": "latest",

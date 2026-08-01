@@ -5,6 +5,7 @@ import { join } from "node:path";
 import test from "node:test";
 import {
 	parseSyncManifest,
+	resolveConfiguredPath,
 	resolveExistingProjectPath,
 	resolveProject,
 	resolveProjectPath,
@@ -29,12 +30,14 @@ test("resolver uses nearest manifest and configured root", async () => {
 	assert.match(project.projectRoot, /work$/);
 	assert.match(project.canonical.project, /work\/state\/PROJECT\.md$/);
 });
-test("existing paths reject symlink escapes", async () => {
+test("project-local symlinks and configured external paths remain usable", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-symlink-"));
 	const outside = join(tmpdir(), `pi-sych-outside-${Date.now()}.md`);
+	const link = join(root, "escape.md");
 	await writeFile(outside, "outside");
-	await symlink(outside, join(root, "escape.md"));
-	await assert.rejects(resolveExistingProjectPath(root, "escape.md"), /leaves the project root/);
+	await symlink(outside, link);
+	assert.equal(await resolveExistingProjectPath(root, "escape.md"), link);
+	assert.equal(await resolveConfiguredPath(link), link);
 });
 
 test("PROJECT markdown remains shallowly validated", () => {

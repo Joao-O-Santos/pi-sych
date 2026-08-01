@@ -7,7 +7,13 @@ import { dirname, isAbsolute, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Type } from "typebox";
 import type { ModelCatalog } from "./model-catalog.js";
-import { type ResolvedProject, resolveExistingProjectPath, showPath } from "./project-files.js";
+import {
+	type ResolvedProject,
+	resolveConfiguredPath,
+	resolveExistingProjectPath,
+	resolveProjectPath,
+	showPath,
+} from "./project-files.js";
 
 export const WORKER_MODES = ["read-only", "edit", "full-host"] as const;
 export type WorkerMode = (typeof WORKER_MODES)[number];
@@ -131,20 +137,20 @@ async function contexts(
 	project: ResolvedProject,
 	request: DispatchRequest,
 ): Promise<ContextFile[]> {
-	const files = [
-		...request.contextFiles,
-		...(["agents", "style"] as const)
-			.filter((role) => existsSync(project.canonical[role]))
-			.map((role) => ({
-				path: showPath(project.projectRoot, project.canonical[role]),
-				purpose: `configured ${role} conventions`,
-			})),
-	];
+	const files = [...request.contextFiles];
 	const unique = new Map<string, ContextFile>();
 	for (const file of files) {
 		const path = await resolveExistingProjectPath(project.projectRoot, file.path);
 		await access(path, constants.R_OK);
 		unique.set(path, { ...file, path: showPath(project.projectRoot, path) });
+	}
+	for (const role of ["agents", "style"] as const) {
+		if (!existsSync(project.canonical[role])) continue;
+		const path = await resolveConfiguredPath(project.canonical[role]);
+		unique.set(path, {
+			path: showPath(project.projectRoot, path),
+			purpose: `configured ${role} conventions`,
+		});
 	}
 	return [...unique.values()];
 }
@@ -183,13 +189,15 @@ export function validateWorkerResult(value: unknown): WorkerResult {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error("Worker result must be an object");
 	const item = value as Record<string, unknown>,
-		status = text(item.status, "status");
+		status = text(item.status, "status"),
+		files = strings(item.files, "files");
 	if (!(["complete", "partial", "failed"] as string[]).includes(status))
 		throw new Error(`Invalid worker result status: ${status}`);
+	for (const file of files) resolveProjectPath("/project", file);
 	return {
 		status: status as WorkerResult["status"],
 		summary: text(item.summary, "summary"),
-		files: strings(item.files, "files"),
+		files,
 		limitations: strings(item.limitations, "limitations"),
 	};
 }
@@ -287,7 +295,15 @@ export async function dispatchWorker(options: {
 		timeoutMs = request.timeoutMs ?? DEFAULT_TIMEOUT_MS,
 		model = modelFor(options.catalog, request.modelRole),
 		contextFiles = await contexts(options.project, request),
-		runtime = await mkdtemp(resolve(tmpdir(), "pi-sych-")),
+		workerSettings = resolve(options.workerAgentDir, "settings.json");
+	try {
+		await access(workerSettings, constants.R_OK);
+	} catch {
+		throw new Error(
+			`Worker agent directory is not initialized at ${options.workerAgentDir}. Run: node ${resolve(options.packageRoot ?? PI_SYCH_PACKAGE_ROOT, "scripts/bootstrap-worker-agent-dir.mjs")} --agent-dir ${options.workerAgentDir}`,
+		);
+	}
+	const runtime = await mkdtemp(resolve(tmpdir(), "pi-sych-")),
 		resultPath = resolve(runtime, "result.json");
 	try {
 		const spec: WorkerLaunchSpec = {
@@ -307,6 +323,8 @@ export async function dispatchWorker(options: {
 		let result: WorkerResult | undefined, error: string | undefined;
 		try {
 			result = validateWorkerResult(JSON.parse(await readFile(resultPath, "utf8")));
+			for (const file of result.files)
+				await resolveExistingProjectPath(options.project.projectRoot, file);
 		} catch (reason) {
 			error = reason instanceof Error ? reason.message : String(reason);
 		}
