@@ -227,7 +227,7 @@ research.
 ## How it works
 
 ![Pi Sych architecture: project state, bounded workers, and human
-review](https://unpkg.com/pi-sych@4.0.3/docs/img/architecture.png)
+review](https://unpkg.com/pi-sych@4.0.4/docs/img/architecture.png)
 
 Pi Sych supplies a few mechanical pieces rather than a general
 orchestration system:

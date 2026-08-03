@@ -3,6 +3,15 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
+## v4.0.4 - 2026-08-03
+
+### Documentation and maintenance
+
+- Add the user-centred review and revision workflow guide and diagrams.
+- Consolidate shared primitive validation across worker, compaction, and
+  project-status paths.
+- Simplify optional model-catalog loading and dependency validation.
+
 ## v4.0.3 - 2026-08-01
 
 ### Correctness and documentation

@@ -7,7 +7,7 @@ and preserves explicit human review. Skills and humans own semantic
 judgment.
 
 ![Pi Sych architecture: supervisor, project state, workers, and
-review](https://unpkg.com/pi-sych@4.0.3/docs/img/architecture.png)
+review](https://unpkg.com/pi-sych@4.0.4/docs/img/architecture.png)
 
 ## Supervisor contract
 
