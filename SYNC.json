@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-03T19:50:02.001Z",
+  "confirmedAt": "2026-08-03T20:03:40.755Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:61ce5edad16050460972fed67eab63aae97e19dfb1981e3dbd380870a22439cb",
+      "fingerprint": "sha256:df6f56e40f0b067bfba40c8c6f860e9f690c9c4b06be87bff7d52cba7926e4e1",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,13 +15,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-03T19:50:02.001Z",
-        "reason": "Reviewed the v4.0.4 release candidate, current architecture and user documentation, shared validation changes, successful local gate, and GitLab pipeline #60."
+        "at": "2026-08-03T20:03:40.755Z",
+        "reason": "Recorded the signed v4.0.4 tag, successful main and tagged GitLab pipelines, and npm publication of 4.0.4."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:646e304690570dec456459e152358195c8e1395644a567c90cc5d059941d3914",
+      "fingerprint": "sha256:1a37e0a51d29478263af4a6e82264c149422bb35a78b62d5cb7a6570b653a4cf",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,8 +35,8 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-03T19:50:02.001Z",
-        "reason": "Reviewed the v4.0.4 release candidate, current architecture and user documentation, shared validation changes, successful local gate, and GitLab pipeline #60."
+        "at": "2026-08-03T20:03:40.755Z",
+        "reason": "Recorded the signed v4.0.4 tag, successful main and tagged GitLab pipelines, and npm publication of 4.0.4."
       }
     },
     {

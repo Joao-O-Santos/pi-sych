@@ -1,18 +1,18 @@
 # Evidence
 
-## E-021 --- v4.0.4 release-candidate verification
+## E-021 --- v4.0.4 release verification
 
 **Status:** verified **Kind:** observed behavior, deterministic tests,
-GitLab CI, and release-candidate verification **Source:** current
-source, package scripts, v4.0.4 release metadata, and package dry run
+GitLab CI, signed tag, and npm publication **Source:** current source,
+package scripts, v4.0.4 release metadata, and package registry
 **Supports:** shared primitive validation, user-centred review workflow
-documentation, current architecture diagrams, and v4.0.4 release
-readiness. **Evidence:** typecheck, Biome and Pandoc checks, 32 unit
-checks, 5 integration checks, dependency validation, source budget,
-package dry run, and whitespace checks passed. GitLab pipeline #60 for
-`main` passed for signed commit `0823c3d3`. **Limits:** The v4.0.4 tag
-and npm publication had not yet been performed when this entry was
-recorded. Real-model usage and browser-mediated Plannotator behavior
+documentation, current architecture diagrams, and the v4.0.4 release.
+**Evidence:** typecheck, Biome and Pandoc checks, 32 unit checks, 5
+integration checks, dependency validation, source budget, package dry
+run, and whitespace checks passed. GitLab pipelines #60 and #61 for
+`main` and #62 for tag `v4.0.4` passed; the signed tag points to
+`b60aae52`, and npm reports `4.0.4` as the current package version.
+**Limits:** Real-model usage and browser-mediated Plannotator behavior
 were not required for these deterministic changes. **Checked:**
 2026-08-03
 

@@ -70,14 +70,16 @@ rewrite, and minimal validator consolidation. The implementation now
 bounds compaction, preserves explicit symlink behavior, surfaces project
 validation errors, rechecks files before acknowledgement, validates
 worker-reported paths, loads model configuration lazily, and keeps
-bootstrap/MCPorter boundaries explicit. The v4.0.4 release candidate
-also includes shared primitive validation and the updated architecture,
-skills, and supervisor diagrams. The deterministic gate passed 32 unit
-checks and 5 integration checks; GitLab pipeline #60 for `main` passed.
+bootstrap/MCPorter boundaries explicit. The v4.0.4 release includes
+shared primitive validation and the updated architecture, skills, and
+supervisor diagrams. The deterministic gate passed 32 unit checks and 5
+integration checks; GitLab pipelines #60 and #61 (`main`) and #62
+(`v4.0.4`) passed.
 
 ## Immediate next step
 
-{verified} Pushed signed release commit `0823c3d3` for package version
-`4.0.4`; GitLab pipeline #60 for `main` passed. The next release step is
-to create and push the signed `v4.0.4` tag, then verify its tagged
-pipeline and npm publication.
+{verified} Released signed patch `v4.0.4` at commit `b60aae52` and tag
+`v4.0.4`. GitLab pipelines #60 and #61 (`main`) and #62 (`v4.0.4`)
+passed; the tagged pipeline published npm `4.0.4`, which npm reports as
+the current version. The next step is the next approved maintenance or
+feature task.
