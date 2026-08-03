@@ -58,20 +58,26 @@ controller.
 resolution, SHA-256 status checks, declared dependency impact, bounded
 workers, and explicit acknowledgement. It uses a small working-memory
 summary, append-only human-review proposals in `INBOX.md`, direct named
-model roles, and narrow MCPorter and Plannotator adapters. Production
-TypeScript is about 1,550 lines within the 2,000-line cap.
+model roles, shared primitive validation, and narrow MCPorter and
+Plannotator adapters. The public documentation includes the user-centred
+review workflow and current architecture diagrams. Production TypeScript
+is about 1,650 lines within the 2,000-line cap.
 
 ## Previous action
 
-{verified} Completed the focused v4 correctness pass and documentation
-rewrite. The implementation now bounds compaction, preserves explicit
-symlink behavior, surfaces project validation errors, rechecks files
-before acknowledgement, validates worker-reported paths, loads model
-configuration lazily, and keeps bootstrap/MCPorter boundaries explicit.
-The deterministic gate passed 27 unit checks and 5 integration checks.
+{verified} Completed the focused v4 correctness pass, documentation
+rewrite, and minimal validator consolidation. The implementation now
+bounds compaction, preserves explicit symlink behavior, surfaces project
+validation errors, rechecks files before acknowledgement, validates
+worker-reported paths, loads model configuration lazily, and keeps
+bootstrap/MCPorter boundaries explicit. The v4.0.4 release candidate
+also includes shared primitive validation and the updated architecture,
+skills, and supervisor diagrams. The deterministic gate passed 32 unit
+checks and 5 integration checks; GitLab pipeline #60 for `main` passed.
 
 ## Immediate next step
 
-{verified} Released signed patch `v4.0.3` as commit `79b9851` and tag
-`v4.0.3`, without moving any existing public tag. GitLab pipelines #56
-(`main`) and #57 (`v4.0.3`) passed; npm now reports `4.0.3` as latest.
+{verified} Pushed signed release commit `0823c3d3` for package version
+`4.0.4`; GitLab pipeline #60 for `main` passed. The next release step is
+to create and push the signed `v4.0.4` tag, then verify its tagged
+pipeline and npm publication.

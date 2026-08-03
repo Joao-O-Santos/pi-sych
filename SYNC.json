@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-01T14:43:01.837Z",
+  "confirmedAt": "2026-08-03T19:50:02.001Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:30e86e4fd43ca899b20377d6fb62e16a9b3262d489dbbd4d1bc9f9bd8951d391",
+      "fingerprint": "sha256:61ce5edad16050460972fed67eab63aae97e19dfb1981e3dbd380870a22439cb",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,13 +15,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T14:40:59.764Z",
-        "reason": "Reviewed the completed v4.0.3 correctness implementation, audience-specific documentation, signed release tag, successful GitLab pipelines #56/#57, npm 4.0.3 publication, and published image response."
+        "at": "2026-08-03T19:50:02.001Z",
+        "reason": "Reviewed the v4.0.4 release candidate, current architecture and user documentation, shared validation changes, successful local gate, and GitLab pipeline #60."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:ed8af0c123446621612b5a6937b35e64698ad70ff1cce4306254b2a4fbbb1bb8",
+      "fingerprint": "sha256:646e304690570dec456459e152358195c8e1395644a567c90cc5d059941d3914",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,26 +35,26 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T14:40:59.764Z",
-        "reason": "Reviewed the completed v4.0.3 correctness implementation, audience-specific documentation, signed release tag, successful GitLab pipelines #56/#57, npm 4.0.3 publication, and published image response."
+        "at": "2026-08-03T19:50:02.001Z",
+        "reason": "Reviewed the v4.0.4 release candidate, current architecture and user documentation, shared validation changes, successful local gate, and GitLab pipeline #60."
       }
     },
     {
       "path": "ARCHITECTURE.md",
-      "fingerprint": "sha256:ab86bbd1d42f0e8dc5ad5e4eef024dd8fcbd5f70aad762c83ed9491646156dc1",
+      "fingerprint": "sha256:c393a6e9e3cee7b741895fb668b28f83f0915f4985b28e192a148940346ea561",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T14:40:59.764Z",
-        "reason": "Reviewed the completed v4.0.3 correctness implementation, audience-specific documentation, signed release tag, successful GitLab pipelines #56/#57, npm 4.0.3 publication, and published image response."
+        "at": "2026-08-03T19:50:02.001Z",
+        "reason": "Reviewed the v4.0.4 release candidate, current architecture and user documentation, shared validation changes, successful local gate, and GitLab pipeline #60."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:15fb137061588287fe6fe0b8ea8af7b008b406464488527c383726d497072e81",
+      "fingerprint": "sha256:f20f342d13ba997771699383183507d3cebe73f58e5ea5ffa33b5a92bc076d4e",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -66,13 +66,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T14:40:59.764Z",
-        "reason": "Reviewed the completed v4.0.3 correctness implementation, audience-specific documentation, signed release tag, successful GitLab pipelines #56/#57, npm 4.0.3 publication, and published image response."
+        "at": "2026-08-03T19:50:02.001Z",
+        "reason": "Reviewed the v4.0.4 release candidate, current architecture and user documentation, shared validation changes, successful local gate, and GitLab pipeline #60."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:29ccd82fb2ed4c47eddac6ace082aeb3aa802e8c08a43ddcee1eb9f0442d76f5",
+      "fingerprint": "sha256:d2a5766e0e69df7ef7ea8ad53353457440e4e4630392e52cf1cca096708a467c",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -86,8 +86,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T14:40:59.764Z",
-        "reason": "Reviewed the completed v4.0.3 correctness implementation, audience-specific documentation, signed release tag, successful GitLab pipelines #56/#57, npm 4.0.3 publication, and published image response."
+        "at": "2026-08-03T19:50:02.001Z",
+        "reason": "Reviewed the v4.0.4 release candidate, current architecture and user documentation, shared validation changes, successful local gate, and GitLab pipeline #60."
       }
     },
     {
