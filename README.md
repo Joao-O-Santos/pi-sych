@@ -1,36 +1,210 @@
 # Pi Sych
 
-Pi Sych is a small Pi package for projects where "looks finished" is not
-proof that something is finished.
+Pi Sych is a small Pi package for research, writing, analysis, and code
+projects that need to remain understandable beyond a single LLM
+conversation.
 
-It keeps project state visible, delegates bounded tasks to short-lived
-workers, and leaves consequential decisions with humans. A changed hash
-is evidence that content changed---not a verdict about drift, quality,
-or authority.
+Long conversations accumulate abandoned ideas, reviewer arguments, stale
+assumptions, and decisions that may never leave the chat. Memory systems
+can help, but they can also become large, opaque, or another source of
+irrelevant context. Pi Sych explores a file-first alternative: keep
+durable project knowledge in ordinary documents, give short-lived
+workers only the context needed for one task, and leave consequential
+decisions with the user.
 
-![Pi Sych architecture: project state, bounded workers, and human
-review](https://unpkg.com/pi-sych@4.0.3/docs/img/architecture.png)
+It is not an autonomous project manager or a hierarchy of persistent
+agents. It provides a small set of mechanisms for keeping project state
+visible, separating tasks when fresh context helps, reviewing changes
+independently, and handing work between people or models without relying
+on hidden conversational memory.
 
-## Start here
+Pi Sych is installed as a package for [Pi](https://pi.dev/). In this
+README, the **supervisor** is the model in your main Pi session. A
+**worker** is a separate, short-lived model process created for one
+bounded task. A **skill** is reusable model guidance, not a persistent
+agent. `project_status` is the mechanical tool that checks or
+acknowledges project state.
 
-Install the package from npm:
+## A typical research workflow
+
+Pi Sych does not impose a fixed workflow. One useful pattern is to
+separate independent review, revision, and verification into fresh
+contexts.
+
+1.  You write or update a manuscript.
+2.  The supervisor checks project state and launches an independent
+    reviewer with the manuscript, relevant evidence, and a focused
+    brief.
+3.  You read the findings and decide which to accept, reject,
+    prioritize, or clarify.
+4.  The supervisor launches a fresh edit worker with the accepted
+    corrections and only the source context needed to implement them.
+5.  Another fresh worker verifies the revised manuscript against the
+    original evidence and requirements.
+6.  After you approve the result, Pi Sych can acknowledge the reviewed
+    files and identify any dependent files that now require attention.
+
+[![Pi Sych review and edit workflow: independent review, human decision,
+clean-context editing, fresh verification, and
+acknowledgement](docs/img/review_workflow.png)](docs/REVIEW_WORKFLOW.md)
+
+The separation between review and editing is deliberate. Rejected
+alternatives and the arguments used to evaluate them do not normally
+belong in the writer's context.
+
+Suppose an earlier draft said X. A reviewer recommends Y, and you agree.
+A writer exposed to the entire debate may produce "Not X, but Y."
+
+A fresh edit worker given the accepted correction can instead produce
+the clean statement "Y."
+
+See the [review and revision workflow](docs/REVIEW_WORKFLOW.md) for the
+complete example and its limits.
+
+## Quick start
+
+Install Pi Sych:
 
 ``` sh
 pi install npm:pi-sych
 ```
 
-Open a project and try:
+Open a project in Pi and inspect its state:
 
 ``` text
 /pi-sych-status
 ```
 
-The status command reports tracked files, missing files, declared review
-impact, project-file problems, and pending review proposals. It does not
-decide whether a change is good or bad.
+The status command reports tracked files, missing files, declared
+dependency impact, project-file problems, and pending review proposals.
+It does not decide whether a change is scientifically, conceptually, or
+editorially correct.
 
-For worker delegation, create a private model catalog and initialize the
-worker runtime once:
+You can use Pi Sych's project files and skills directly. Separate worker
+configuration is required only when you want the supervisor to launch
+fresh model processes for bounded tasks.
+
+## Project files as shared memory
+
+Pi Sych does not treat the conversation transcript as the authoritative
+record of a project. Durable information belongs in ordinary files that
+a collaborator, another model, or a future session can inspect.
+
+A project can begin with `PROJECT.md` and add other files only when they
+become useful.
+
+| File | Typical purpose |
+|------------------------------------|------------------------------------|
+| `PROJECT.md` | The objective, accepted direction, definition of done, previous action, and immediate next step. |
+| `EVIDENCE.md` | Important claims, sources, quotations, outputs, caveats, and material that may support the artifact. |
+| `DECISIONS.md` | Accepted methodological, conceptual, editorial, or architectural decisions and their reasons. |
+| `TODO.md` | Open work that has not yet been completed. |
+| `STYLE.md` | Stable terminology, spelling, venue conventions, and writing preferences. |
+| `SYNC.json` | Mechanical fingerprints, statuses, and declared relationships between files. |
+| `INBOX.md` | Unreviewed proposals that have not become authoritative project state. |
+
+These files are not an invitation to document everything. They preserve
+the information that another person or model would need to continue the
+work without reconstructing it from chat history.
+
+For example, a small manuscript project might contain:
+
+``` text
+my-paper/
+├── PROJECT.md
+├── manuscript.qmd
+├── EVIDENCE.md
+├── DECISIONS.md
+├── TODO.md
+├── STYLE.md
+└── SYNC.json
+```
+
+## Why separate contexts?
+
+A model can be influenced by everything in its current context window,
+including ideas that were considered and rejected. That can be useful
+during discussion, but it is not always useful during implementation.
+
+Reviewing and revising a manuscript in one long conversation can cause
+the final prose to retain traces of the debate. Rejected alternatives
+may reappear as unnecessary qualifications, contrasts, defensive
+language, or explanations that the reader never needed.
+
+Pi Sych can instead launch a fresh worker with a deliberately selected
+packet:
+
+- the task;
+- the expected result;
+- the files required for that task;
+- the relevant skills and guidance;
+- the selected model and tool mode;
+- optional integrations; and
+- a bounded timeout.
+
+The worker does not receive the supervisor transcript. Its result
+returns to the supervisor, where the user decides what should happen
+next.
+
+This is context isolation, not an operating-system sandbox. The
+supervisor still chooses what the worker receives. Depending on the
+task, that may include editing tools, Bash, or remote-research tools.
+
+## What Pi Sych can help with
+
+Skills are reusable guidance for a model, not persistent agents. Pi Sych
+initially exposes six broad skills and loads more specific guidance only
+when it is relevant.
+
+- `project` --- project state, artifacts, dependencies, decisions, and
+  plans;
+- `write` --- scholarly, professional, instructional, slide, and web
+  content;
+- `analyze` --- quantitative, qualitative, R/Quarto, and reporting work;
+- `code` --- architecture, testing, Git, npm, and web implementation;
+- `review` --- structure, evidence, detail, copyediting, code, analysis,
+  response, and verification; and
+- `research` --- search, source assessment, synthesis, and citations.
+
+Each skill has one level of focused modules containing guidance and
+editable examples. Project, user, and packaged versions can override one
+another without enlarging the initial public skill catalogue. See [skill
+customization](docs/CONFIGURATION.md#skill-customization) for the lookup
+order and customization paths.
+
+## Commands you can use
+
+Human-facing commands:
+
+- `/pi-sych-status` --- show mechanical project state;
+- `/pi-sych-mcp` --- inspect optional MCPorter configuration without
+  printing credentials;
+- `/plannotator-annotate <project-local-file>` --- annotate a file and
+  save feedback beside it;
+- `/plannotator-last` --- annotate the last assistant response and
+  return the feedback to the conversation; and
+- `/plannotator-review` --- open Plannotator code review for current
+  changes or a pull request.
+
+Plannotator is a human review adapter. It does not add a plan
+controller, automatically accept feedback, or promote generated output
+into project state.
+
+### Tools available to the supervising model
+
+Pi Sych gives the supervisor two mechanical tools:
+
+- `project_status` checks or acknowledges project state; and
+- `dispatch_worker` starts one bounded, short-lived worker.
+
+These tools support a workflow; they do not decide what the workflow
+must be.
+
+## Optional: enable workers
+
+Direct work does not require a worker model catalogue. To let the
+supervisor launch separate workers, create a private catalogue and
+initialize the worker runtime once:
 
 ``` sh
 mkdir -p ~/.config/pi/pi-sych
@@ -39,84 +213,144 @@ node /path/to/pi-sych/scripts/bootstrap-worker-agent-dir.mjs
 ```
 
 Replace `/path/to/pi-sych` with the package location used by your Pi
-installation. The bootstrap script is intentionally explicit: nothing
-silently mutates your home directory in the background.
+installation.
 
-The catalog contains provider model identifiers and stays outside the
-package. Pi Sych does not ship credentials or choose providers for you.
-See [configuration](docs/CONFIGURATION.md) for the complete setup.
+The catalogue contains provider model identifiers and remains outside
+the package. Pi Sych does not ship credentials, rank providers, or
+choose models for you. The bootstrap operation is explicit and does not
+silently modify your home directory during ordinary use.
 
-## The useful mental model
+See [configuration](docs/CONFIGURATION.md) for model roles, worker
+directories, canonical paths, skill overrides, and optional remote
+research.
 
-Pi Sych gives you a few sturdy pieces rather than a grand workflow:
+## How it works
 
-- **Project state:** `PROJECT.md` explains purpose, direction,
-  completion, and the next step. `SYNC.json` records fingerprints and
-  explicit dependency edges.
-- **Mechanical status:** `project_status` reports what changed and what
-  depends on it. Human review supplies the meaning.
-- **Bounded delegation:** `dispatch_worker` starts one clean,
-  short-lived worker with an explicit task, model role, context packet,
-  skills, mode, and timeout.
-- **Working memory:** compaction keeps a small summary and may append
-  plainly marked proposals to `INBOX.md`. Proposals are review material,
-  never canonical state.
-- **Human review:** Plannotator commands support file annotation, last
-  message annotation, and code review without adding a plan controller.
+![Pi Sych architecture: project state, bounded workers, and human
+review](https://unpkg.com/pi-sych@4.0.3/docs/img/architecture.png)
+
+Pi Sych supplies a few mechanical pieces rather than a general
+orchestration system:
+
+- **Explicit project state:** `PROJECT.md` records the accepted
+  direction and `SYNC.json` records fingerprints and declared
+  dependencies.
+- **Mechanical status:** `project_status` reports changed or missing
+  files and affected dependants. Human review supplies the meaning.
+- **Bounded delegation:** `dispatch_worker` starts one fresh worker with
+  an explicit task, context packet, skills, model role, mode, and
+  timeout.
+- **Small working memory:** compaction retains a bounded summary and may
+  place plainly marked proposals in `INBOX.md`.
+- **Human review:** Plannotator provides annotation and code-review
+  interfaces without becoming a workflow controller.
 
 This is intentionally not an autonomous project manager. It does not
-silently promote model output into evidence, citations, release state,
-or final approval.
+silently turn model output into evidence, citations, release state,
+approval, or project truth.
 
-## Six public skills
+## Limits and responsibilities
 
-Pi initially exposes six umbrella skills:
+Pi Sych provides context and process boundaries, not proof that an
+artifact is correct.
 
-- `project` --- state, artifacts, dependencies, decisions, and plans;
-- `write` --- scholarly, professional, instructional, slide, and web
-  content;
-- `analyze` --- quantitative, qualitative, R/Quarto, and reporting work;
-- `code` --- architecture, testing, Git, npm, and web implementation;
-- `review` --- independent structure, evidence, detail, copyedit, code,
-  analysis, response, and verification review; and
-- `research` --- search, source assessment, synthesis, and citations.
+- A changed hash establishes that content changed; it does not establish
+  conceptual drift, improvement, or error.
+- A successful test establishes only what that test examined.
+- A worker result is model-generated output and still requires
+  appropriate review.
+- Worker modes control which Pi tools are visible. They do not remove
+  the worker process's underlying host permissions.
+- Remote research and external tools may return incomplete, outdated, or
+  incorrect information.
+- Human users remain responsible for consequential decisions,
+  publication, release, and final approval.
 
-Each skill keeps its always-applicable guidance close to one-level
-`modules/*/guidance.md` and editable `examples.md` files. Customize
-examples in `.pi/skills/`, `.agents/skills/`, or `~/.pi/agent/skills/`;
-the first matching named skill wins.
+Inspect sources, generated outputs, external results, and package
+behaviour before relying on them for consequential work.
 
-## Commands and tools
+## Why I built this
 
-Agent tools:
+Pi Sych grew out of my move from OpenCode to Pi. I was attracted to Pi
+because its core is small and its extension model leaves room for users
+to build the workflow they need.
 
-- `project_status` --- check or acknowledge mechanical project state;
-- `dispatch_worker` --- run one bounded worker after private model
-  setup.
+I did not want to reproduce a large orchestration framework or maintain
+a roster of persistent specialist agents. Other extensions already
+explore those approaches, and they may be a better fit for people who
+want them. I wanted to see how far a smaller set of mechanisms could go:
+explicit project files, normal Pi skills, short-lived workers, and human
+review.
 
-Human commands:
+The project was also shaped by experience with memory systems. Many of
+those tools are useful, and Pi Sych is not an argument that they should
+not exist. My difficulty was that memories could become large, opaque,
+or closely tied to one model and one conversation. Important findings
+were not always easy for another researcher, collaborator, or model to
+inspect.
 
-- `/pi-sych-status`
-- `/pi-sych-mcp`
-- `/plannotator-annotate <project-local-file>`
-- `/plannotator-last`
-- `/plannotator-review`
+Pi Sych therefore treats ordinary files as the durable record. The
+conversation remains useful working space, but accepted evidence,
+decisions, and project direction should be written somewhere that can be
+reviewed and handed over.
 
-The worker modes control which Pi tools are visible. They are not
-sandboxes and do not remove host permissions. Review the source and Pi's
-security guidance before using a worker on consequential material.
+This is an experiment in keeping that approach useful without adding
+more machinery than the problem appears to require.
 
-## Read next
+## For supervising models
 
+When working in a Pi Sych project:
+
+- inspect project state before substantial work;
+- read `PROJECT.md` and only the additional files needed for the task;
+- treat accepted project files, rather than conversational recollection,
+  as the durable project record;
+- work directly unless an independent context would materially improve
+  the result;
+- give workers the smallest complete packet and no supervisor
+  transcript;
+- treat changed hashes as evidence of changed content, not semantic
+  drift;
+- do not treat proposals, generated text, successful checks, or reviewer
+  output as human approval; and
+- report only retrieval, execution, review, and verification that
+  actually occurred.
+
+See [architecture](ARCHITECTURE.md) for the complete runtime contract.
+
+## Status and contributions
+
+Pi Sych is alpha software. Its current design reflects one approach to
+organizing long-running LLM-assisted work, and it will not suit every
+project.
+
+Issues and contributions are welcome, especially from researchers,
+writers, analysts, and maintainers using it outside conventional
+software-development workflows.
+
+Useful contributions include:
+
+- clearer documentation and examples;
+- improvements to the public skills;
+- small reproducible bug reports;
+- project templates;
+- accessibility improvements; and
+- reports of where the file-first approach does or does not work well.
+
+See [contributing](CONTRIBUTING.md) before proposing code or release
+changes.
+
+## Detailed documentation
+
+- [Review and revision workflow](docs/REVIEW_WORKFLOW.md) --- a
+  user-guided pattern for independent review, clean-context editing, and
+  fresh verification;
 - [Configuration](docs/CONFIGURATION.md) --- private models, worker
-  setup, project roots, canonical paths, and optional integrations;
+  setup, project roots, canonical paths, skill customization, and
+  optional integrations;
 - [Architecture](ARCHITECTURE.md) --- supervisor-facing runtime
   boundaries and mechanical invariants;
 - [Development](docs/DEVELOPMENT.md) --- checks, tests, style, and
   design constraints for contributors; and
 - [Contributing](CONTRIBUTING.md) --- issues, pull requests, and release
   ownership.
-
-Pi Sych is alpha software. Inspect source, dependencies, generated
-outputs, and external results before relying on it for consequential
-work.
