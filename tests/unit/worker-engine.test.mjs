@@ -21,6 +21,10 @@ test("worker request and result retain the bounded protocol", () => {
 		["A.md"],
 	);
 	assert.throws(() => validateWorkerResult({ status: "complete", summary: "x" }), /files/);
+	assert.throws(
+		() => validateWorkerResult({ status: "complete", summary: "x", files: {}, limitations: [] }),
+		/files must be an array of strings/,
+	);
 	assert.equal(modelFor(parseModelCatalog(catalog), "junior"), "x/y");
 	assert.deepEqual(toolsForRequest({ mode: "read-only", remoteResearch: false }), [
 		"read",

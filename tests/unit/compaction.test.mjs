@@ -8,9 +8,33 @@ import {
 	COMPACTION_TOTAL_BYTE_LIMIT,
 	compactionSnapshot,
 	pendingPromotions,
+	validateWorkingMemory,
 } from "../../.test-build/workbench/src/compaction.js";
 import { resolveProject } from "../../.test-build/workbench/src/project-files.js";
 import { checkProjectStatus } from "../../.test-build/workbench/src/project-status.js";
+
+test("working-memory validation trims values and standardizes array errors", () => {
+	const memory = validateWorkingMemory({
+		task: " task ",
+		constraints: [" one ", ""],
+		active: [],
+		blockers: [],
+		next: " next ",
+		files: ["PROJECT.md"],
+	});
+	assert.deepEqual(memory, {
+		task: "task",
+		constraints: ["one"],
+		active: [],
+		blockers: [],
+		next: "next",
+		files: ["PROJECT.md"],
+	});
+	assert.throws(
+		() => validateWorkingMemory({ ...memory, constraints: {} }),
+		/constraints must be an array of strings/,
+	);
+});
 
 test("compaction excludes inbox contents and bounds canonical snapshots", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-compaction-"));

@@ -15,6 +15,7 @@ import {
 	showPath,
 } from "./project-files.js";
 import { checkProjectStatus } from "./project-status.js";
+import { nonEmptyString, stringArray } from "./validation.js";
 
 export interface Memory {
 	task: string;
@@ -45,36 +46,26 @@ const targets = new Set<PromotionTarget>([
 	"decisions",
 	"todo",
 ]);
-const string = (value: unknown, name: string) => {
-	if (typeof value !== "string" || !value.trim())
-		throw new Error(`${name} must be a non-empty string`);
-	return value.trim();
-};
-const strings = (value: unknown, name: string) => {
-	if (!Array.isArray(value) || value.some((item) => typeof item !== "string"))
-		throw new Error(`${name} must be an array of strings`);
-	return value.map((item) => item.trim()).filter(Boolean);
-};
 export function validateWorkingMemory(value: unknown, allowed?: Set<string>): Memory {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error("workingMemory must be an object");
 	const item = value as Record<string, unknown>;
 	return {
-		task: string(item.task, "task"),
-		constraints: strings(item.constraints, "constraints"),
-		active: strings(item.active, "active"),
-		blockers: strings(item.blockers, "blockers"),
-		next: string(item.next, "next"),
-		files: strings(item.files, "files").filter((path) => !allowed || allowed.has(path)),
+		task: nonEmptyString(item.task, "task"),
+		constraints: stringArray(item.constraints, "constraints"),
+		active: stringArray(item.active, "active"),
+		blockers: stringArray(item.blockers, "blockers"),
+		next: nonEmptyString(item.next, "next"),
+		files: stringArray(item.files, "files").filter((path) => !allowed || allowed.has(path)),
 	};
 }
 function promotion(value: unknown): Promotion {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error("promotion must be an object");
 	const item = value as Record<string, unknown>,
-		target = string(item.target, "target") as PromotionTarget;
+		target = nonEmptyString(item.target, "target") as PromotionTarget;
 	if (!targets.has(target)) throw new Error("promotion.target is not allowed");
-	return { target, proposal: string(item.proposal, "proposal") };
+	return { target, proposal: nonEmptyString(item.proposal, "proposal") };
 }
 export function parseCompactionModelOutput(raw: string): {
 	workingMemory: Memory;

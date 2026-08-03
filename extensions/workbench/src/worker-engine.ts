@@ -14,6 +14,7 @@ import {
 	resolveProjectPath,
 	showPath,
 } from "./project-files.js";
+import { nonEmptyString, stringArray } from "./validation.js";
 
 export const WORKER_MODES = ["read-only", "edit", "full-host"] as const;
 export type WorkerMode = (typeof WORKER_MODES)[number];
@@ -86,16 +87,6 @@ export const dispatchSchema = Type.Object({
 	timeoutMs: Type.Optional(Type.Integer({ minimum: 1, maximum: MAX_TIMEOUT_MS })),
 });
 
-const text = (value: unknown, label: string) => {
-	if (typeof value !== "string" || !value.trim())
-		throw new Error(`${label} must be a non-empty string`);
-	return value.trim();
-};
-const strings = (value: unknown, label: string) => {
-	if (!Array.isArray(value) || value.some((item) => typeof item !== "string"))
-		throw new Error(`${label} must be strings`);
-	return value.map((item) => item.trim()).filter(Boolean);
-};
 export const toolsForRequest = (request: Pick<DispatchRequest, "mode" | "remoteResearch">) => [
 	...MODE_TOOLS[request.mode],
 	...(request.remoteResearch ? ["mcporter"] : []),
@@ -189,16 +180,16 @@ export function validateWorkerResult(value: unknown): WorkerResult {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error("Worker result must be an object");
 	const item = value as Record<string, unknown>,
-		status = text(item.status, "status"),
-		files = strings(item.files, "files");
+		status = nonEmptyString(item.status, "status"),
+		files = stringArray(item.files, "files");
 	if (!(["complete", "partial", "failed"] as string[]).includes(status))
 		throw new Error(`Invalid worker result status: ${status}`);
 	for (const file of files) resolveProjectPath("/project", file);
 	return {
 		status: status as WorkerResult["status"],
-		summary: text(item.summary, "summary"),
+		summary: nonEmptyString(item.summary, "summary"),
 		files,
-		limitations: strings(item.limitations, "limitations"),
+		limitations: stringArray(item.limitations, "limitations"),
 	};
 }
 export const launchPiWorker: WorkerLauncher = (spec) =>

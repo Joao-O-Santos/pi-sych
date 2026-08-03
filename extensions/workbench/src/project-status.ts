@@ -13,6 +13,7 @@ import {
 	showPath,
 	writeAtomicFile,
 } from "./project-files.js";
+import { nonEmptyString } from "./validation.js";
 export const PROJECT_STATUSES = [
 	"current",
 	"stale",
@@ -54,18 +55,13 @@ export interface ProjectStatusCheck {
 	missingCore: string[];
 	projectErrors: string[];
 }
-const text = (value: unknown, label: string) => {
-	if (typeof value !== "string" || !value.trim())
-		throw new Error(`${label} must be a non-empty string`);
-	return value.trim();
-};
 const path = (value: unknown, label: string) => {
-	const result = text(value, label);
+	const result = nonEmptyString(value, label);
 	resolveProjectPath("/project", result);
 	return result;
 };
 const fingerprint = (value: unknown, label: string) => {
-	const result = text(value, label);
+	const result = nonEmptyString(value, label);
 	if (!/^sha256:[a-f0-9]{64}$/i.test(result))
 		throw new Error(`${label} must be a SHA-256 fingerprint`);
 	return result;
@@ -78,7 +74,10 @@ function dependencies(value: unknown, label: string): Dependency[] | undefined {
 			? path(entry, `${label}[${i}]`)
 			: {
 					path: path((entry as Record<string, unknown>)?.path, `${label}[${i}].path`),
-					reason: text((entry as Record<string, unknown>)?.reason, `${label}[${i}].reason`),
+					reason: nonEmptyString(
+						(entry as Record<string, unknown>)?.reason,
+						`${label}[${i}].reason`,
+					),
 				},
 	);
 }
@@ -86,7 +85,7 @@ function parseArtifact(value: unknown, index: number): ProjectArtifact {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error(`artifacts[${index}] must be an object`);
 	const item = value as Record<string, unknown>,
-		status = text(item.status, `artifacts[${index}].status`);
+		status = nonEmptyString(item.status, `artifacts[${index}].status`);
 	if (!PROJECT_STATUSES.includes(status as ProjectStatus))
 		throw new Error(`artifacts[${index}].status is not allowed: ${status}`);
 	return {
