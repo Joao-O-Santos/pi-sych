@@ -70,21 +70,18 @@ const fingerprint = (value: unknown, label: string) => {
 		throw new Error(`${label} must be a SHA-256 fingerprint`);
 	return result;
 };
-const dependencies = (value: unknown, label: string): Dependency[] | undefined =>
-	value === undefined
-		? undefined
-		: !Array.isArray(value)
-			? (() => {
-					throw new Error(`${label} must be an array`);
-				})()
-			: value.map((entry, i) =>
-					typeof entry === "string"
-						? path(entry, `${label}[${i}]`)
-						: {
-								path: path((entry as Record<string, unknown>)?.path, `${label}[${i}].path`),
-								reason: text((entry as Record<string, unknown>)?.reason, `${label}[${i}].reason`),
-							},
-				);
+function dependencies(value: unknown, label: string): Dependency[] | undefined {
+	if (value === undefined) return undefined;
+	if (!Array.isArray(value)) throw new Error(`${label} must be an array`);
+	return value.map((entry, i) =>
+		typeof entry === "string"
+			? path(entry, `${label}[${i}]`)
+			: {
+					path: path((entry as Record<string, unknown>)?.path, `${label}[${i}].path`),
+					reason: text((entry as Record<string, unknown>)?.reason, `${label}[${i}].reason`),
+				},
+	);
+}
 function parseArtifact(value: unknown, index: number): ProjectArtifact {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error(`artifacts[${index}] must be an object`);

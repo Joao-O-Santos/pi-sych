@@ -8,12 +8,46 @@ import {
 	acknowledgeProjectStatus,
 	checkProjectStatus,
 	formatProjectStatusCheck,
+	parseProjectStatusManifest,
 	verifyAcknowledgementObservation,
 } from "../../.test-build/workbench/src/project-status.js";
 
 const hash = (value) => `sha256:${createHash("sha256").update(value).digest("hex")}`;
 const project =
 	"# Project\n## Objective\n## Current direction\n## Definition of done\n## Previous action\n## Immediate next step\n";
+test("dependency arrays retain clear validation and object entries", () => {
+	const manifest = {
+		version: 2,
+		confirmedAt: "now",
+		artifacts: [
+			{
+				path: "B.md",
+				fingerprint: hash("b"),
+				status: "current",
+				dependsOn: [{ path: "A.md", reason: "input" }],
+			},
+		],
+	};
+	assert.deepEqual(parseProjectStatusManifest(manifest).artifacts[0].dependsOn, [
+		{ path: "A.md", reason: "input" },
+	]);
+	assert.throws(
+		() =>
+			parseProjectStatusManifest({
+				...manifest,
+				artifacts: [{ ...manifest.artifacts[0], dependsOn: {} }],
+			}),
+		/artifacts\[0\]\.dependsOn must be an array/,
+	);
+	assert.throws(
+		() =>
+			parseProjectStatusManifest({
+				...manifest,
+				artifacts: [{ ...manifest.artifacts[0], updateFrom: {} }],
+			}),
+		/artifacts\[0\]\.updateFrom must be an array/,
+	);
+});
 test("status exposes missing core files and project validation problems", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-errors-"));
 	await writeFile(join(root, "PROJECT.md"), "# Project\n\n## Objective\nIncomplete\n");

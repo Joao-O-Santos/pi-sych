@@ -60,11 +60,16 @@ export function loadOptionalModelCatalog(
 	env: NodeJS.ProcessEnv = process.env,
 ): ModelCatalog | undefined {
 	const path = modelCatalogPath(env);
+	let value: string;
 	try {
-		readFileSync(path);
+		value = readFileSync(path, "utf8");
 	} catch (error) {
 		if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
 		throw new Error(`Worker model catalog is unavailable at ${path}: ${String(error)}`);
 	}
-	return loadModelCatalog(env);
+	try {
+		return parseModelCatalog(JSON.parse(value));
+	} catch (error) {
+		throw new Error(`Worker model catalog is unavailable or invalid at ${path}: ${String(error)}`);
+	}
 }
