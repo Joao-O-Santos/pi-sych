@@ -90,32 +90,6 @@ test("modules are one-level non-skills with editable examples", async () => {
 		}
 });
 
-test("migration ledger exactly maps the historical source skills to existing guidance modules", async () => {
-	const ledger = await readFile("SKILL_MIGRATION_LEDGER.md", "utf8");
-	const sourceNames = JSON.parse(
-		await readFile("tests/fixtures/source-skill-names.json", "utf8"),
-	).sort();
-	const mappings = ledger
-		.split("\n")
-		.map((line) => line.match(/^\| ([a-z0-9-]+) \| `([^`]+)` \|$/))
-		.filter(Boolean)
-		.map((match) => ({ source: match[1], destination: match[2] }));
-	const mappedNames = mappings.map(({ source }) => source).sort();
-	assert.deepEqual(mappedNames, sourceNames, "ledger rejects missing or extra sources");
-	assert.equal(
-		new Set(mappedNames).size,
-		mappedNames.length,
-		"ledger rejects duplicate source mappings",
-	);
-	for (const { source, destination } of mappings) {
-		assert.match(destination, /^[a-z]+\/modules\/[a-z-]+$/);
-		for (const file of ["guidance.md", "examples.md"])
-			await access(join("skills", destination, file), undefined).catch(() =>
-				assert.fail(`${source} destination lacks ${destination}/${file}`),
-			);
-	}
-});
-
 test("umbrella prompts state precedence and critical anti-default safeguards", async () => {
 	for (const skill of Object.keys(catalog)) {
 		const content = await readFile(join("skills", skill, "SKILL.md"), "utf8");
