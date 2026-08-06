@@ -1,12 +1,14 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import test from "node:test";
 import { parseModelCatalog } from "../../.test-build/workbench/src/model-catalog.js";
 import {
 	DEFAULT_TIMEOUT_MS,
 	modelFor,
+	skillPaths,
+	taskPrompt,
 	toolsForRequest,
 	validateWorkerResult,
 	writeImmutableResult,
@@ -42,6 +44,58 @@ test("worker request and result retain the bounded protocol", () => {
 		"submit_artifact",
 	]);
 });
+test("named skills retain project, user, and package precedence", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-skill-paths-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const projectRoot = join(root, "project");
+	const packageRoot = join(root, "package");
+	const userRoot = join(root, "user");
+	const paths = [
+		join(packageRoot, "skills", "write", "SKILL.md"),
+		join(userRoot, "write", "SKILL.md"),
+		join(projectRoot, ".agents", "skills", "write", "SKILL.md"),
+		join(projectRoot, ".pi", "skills", "write", "SKILL.md"),
+	];
+	for (const [index, path] of paths.entries()) {
+		await mkdir(dirname(path), { recursive: true });
+		await writeFile(path, `source ${index}\n`);
+	}
+	assert.equal(skillPaths(["write"], projectRoot, packageRoot, userRoot)[0], paths[3]);
+	await rm(dirname(paths[3]), { recursive: true });
+	assert.equal(skillPaths(["write"], projectRoot, packageRoot, userRoot)[0], paths[2]);
+	await rm(dirname(paths[2]), { recursive: true });
+	assert.equal(skillPaths(["write"], projectRoot, packageRoot, userRoot)[0], paths[1]);
+	await rm(dirname(paths[1]), { recursive: true });
+	assert.equal(skillPaths(["write"], projectRoot, packageRoot, userRoot)[0], paths[0]);
+});
+
+test("worker prompt requires routed method and module reads", () => {
+	const prompt = taskPrompt(
+		{
+			id: "task-1",
+			request: {
+				task: "review prose",
+				mode: "read-only",
+				expectedOutput: "findings",
+				contextFiles: [],
+				skills: ["review"],
+			},
+			workerAgentDir: "/worker",
+			resultPath: "/result.json",
+			projectRoot: "/project",
+			model: "provider/model",
+			prompt: "",
+			packageRoot: "/package",
+			extraExtensionPaths: [],
+		},
+		[{ path: "DRAFT.md", purpose: "artifact under review" }],
+	);
+	assert.match(prompt, /Read every context file and selected skill/i);
+	assert.match(prompt, /local modules and shared methods.*routes to for this task/i);
+	assert.match(prompt, /state missing context as a limitation instead of guessing/i);
+	assert.match(prompt, /submit_artifact by itself as the final tool call/i);
+});
+
 test("worker result is immutable", async () => {
 	const dir = await mkdtemp(join(tmpdir(), "pi-sych-worker-")),
 		path = join(dir, "result.json"),

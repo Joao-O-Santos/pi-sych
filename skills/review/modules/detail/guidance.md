@@ -1,5 +1,15 @@
 # Detail
 
-Select the review lens that fits: argumentative coherence, evidence, prose, skeptical review, pedagogy, audience load, grant compliance, architecture, maintainability, requirements, or security. Evaluate claims independently; do not optimize for agreement. For each material finding state location, concrete concern, consequence, minimum credible response, kind (defect, trade-off, robustness issue, preference, or unresolved alternative), and confidence or limitation when it changes the finding. Order by location when useful; end with one explicit blind-spot question when the selected lens could miss a material alternative. Do not redesign the artifact or apply findings independently.
+Select the review lens that fits: argumentative coherence, evidence, skeptical
+review, pedagogy, audience load, grant compliance, architecture,
+maintainability, requirements, or security. Evaluate claims independently; do
+not optimize for agreement. Apply the routed argument method before naming a
+fallacy, rival explanation, weak premise, or missing scope condition.
 
-Ask whether reverse causality, common causes, selection, measurement, moderators, counterforces, deviant cases, or omitted nulls could matter. Name fallacies or statistical concerns specifically and explain how they weaken, not disprove, an inference. Distinguish missing citation, weak inference, unresolved alternative, and authorial choice. Frame bias checks as questions about post-hoc hypotheses, exclusions, analyses, selective reporting, or multiplicity.
+For each material finding state location, concrete concern, consequence,
+minimum credible response, kind (defect, trade-off, robustness issue,
+preference, or unresolved alternative), and confidence or limitation when it
+changes the finding. Frame bias checks as questions about post-hoc hypotheses,
+exclusions, analyses, selective reporting, omitted nulls, or multiplicity. End
+with one explicit blind-spot question when the selected lens could miss a
+material alternative. Do not redesign or apply findings independently.

@@ -3,6 +3,41 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
+## Unreleased
+
+### Skills architecture
+
+- Keep the six public umbrella skills while adding four shared methods
+  for prose, hypothesis generation, argument analysis, and
+  claim-to-evidence mapping.
+
+- Replace module lists with bounded ordered task recipes and retain
+  genre-specific local modules.
+
+- Make project `STYLE.md` a local-delta template and instruct workers to
+  read routed methods and modules.
+
+- Keep deterministic skill tests mechanical: public discovery, file
+  structure, routes, prompt budgets, and override precedence. Evaluate
+  semantic behavior only through the opt-in live-model fixtures.
+
+- Refine analysis, research, review, and manuscript routes so specialist
+  methods load only when the task needs them.
+
+- Add defeasible prose guidance for natural professional register,
+  restrained em dashes, genuine uncertainty, and common model-writing
+  defaults while preserving precise passive-voice guidance.
+
+- Complete packaged `docs/attribution.md` with cited skill-method,
+  package-design, retrospective-workflow, platform, and integration
+  influences outside routed method context.
+
+- Preserve superseded diagrams as historical files but omit stale
+  gallery image metadata until replacement artwork is reviewed.
+
+- Normalize documentation paths to lowercase, move attribution under
+  `docs/`, and remove completed project-only plans and ledgers.
+
 ## v4.0.4 - 2026-08-03
 
 ### Documentation and maintenance
@@ -68,7 +103,7 @@ immutable npm publications unless explicitly marked otherwise.
 
 ### Documentation
 
-- Corrected default `inbox` path in CONFIGURATION.md example from
+- Corrected the default `inbox` path in the configuration example from
   `.pi-sych/INBOX.md` to `INBOX.md` to match actual source defaults.
 - Added motivation for canonical path overrides (monorepo layouts,
   shared INBOX across workspaces).
@@ -88,7 +123,7 @@ immutable npm publications unless explicitly marked otherwise.
 - Added manifest resolution section to ARCHITECTURE.md: workspace walk,
   nearest SYNC.json selection, projectRoot relocation, canonical path
   overrides for seven roles.
-- Added project canonical paths section to docs/CONFIGURATION.md:
+- Added project canonical paths section to `docs/configuration.md`:
   SYNC.json v2 schema, projectRoot and canonical object documentation,
   role-to-path mapping, artifact declaration structure.
 

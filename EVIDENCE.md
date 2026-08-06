@@ -1,20 +1,106 @@
 # Evidence
 
+## E-024 --- Repository cleanup and lowercase documentation gate
+
+**Status:** verified **Kind:** observed repository layout, deterministic
+checks, package contents, and independent review **Source:** root and
+docs inventories, package metadata, Markdown links, current source and
+tests, package dry run, and read-only cleanup reviews **Supports:**
+removal of completed plans and empty historical ledgers, lowercase
+documentation paths, packaged `docs/attribution.md`, and retention of
+discoverable root canonical state without an unnecessary `project/`
+directory. **Evidence:** completed project-only plans, the resolved
+decision ledger, and the completed-only task ledger were removed.
+`PROJECT.md`, `EVIDENCE.md`, `SYNC.json`, and `AGENTS.md` remain at root
+because native instruction and manifest discovery use that location;
+moving only two files would split rather than simplify canonical state.
+Typecheck, Biome and Pandoc checks, dependency validation, source
+budget, 31 unit checks, 6 integration checks, a 130-file package dry
+run, relative Markdown-link validation, stale-path search, and
+whitespace checks passed. The tarball contains lowercase
+`docs/attribution.md`, `docs/configuration.md`, `docs/development.md`,
+`docs/review-workflow.md`, and `docs/img/readme.md`, and none of their
+obsolete paths. Independent review approved after three historical
+deleted-file references were generalized. **Limits:** The live-model
+behavioral evaluation remained skipped. `4.0.5` was not tagged,
+published, or released. `npm audit --omit=dev` retained five upstream or
+transitive advisories (two moderate and three high) in
+`brace-expansion`, `fast-uri`, `hono`, and `undici`; no dependency
+change was made. **Checked:** 2026-08-06
+
+## E-023 --- Skill density, routing, attribution, and v4.0.5 preparation
+
+**Status:** verified **Kind:** observed deterministic behavior, package
+contents, source inspection, and independent review **Source:** current
+skill routes and guidance, `docs/attribution.md`, package metadata,
+tests, package dry run, owner-supplied source inventory, targeted
+metadata retrieval, and read-only reviews **Supports:** task-specific
+route composition, dense defeasible prose guidance, removal of generic
+prompt repetition, complete known influence mapping, mechanical prompt
+budgets, and consistent `4.0.5` package preparation. **Evidence:**
+typecheck, Biome and Pandoc checks, dependency validation, source
+budget, 31 unit checks, 6 integration checks, package dry run (130
+files), and whitespace checks passed. Pi discovered exactly six public
+skills. Every complete route is mechanically limited to the historical
+1,736-word ceiling; the largest current route is 1,730 words.
+Deterministic tests assert route composition, resolution, order,
+acyclicity, package attribution, and exact version consistency without
+freezing semantic prose. Three new behavioral scenarios remain opt-in.
+Independent review approved the substantive routing, prose,
+deduplication, and attribution changes after aggregate route-size and
+exact-version guards were added. **Limits:** The live-model behavioral
+evaluation was syntax checked but skipped, so no model-adherence claim
+is made. `4.0.5` was not tagged, published, or released. The attribution
+maps known direct influences identified in project history and the
+owner's source inventory; it does not imply copied code or universal
+authority. `npm audit --omit=dev` reported five upstream or transitive
+advisories (two moderate and three high) in `brace-expansion`,
+`fast-uri`, `hono`, and `undici`; no dependency change was made.
+**Checked:** 2026-08-06
+
+## E-022 --- Shared-method skills architecture gate
+
+**Status:** verified **Kind:** observed deterministic behavior, package
+contents, and independent review **Source:** current skills, worker
+prompt, templates, documentation, tests, package dry run, and a
+read-only architecture review **Supports:** six public umbrella skills,
+non-public shared methods, ordered task recipes, local-module
+adaptation, override precedence, project-delta style, and truthful
+behavioral-test boundaries. **Evidence:** typecheck, Biome and Pandoc
+checks, dependency validation, source budget, 30 unit checks, 5
+integration checks, package dry run (130 files), and whitespace checks
+passed. Pi RPC discovered only the accepted six skills. Independent
+reviews identified and confirmed corrections for the live evaluator,
+canonical state, override coverage, gallery artwork, brittle semantic
+phrase tests, and attribution inside routed method context. The owner's
+Plannotator feedback is now reflected by mechanical-only deterministic
+skill tests, opt-in behavioral fixtures, and packaged
+`docs/attribution.md`; the review file was deleted as requested.
+**Limits:** The opt-in live-model behavioral evaluation was syntax
+checked but skipped, so no model-adherence claim is made. Superseded
+v4.0.4 diagrams remain packaged as historical files; stale gallery image
+metadata was removed pending separately reviewed replacement artwork.
+`npm audit --omit=dev` reported five upstream or transitive advisories
+(two moderate and three high) in `brace-expansion`, `fast-uri`, `hono`,
+and `undici`; no dependency change was made in this refactor.
+**Checked:** 2026-08-06
+
 ## E-021 --- v4.0.4 release verification
 
 **Status:** verified **Kind:** observed behavior, deterministic tests,
 GitLab CI, signed tag, and npm publication **Source:** current source,
 package scripts, v4.0.4 release metadata, and package registry
 **Supports:** shared primitive validation, user-centred review workflow
-documentation, current architecture diagrams, and the v4.0.4 release.
-**Evidence:** typecheck, Biome and Pandoc checks, 32 unit checks, 5
-integration checks, dependency validation, source budget, package dry
-run, and whitespace checks passed. GitLab pipelines #60 and #61 for
-`main` and #62 for tag `v4.0.4` passed; the signed tag points to
+documentation, the architecture diagrams published with v4.0.4, and the
+v4.0.4 release. **Evidence:** typecheck, Biome and Pandoc checks, 32
+unit checks, 5 integration checks, dependency validation, source budget,
+package dry run, and whitespace checks passed. GitLab pipelines #60 and
+#61 for `main` and #62 for tag `v4.0.4` passed; the signed tag points to
 `b60aae52`, and npm reports `4.0.4` as the current package version.
-**Limits:** Real-model usage and browser-mediated Plannotator behavior
-were not required for these deterministic changes. **Checked:**
-2026-08-03
+**Limits:** The diagrams remain evidence of the v4.0.4 release state but
+their one-level skill wording is superseded by E-022. Real-model usage
+and browser-mediated Plannotator behavior were not required for these
+deterministic changes. **Checked:** 2026-08-03
 
 ## E-020 --- v4.0.3 correctness and documentation pass
 
@@ -38,9 +124,9 @@ were not required for these deterministic changes. **Checked:**
 ## E-016 --- v3.0.3 documentation corrections
 
 **Status:** verified **Kind:** observed behaviour **Source:**
-ARCHITECTURE.md, docs/CONFIGURATION.md, package scripts **Supports:**
+ARCHITECTURE.md, `docs/configuration.md`, package scripts **Supports:**
 v3.0.3 release readiness **Evidence:** Corrected default `inbox` path in
-CONFIGURATION.md example (`.pi-sych/INBOX.md` → `INBOX.md`) to match
+the configuration example (`.pi-sych/INBOX.md` → `INBOX.md`) to match
 source defaults. Added motivation for canonical path overrides.
 Clarified ARCHITECTURE.md compaction triggers (manual `/compact`,
 context threshold, overflow recovery) and noted compaction uses
@@ -52,20 +138,21 @@ Documentation-only; no behavioral changes. **Checked:** 2026-07-31
 ## E-015 --- v3.0.2 documentation update
 
 **Status:** verified **Kind:** observed behaviour **Source:**
-ARCHITECTURE.md, docs/CONFIGURATION.md, package scripts **Supports:**
+ARCHITECTURE.md, `docs/configuration.md`, package scripts **Supports:**
 v3.0.2 release readiness **Evidence:** Added detailed compaction
 pipeline description to ARCHITECTURE.md: working-memory construction,
 status projection, canonical snapshot, promotion routing by role,
 malformed inbox isolation, failure classification, and native compactor
 fallback. Added manifest resolution section to ARCHITECTURE.md covering
 workspace walk, nearest SYNC.json selection, projectRoot relocation, and
-canonical path overrides for seven roles. Added project canonical paths
-section to docs/CONFIGURATION.md documenting SYNC.json v2 schema,
-projectRoot and canonical object structure, role-to-path mapping, and
-artifact declaration format. Typecheck, Biome and Pandoc style, 61 unit
-checks, 5 integration checks, MCPorter dependency check, smoke, source
-budget (2,650/3,000), and whitespace checks passed. **Limits:**
-Documentation-only; no behavioral changes. **Checked:** 2026-07-31
+canonical path overrides for seven roles. Added the project canonical
+paths section to `docs/configuration.md`, documenting the SYNC.json v2
+schema, projectRoot and canonical object structure, role-to-path
+mapping, and artifact declaration format. Typecheck, Biome and Pandoc
+style, 61 unit checks, 5 integration checks, MCPorter dependency check,
+smoke, source budget (2,650/3,000), and whitespace checks passed.
+**Limits:** Documentation-only; no behavioral changes. **Checked:**
+2026-07-31
 
 ## E-014 --- v3.0.1 code-quality audit and malformed-manifest fix
 
@@ -89,39 +176,40 @@ compaction model path and prompts. **Checked:** 2026-07-31
 ## E-013 --- v3.0.0 refactor and release gate passed
 
 **Status:** verified **Kind:** observed behaviour and independent
-reviews **Source:** `PLAN.md`, package scripts, unit/integration/usage
-checks, package dry run, and independent read-only reviews **Supports:**
-`SYNC.json` v2 resolution, canonical-role promotion routing, compaction
-status/error isolation, skill restoration, and v3.0.0 release readiness
-**Evidence:** Typecheck, Biome and Pandoc Markdown style, 62 unit
-checks, 4 integration checks, opt-in real-Pi usage
-(`PI_SYCH_USAGE_TEST=1`), live LLM-judged prompt-quality usage, source
-budget (2,650/3,000), package dry run, and whitespace checks passed.
-Independent reviews identified and the implementation addressed
-non-atomic acknowledgement, malformed-manifest diagnostics, single
-resolved-project threading, single-read canonical fingerprinting,
-tracked-artifact preservation in working memory, v1.2.0 procedure
-restoration, and regex-behavior test honesty. **Limits:** The npm
-release has not been published; inherited advisory retention was not
-rechecked for this entry. **Checked:** 2026-07-31
+reviews **Source:** approved implementation plan (removed after
+completion), package scripts, unit/integration/usage checks, package dry
+run, and independent read-only reviews **Supports:** `SYNC.json` v2
+resolution, canonical-role promotion routing, compaction status/error
+isolation, skill restoration, and v3.0.0 release readiness **Evidence:**
+Typecheck, Biome and Pandoc Markdown style, 62 unit checks, 4
+integration checks, opt-in real-Pi usage (`PI_SYCH_USAGE_TEST=1`), live
+LLM-judged prompt-quality usage, source budget (2,650/3,000), package
+dry run, and whitespace checks passed. Independent reviews identified
+and the implementation addressed non-atomic acknowledgement,
+malformed-manifest diagnostics, single resolved-project threading,
+single-read canonical fingerprinting, tracked-artifact preservation in
+working memory, v1.2.0 procedure restoration, and regex-behavior test
+honesty. **Limits:** The npm release has not been published; inherited
+advisory retention was not rechecked for this entry. **Checked:**
+2026-07-31
 
 ## E-012 --- v2.1.1 compaction and release gate passed
 
 **Status:** verified **Kind:** observed behaviour and independent review
-**Source:** `FOLLOW_UP.md`, `REUSE_REDUCTION_PLAN.md`, package scripts,
-unit/integration/smoke checks, package dry run, and dependency audit
-**Supports:** working-memory compaction, human-review `INBOX.md`
-promotions, status visibility, and v2.1.1 release readiness
-**Evidence:** Typecheck, Biome/Markdown style checks, clean
-`npm ci --ignore-scripts`, MCPorter dependency validation, 49 unit
-checks, 4 integration checks, 3 smoke checks, package dry run (114
-files), whitespace check, and the 2,300/2,500 production TypeScript
-budget passed. The reuse audit retained Pi's compaction lifecycle,
-message conversion/serialization, model registry, authentication,
-cancellation, and usage accounting; Pi's fixed summary helpers cannot
-implement the one-call working-memory plus promotion contract.
-**Limits:** Opt-in real-Pi usage was not rerun for v2.1.1.
-`npm audit --omit=dev` retains one inherited high-severity
+**Source:** approved v2.1.1 follow-up and reduction work (planning files
+removed after completion), package scripts, unit/integration/smoke
+checks, package dry run, and dependency audit **Supports:**
+working-memory compaction, human-review `INBOX.md` promotions, status
+visibility, and v2.1.1 release readiness **Evidence:** Typecheck,
+Biome/Markdown style checks, clean `npm ci --ignore-scripts`, MCPorter
+dependency validation, 49 unit checks, 4 integration checks, 3 smoke
+checks, package dry run (114 files), whitespace check, and the
+2,300/2,500 production TypeScript budget passed. The reuse audit
+retained Pi's compaction lifecycle, message conversion/serialization,
+model registry, authentication, cancellation, and usage accounting; Pi's
+fixed summary helpers cannot implement the one-call working-memory plus
+promotion contract. **Limits:** Opt-in real-Pi usage was not rerun for
+v2.1.1. `npm audit --omit=dev` retains one inherited high-severity
 `brace-expansion` advisory below `@earendil-works/pi-coding-agent`;
 npm's dry-run offered no dependency upgrade. **Checked:** 2026-07-31
 
@@ -186,18 +274,19 @@ audit still reports the inherited high-severity `brace-expansion`
 advisory through Pi. Renderer checks establish literal brace handling,
 not identical styling in every Markdown host. **Checked:** 2026-07-30
 
-## E-002 --- Six-skill corpus has direct module structure
+## E-002 --- Historical direct-module six-skill corpus (superseded)
 
-**Status:** verified **Kind:** observed behaviour **Source:** `skills/`,
-`tests/unit/skills.test.mjs`, and
-`tests/integration/package-load.test.mjs` **Supports:** the public
-six-skill catalog, one-level guidance/example modules, and Pi discovery
-claims **Evidence:** Unit tests verify exactly six accepted names and
-descriptions, direct module routes, and non-skill module files. The RPC
-integration test loaded the corpus through Pi and found only `project`,
-`write`, `analyze`, `code`, `review`, and `research`. **Limits:**
-Structural tests and successful discovery do not establish model
-adherence or the quality of every future skill revision. **Checked:**
+**Status:** superseded **Kind:** historical observed behaviour
+**Source:** `skills/`, `tests/unit/skills.test.mjs`, and
+`tests/integration/package-load.test.mjs` **Supports:** the former
+direct one-level module architecture only **Evidence:** The v2--v4.0.4
+tests verified exactly six accepted names and descriptions, direct
+module routes, non-skill module files, and Pi discovery of only
+`project`, `write`, `analyze`, `code`, `review`, and `research`. E-022
+replaces the structural claim with the current shared-method
+architecture while preserving the six-skill public surface. **Limits:**
+Historical structural tests and successful discovery did not establish
+model adherence or the quality of every skill revision. **Checked:**
 2026-07-30
 
 ## E-003 --- Configured remote-research transports passed bounded live checks
@@ -269,21 +358,23 @@ published-package interactive session. Passing checks and reviewed skill
 guidance do not establish universal provider, browser, or workflow
 behavior. **Checked:** 2026-07-30
 
-## E-007 --- Corrective package and diagram review passed
+## E-007 --- Historical package and diagram review (superseded)
 
-**Status:** verified **Kind:** observed behaviour **Source:**
-`docs/img/architecture.png`, `docs/img/supervisors_context.png`,
-`README.md`, `ARCHITECTURE.md`, `package.json`, and package dry-run
-output **Supports:** current visual architecture, Pi gallery preview,
-and packaged-documentation claims **Evidence:** Both regenerated
-diagrams were visually checked against the implemented tool names,
-timeout and dependency semantics, worker context, optional project
-files, MCPorter boundary, and human ownership. The package manifest
-includes the diagrams and versioned image URLs used by the README and
-gallery metadata. **Limits:** Visual summaries omit implementation
-detail and do not supersede the text documentation or code. Rendering on
-Pi.dev remains dependent on publication and the gallery renderer
-fetching the declared URL. **Checked:** 2026-07-30
+**Status:** superseded **Kind:** historical observed behaviour
+**Source:** `docs/img/architecture.png`,
+`docs/img/supervisors_context.png`, `README.md`, `ARCHITECTURE.md`,
+`package.json`, and package dry-run output **Supports:** the visual
+architecture and Pi gallery preview at the recorded release state only
+**Evidence:** Both regenerated diagrams were visually checked against
+the then-implemented tool names, timeout and dependency semantics,
+worker context, optional project files, MCPorter boundary, and human
+ownership. The package manifest included the diagrams and versioned
+image URLs then used by the README and gallery metadata. **Limits:**
+E-022 supersedes the diagrams' one-level skill wording. The files remain
+packaged as historical images, but current documentation does not
+present them as the architecture contract and current package metadata
+omits a gallery image pending reviewed replacement artwork. **Checked:**
+2026-07-30
 
 ## E-006 --- Opt-in local Pi usage acceptance passed
 

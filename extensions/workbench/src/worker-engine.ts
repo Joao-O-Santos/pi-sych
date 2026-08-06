@@ -154,7 +154,7 @@ export function taskPrompt(spec: WorkerLaunchSpec, files: ContextFile[]) {
 		`Capability mode: ${spec.request.mode}`,
 		`Context files: ${files.map((f) => `${f.path} (${f.purpose})`).join("; ") || "none"}`,
 		`Selected skills: ${(spec.request.skills ?? []).join(", ") || "none"}`,
-		"Read every context file and selected skill before working.",
+		"Read every context file and selected skill, then read the local modules and shared methods that the selected skill routes to for this task.",
 		"Treat this packet as complete; state missing context as a limitation instead of guessing.",
 		...(spec.request.remoteResearch
 			? ["MCPorter is available only for this assigned remote research."]

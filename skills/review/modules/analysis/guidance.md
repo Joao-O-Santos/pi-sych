@@ -1,3 +1,10 @@
 # Analysis
 
-Review method/design fit, assumptions, interpretation, reporting, and alignment of analysis with claims. Test whether the estimand, sample, measures, exclusions, model, and uncertainty support the stated conclusion. Separate observed result, statistical summary, causal interpretation, and practical implication. Check alternatives such as confounding, selection, reverse causality, measurement error, multiplicity, and model sensitivity. State the evidence or analysis that would resolve material uncertainty; the review remains advisory.
+Review whether the estimand, design, sample, measures, exclusions, model,
+uncertainty, and sensitivity work support the stated claim. Separate observed
+result, statistical summary, causal interpretation, and practical implication.
+Raise confounding, selection, reverse direction, measurement, multiplicity, or
+model sensitivity only when the specific design makes it material.
+
+For each gap, state how it changes or limits the conclusion and what evidence
+or analysis could resolve it. The review remains advisory.

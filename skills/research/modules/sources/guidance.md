@@ -1,3 +1,12 @@
 # Sources
 
-Assess authority, method, recency, primary versus secondary status, conflicts, corrections, and relevance to the actual claim. Prefer sources that can bear the intended inference. Inspect methods, population, measures, and stated limitations rather than inferring quality from venue alone. Reconcile conflicts by identifying the design, scope, or timing difference that may explain them; do not manufacture consensus. State when only secondary reporting or incomplete access is available.
+Ask whether the inspected source can bear the exact intended inference. Check
+design or basis, population, measures, comparison, uncertainty, stated limits,
+and relevance to the claim. Distinguish primary evidence from secondary
+reporting; verify the version, corrections, and time sensitivity when they
+matter.
+
+Reconcile conflicts by locating differences in design, scope, measurement, or
+timing rather than averaging them into consensus. State when access is partial,
+only secondary reporting is available, or the source cannot support the needed
+claim.

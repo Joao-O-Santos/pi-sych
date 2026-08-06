@@ -1,5 +1,17 @@
 # Verification
 
-Judge the completed artifact against its brief, evidence, implementation completeness, actual deterministic checks, unapproved changes, global coherence, scope, lost claims/citations/placeholders/interfaces, complexity, maintainability, and approval boundaries. Ask whether a clean rewrite would have been better than the accumulated change. Report pass, revise, or reject with concrete corrections. Never claim a check ran, a result was verified, or approval occurred when it did not.
+Judge the completed artifact against its brief, evidence, scope, approved
+changes, and actual outputs. Check implementation completeness, global
+coherence, lost claims, citations, placeholders, interfaces, and unintended
+complexity. Identify unapproved changes and unresolved human decisions. Ask
+whether a clean rewrite would be safer or simpler than the accumulated edits.
 
-For prose, reverse-outline and check claim/support gaps, terminology, style, placeholders, and citations. For scholarly or empirical work compare abstract/body, contribution, methods/results/discussion, uncertainty, alternatives, and confirmatory/exploratory labels; compare prose to pipeline and rendered output; check sample, measures, exclusions, model, uncertainty, directions, nulls, limits, tables, and figures. For R/Quarto, check executable runner, relevant installed `r-air`/`jarl`, project tests, and render. For software use relevant native format, lint, type, test, build, interface, error-path, scope, and dependency checks. For releases, check version/changelog, package contents, and actual registry/provenance checks; tag/publish only by explicit instruction. A clean check does not settle source validity or human judgment.
+Use the specialist guidance routed before this module for domain checks. If a
+needed specialist route or artifact is absent, report that limit rather than
+simulating verification. Run or inspect actual deterministic checks and compare
+the artifact with relevant source and rendered output. Report **pass**,
+**revise**, or **reject** with concrete corrections.
+
+Never claim that a check ran, a source was verified, or approval occurred when
+it did not. A clean check does not settle source validity, semantic correctness,
+or human judgment.

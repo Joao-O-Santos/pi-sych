@@ -5,32 +5,24 @@ description: Draft and revise scholarly, professional, instructional, presentati
 
 # Write
 
-User, project, and genre requirements override package defaults; evidence limits override pressure for a strong conclusion. State claims with their support and label inference or uncertainty. Do not invent facts, citations, quotations, requirements, or results. Avoid padded LLM prose and formulaic rules. Choose voice by information structure; never mechanically replace passive voice.
+User, project, venue, and genre requirements override package defaults;
+evidence limits override pressure for a stronger conclusion. State claims with
+their support and label inference or uncertainty. Do not invent facts,
+citations, quotations, requirements, or results. Select the smallest recipe
+that covers the task and read its guidance in order.
 
-## Modules
+## Task recipes
 
-- `academic`: `modules/academic/guidance.md` and `modules/academic/examples.md`.
-- `empirical`: `modules/empirical/guidance.md` and `modules/empirical/examples.md`.
-- `theoretical`: `modules/theoretical/guidance.md` and `modules/theoretical/examples.md`.
-- `theory`: `modules/theory/guidance.md` and `modules/theory/examples.md`.
-- `sections`: `modules/sections/guidance.md` and `modules/sections/examples.md`.
-- `style`: `modules/style/guidance.md` and `modules/style/examples.md`.
-- `book`: `modules/book/guidance.md` and `modules/book/examples.md`.
-- `grant`: `modules/grant/guidance.md` and `modules/grant/examples.md`.
-- `slides`: `modules/slides/guidance.md` and `modules/slides/examples.md`.
-- `web`: `modules/web/guidance.md` and `modules/web/examples.md`.
-
-## Choose modules
-
-| If the task is… | Read… |
+| Task | Read in order |
 | --- | --- |
-| scholarly paper | `academic` |
-| empirical paper | `academic, empirical` |
-| theoretical paper | `academic, theoretical` |
-| theory development | `theory` |
-| specific paper section | `academic, sections`, plus `empirical` or `theoretical` as applicable |
-| style or pt-PT | `style` |
-| book or tutorial | `book` |
-| grant | `grant` |
-| presentation | `slides` |
-| site content or navigation | `web` |
+| general substantial prose | [prose](../_methods/prose/guidance.md) |
+| empirical manuscript | [claim and evidence](../_methods/claim-evidence/guidance.md) → [prose](../_methods/prose/guidance.md) → [academic](modules/academic/guidance.md) → [empirical](modules/empirical/guidance.md) |
+| empirical interpretation or causal argument | [claim and evidence](../_methods/claim-evidence/guidance.md) → [argument analysis](../_methods/argument-analysis/guidance.md) → [empirical](modules/empirical/guidance.md) |
+| theoretical manuscript | [argument analysis](../_methods/argument-analysis/guidance.md) → [prose](../_methods/prose/guidance.md) → [academic](modules/academic/guidance.md) → [theoretical](modules/theoretical/guidance.md) |
+| theory development | [hypothesis generation](../_methods/hypothesis-generation/guidance.md) → [argument analysis](../_methods/argument-analysis/guidance.md) → [theory](modules/theory/guidance.md) |
+| section revision | [prose](../_methods/prose/guidance.md) → [sections](modules/sections/guidance.md) |
+| voice, dialect, or style calibration | [prose](../_methods/prose/guidance.md) → [style](modules/style/guidance.md) |
+| book or tutorial | [prose](../_methods/prose/guidance.md) → [book](modules/book/guidance.md) |
+| grant | [claim and evidence](../_methods/claim-evidence/guidance.md) → [argument analysis](../_methods/argument-analysis/guidance.md) → [prose](../_methods/prose/guidance.md) → [grant](modules/grant/guidance.md) |
+| presentation | [prose](../_methods/prose/guidance.md) → [slides](modules/slides/guidance.md) |
+| site content or navigation | [prose](../_methods/prose/guidance.md) → [web](modules/web/guidance.md) |

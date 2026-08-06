@@ -5,28 +5,24 @@ description: Independently evaluate artifacts for correctness, structure, eviden
 
 # Review
 
-Evaluate independently: do not optimize for agreement or soften a material defect into preference. Accepted requirements and evidence override generic advice. Diagnose before proposing, distinguish defects from trade-offs and uncertainty, and recommend the smallest credible response. Report only inspection or checks actually performed; do not redesign by default.
+Evaluate independently: do not optimize for agreement or soften a material
+defect into preference. Accepted requirements and evidence override generic
+advice. Distinguish defects, trade-offs, alternatives, and uncertainty; report
+only inspection or checks actually performed. Select the smallest recipe that
+covers the review and read its guidance in order.
 
-## Modules
+## Task recipes
 
-- `structure`: `modules/structure/guidance.md` and `modules/structure/examples.md`.
-- `evidence`: `modules/evidence/guidance.md` and `modules/evidence/examples.md`.
-- `detail`: `modules/detail/guidance.md` and `modules/detail/examples.md`.
-- `copyedit`: `modules/copyedit/guidance.md` and `modules/copyedit/examples.md`.
-- `code`: `modules/code/guidance.md` and `modules/code/examples.md`.
-- `analysis`: `modules/analysis/guidance.md` and `modules/analysis/examples.md`.
-- `response`: `modules/response/guidance.md` and `modules/response/examples.md`.
-- `verification`: `modules/verification/guidance.md` and `modules/verification/examples.md`.
-
-## Choose modules
-
-| If the task is… | Read… |
+| Task | Read in order |
 | --- | --- |
-| organization or interfaces | `structure` |
-| support and assumptions | `evidence` |
-| consistency and edge cases | `detail` |
-| sentence-level correction | `copyedit` |
-| implementation and tests | `code` |
-| methods and interpretation | `analysis` |
-| respond to findings | `response` |
-| completed-artifact checks | `verification` |
+| structural prose review | [prose](../_methods/prose/guidance.md) → [structure](modules/structure/guidance.md) |
+| copyedit | [prose](../_methods/prose/guidance.md) → [copyedit](modules/copyedit/guidance.md) |
+| theoretical review | [argument analysis](../_methods/argument-analysis/guidance.md) → [claim and evidence](../_methods/claim-evidence/guidance.md) → [evidence](modules/evidence/guidance.md) → [detail](modules/detail/guidance.md) |
+| empirical inference review | [claim and evidence](../_methods/claim-evidence/guidance.md) → [argument analysis](../_methods/argument-analysis/guidance.md) → [analysis](modules/analysis/guidance.md) |
+| citation audit | [claim and evidence](../_methods/claim-evidence/guidance.md) → [citations](../research/modules/citations/guidance.md) → [evidence](modules/evidence/guidance.md) |
+| implementation review | [code](modules/code/guidance.md) → [testing](../code/modules/testing/guidance.md) → [verification](modules/verification/guidance.md) |
+| R or Quarto verification | [R and Quarto](../analyze/modules/r-quarto/guidance.md) → [verification](modules/verification/guidance.md) |
+| package or release verification | [npm](../code/modules/npm/guidance.md) → [verification](modules/verification/guidance.md) |
+| response to findings | [argument analysis](../_methods/argument-analysis/guidance.md) → [response](modules/response/guidance.md) |
+| completed prose or scholarly verification | [prose](../_methods/prose/guidance.md) → [claim and evidence](../_methods/claim-evidence/guidance.md) → [verification](modules/verification/guidance.md) |
+| completed-artifact verification | [claim and evidence](../_methods/claim-evidence/guidance.md) → [verification](modules/verification/guidance.md) |

@@ -97,8 +97,9 @@ not canonical instruction state.
 
 ## Skill customization
 
-Pi Sych exposes six umbrella skills. To customize examples durably, copy
-one umbrella directory into one of:
+Pi Sych exposes six umbrella skills. Their task recipes use relative
+links to local modules and shared methods. To customize one durably,
+copy its umbrella directory and the `_methods` directory into one of:
 
 ``` text
 ~/.pi/agent/skills/
@@ -106,10 +107,17 @@ one umbrella directory into one of:
 .agents/skills/
 ```
 
-For named worker selection, `.pi/skills/` wins over `.agents/skills/`,
-which wins over user and packaged skills. Edit `modules/*/examples.md`.
-Leave `guidance.md` intact unless you intentionally want to change
-behavioral guidance.
+Preserve the relative layout so recipe links continue to resolve. Copy
+only the method directories reached by the selected umbrella if a
+smaller override is useful. For named worker selection, `.pi/skills/`
+wins over `.agents/skills/`, which wins over user and packaged skills.
+
+Edit local `modules/*/examples.md` or shared `_methods/*/examples.md`
+first. Change guidance or task-recipe order only when you intentionally
+want different behavior. A project `STYLE.md` should record durable
+local deltas---audience, voice, dialect, terminology, citation form,
+venue, and artifact conventions---rather than copy package prose
+doctrine.
 
 ## Optional integrations
 

@@ -46,7 +46,7 @@ contexts.
 
 [![Pi Sych review and edit workflow: independent review, human decision,
 clean-context editing, fresh verification, and
-acknowledgement](docs/img/review_workflow.png)](docs/REVIEW_WORKFLOW.md)
+acknowledgement](docs/img/review_workflow.png)](docs/review-workflow.md)
 
 The separation between review and editing is deliberate. Rejected
 alternatives and the arguments used to evaluate them do not normally
@@ -58,7 +58,7 @@ A writer exposed to the entire debate may produce "Not X, but Y."
 A fresh edit worker given the accepted correction can instead produce
 the clean statement "Y."
 
-See the [review and revision workflow](docs/REVIEW_WORKFLOW.md) for the
+See the [review and revision workflow](docs/review-workflow.md) for the
 complete example and its limits.
 
 ## Quick start
@@ -166,10 +166,20 @@ when it is relevant.
   response, and verification; and
 - `research` --- search, source assessment, synthesis, and citations.
 
-Each skill has one level of focused modules containing guidance and
-editable examples. Project, user, and packaged versions can override one
-another without enlarging the initial public skill catalogue. See [skill
-customization](docs/CONFIGURATION.md#skill-customization) for the lookup
+Each umbrella skill contains small ordered task recipes. A recipe
+selects only the shared methods and local modules needed for that task:
+
+- shared methods define reusable procedures for prose, hypothesis
+  generation, argument analysis, and claim-to-evidence mapping; and
+- local modules adapt those procedures to a genre, artifact, or review
+  mode.
+
+Shared methods have no `SKILL.md`, so Pi still discovers exactly six
+public skills. The recipes are plain Markdown links, not a loader,
+inheritance system, or workflow controller. Project, user, and packaged
+versions can override one another without enlarging the public
+catalogue. See [skill
+customization](docs/configuration.md#skill-customization) for the lookup
 order and customization paths.
 
 ## Commands you can use
@@ -220,14 +230,11 @@ the package. Pi Sych does not ship credentials, rank providers, or
 choose models for you. The bootstrap operation is explicit and does not
 silently modify your home directory during ordinary use.
 
-See [configuration](docs/CONFIGURATION.md) for model roles, worker
+See [configuration](docs/configuration.md) for model roles, worker
 directories, canonical paths, skill overrides, and optional remote
 research.
 
 ## How it works
-
-![Pi Sych architecture: project state, bounded workers, and human
-review](https://unpkg.com/pi-sych@4.0.4/docs/img/architecture.png)
 
 Pi Sych supplies a few mechanical pieces rather than a general
 orchestration system:
@@ -342,15 +349,18 @@ changes.
 
 ## Detailed documentation
 
-- [Review and revision workflow](docs/REVIEW_WORKFLOW.md) --- a
+- [Review and revision workflow](docs/review-workflow.md) --- a
   user-guided pattern for independent review, clean-context editing, and
   fresh verification;
-- [Configuration](docs/CONFIGURATION.md) --- private models, worker
+- [Configuration](docs/configuration.md) --- private models, worker
   setup, project roots, canonical paths, skill customization, and
   optional integrations;
 - [Architecture](ARCHITECTURE.md) --- supervisor-facing runtime
   boundaries and mechanical invariants;
-- [Development](docs/DEVELOPMENT.md) --- checks, tests, style, and
+- [Development](docs/development.md) --- checks, tests, style, and
   design constraints for contributors; and
 - [Contributing](CONTRIBUTING.md) --- issues, pull requests, and release
-  ownership.
+  ownership; and
+- [Attribution](docs/attribution.md) --- cited influences behind the
+  skills and package design, plus platform and integration
+  acknowledgements.

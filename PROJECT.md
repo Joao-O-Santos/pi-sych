@@ -48,9 +48,9 @@ agent memory.
 ## Current direction
 
 {accepted} Keep the package small, explicit, and reviewable for human
-users: six umbrella skills with direct one-level modules, bounded
-workers, independent substantive review, and no automated workflow
-controller.
+users: six public umbrella skills with bounded ordered task recipes,
+four reusable shared methods, focused local modules, bounded workers,
+independent substantive review, and no automated workflow controller.
 
 ## Current state
 
@@ -59,27 +59,30 @@ resolution, SHA-256 status checks, declared dependency impact, bounded
 workers, and explicit acknowledgement. It uses a small working-memory
 summary, append-only human-review proposals in `INBOX.md`, direct named
 model roles, shared primitive validation, and narrow MCPorter and
-Plannotator adapters. The public documentation includes the user-centred
-review workflow and current architecture diagrams. Production TypeScript
+Plannotator adapters. The six public skills compose plain shared methods
+and local modules through ordered Markdown recipes; no loader or
+workflow controller was added. Routes distinguish routine work from
+specialist inference, retrieval, and verification. Intellectual
+influences and platform acknowledgements live in packaged
+`docs/attribution.md`, outside routed worker context. Package metadata
+is prepared at `4.0.5` but has not been published. Production TypeScript
 is about 1,650 lines within the 2,000-line cap.
 
 ## Previous action
 
-{verified} Completed the focused v4 correctness pass, documentation
-rewrite, and minimal validator consolidation. The implementation now
-bounds compaction, preserves explicit symlink behavior, surfaces project
-validation errors, rechecks files before acknowledgement, validates
-worker-reported paths, loads model configuration lazily, and keeps
-bootstrap/MCPorter boundaries explicit. The v4.0.4 release includes
-shared primitive validation and the updated architecture, skills, and
-supervisor diagrams. The deterministic gate passed 32 unit checks and 5
-integration checks; GitLab pipelines #60 and #61 (`main`) and #62
-(`v4.0.4`) passed.
+{verified} Completed the approved `4.0.5` skill, attribution, and
+repository cleanup. Refined task routes and model-facing guidance;
+completed cited attribution under lowercase `docs/`; removed completed
+plans and stale ledgers; retained root canonical discovery rather than
+adding a split `project/` layout; and normalized documentation paths.
+The largest route is 1,730 words against the historical 1,736-word
+ceiling. The gate passed 31 unit checks and 6 integration checks, and a
+130-file package dry run and independent read-only review approved the
+cleaned implementation.
 
 ## Immediate next step
 
-{verified} Released signed patch `v4.0.4` at commit `b60aae52` and tag
-`v4.0.4`. GitLab pipelines #60 and #61 (`main`) and #62 (`v4.0.4`)
-passed; the tagged pipeline published npm `4.0.4`, which npm reports as
-the current version. The next step is the next approved maintenance or
-feature task.
+{verified} The `4.0.5` implementation and repository cleanup are
+complete and independently approved. No tag, release, diagram
+replacement, push, or publication is authorized; the next owner action
+is release inspection.

@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-03T20:03:40.755Z",
+  "confirmedAt": "2026-08-06T13:59:30.906Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:df6f56e40f0b067bfba40c8c6f860e9f690c9c4b06be87bff7d52cba7926e4e1",
+      "fingerprint": "sha256:678ddb6e0eea24b5fc15452f30c24aca1385836f381bf89d2d264d1fec08ce9f",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,13 +15,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-03T20:03:40.755Z",
-        "reason": "Recorded the signed v4.0.4 tag, successful main and tagged GitLab pipelines, and npm publication of 4.0.4."
+        "at": "2026-08-06T13:59:30.906Z",
+        "reason": "Verified the clean v4.0.5 repository layout: completed plans and stale ledgers removed, lowercase docs and docs/attribution.md packaged, root canonical discovery retained, independent approval, 31 unit and 6 integration checks, 130-file package dry run, link and stale-path validation."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:1a37e0a51d29478263af4a6e82264c149422bb35a78b62d5cb7a6570b653a4cf",
+      "fingerprint": "sha256:b6499d153ad3d867bd755033263179bb17de21c85637ec4a206220eac8c2d633",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,26 +35,26 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-03T20:03:40.755Z",
-        "reason": "Recorded the signed v4.0.4 tag, successful main and tagged GitLab pipelines, and npm publication of 4.0.4."
+        "at": "2026-08-06T13:59:30.906Z",
+        "reason": "Verified the clean v4.0.5 repository layout: completed plans and stale ledgers removed, lowercase docs and docs/attribution.md packaged, root canonical discovery retained, independent approval, 31 unit and 6 integration checks, 130-file package dry run, link and stale-path validation."
       }
     },
     {
       "path": "ARCHITECTURE.md",
-      "fingerprint": "sha256:c393a6e9e3cee7b741895fb668b28f83f0915f4985b28e192a148940346ea561",
+      "fingerprint": "sha256:158f68d4348159fd8d285ffd99550859fe185b53daca767fc53db298c1f462a0",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-08-03T19:50:02.001Z",
-        "reason": "Reviewed the v4.0.4 release candidate, current architecture and user documentation, shared validation changes, successful local gate, and GitLab pipeline #60."
+        "at": "2026-08-06T13:59:30.906Z",
+        "reason": "Verified the clean v4.0.5 repository layout: completed plans and stale ledgers removed, lowercase docs and docs/attribution.md packaged, root canonical discovery retained, independent approval, 31 unit and 6 integration checks, 130-file package dry run, link and stale-path validation."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:f20f342d13ba997771699383183507d3cebe73f58e5ea5ffa33b5a92bc076d4e",
+      "fingerprint": "sha256:5662259e27b5546aee4acffc38de24818c85c8c4ab2f231c81f25645cfc6d1a7",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -66,13 +66,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-08-03T19:50:02.001Z",
-        "reason": "Reviewed the v4.0.4 release candidate, current architecture and user documentation, shared validation changes, successful local gate, and GitLab pipeline #60."
+        "at": "2026-08-06T13:59:30.906Z",
+        "reason": "Verified the clean v4.0.5 repository layout: completed plans and stale ledgers removed, lowercase docs and docs/attribution.md packaged, root canonical discovery retained, independent approval, 31 unit and 6 integration checks, 130-file package dry run, link and stale-path validation."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:d2a5766e0e69df7ef7ea8ad53353457440e4e4630392e52cf1cca096708a467c",
+      "fingerprint": "sha256:9f954a84bb2741f34e030b25f44eee005f07d797d1aa98852a6f6559bc9db98d",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -86,34 +86,34 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-08-03T19:50:02.001Z",
-        "reason": "Reviewed the v4.0.4 release candidate, current architecture and user documentation, shared validation changes, successful local gate, and GitLab pipeline #60."
+        "at": "2026-08-06T13:59:30.906Z",
+        "reason": "Verified the clean v4.0.5 repository layout: completed plans and stale ledgers removed, lowercase docs and docs/attribution.md packaged, root canonical discovery retained, independent approval, 31 unit and 6 integration checks, 130-file package dry run, link and stale-path validation."
       }
     },
     {
-      "path": "docs/CONFIGURATION.md",
-      "fingerprint": "sha256:be52872a3fdbb05d2d00f2082689c1e8890fc770684d433623d935218158ffbf",
+      "path": "docs/configuration.md",
+      "fingerprint": "sha256:7350bfd8deb9bb6f0b2c0894b566c0eeba4dee116971947db0e156082741aa6e",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T14:40:59.764Z",
-        "reason": "Reviewed the completed v4.0.3 correctness implementation, audience-specific documentation, signed release tag, successful GitLab pipelines #56/#57, npm 4.0.3 publication, and published image response."
+        "at": "2026-08-06T11:35:15.309Z",
+        "reason": "Reviewed and verified the approved shared-method skills architecture, corrected independent-review findings, final read-only approval, 36 passing unit checks, 5 passing integration checks, package contents, and documented limitations."
       }
     },
     {
-      "path": "docs/DEVELOPMENT.md",
-      "fingerprint": "sha256:2454f89648e382cc42b68c76f94622d77e1fd94ab21f000a6b1bbe0c80d7b1b8",
+      "path": "docs/development.md",
+      "fingerprint": "sha256:33f0a44f456dcb1ba2606635ca85c441358db6519f3762834cbfb8bbaf0ae1a6",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "development-checks"
       ],
       "acknowledgement": {
-        "at": "2026-08-01T14:43:01.837Z",
-        "reason": "Reviewed the completed contributor documentation rewrite and the successful v4.0.3 release gate; its current fingerprint is now recorded."
+        "at": "2026-08-06T13:09:49.947Z",
+        "reason": "Applied and independently reviewed the owner's Plannotator feedback: deterministic skill tests are mechanical only, behavioral fixtures are opt-in, intellectual attribution is packaged outside routed context, the review file was deleted, and the final gate passed 30 unit and 5 integration checks."
       }
     }
   ]

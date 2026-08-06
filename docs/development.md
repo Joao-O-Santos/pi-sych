@@ -55,6 +55,20 @@ Use temporary directories and fake launchers in deterministic tests.
 Never place credentials in fixtures. For package-load tests, use an
 empty `PI_CODING_AGENT_DIR` and explicit `--no-*` resource flags.
 
+Skill-architecture tests mechanically verify the six public `SKILL.md`
+files, hidden shared methods, required guidance and examples, resolvable
+ordered recipes, acyclic routes, and prompt budgets. They do not freeze
+semantic guidance through keyword or prose-presence assertions.
+
+The prompt-quality fixtures run only through the opt-in live model
+evaluation. That test validates each scenario, injects its target
+guidance into a real model prompt, and asks a second model pass to judge
+the stated required and prohibited properties. It requires
+`PI_SYCH_USAGE_TEST=1`, configured credentials, and may incur cost or
+vary by model and run. Its result is evaluation evidence, not a
+deterministic contract or proof of adherence. See
+`tests/usage/README.md`.
+
 ## Code and documentation style
 
 Biome formats and lints TypeScript, JavaScript, and tests. Pandoc 3.10.1

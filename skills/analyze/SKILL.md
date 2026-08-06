@@ -5,20 +5,20 @@ description: Conduct reproducible quantitative, qualitative, statistical, and da
 
 # Analyze
 
-Project decisions and evidence limits override generic methods. Maintain traceability from inputs to conclusions; distinguish confirmatory, exploratory, observation, inference, and unresolved limitation. Do not treat software output, statistical thresholds, or reproducibility as authority. Run and report only actual work; do not add workflow or tooling beyond the stated task.
+Project decisions and evidence limits override generic methods. Maintain
+traceability from inputs to conclusions; distinguish confirmatory, exploratory,
+observation, inference, and unresolved limitation. Do not treat software output,
+statistical thresholds, or reproducibility as authority. Run and report only
+actual work. Read the selected recipe in order.
 
-## Modules
+## Task recipes
 
-- `quantitative`: `modules/quantitative/guidance.md` and `modules/quantitative/examples.md`.
-- `qualitative`: `modules/qualitative/guidance.md` and `modules/qualitative/examples.md`.
-- `r-quarto`: `modules/r-quarto/guidance.md` and `modules/r-quarto/examples.md`.
-- `reporting`: `modules/reporting/guidance.md` and `modules/reporting/examples.md`.
-
-## Choose modules
-
-| If the task is… | Read… |
+| Task | Read in order |
 | --- | --- |
-| statistical inference | `quantitative` |
-| qualitative inquiry | `qualitative` |
-| R or Quarto workflow | `r-quarto` |
-| tables, figures, results prose | `reporting` |
+| quantitative inference | [claim and evidence](../_methods/claim-evidence/guidance.md) → [argument analysis](../_methods/argument-analysis/guidance.md) → [quantitative](modules/quantitative/guidance.md) |
+| qualitative inquiry | [claim and evidence](../_methods/claim-evidence/guidance.md) → [qualitative](modules/qualitative/guidance.md) |
+| explanations from qualitative material | [hypothesis generation](../_methods/hypothesis-generation/guidance.md) → [argument analysis](../_methods/argument-analysis/guidance.md) → [claim and evidence](../_methods/claim-evidence/guidance.md) → [qualitative](modules/qualitative/guidance.md) |
+| routine R or Quarto workflow | [R and Quarto](modules/r-quarto/guidance.md) |
+| R or Quarto work that changes claims | [claim and evidence](../_methods/claim-evidence/guidance.md) → [R and Quarto](modules/r-quarto/guidance.md) |
+| tables or figures | [claim and evidence](../_methods/claim-evidence/guidance.md) → [reporting](modules/reporting/guidance.md) |
+| results prose | [claim and evidence](../_methods/claim-evidence/guidance.md) → [prose](../_methods/prose/guidance.md) → [reporting](modules/reporting/guidance.md) |

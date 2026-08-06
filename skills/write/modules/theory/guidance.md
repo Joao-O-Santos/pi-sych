@@ -1,5 +1,14 @@
 # Theory
 
-Define constructs only far enough to distinguish neighboring ideas. For each retained proposition state inputs, mechanism, outputs, assumptions, scope, rival account, and discriminating implication. A new label is not an explanation, and illustration is not evidence.
+Define constructs only far enough to distinguish neighboring ideas. For each
+retained proposition state inputs, mechanism, outputs, assumptions, scope,
+rival account, and discriminating implication. A new label is not an
+explanation, and illustration is not evidence.
 
-Generate alternatives selectively, not as evidence or an automatic selection rule: **Contrary (E10)** asks whether the contrary is partly true; **Reverse direction (E11)** whether outcome causes predictor; **Moderators (E14)** which population/boundary reverses, suppresses, or amplifies; **Multiple accounts (H23)** for several explanations before preference; **Counterforces (H25)** for opposing net processes; and **Deviant cases (K35)** or **Reconcile conflicts (L37)** for nulls, boundaries, or a moderator that explains conflict. Also test extreme/zero conditions, re-operationalize measures/manipulations, decompose outcomes, restate as prose/diagram/matrix/premises, and use analogies only with their breaking point. Prefer a small sequence of discriminating tests to a loose study list. Keep unresolved tensions visible; do not choose a preferred account without support.
+Apply the routed hypothesis-generation method selectively, then turn retained
+candidates into explicit propositions or mechanisms. Restate difficult accounts
+as prose, diagrams, matrices, or premises when that exposes missing mediators or
+unclear constructs. Prefer a small sequence of discriminating tests to a loose
+study list. Keep unresolved tensions, nulls, and boundary cases visible; do not
+choose a preferred account without support or present a generated candidate as
+a finding.

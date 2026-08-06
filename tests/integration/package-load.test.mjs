@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { mkdtemp } from "node:fs/promises";
+import { mkdtemp, readFile, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
@@ -114,6 +114,16 @@ test("Pi discovers exactly the six public skills without exposing modules", asyn
 			"skill:write",
 		],
 	);
+});
+
+test("package metadata keeps attribution and patch version consistent", async () => {
+	const manifest = JSON.parse(await readFile("package.json", "utf8"));
+	const lockfile = JSON.parse(await readFile("package-lock.json", "utf8"));
+	assert.equal(manifest.files.includes("docs"), true);
+	assert.equal((await stat("docs/attribution.md")).isFile(), true);
+	assert.equal(manifest.version, "4.0.5");
+	assert.equal(lockfile.version, manifest.version);
+	assert.equal(lockfile.packages[""].version, manifest.version);
 });
 
 test("bootstrapped worker starts with only the worker extension", async () => {

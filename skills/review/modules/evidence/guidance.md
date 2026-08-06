@@ -1,3 +1,12 @@
 # Evidence
 
-Review claims, sources, assumptions, evidence quality, alternatives, unsupported inference, and traceability. Trace each consequential claim to the source, method, result, or stated premise that bears its weight. Identify what evidence would discriminate among competing explanations; citation count, prestige, and repetition are not support. Distinguish a missing source, an inaccurate citation, weak evidence, and an inference beyond the evidence. Report the consequence for the claim and a bounded repair. The review is advisory and never silently creates approval or a new requirement.
+Use the routed claim map to compare each consequential claim with the source,
+method, result, output, or premise that actually bears its weight. Diagnose the
+specific mismatch: missing source, inaccurate citation, weak premise,
+contradictory evidence, or inference beyond support. Prestige, citation count,
+and repetition do not repair a mismatch.
+
+For each material finding state location, claim, actual support, consequence,
+and the smallest credible repair. Name evidence that could discriminate serious
+alternatives when relevant. The review is advisory; it does not silently create
+approval or a new requirement.

@@ -5,20 +5,21 @@ description: Retrieve, assess, and synthesize sources with explicit limitations.
 
 # Research
 
-Local evidence, project constraints, and source limits override generic expectations. Separate verified source content, inference, and missing evidence; do not manufacture citations, coverage, consensus, quotations, or retrieval. Retrieve only what can materially alter the answer, state uncertainty and stopping reasons, and report actual access and limitations.
+Local evidence, project constraints, and source limits override generic
+expectations. Separate verified source content, inference, and missing evidence;
+do not manufacture citations, coverage, consensus, quotations, or retrieval.
+Retrieve only what can materially alter the answer, and report actual access,
+uncertainty, stopping reasons, and limitations. Read the selected recipe in
+order.
 
-## Modules
+## Task recipes
 
-- `search`: `modules/search/guidance.md` and `modules/search/examples.md`.
-- `sources`: `modules/sources/guidance.md` and `modules/sources/examples.md`.
-- `synthesis`: `modules/synthesis/guidance.md` and `modules/synthesis/examples.md`.
-- `citations`: `modules/citations/guidance.md` and `modules/citations/examples.md`.
-
-## Choose modules
-
-| If the task is… | Read… |
+| Task | Read in order |
 | --- | --- |
-| queries and stopping rule | `search` |
-| authority and relevance | `sources` |
-| comparison and conclusion | `synthesis` |
-| claim/source checking | `citations` |
+| query design and stopping rule | [search](modules/search/guidance.md) |
+| supplied-source synthesis | [claim and evidence](../_methods/claim-evidence/guidance.md) → [sources](modules/sources/guidance.md) → [synthesis](modules/synthesis/guidance.md) |
+| literature retrieval and synthesis | [search](modules/search/guidance.md) → [sources](modules/sources/guidance.md) → [claim and evidence](../_methods/claim-evidence/guidance.md) → [synthesis](modules/synthesis/guidance.md) |
+| explanation or hypothesis search | [hypothesis generation](../_methods/hypothesis-generation/guidance.md) → [search](modules/search/guidance.md) → [sources](modules/sources/guidance.md) → [claim and evidence](../_methods/claim-evidence/guidance.md) → [synthesis](modules/synthesis/guidance.md) |
+| citation verification | [claim and evidence](../_methods/claim-evidence/guidance.md) → [citations](modules/citations/guidance.md) |
+| compare explanations in supplied sources | [hypothesis generation](../_methods/hypothesis-generation/guidance.md) → [argument analysis](../_methods/argument-analysis/guidance.md) → [sources](modules/sources/guidance.md) → [claim and evidence](../_methods/claim-evidence/guidance.md) → [synthesis](modules/synthesis/guidance.md) |
+| retrieve and compare explanations | [hypothesis generation](../_methods/hypothesis-generation/guidance.md) → [argument analysis](../_methods/argument-analysis/guidance.md) → [search](modules/search/guidance.md) → [sources](modules/sources/guidance.md) → [claim and evidence](../_methods/claim-evidence/guidance.md) → [synthesis](modules/synthesis/guidance.md) |

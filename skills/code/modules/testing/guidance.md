@@ -1,5 +1,13 @@
 # Testing
 
-Before selecting checks, inspect the repository's available scripts, formatter, linter, type checker, build, smoke, and task-specific commands. Choose existing project-native checks that can falsify the changed behavior before adding tests or wrappers. For substantive behavior changes, obtain independently authored test design when available; test normal, error, and boundary paths proportionately. Run exact commands and inspect changed files and outputs afterwards.
+Identify the changed behavior and the project-native check most likely to
+falsify it. Inspect existing scripts and tests before adding a case, wrapper, or
+new tool. For substantive behavior changes, obtain independently authored test
+design when available; cover meaningful normal, error, and boundary behavior in
+proportion to risk.
 
-Run selected commands with Pi’s built-in Bash using exact commands and arguments; inspect changed files and relevant outputs afterwards. Report only checks actually run, their exit status, relevant failures, and limitations. Record durable verification support in `EVIDENCE.md`, a decision, or a `project_status` acknowledgement reason only when useful. Passing checks do not prove semantic correctness, approval, or untested behavior. Do not claim verification from inspection alone.
+Run exact commands with Pi's built-in Bash, inspect changed files and relevant
+outputs afterwards, and report only actual exit status, failures, and limits.
+Record durable verification in `EVIDENCE.md`, a decision, or a
+`project_status` acknowledgement only when useful. Passing checks do not prove
+semantic correctness, approval, or untested behavior.
