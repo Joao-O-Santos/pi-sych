@@ -3,6 +3,20 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
+## v4.0.6 - 2026-08-06
+
+### Scientific continuity
+
+- Require inspected motivating material for hypothesis generation and
+  bound model assistance to diversification, formalization, comparison,
+  scope analysis, and discriminating tests.
+- Make retrospective proposals name predicted effects, regression risks,
+  and held-in and held-out evaluations without enabling automatic
+  mutation.
+- Preserve continuity-critical alternatives, negative results, failed
+  approaches, and not-yet-canonical commitments during compaction
+  without expanding the working-memory schema.
+
 ## v4.0.5 - 2026-08-06
 
 ### Skills architecture

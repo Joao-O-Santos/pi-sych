@@ -1,9 +1,14 @@
 # Hypothesis generation
 
 Use this method to generate candidate explanations from an observation,
-anomaly, conflict, puzzle, null, or deviant case. These heuristics are
-generative aids, not evidence: they can produce candidate hypotheses but cannot
-make those hypotheses evidentially supported.
+anomaly, conflict, puzzle, null, or deviant case. Identify the inspected
+material that supplied the motivation. Do not manufacture an observation,
+anomaly, field experience, participant account, result, or literature conflict.
+If none was inspected, request it or state a conditional premise.
+
+The model may diversify, formalize, compare, analyze scope, and propose
+discriminating tests. It does not independently supply grounded experience or
+scientific taste. These heuristics generate candidates, not evidence.
 
 ## Generate a portfolio
 
@@ -25,9 +30,8 @@ candidate:
 - use bounded qualitative, quantitative, or simulated probes to clarify which
   observations could distinguish candidates.
 
-**Reason:** Transforming the problem produces genuinely different mechanisms
-and boundary conditions rather than cosmetic restatements of one favored
-account.
+**Reason:** These transformations vary mechanisms and boundaries rather than
+cosmetically restating one account.
 
 **Exceptions:** A well-constrained task may need only one serious rival or a
 clarification of the existing account. Stop when new transformations merely
@@ -42,7 +46,8 @@ explain every possible result.
 
 ## Preserve epistemic status
 
-**Default:** Label the source of each candidate, the timing of its generation,
+**Default:** Name the inspected motivating artifact and label the source of
+each candidate, the timing of its generation,
 and whether it is exploratory, preregistered, or previously supported. Preserve
 nulls, counterexamples, and unresolved tensions. Record what evidence would
 support, weaken, or discriminate the candidate.

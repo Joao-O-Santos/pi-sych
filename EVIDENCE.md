@@ -1,5 +1,41 @@
 # Evidence
 
+## E-026 --- Scientific grounding and continuity gate
+
+**Status:** verified **Kind:** observed guidance, deterministic prompt
+and schema behavior, package contents, source inspection, and
+independent review **Source:** hypothesis and retrospective guidance,
+compaction source and unit tests, opt-in live usage evaluation, Zahavy
+(2026), current documentation, package dry run, and read-only review
+**Supports:** inspected motivation for hypothesis generation, bounded
+model contribution, regression-aware retrospective proposals, and
+scientific continuity through compaction without schema expansion.
+**Evidence:** hypothesis guidance rejects invented observations,
+anomalies, field experience, participant accounts, results, and
+literature conflicts while retaining model-assisted diversification,
+formalization, comparison, scope analysis, and discriminating tests.
+Retrospective proposals now identify the targeted component, predicted
+effect, regression risks, motivating cases, held-out cases, and human
+decision. The compaction prompt retains unresolved alternatives,
+consequential negative results, constraining failed approaches, and
+not-yet-canonical decisions or commitments in the existing `task`,
+`constraints`, `active`, `blockers`, `next`, and `files` fields.
+Typecheck, Biome and Pandoc checks, dependency validation, source
+budget, 32 unit checks, 6 integration checks, a 130-file package dry
+run, and whitespace checks passed. The maximum route remains 1,730/1,736
+words. Independent review approved all requirements. The live
+disposable- project workflow passed. Initial prompt-quality runs exposed
+one missing presentation-versus-evidence safeguard and an underspecified
+retrospective fixture; both were corrected, and the final prompt-quality
+evaluation passed. **Limits:** Live results are evidence from the
+configured models and these runs, not proof of general adherence. The
+Zahavy citation supports a narrow grounding caution; Pi Sych does not
+adopt the paper's strongest conclusion as established fact. At this
+checked gate, `4.0.6` had not yet been tagged, published, or released.
+`npm audit --omit=dev` retained five upstream or transitive advisories
+(two moderate and three high); no dependency change was made.
+**Checked:** 2026-08-06
+
 ## E-025 --- v4.0.5 release verification
 
 **Status:** verified **Kind:** observed signed Git state, GitLab CI, npm

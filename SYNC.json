@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-06T15:40:42.774Z",
+  "confirmedAt": "2026-08-06T22:15:52.273Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:160e1d11956a4cbc2cade0ed3a0c94a1805a83bb07562eac841719b91c1da0ea",
+      "fingerprint": "sha256:e05ce237d2d10e2a1f161e1e8cf7f1483e56f803150ecc4121fffd33bf531f77",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,13 +15,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-06T15:40:42.774Z",
-        "reason": "Verified the published v4.0.5 release: signed tag target, successful GitLab main/tag pipelines and release jobs, npm registry publication with SLSA provenance, integrity, and reviewed 130-file tarball contents."
+        "at": "2026-08-06T22:15:52.273Z",
+        "reason": "Final v4.0.6 release review approved after live evaluation corrections; full gate passed 32 unit and 6 integration checks, live disposable-project and final prompt-quality evaluations passed, package dry run contained 130 files, version metadata and evidence are consistent."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:1e2f37cdb1974b893cf7c20ce49cac54f0edc6c9b22f796875fe49303e795705",
+      "fingerprint": "sha256:8e3b15d2cfb9a9829552a5cd81527f44aef946ab3cde9982f4207b21eb640b80",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,26 +35,26 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-06T15:40:42.774Z",
-        "reason": "Verified the published v4.0.5 release: signed tag target, successful GitLab main/tag pipelines and release jobs, npm registry publication with SLSA provenance, integrity, and reviewed 130-file tarball contents."
+        "at": "2026-08-06T22:15:52.273Z",
+        "reason": "Final v4.0.6 release review approved after live evaluation corrections; full gate passed 32 unit and 6 integration checks, live disposable-project and final prompt-quality evaluations passed, package dry run contained 130 files, version metadata and evidence are consistent."
       }
     },
     {
       "path": "ARCHITECTURE.md",
-      "fingerprint": "sha256:158f68d4348159fd8d285ffd99550859fe185b53daca767fc53db298c1f462a0",
+      "fingerprint": "sha256:29cdb293bb2c519afb37aa0d2626edfd95002af8a99c3a52114abfa695d1aee3",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-08-06T13:59:30.906Z",
-        "reason": "Verified the clean v4.0.5 repository layout: completed plans and stale ledgers removed, lowercase docs and docs/attribution.md packaged, root canonical discovery retained, independent approval, 31 unit and 6 integration checks, 130-file package dry run, link and stale-path validation."
+        "at": "2026-08-06T21:30:03.989Z",
+        "reason": "Verified the three unreleased scientific-continuity improvements: inspected hypothesis motivation, regression-aware retrospective proposals, and continuity-critical compaction in the unchanged six-field schema; independent approval, 32 unit and 6 integration checks, and 130-file package dry run."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:5662259e27b5546aee4acffc38de24818c85c8c4ab2f231c81f25645cfc6d1a7",
+      "fingerprint": "sha256:268b994ccefeedcbe027ee6fccf27c68f3581fb6bfce9d3e04a5136efde25a64",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -66,13 +66,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-08-06T13:59:30.906Z",
-        "reason": "Verified the clean v4.0.5 repository layout: completed plans and stale ledgers removed, lowercase docs and docs/attribution.md packaged, root canonical discovery retained, independent approval, 31 unit and 6 integration checks, 130-file package dry run, link and stale-path validation."
+        "at": "2026-08-06T22:15:52.273Z",
+        "reason": "Final v4.0.6 release review approved after live evaluation corrections; full gate passed 32 unit and 6 integration checks, live disposable-project and final prompt-quality evaluations passed, package dry run contained 130 files, version metadata and evidence are consistent."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:9f954a84bb2741f34e030b25f44eee005f07d797d1aa98852a6f6559bc9db98d",
+      "fingerprint": "sha256:4736a5b29102a88f8c0584c8cc021571baf89da08f196f1e8d0e3795bd1c594a",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -86,8 +86,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-08-06T13:59:30.906Z",
-        "reason": "Verified the clean v4.0.5 repository layout: completed plans and stale ledgers removed, lowercase docs and docs/attribution.md packaged, root canonical discovery retained, independent approval, 31 unit and 6 integration checks, 130-file package dry run, link and stale-path validation."
+        "at": "2026-08-06T22:15:52.273Z",
+        "reason": "Final v4.0.6 release review approved after live evaluation corrections; full gate passed 32 unit and 6 integration checks, live disposable-project and final prompt-quality evaluations passed, package dry run contained 130 files, version metadata and evidence are consistent."
       }
     },
     {

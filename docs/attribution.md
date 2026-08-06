@@ -68,6 +68,17 @@ causation, moderators, multiple accounts, counterforces, deviant cases,
 conflict reconciliation, extreme conditions, re-operationalization,
 decomposition, restatement, analogy, and discriminating study sequences.
 
+Tom Zahavy's position paper informs a narrower grounding safeguard: a
+language model may diversify, formalize, compare, analyze scope, and
+propose discriminating tests for candidate hypotheses, but it must not
+invent the sensory, experiential, empirical, or literature material that
+supposedly motivated them. Pi Sych adopts this operational risk, not the
+paper's stronger conclusion that present LLMs are structurally incapable
+of an abductive scientific jump.
+
+- Zahavy, T. (2026). "Position: LLMs can't jump." *Proceedings of the
+  43rd International Conference on Machine Learning*, PMLR 306.
+
 ### Argument and claim analysis
 
 The argument-analysis and claim-evidence methods consolidate procedures
@@ -91,8 +102,10 @@ task-specific context, not only on base-model capability.
   artifacts, and evaluation as behaviorally material parts of a model's
   deployment system. Pi Sych applies that lesson through explicit
   project files, bounded context packets, short-lived workers, and
-  visible verification boundaries; it does not implement recursive
-  self-improvement.
+  visible verification boundaries. Regression-aware retrospective
+  proposals name the targeted component and predicted effect, then
+  separate motivating cases from held-out checks. Pi Sych does not
+  implement recursive self-improvement or autonomous prompt mutation.
 
 - Goedecke, S. (2026, July 24). "LLMs reward expertise."
   <https://www.seangoedecke.com/llms-reward-expertise/>

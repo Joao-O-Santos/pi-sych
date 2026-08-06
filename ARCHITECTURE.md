@@ -73,8 +73,11 @@ sandbox boundary.
 Compaction sends the previous summary, compacted conversation, a concise
 status projection, and bounded snapshots of the configured `project`,
 `todo`, and `decisions` files when present. It retains relevant artifact
-paths without loading every artifact. `INBOX.md` is intentionally
-excluded because it contains unreviewed proposals.
+paths without loading every artifact. The prompt explicitly preserves
+continuity-critical unresolved alternatives, negative results, failed
+approaches that constrain the next action, and commitments not yet
+written to canonical files, using the existing memory fields. `INBOX.md`
+is intentionally excluded because it contains unreviewed proposals.
 
 Text snapshots are capped per file and in total. Truncation is reported
 to the model. At most five validated proposals may be appended to the

@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import {
+	buildCompactionPrompt,
 	COMPACTION_FILE_BYTE_LIMIT,
 	COMPACTION_TOTAL_BYTE_LIMIT,
 	compactionSnapshot,
@@ -30,9 +31,50 @@ test("working-memory validation trims values and standardizes array errors", () 
 		next: "next",
 		files: ["PROJECT.md"],
 	});
+	assert.deepEqual(Object.keys(memory).sort(), [
+		"active",
+		"blockers",
+		"constraints",
+		"files",
+		"next",
+		"task",
+	]);
 	assert.throws(
 		() => validateWorkingMemory({ ...memory, constraints: {} }),
 		/constraints must be an array of strings/,
+	);
+});
+
+test("compaction prompt retains scientific continuity without expanding memory", () => {
+	const prompt = buildCompactionPrompt(
+		{
+			preparation: {
+				messagesToSummarize: [],
+				turnPrefixMessages: [],
+				previousSummary: undefined,
+			},
+		},
+		{ files: [], paths: [] },
+		{
+			projectRoot: "/tmp/project",
+			syncError: undefined,
+			changed: [],
+			missing: [],
+			impacted: [],
+			cycles: [],
+			missingCore: [],
+			projectErrors: [],
+		},
+	);
+	assert.ok(
+		prompt.includes(
+			"Retain continuity-critical information even when it is not current active work: unresolved alternatives; consequential negative results; failed approaches that constrain the next action; and decisions or commitments not yet represented in canonical project files.",
+		),
+	);
+	assert.ok(
+		prompt.includes(
+			"Put these in the existing workingMemory fields—constraints, active, blockers, or next—as appropriate; do not add workingMemory fields.",
+		),
 	);
 });
 

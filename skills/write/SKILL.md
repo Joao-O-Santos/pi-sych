@@ -5,8 +5,9 @@ description: Draft and revise scholarly, professional, instructional, presentati
 
 # Write
 
-User, project, venue, and genre requirements override package defaults;
-evidence limits override pressure for a stronger conclusion. State claims with
+User, project, venue, and genre requirements override package defaults.
+Presentation overrides never weaken evidential standards; evidence limits
+override pressure for a stronger conclusion. State claims with
 their support and label inference or uncertainty. Do not invent facts,
 citations, quotations, requirements, or results. Select the smallest recipe
 that covers the task and read its guidance in order.

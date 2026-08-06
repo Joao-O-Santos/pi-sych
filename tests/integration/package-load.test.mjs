@@ -121,7 +121,7 @@ test("package metadata keeps attribution and patch version consistent", async ()
 	const lockfile = JSON.parse(await readFile("package-lock.json", "utf8"));
 	assert.equal(manifest.files.includes("docs"), true);
 	assert.equal((await stat("docs/attribution.md")).isFile(), true);
-	assert.equal(manifest.version, "4.0.5");
+	assert.equal(manifest.version, "4.0.6");
 	assert.equal(lockfile.version, manifest.version);
 	assert.equal(lockfile.packages[""].version, manifest.version);
 });

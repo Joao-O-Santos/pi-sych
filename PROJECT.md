@@ -64,20 +64,31 @@ and local modules through ordered Markdown recipes; no loader or
 workflow controller was added. Routes distinguish routine work from
 specialist inference, retrieval, and verification. Intellectual
 influences and platform acknowledgements live in packaged
-`docs/attribution.md`, outside routed worker context. Signed tag
-`v4.0.5` points to the verified release commit, and npm publication with
-provenance is confirmed. Production TypeScript is about 1,650 lines
-within the 2,000-line cap.
+`docs/attribution.md`, outside routed worker context. Published baseline
+`v4.0.5` remains verified, and package metadata is prepared at `4.0.6`
+for the scientific-grounding, regression-aware retrospective, and
+continuity-preserving compaction changes. The six-field memory schema is
+unchanged. Production TypeScript remains about 1,650 lines within the
+2,000-line cap.
 
 ## Previous action
 
-{verified} Released `pi-sych@4.0.5`. Signed tag `v4.0.5` points to
-`267992641ed3c5a450ce1eb2c55a8a3222fc1871`; GitLab main pipeline #66 and
-tag pipeline #67 passed; npm reports `4.0.5` with provenance; and the
-published 130-file tarball contains the reviewed lowercase documentation
-and shared-method skill architecture.
+{verified} Implemented three bounded scientific-continuity improvements.
+Hypothesis generation now requires inspected motivating material and
+limits model assistance to diversification, formalization, comparison,
+scope analysis, and discriminating tests. Retrospective proposals now
+name predicted effects, regression risks, and held-in and held-out
+evaluations. Compaction now preserves continuity-critical alternatives,
+negative results, constraining failures, and not-yet-canonical
+commitments in its existing fields. Independent review approved the
+implementation. Live evaluation then exposed one missing
+presentation-versus- evidence safeguard and one underspecified
+retrospective fixture; both were corrected. The real disposable-project
+workflow and final prompt-quality evaluation passed.
 
 ## Immediate next step
 
-{verified} The `v4.0.5` release, provenance, and package contents are
-verified. No further release action or diagram replacement is pending.
+{accepted} The owner authorized a signed `v4.0.6` release if live model
+evaluation passed. That condition is met. Run the complete release gate,
+commit and push `main`, push the signed annotated tag, and verify the
+automatic pipeline, provenance, registry, and package contents.

@@ -149,7 +149,7 @@ function statusProjection(status: Awaited<ReturnType<typeof checkProjectStatus>>
 		projectErrors: status.projectErrors,
 	};
 }
-function prompt(
+export function buildCompactionPrompt(
 	event: SessionBeforeCompactEvent,
 	snapshot: Awaited<ReturnType<typeof compactionSnapshot>>,
 	status: Awaited<ReturnType<typeof checkProjectStatus>>,
@@ -160,7 +160,7 @@ function prompt(
 			...event.preparation.turnPrefixMessages,
 		]),
 	);
-	return `Return JSON with workingMemory {task,constraints,active,blockers,next,files} and at most five promotions {target,proposal}. Preserve only information needed to continue. Promotions are usually empty and are unreviewed lines in INBOX.md.\nPrevious summary:\n${event.preparation.previousSummary ?? "none"}\nConversation:\n${conversation}\nRelevant project files (bounded text snapshot; INBOX is intentionally excluded):\n${JSON.stringify(snapshot.files)}\nRelevant artifact paths (contents are not included):\n${JSON.stringify(snapshot.paths)}\nProject status:\n${JSON.stringify(statusProjection(status))}`;
+	return `Return JSON with workingMemory {task,constraints,active,blockers,next,files} and at most five promotions {target,proposal}. Preserve only information needed to continue. Retain continuity-critical information even when it is not current active work: unresolved alternatives; consequential negative results; failed approaches that constrain the next action; and decisions or commitments not yet represented in canonical project files. Put these in the existing workingMemory fields—constraints, active, blockers, or next—as appropriate; do not add workingMemory fields. Promotions are usually empty and are unreviewed lines in INBOX.md.\nPrevious summary:\n${event.preparation.previousSummary ?? "none"}\nConversation:\n${conversation}\nRelevant project files (bounded text snapshot; INBOX is intentionally excluded):\n${JSON.stringify(snapshot.files)}\nRelevant artifact paths (contents are not included):\n${JSON.stringify(snapshot.paths)}\nProject status:\n${JSON.stringify(statusProjection(status))}`;
 }
 export async function compact(event: SessionBeforeCompactEvent, ctx: ExtensionContext) {
 	try {
@@ -176,7 +176,7 @@ export async function compact(event: SessionBeforeCompactEvent, ctx: ExtensionCo
 				messages: [
 					{
 						role: "user",
-						content: [{ type: "text", text: prompt(event, snapshot, status) }],
+						content: [{ type: "text", text: buildCompactionPrompt(event, snapshot, status) }],
 						timestamp: Date.now(),
 					},
 				],

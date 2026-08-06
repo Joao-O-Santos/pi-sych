@@ -247,8 +247,10 @@ orchestration system:
 - **Bounded delegation:** `dispatch_worker` starts one fresh worker with
   an explicit task, context packet, skills, model role, mode, and
   timeout.
-- **Small working memory:** compaction retains a bounded summary and may
-  place plainly marked proposals in `INBOX.md`.
+- **Small working memory:** compaction retains a bounded continuation
+  summary, including consequential unresolved alternatives, negative
+  results, and failed approaches, and may place plainly marked proposals
+  in `INBOX.md`.
 - **Human review:** Plannotator provides annotation and code-review
   interfaces without becoming a workflow controller.
 
