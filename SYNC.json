@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-06T22:15:52.273Z",
+  "confirmedAt": "2026-08-06T22:21:29.294Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:e05ce237d2d10e2a1f161e1e8cf7f1483e56f803150ecc4121fffd33bf531f77",
+      "fingerprint": "sha256:959823fd8f6a84ff489a9813c7b57e7d9804dbb581dc0887514abca7201e9b89",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,13 +15,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-06T22:15:52.273Z",
-        "reason": "Final v4.0.6 release review approved after live evaluation corrections; full gate passed 32 unit and 6 integration checks, live disposable-project and final prompt-quality evaluations passed, package dry run contained 130 files, version metadata and evidence are consistent."
+        "at": "2026-08-06T22:21:29.294Z",
+        "reason": "Verified v4.0.6 release state: live usage and final prompt-quality evaluation, signed tag target, successful GitLab main/tag pipelines and release jobs, npm publication with SLSA provenance, integrity, and reviewed 130-file tarball."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:8e3b15d2cfb9a9829552a5cd81527f44aef946ab3cde9982f4207b21eb640b80",
+      "fingerprint": "sha256:e4e48860f136b4568bb0ba203113e1db45f3bc023f336cd9616c0834e0bf3c6f",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,8 +35,8 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-06T22:15:52.273Z",
-        "reason": "Final v4.0.6 release review approved after live evaluation corrections; full gate passed 32 unit and 6 integration checks, live disposable-project and final prompt-quality evaluations passed, package dry run contained 130 files, version metadata and evidence are consistent."
+        "at": "2026-08-06T22:21:29.294Z",
+        "reason": "Verified v4.0.6 release state: live usage and final prompt-quality evaluation, signed tag target, successful GitLab main/tag pipelines and release jobs, npm publication with SLSA provenance, integrity, and reviewed 130-file tarball."
       }
     },
     {

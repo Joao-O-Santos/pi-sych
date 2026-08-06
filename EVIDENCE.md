@@ -1,5 +1,31 @@
 # Evidence
 
+## E-027 --- v4.0.6 release and live-evaluation verification
+
+**Status:** verified **Kind:** observed live-model behavior, signed Git
+state, GitLab CI, npm registry metadata, provenance, and published
+package contents **Source:** opt-in usage runs, remote `main`, signed
+annotated `v4.0.6`, GitLab pipelines #69 and #70, npm registry and
+attestation metadata, and published package dry run **Supports:** the
+`pi-sych@4.0.6` scientific- continuity release. **Evidence:** the real
+disposable-project usage workflow passed. Prompt-quality evaluation
+first exposed a missing presentation-versus- evidence safeguard, then an
+underspecified retrospective fixture; both were corrected, the final
+prompt-quality evaluation passed, and independent review confirmed that
+the corrections remained substantive. Signed tag `v4.0.6` resolves to
+release commit `1ca2723fb76cb7f85a94a1687d0af3c3f0116e7a`. GitLab main
+pipeline #69 (`2738777057`) and tag pipeline #70 (`2738777535`) passed;
+tag jobs `verify` (`15758469506`) and `publish-npm` (`15758469507`) both
+succeeded. npm reports `pi-sych@4.0.6`, publication time
+`2026-08-06T22:19:27.849Z`, SLSA provenance attestation metadata,
+integrity
+`sha512-EMoVOfy2tR2BeLpBrJu6K8ER/oGtRPg6efZ/zetfLT2/rsffPPL8N4yzISKShLmF8iVMXgPzx5/v/r6khiJNFQ==`,
+and the reviewed 130-file published tarball. **Limits:** Live results
+are specific to the configured models and runs, not proof of general
+adherence. The five previously reported upstream or transitive
+production advisories were not changed by this release. **Checked:**
+2026-08-06
+
 ## E-026 --- Scientific grounding and continuity gate
 
 **Status:** verified **Kind:** observed guidance, deterministic prompt
