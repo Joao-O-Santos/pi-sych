@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-06T15:35:28.795Z",
+  "confirmedAt": "2026-08-06T15:40:42.774Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:4ecda591c96d89afc0fb4a1755ef250ae770fde033fa2a20942e41a81110839b",
+      "fingerprint": "sha256:160e1d11956a4cbc2cade0ed3a0c94a1805a83bb07562eac841719b91c1da0ea",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,13 +15,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-06T15:35:28.795Z",
-        "reason": "Recorded the owner's explicit v4.0.5 push/tag authorization and made pre-release evidence temporally accurate; CHANGELOG.md now finalizes v4.0.5 and style/version checks passed."
+        "at": "2026-08-06T15:40:42.774Z",
+        "reason": "Verified the published v4.0.5 release: signed tag target, successful GitLab main/tag pipelines and release jobs, npm registry publication with SLSA provenance, integrity, and reviewed 130-file tarball contents."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:00d986014490c0a2db9267439bc2dba6263dd90c99cc08970cd017abd8ec55ce",
+      "fingerprint": "sha256:1e2f37cdb1974b893cf7c20ce49cac54f0edc6c9b22f796875fe49303e795705",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,8 +35,8 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-06T15:35:28.795Z",
-        "reason": "Recorded the owner's explicit v4.0.5 push/tag authorization and made pre-release evidence temporally accurate; CHANGELOG.md now finalizes v4.0.5 and style/version checks passed."
+        "at": "2026-08-06T15:40:42.774Z",
+        "reason": "Verified the published v4.0.5 release: signed tag target, successful GitLab main/tag pipelines and release jobs, npm registry publication with SLSA provenance, integrity, and reviewed 130-file tarball contents."
       }
     },
     {

@@ -1,5 +1,29 @@
 # Evidence
 
+## E-025 --- v4.0.5 release verification
+
+**Status:** verified **Kind:** observed signed Git state, GitLab CI, npm
+registry metadata, provenance, and published package contents
+**Source:** remote `main`, signed annotated `v4.0.5`, GitLab pipelines
+#66 and #67, npm registry metadata, attestation metadata, and published
+package dry run **Supports:** the `pi-sych@4.0.5` release and reviewed
+skill, attribution, and repository-cleanup changes. **Evidence:** signed
+tag `v4.0.5` resolves to release commit
+`267992641ed3c5a450ce1eb2c55a8a3222fc1871`. GitLab main pipeline #66
+(`2737876506`) and tag pipeline #67 (`2737876595`) passed; tag jobs
+`verify` (`15751889780`) and `publish-npm` (`15751889781`) both
+succeeded. npm reports `pi-sych@4.0.5`, publication time
+`2026-08-06T15:39:04.448Z`, SLSA provenance attestation metadata,
+integrity
+`sha512-Gt8IvDUu/DKnvOxlIPCdX1qFLjEUhk04SQ19gelUyhupIHYvrixQyk4IxDpCOhZ2dUcYZJgALQhNVyPJO7RipA==`,
+and a 130-file published tarball. The tarball contains lowercase
+`docs/attribution.md`, `docs/configuration.md`, `docs/development.md`,
+`docs/review-workflow.md`, and `docs/img/readme.md`, with none of the
+superseded paths. **Limits:** The opt-in live-model behavioral
+evaluation remained skipped, so the release makes no new model-adherence
+claim. The five previously reported upstream or transitive production
+advisories were not changed by this release. **Checked:** 2026-08-06
+
 ## E-024 --- Repository cleanup and lowercase documentation gate
 
 **Status:** verified **Kind:** observed repository layout, deterministic

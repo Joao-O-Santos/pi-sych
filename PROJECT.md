@@ -64,25 +64,20 @@ and local modules through ordered Markdown recipes; no loader or
 workflow controller was added. Routes distinguish routine work from
 specialist inference, retrieval, and verification. Intellectual
 influences and platform acknowledgements live in packaged
-`docs/attribution.md`, outside routed worker context. Package metadata
-is `4.0.5`. Production TypeScript is about 1,650 lines within the
-2,000-line cap.
+`docs/attribution.md`, outside routed worker context. Signed tag
+`v4.0.5` points to the verified release commit, and npm publication with
+provenance is confirmed. Production TypeScript is about 1,650 lines
+within the 2,000-line cap.
 
 ## Previous action
 
-{verified} Completed the approved `4.0.5` skill, attribution, and
-repository cleanup. Refined task routes and model-facing guidance;
-completed cited attribution under lowercase `docs/`; removed completed
-plans and stale ledgers; retained root canonical discovery rather than
-adding a split `project/` layout; and normalized documentation paths.
-The largest route is 1,730 words against the historical 1,736-word
-ceiling. The gate passed 31 unit checks and 6 integration checks, and a
-130-file package dry run and independent read-only review approved the
-cleaned implementation.
+{verified} Released `pi-sych@4.0.5`. Signed tag `v4.0.5` points to
+`267992641ed3c5a450ce1eb2c55a8a3222fc1871`; GitLab main pipeline #66 and
+tag pipeline #67 passed; npm reports `4.0.5` with provenance; and the
+published 130-file tarball contains the reviewed lowercase documentation
+and shared-method skill architecture.
 
 ## Immediate next step
 
-{accepted} The owner authorized pushing `main` and a signed annotated
-`v4.0.5` tag, which triggers the automatic publication pipeline. Verify
-the remote pipeline, tag, package, provenance, and registry state after
-the push. No diagram replacement is authorized.
+{verified} The `v4.0.5` release, provenance, and package contents are
+verified. No further release action or diagram replacement is pending.
