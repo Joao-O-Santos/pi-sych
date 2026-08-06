@@ -3,7 +3,7 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
-## Unreleased
+## v4.0.5 - 2026-08-06
 
 ### Skills architecture
 

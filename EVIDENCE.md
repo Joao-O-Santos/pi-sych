@@ -22,11 +22,11 @@ whitespace checks passed. The tarball contains lowercase
 `docs/review-workflow.md`, and `docs/img/readme.md`, and none of their
 obsolete paths. Independent review approved after three historical
 deleted-file references were generalized. **Limits:** The live-model
-behavioral evaluation remained skipped. `4.0.5` was not tagged,
-published, or released. `npm audit --omit=dev` retained five upstream or
-transitive advisories (two moderate and three high) in
-`brace-expansion`, `fast-uri`, `hono`, and `undici`; no dependency
-change was made. **Checked:** 2026-08-06
+behavioral evaluation remained skipped. At this checked gate, `4.0.5`
+had not yet been tagged, published, or released. `npm audit --omit=dev`
+retained five upstream or transitive advisories (two moderate and three
+high) in `brace-expansion`, `fast-uri`, `hono`, and `undici`; no
+dependency change was made. **Checked:** 2026-08-06
 
 ## E-023 --- Skill density, routing, attribution, and v4.0.5 preparation
 
@@ -50,13 +50,13 @@ Independent review approved the substantive routing, prose,
 deduplication, and attribution changes after aggregate route-size and
 exact-version guards were added. **Limits:** The live-model behavioral
 evaluation was syntax checked but skipped, so no model-adherence claim
-is made. `4.0.5` was not tagged, published, or released. The attribution
-maps known direct influences identified in project history and the
-owner's source inventory; it does not imply copied code or universal
-authority. `npm audit --omit=dev` reported five upstream or transitive
-advisories (two moderate and three high) in `brace-expansion`,
-`fast-uri`, `hono`, and `undici`; no dependency change was made.
-**Checked:** 2026-08-06
+is made. At this checked gate, `4.0.5` had not yet been tagged,
+published, or released. The attribution maps known direct influences
+identified in project history and the owner's source inventory; it does
+not imply copied code or universal authority. `npm audit --omit=dev`
+reported five upstream or transitive advisories (two moderate and three
+high) in `brace-expansion`, `fast-uri`, `hono`, and `undici`; no
+dependency change was made. **Checked:** 2026-08-06
 
 ## E-022 --- Shared-method skills architecture gate
 

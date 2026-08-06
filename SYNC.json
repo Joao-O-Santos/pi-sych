@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-06T13:59:30.906Z",
+  "confirmedAt": "2026-08-06T15:35:28.795Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:678ddb6e0eea24b5fc15452f30c24aca1385836f381bf89d2d264d1fec08ce9f",
+      "fingerprint": "sha256:4ecda591c96d89afc0fb4a1755ef250ae770fde033fa2a20942e41a81110839b",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,13 +15,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-06T13:59:30.906Z",
-        "reason": "Verified the clean v4.0.5 repository layout: completed plans and stale ledgers removed, lowercase docs and docs/attribution.md packaged, root canonical discovery retained, independent approval, 31 unit and 6 integration checks, 130-file package dry run, link and stale-path validation."
+        "at": "2026-08-06T15:35:28.795Z",
+        "reason": "Recorded the owner's explicit v4.0.5 push/tag authorization and made pre-release evidence temporally accurate; CHANGELOG.md now finalizes v4.0.5 and style/version checks passed."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:b6499d153ad3d867bd755033263179bb17de21c85637ec4a206220eac8c2d633",
+      "fingerprint": "sha256:00d986014490c0a2db9267439bc2dba6263dd90c99cc08970cd017abd8ec55ce",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,8 +35,8 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-06T13:59:30.906Z",
-        "reason": "Verified the clean v4.0.5 repository layout: completed plans and stale ledgers removed, lowercase docs and docs/attribution.md packaged, root canonical discovery retained, independent approval, 31 unit and 6 integration checks, 130-file package dry run, link and stale-path validation."
+        "at": "2026-08-06T15:35:28.795Z",
+        "reason": "Recorded the owner's explicit v4.0.5 push/tag authorization and made pre-release evidence temporally accurate; CHANGELOG.md now finalizes v4.0.5 and style/version checks passed."
       }
     },
     {

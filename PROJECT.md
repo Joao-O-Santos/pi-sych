@@ -65,8 +65,8 @@ workflow controller was added. Routes distinguish routine work from
 specialist inference, retrieval, and verification. Intellectual
 influences and platform acknowledgements live in packaged
 `docs/attribution.md`, outside routed worker context. Package metadata
-is prepared at `4.0.5` but has not been published. Production TypeScript
-is about 1,650 lines within the 2,000-line cap.
+is `4.0.5`. Production TypeScript is about 1,650 lines within the
+2,000-line cap.
 
 ## Previous action
 
@@ -82,7 +82,7 @@ cleaned implementation.
 
 ## Immediate next step
 
-{verified} The `4.0.5` implementation and repository cleanup are
-complete and independently approved. No tag, release, diagram
-replacement, push, or publication is authorized; the next owner action
-is release inspection.
+{accepted} The owner authorized pushing `main` and a signed annotated
+`v4.0.5` tag, which triggers the automatic publication pipeline. Verify
+the remote pipeline, tag, package, provenance, and registry state after
+the push. No diagram replacement is authorized.
