@@ -18,18 +18,26 @@ async function capturedExtension(extension) {
 	const commands = [];
 	const commandHandlers = new Map();
 	const events = new Map();
-	await extension({
-		on(name, handler) {
-			events.set(name, handler);
-		},
-		registerTool(tool) {
-			tools.push(tool);
-		},
-		registerCommand(name, command) {
-			commands.push(name);
-			commandHandlers.set(name, command);
-		},
-	});
+	const agentDir = await mkdtemp(join(tmpdir(), "pi-sych-ext-"));
+	const prev = process.env.PI_CODING_AGENT_DIR;
+	process.env.PI_CODING_AGENT_DIR = agentDir;
+	try {
+		await extension({
+			on(name, handler) {
+				events.set(name, handler);
+			},
+			registerTool(tool) {
+				tools.push(tool);
+			},
+			registerCommand(name, command) {
+				commands.push(name);
+				commandHandlers.set(name, command);
+			},
+		});
+	} finally {
+		if (prev === undefined) delete process.env.PI_CODING_AGENT_DIR;
+		else process.env.PI_CODING_AGENT_DIR = prev;
+	}
 	return { tools, commands, commandHandlers, events };
 }
 
