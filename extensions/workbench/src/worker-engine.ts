@@ -185,90 +185,77 @@ export function validateWorkerResult(value: unknown): WorkerResult {
 		limitations: stringArray(item.limitations, "limitations"),
 	};
 }
-export const launchPiWorker: WorkerLauncher = (spec) =>
-	new Promise((done) => {
-		let stderr = "",
-			settled = false,
-			forced: ReturnType<typeof setTimeout> | undefined,
-			stopped: "cancelled" | "timeout" | undefined;
-		const child = spawn(
-			"pi",
-			[
-				"--mode",
-				"json",
-				"--print",
-				spec.prompt,
-				"--no-session",
-				"--no-extensions",
-				"--extension",
-				resolve(spec.packageRoot, "extensions/worker/index.ts"),
-				...spec.extraExtensionPaths.flatMap((path) => ["--extension", path]),
-				"--no-skills",
-				"--no-prompt-templates",
-				"--no-themes",
-				"--no-context-files",
-				"--no-approve",
-				"--tools",
-				toolsForRequest(spec.request).join(","),
-				"--model",
-				spec.model,
-				...skillPaths(spec.request.skills, spec.projectRoot, spec.packageRoot).flatMap((path) => [
-					"--skill",
-					path,
-				]),
-			],
-			{
-				cwd: spec.projectRoot,
-				env: {
-					...process.env,
-					PI_CODING_AGENT_DIR: spec.workerAgentDir,
-					PI_SYCH_TASK_ID: spec.id,
-					PI_SYCH_RESULT_PATH: spec.resultPath,
-					...(spec.request.remoteResearch
-						? { MCPORTER_CONFIG: mcporterConfigPath(spec.projectRoot) }
-						: {}),
-				},
-				stdio: ["ignore", "ignore", "pipe"],
+export const launchPiWorker: WorkerLauncher = async (spec): Promise<WorkerLaunchOutcome> => {
+	let stderr = "";
+	let stopped: "cancelled" | "timeout" | undefined;
+	const child = spawn(
+		"pi",
+		[
+			"--mode",
+			"json",
+			"--print",
+			spec.prompt,
+			"--no-session",
+			"--no-extensions",
+			"--extension",
+			resolve(spec.packageRoot, "extensions/worker/index.ts"),
+			...spec.extraExtensionPaths.flatMap((path) => ["--extension", path]),
+			"--no-skills",
+			"--no-prompt-templates",
+			"--no-themes",
+			"--no-context-files",
+			"--no-approve",
+			"--tools",
+			toolsForRequest(spec.request).join(","),
+			"--model",
+			spec.model,
+			...skillPaths(spec.request.skills, spec.projectRoot, spec.packageRoot).flatMap((path) => [
+				"--skill",
+				path,
+			]),
+		],
+		{
+			cwd: spec.projectRoot,
+			env: {
+				...process.env,
+				PI_CODING_AGENT_DIR: spec.workerAgentDir,
+				PI_SYCH_TASK_ID: spec.id,
+				PI_SYCH_RESULT_PATH: spec.resultPath,
+				...(spec.request.remoteResearch
+					? { MCPORTER_CONFIG: mcporterConfigPath(spec.projectRoot) }
+					: {}),
 			},
-		);
-		child.stderr.setEncoding("utf8");
-		child.stderr.on("data", (chunk) => {
-			stderr = (stderr + chunk).slice(-LOG_LIMIT);
-		});
-		const finish = (result: WorkerLaunchOutcome) => {
-			if (settled) return;
-			settled = true;
-			clearTimeout(timeout);
-			if (forced) clearTimeout(forced);
-			spec.signal?.removeEventListener("abort", abort);
-			done(result);
-		};
-		const stop = (kind: "cancelled" | "timeout") => {
-			if (stopped || settled) return;
-			stopped = kind;
-			child.kill("SIGTERM");
-			forced = setTimeout(() => child.kill("SIGKILL"), 2_000);
-		};
-		const abort = () => stop("cancelled");
-		if (spec.signal?.aborted) abort();
-		else spec.signal?.addEventListener("abort", abort, { once: true });
-		const timeout = setTimeout(() => stop("timeout"), spec.request.timeoutMs ?? DEFAULT_TIMEOUT_MS);
-		child.once("error", (error) =>
-			finish({
-				exitCode: null,
-				stderr: (stderr + error.message).slice(-LOG_LIMIT),
-				classification: "spawn-failure",
-			}),
-		);
-		child.once("close", (exitCode, terminationSignal) =>
-			finish({
-				exitCode,
-				stderr,
-				...(stopped ? { classification: stopped } : {}),
-				...(terminationSignal ? { terminationSignal } : {}),
-			}),
-		);
+			stdio: ["ignore", "ignore", "pipe"],
+		},
+	);
+	child.stderr.setEncoding("utf8");
+	child.stderr.on("data", (chunk) => {
+		stderr = (stderr + chunk).slice(-LOG_LIMIT);
 	});
+	const stop = (kind: "cancelled" | "timeout") => {
+		stopped = kind;
+		child.kill("SIGTERM");
+		setTimeout(() => child.kill("SIGKILL"), 2_000);
+	};
+	if (spec.signal?.aborted) stop("cancelled");
+	else spec.signal?.addEventListener("abort", () => stop("cancelled"), { once: true });
+	const timeout = setTimeout(() => stop("timeout"), spec.request.timeoutMs ?? DEFAULT_TIMEOUT_MS);
+	const [exitCode, terminationSignal] = await new Promise<[number | null, NodeJS.Signals | null]>(
+		(resolve) => {
+			child.once("error", () => resolve([null, null]));
+			child.once("close", (code, signal) => resolve([code, signal]));
+		},
+	);
+	clearTimeout(timeout);
+	if (stopped) return { exitCode: exitCode ?? null, stderr, classification: stopped };
+	if (exitCode === null)
+		return {
+			exitCode: null,
+			stderr: (stderr + "spawn error").slice(-LOG_LIMIT),
+			classification: "spawn-failure",
+		};
+	return { exitCode, stderr, ...(terminationSignal ? { terminationSignal } : {}) };
+};
 export async function dispatchWorker(options: {
 	project: ResolvedProject;
 	workerAgentDir: string;

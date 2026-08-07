@@ -1,299 +1,447 @@
-Yes. I compared the current `main` against the v5.0.4 baseline we reviewed. Current head is `7545a407…`; the substantive v6 implementation is `0ae415e8…`, followed by the project-state/evidence update.
+The latest is substantially better. I reviewed current `main` at `b847c4c586192dcb963e48f65bfb5f9369df0c9a`, including the corrective commits after my last review.
 
-The broad direction is good, and several important fixes landed correctly. I would **not tag v6.0.0 yet**, though. I found three real correctness issues plus a handful of incomplete simplifications.
+The **three previous blockers are genuinely fixed**. I would not call the current head release-clean yet, though: I found **two code issues, one likely CI failure, and a release-state/version problem**.
 
-### The important fixes that are correct
+## What is now fixed correctly
 
-The shared Pi-root work is basically the right architecture now. `piConfigRoot()` owns project `.pi` → `PI_CODING_AGENT_DIR` → XDG → `~/.config/pi` → `~/.pi`, and both Pi Sych config and skill locations derive from it. That is much better than duplicating environment/home logic in the worker.
+The status model now does what we intended. Artifact observation failures are collected in `errors`, displayed under `Unable to observe:`, and prevent the false “All tracked files match” message. Missing artifacts again participate in dependency impact.
 
-The acknowledgement bug is also fixed correctly. `actuallyChanged` is now derived from the observation state, so acknowledging an unchanged A does not invalidate B, while changed A still does. There is an explicit regression test for both cases.
+The corresponding tests were added for both observation errors and missing→dependent propagation.
 
-Worker failure precedence is fixed in the right direction: abnormal launch results return before `result.json` is read. So a timeout no longer gets masked by an `ENOENT`. The redundant process-warning presentation was removed too.
+The compaction issue is also fixed correctly: an untracked file now has to pass `resolveExistingProjectPath()` rather than merely being lexically project-local.
 
-Project discovery now reads `SYNC.json` directly and walks upward only on `ENOENT`/`ENOTDIR`, while malformed state fails. Startup also no longer swallows project-resolution errors. Good fail-fast behavior.
-
-The model-catalog consolidation, MCPorter preflight deletion, Plannotator helper cleanup, Node 26 floor, `latest` tooling and `ESNext` target are all sensible.
-
-## 1. Blocker: observation errors are still effectively hidden
-
-The new state model itself is good:
+Windows path checking is cleaner and correct in principle now:
 
 ```ts
-current | changed | missing | error
+posix.isAbsolute(value) ||
+win32.isAbsolute(value) ||
+value.split(/[\\/]/).includes("..")
 ```
 
-But `ProjectStatusCheck` only exposes top-level `changed` and `missing`. An artifact whose observation is `"error"` stays buried inside `artifacts`. More seriously, `formatProjectStatusCheck()` doesn't print observation errors at all.
+That is exactly the sort of small cross-platform lexical check I wanted.
 
-That means this situation:
+The modernization also actually started happening: `crypto.hash()`, `import.meta.dirname`, `Static<typeof schema>`, `await using` for result files, removal of redundant context access/copying, and shared worker-result schema.
 
-```text
-tracked A.md
-permission/I/O failure reading A.md
-```
-
-can produce:
-
-```text
-All tracked files match their recorded hashes.
-```
-
-because the success condition only checks:
-
-```text
-changed
-missing
-missingCore
-projectErrors
-```
-
-and none of those contains artifact observation failures.
-
-That contradicts the point of introducing the fourth state.
-
-I would make this extremely small. Add something like:
-
-```ts
-errors: Array<{ path: string; message: string }>
-```
-
-derived from `"error"` observations, print an `Errors:`/`Unable to observe:` section, and include `!state.errors.length` in the all-clear condition.
-
-The current tests cover missing-vs-changed but not an artifact observation error, which is probably why this escaped.
-
-**Priority: P0.**
-
-## 2. Blocker: missing artifacts stopped propagating dependency impact
-
-This looks accidental.
-
-Before v6, dependency impact was calculated from:
-
-```ts
-[...changed, ...missing]
-```
-
-The new implementation does:
-
-```ts
-impacted: impacts(manifest.artifacts, changed)
-```
-
-So if:
-
-```text
-B depends on A
-A is deleted
-```
-
-Pi Sych now reports A as missing but no longer reports B as impacted.
-
-Deletion/absence is exactly the sort of mechanical change dependency propagation should detect. No semantic judgment is involved.
-
-The fix is probably literally:
-
-```ts
-impacted: impacts(manifest.artifacts, [...changed, ...missing])
-```
-
-I would **not** automatically propagate observation errors as impact, because an observation error does not establish changed content. Report the error loudly instead.
-
-The missing-artifact test doesn't give the missing artifact a dependent, so it doesn't catch this regression.
-
-**Priority: P0.**
-
-## 3. Blocker-ish: compaction does not actually require an untracked file to exist
-
-The intended fix was:
-
-> preserve an active untracked file if it is an existing project-local file.
-
-The implementation currently does:
-
-```ts
-try {
-    resolveProjectPath(project.projectRoot, file);
-    return true;
-} catch {
-    return false;
-}
-```
-
-That proves only that the string is lexically project-local.
-
-So these both survive:
-
-```text
-src/real-new-file.ts
-src/completely-invented-file-that-does-not-exist.ts
-```
-
-That is contrary to both the plan and the commit message, which says “active existing untracked files.”
-
-Use `resolveExistingProjectPath()`, not `resolveProjectPath()`.
-
-Because existence checking is asynchronous, don't force it into `.filter()`. A boring loop is clearer:
-
-```ts
-const files: string[] = [];
-
-for (const file of output.workingMemory.files) {
-    if (allowed.has(file)) {
-        files.push(file);
-        continue;
-    }
-
-    try {
-        await resolveExistingProjectPath(project.projectRoot, file);
-        files.push(file);
-    } catch {
-        // not an existing project-local file
-    }
-}
-```
-
-No additional abstraction needed.
-
-And add exactly the tests from the plan:
-
-```text
-existing untracked → retained
-nonexistent local → removed
-outside project → removed
-```
-
-The current compaction tests don't test this behavior.
-
-**Priority: P0/P1.**
-
-## 4. The modern-Node simplification pass was largely not implemented
-
-This surprised me.
-
-The project now requires Node >=26 and targets ESNext, which is good.
-
-But much of the reason we agreed to raise the baseline was to delete lifecycle machinery. The current code still has:
-
-* `mkdtemp()` + `try/finally` + recursive `rm()` for workers;
-* manual `FileHandle | undefined` cleanup in atomic writes;
-* manual `try/finally` handle closing for immutable worker results;
-* `fileURLToPath(import.meta.url)` boilerplate;
-* `createHash().update().digest()`;
-* a hand-written recursive source-tree walker;
-* manual `DispatchRequest` and `WorkerResult` interfaces alongside TypeBox schemas;
-* the redundant `access()` immediately after `resolveExistingProjectPath()`;
-* an unnecessary `const files = [...request.contextFiles]`.
-
-Node 26 definitely provides `fsPromises.mkdtempDisposable()` and stable `FileHandle[Symbol.asyncDispose]`, so the `await using` simplifications we discussed are available under the project's new minimum. ([Node.js][1])
-
-Current TypeBox also directly supports deriving static types with `Type.Static<typeof schema>`, so the duplicated request/result type declarations can genuinely disappear. ([GitHub][2])
-
-I would therefore do this **after the three correctness fixes**, because it should give you source-budget headroom instead of consuming it.
-
-## 5. Cross-platform config validation has one Windows hole
-
-The new checks correctly catch:
-
-```text
-/absolute
-C:\absolute
-\\server\share
-..\escape
-foo\..\escape
-```
-
-and there are tests for most of these.
-
-But a Windows root-relative path can be:
-
-```text
-\foo
-```
-
-A single leading backslash is rooted on the current Windows drive. The current code only rejects two leading backslashes (`\\`) for UNC.
-
-So `\foo` can pass `configString()`.
-
-Rather than expand the regex collection, this is a good place to simplify:
-
-```ts
-import { posix, win32 } from "node:path";
-
-if (
-    ...
-    posix.isAbsolute(value) ||
-    win32.isAbsolute(value) ||
-    value.split(/[\\/]/).includes("..")
-)
-```
-
-Still purely lexical. Still no `realpath()`. Still no symlink restriction.
-
-**Priority: P1.**
-
-## 6. The source budget is at the ceiling, but the intended slimming didn't really happen
-
-The checker now correctly includes the worker bootstrap, which I agree with. But it still contains its custom recursive walker, and it still prints:
-
-> `Estimated production TypeScript`
-
-even though it now counts an `.mjs` file.
-
-More importantly, the project records **exactly 2000/2000**.
-
-That's not much headroom, and some prompt strings have been compressed fairly aggressively while most of the actual modern-runtime deletion opportunities remain untouched.
-
-I would rename the metric to something like:
-
-```text
-runtime source
-```
-
-and use the modern Node simplifications above to get comfortably below the cap—ideally 1850–1950 rather than exactly 2000.
-
-The budget should constrain architecture, not force sentence packing.
-
-## 7. Durable project state has already gone stale again
-
-This one is particularly ironic given Pi Sych's philosophy.
-
-The latest `PROJECT.md` says:
-
-> “Evidence and synchronization need updating.”
-
-But the latest commit is specifically the commit that updated `EVIDENCE.md` and `SYNC.json`.
-
-It also says:
-
-> “No … image replacement has occurred”
-
-and E-029 repeats that claim.
-
-But the implementation commit explicitly says it replaced the architecture/workflow diagrams, and the diff includes the PNG replacements.
-
-So those claims are false.
-
-There is also a terminology mismatch: `PROJECT.md` says “Production TypeScript is exactly 2,000 lines,” whereas the budget now includes the JavaScript worker bootstrap.
-
-These are easy edits, but I would fix them before release because authoritative state being demonstrably wrong is worse for Pi Sych than it would be for an ordinary package.
+So the corrective pass was worthwhile.
 
 ---
 
-### What I would do next
+# Findings
 
-I think this needs **one small corrective pass, not another refactor**:
+## 1. P0 — the new observation-error test is environment-dependent and likely breaks GitLab CI
 
-1. Surface artifact observation errors and prevent false all-clear status.
-2. Restore dependency impact for missing artifacts.
-3. Require active untracked compaction files actually to exist.
-4. Fix Windows `\root-relative` config paths.
-5. Add the four focused regression tests.
-6. Then use Node 26/TypeBox features to delete the still-manual lifecycle/type duplication until there's meaningful budget headroom.
-7. Finally correct `PROJECT.md`, E-029 and `SYNC.json` after the independent review.
+The new test makes a file unreadable with:
 
-I would leave the graph code, MCPorter, Plannotator argument behavior, model-catalog fail-fast semantics, two-tool architecture, symlink behavior, and overall v6 design alone.
+```js
+await chmod(join(root, "A.md"), 0);
+```
 
-So the result is **quite close**, and the two concerns you originally cared most about—worker failure masking and unchanged acknowledgements—were addressed well. But the status error presentation and missing-dependency regression are release blockers in my view, and the simplification portion of the plan is only partially complete.
+and then requires the observation to be `"error"` with a permission/EACCES message.
 
-[1]: https://nodejs.org/api/fs.html?utm_source=chatgpt.com "File system | Node.js v26.5.1 Documentation"
-[2]: https://github.com/sinclairzx81/typebox?utm_source=chatgpt.com "GitHub - sinclairzx81/typebox: JSON Schema Type Builder with Static Type Resolution for TypeScript · GitHub"
+That isn't portable across privilege levels. Your GitLab job uses:
+
+```yaml
+image: node:26-bookworm
+```
+
+and does not select a non-root user.
+
+The official Node Docker guidance explicitly notes that Docker commands run as root by default unless the image is run using the provided `node` user. ([GitHub][1]) Root can read a mode-000 file, so the expected EACCES is not a reliable fixture.
+
+I would make the test deterministic instead. For example, create a **directory** at the tracked artifact path. `access()` succeeds, then `readFile()` fails with `EISDIR`, which exercises exactly the `observation: "error"` branch without relying on permissions.
+
+This isn't a production-code flaw; it is a release-gate flaw.
+
+**Fix before relying on the 65-test claim in CI.**
+
+---
+
+## 2. P0/P1 — `PI_SYCH_PACKAGE_ROOT` modernization introduced an off-by-one directory bug
+
+This is currently:
+
+```ts
+export const PI_SYCH_PACKAGE_ROOT = resolve(
+    process.env.PI_PACKAGE_DIR ?? resolve(dirname(import.meta.dirname), "../../.."),
+);
+```
+
+For:
+
+```text
+/package/extensions/workbench/src/worker-engine.ts
+```
+
+`import.meta.dirname` is:
+
+```text
+/package/extensions/workbench/src
+```
+
+The old code effectively started there and climbed three levels:
+
+```text
+src
+→ workbench
+→ extensions
+→ package
+```
+
+Correct.
+
+The new code first does `dirname(import.meta.dirname)`:
+
+```text
+/package/extensions/workbench
+```
+
+and **then** climbs three:
+
+```text
+workbench
+→ extensions
+→ package
+→ parent-of-package
+```
+
+So the fallback should simply be:
+
+```ts
+resolve(import.meta.dirname, "../../..")
+```
+
+not:
+
+```ts
+resolve(dirname(import.meta.dirname), "../../..")
+```
+
+Normal supervisor use may mask this because `dispatchWorker()` is ordinarily given an explicit `packageRoot`, but the exported/default fallback is now wrong.
+
+This is exactly the sort of tiny modernization regression worth adding a one-line path assertion for.
+
+---
+
+## 3. P1 — `writeAtomicFile()` disposes the handle after the rename, not before it
+
+Current code:
+
+```ts
+try {
+    await using handle = await open(temporary, "wx", 0o600);
+    await handle.writeFile(content);
+    await handle.sync();
+    await rename(temporary, path);
+} catch ...
+```
+
+`await using` disposes at the **end of its scope**. Node's async disposal calls `FileHandle.close()`. ([Node.js][2])
+
+Therefore the actual sequence is:
+
+```text
+open
+write
+sync
+rename
+close
+```
+
+whereas the intended atomic-writer sequence was:
+
+```text
+open
+write
+sync
+close
+rename
+```
+
+On Unix, renaming an open file is normal. I would not call this a demonstrated runtime failure. But since we're explicitly aiming for clean cross-platform semantics, there's no reason to depend on open-handle rename behavior.
+
+Use a nested scope:
+
+```ts
+try {
+    {
+        await using handle = await open(temporary, "wx", 0o600);
+        await handle.writeFile(content);
+        await handle.sync();
+    }
+
+    await rename(temporary, path);
+} catch ...
+```
+
+That's still concise and gives the intended resource ordering.
+
+`writeImmutableResult()` does not have this issue because nothing needs to happen after the result handle closes.
+
+---
+
+## 4. P0 release-state issue — current `main` is no longer the tagged `v6.0.1`
+
+This now needs sorting out before publication.
+
+The package says:
+
+```json
+"version": "6.0.1"
+```
+
+And a signed `v6.0.1` tag already exists, pointing to commit:
+
+```text
+16aaa5a...
+```
+
+But current `main` is:
+
+```text
+b847c4c...
+```
+
+which came **after** that tag and replaces the four packaged documentation PNGs.
+
+Since `docs` is included in the npm package, current `main` and the immutable `v6.0.1` release tree no longer describe the same `6.0.1` package.
+
+I would **not move the signed tag**.
+
+Given that the corrected images should presumably stay, the clean solution is now:
+
+```text
+6.0.2
+```
+
+for the tiny final corrective release containing:
+
+* the diagram fixes;
+* package-root fallback correction;
+* atomic-writer scope correction;
+* deterministic status-error test;
+* any remaining tiny review fixes.
+
+Then tag `v6.0.2` only after the gate.
+
+---
+
+## 5. The durable state is consequently stale again
+
+`PROJECT.md` currently calls the work “unreleased `6.0.0`”, says `v6.0.0` was tagged, and says the next step is:
+
+> “tag and publish `v6.0.0`”
+
+But:
+
+* `package.json` is 6.0.1;
+* a signed `v6.0.1` tag already exists;
+* current main is newer still.
+
+The changelog likewise says both:
+
+```text
+v6.0.1 - Unreleased
+v6.0.0 - Unreleased
+```
+
+despite both tags existing.
+
+E-030 is still titled a **v6.0.0** corrective pass even though the corrections were ultimately versioned as 6.0.1.
+
+And `SYNC.json`'s PROJECT/EVIDENCE acknowledgements say 6.0.1, while some other tracked acknowledgements/fingerprints remain older.
+
+For this project specifically, I consider that release-significant because these files are supposed to be the antidote to conversational/version-state ambiguity.
+
+Fix them **after** settling on 6.0.2, not before.
+
+---
+
+## 6. P1 — the new diagram generator has two problems
+
+The latest commit adds:
+
+```text
+scripts/generate-architecture-images.mjs
+```
+
+which imports:
+
+```js
+import { Resvg } from "@resvg/resvg-js";
+```
+
+But `@resvg/resvg-js` is in neither `package.json` nor the root lockfile dependencies.
+
+So a clean:
+
+```bash
+npm ci
+node scripts/generate-architecture-images.mjs
+```
+
+cannot reproduce the checked-in diagrams.
+
+Given the minimalism goal, I actually prefer **deleting this generator** after producing the final PNGs rather than adding a permanent graphics dependency, unless reproducible diagram generation is something you genuinely want to maintain.
+
+There is also a direct geometry bug in the generator.
+
+Three diagrams have:
+
+```text
+viewBox height = 600
+lower box y = 440
+box height = 180 or 200
+```
+
+meaning their lower bounds are:
+
+```text
+620
+640
+620
+```
+
+outside the 600px canvas.
+
+So the new “fix broken architecture diagrams” script itself generates lower boxes that extend beyond the SVG viewport.
+
+Either move `y2` upward or increase the height. If this script is just a one-off, fix the images and delete the script.
+
+---
+
+## 7. The corrective behavior still lacks two of the targeted regression tests
+
+The implementation of compaction is now correct, but the test suite still does not appear to assert the exact three-way behavior:
+
+```text
+existing untracked project file → retain
+nonexistent project-local file  → discard
+outside-project file            → discard
+```
+
+The code should pass those now because it uses `resolveExistingProjectPath()`.  But this was one of the specific regressions we wanted captured.
+
+Similarly, Windows validation now uses `win32.isAbsolute()` correctly, but the config test still tests UNC and drive paths without the exact case that originally exposed the hole:
+
+```text
+\worker
+```
+
+These are cheap tests and worth adding.
+
+---
+
+## 8. Coverage should be run as part of this review gate
+
+The current `make verify` runs:
+
+```text
+typecheck
+style
+dependencies
+budget
+test
+pack
+git diff --check
+```
+
+but not coverage.
+
+E-030 records 65 passing tests and the other gates, but not a fresh coverage result.
+
+Given that this pass specifically changed branches in status, compaction, path validation, resource disposal and worker paths, I would run:
+
+```bash
+npm run test:coverage
+```
+
+before declaring the corrective release reviewed.
+
+I wouldn't necessarily put coverage into every `make verify` if you deliberately want the normal gate faster, but I would include it in this release gate.
+
+---
+
+## 9. There is still easy runtime-code headroom available
+
+The runtime budget remains:
+
+```text
+2000 / 2000
+```
+
+Yet `dispatchWorker()` still has:
+
+```ts
+const runtime = await mkdtemp(...);
+
+try {
+    ...
+} finally {
+    await rm(runtime, { recursive: true, force: true });
+}
+```
+
+Node 26 has stable `mkdtempDisposable()`, designed specifically for:
+
+```ts
+await using runtime = await mkdtempDisposable(...);
+```
+
+([Node.js][2])
+
+That should delete the outer worker `try/finally` and give genuine source-budget headroom.
+
+Unlike the atomic-file case, this one is very straightforward.
+
+The budget checker also still has its handwritten recursive filesystem walker.  That's development code rather than runtime budget itself, so lower priority, but modern Node can simplify it too.
+
+I would like to see the final runtime come in somewhere below 2,000 rather than exactly landing on the ceiling.
+
+---
+
+## 10. `PLAN.md` should probably disappear when this is done
+
+Current `PLAN.md` is essentially my entire previous review pasted verbatim into the repository, including statements such as:
+
+> “Current head is `7545a407…`”
+
+which is already stale.
+
+It served its purpose as an implementation artifact.
+
+Once the final corrective pass is complete, I would remove it rather than make a transient code-review transcript part of the long-term repository. That matches the earlier cleanup principle of retaining durable project truth rather than completed plans and conversational history.
+
+---
+
+# Overall assessment
+
+This revision is **meaningfully better than the one I reviewed before**. The actual architecture is still sound, and the important v6 behavioral corrections are now implemented properly:
+
+* four-state artifact observation: good;
+* missing dependency impact: restored;
+* unchanged acknowledgement behavior: good;
+* worker failure precedence: good;
+* active untracked compaction path: good;
+* shared Pi config/skill root: good;
+* Windows lexical validation: good;
+* schema-derived worker types: good;
+* `crypto.hash()` and resource disposal: moving in the right direction.
+
+I would do **one very small 6.0.2 pass**, with no architecture changes:
+
+1. Fix `PI_SYCH_PACKAGE_ROOT` to use `resolve(import.meta.dirname, "../../..")`.
+2. End the atomic-file `await using` scope before `rename()`.
+3. Replace the chmod-based observation-error test with a deterministic filesystem-error fixture.
+4. Add the missing compaction and `\root-relative` regression cases.
+5. Use `mkdtempDisposable()` for worker runtime cleanup.
+6. Fix the diagram dimensions; then preferably delete the one-off generator, or formally declare its dependency if you want to keep it.
+7. Run full tests **and coverage**.
+8. Bump to 6.0.2 and update CHANGELOG/PROJECT/EVIDENCE/SYNC coherently.
+9. Delete stale `PLAN.md`.
+10. Tag `v6.0.2`; do not move either existing signed tag.
+
+After that, I think you're at the point where further production-code refactoring is much more likely to be churn than useful simplification.
+
+[1]: https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md?utm_source=chatgpt.com "docker-node/docs/BestPractices.md at main · nodejs/docker-node · GitHub"
+[2]: https://nodejs.org/api/all.html?utm_source=chatgpt.com "All | Node.js v26.5.0 Documentation"
 

@@ -9,8 +9,8 @@ immutable npm publications unless explicitly marked otherwise.
 
 - Regenerate the four architecture PNGs with proper box widths and
   line-wrapped text; the v6.0.0 and v6.0.1 renderings had boxes too
-  narrow for Mermaid to lay out, so each character appeared on its
-  own line.
+  narrow for Mermaid to lay out, so each character appeared on its own
+  line.
 
 ### Independent review corrections
 

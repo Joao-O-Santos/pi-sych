@@ -209,9 +209,7 @@ export async function compact(event: SessionBeforeCompactEvent, ctx: ExtensionCo
 			try {
 				await resolveExistingProjectPath(project.projectRoot, file);
 				files.push(file);
-			} catch {
-				// not an existing project-local file
-			}
+			} catch {}
 		}
 		const memory = { ...output.workingMemory, files };
 		if (output.promotions.length) {

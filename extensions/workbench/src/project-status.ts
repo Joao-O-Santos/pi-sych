@@ -273,31 +273,32 @@ export async function checkProjectStatus(
 		};
 	}
 }
-const bullet = (header: string, items: string[]) =>
-	items.length ? ["", header, ...items.map((v) => `- ${v}`)] : [];
 export function formatProjectStatusCheck(
 	state: ProjectStatusCheck,
 	pending = 0,
 	inboxPath = "INBOX.md",
-) {
+): string {
 	const lines = ["Project status", "", `Root: ${state.projectRoot}`];
 	if (state.syncError) lines.push("", `State unavailable: ${state.syncError}`);
 	else {
-		lines.push(
-			...bullet("Missing project files:", state.missingCore),
-			...bullet("Project-file problems:", state.projectErrors),
-			...bullet("Changed:", state.changed),
-			...bullet("Missing:", state.missing),
-			...bullet(
+		if (state.missingCore.length)
+			lines.push("", "Missing project files:", ...state.missingCore.map((v) => `- ${v}`));
+		if (state.projectErrors.length)
+			lines.push("", "Project-file problems:", ...state.projectErrors.map((v) => `- ${v}`));
+		if (state.changed.length) lines.push("", "Changed:", ...state.changed.map((v) => `- ${v}`));
+		if (state.missing.length) lines.push("", "Missing:", ...state.missing.map((v) => `- ${v}`));
+		if (state.errors.length)
+			lines.push(
+				"",
 				"Unable to observe:",
-				state.errors.map((item) => `${item.path} (${item.message})`),
-			),
-		);
+				...state.errors.map((e) => `- ${e.path} (${e.message})`),
+			);
 		for (const status of PROJECT_STATUSES.filter((s) => s !== "current")) {
 			const files = state.artifacts.filter((a) => a.status === status).map((a) => a.path);
-			lines.push(
-				...bullet(`Persisted as ${status === "needs-review" ? "needing review" : status}:`, files),
-			);
+			if (files.length) {
+				lines.push("", `Persisted as ${status === "needs-review" ? "needing review" : status}:`);
+				for (const file of files) lines.push(`- ${file}`);
+			}
 		}
 		if (state.impacted.length)
 			lines.push(
