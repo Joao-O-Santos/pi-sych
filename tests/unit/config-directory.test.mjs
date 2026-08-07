@@ -96,23 +96,7 @@ test("Pi Sych config rejects malformed, unknown, and mistyped values", async () 
 		[{ ...DEFAULT_CONFIG, review: { mode: "manual", typo: true } }, /Unknown/],
 	]) {
 		await writeFile(path, typeof value === "string" ? value : JSON.stringify(value));
-		try {
-			load();
-			console.error("NO ERROR for:", JSON.stringify(value));
-			throw new Error("Missing expected exception");
-		} catch (e) {
-			if (!pattern.test(e.message)) {
-				console.error(
-					"WRONG ERROR for:",
-					JSON.stringify(value),
-					"expected",
-					pattern,
-					"got",
-					e.message,
-				);
-				throw e;
-			}
-		}
+		assert.throws(load, pattern);
 	}
 	const { review: _review, ...legacy } = DEFAULT_CONFIG;
 	await writeFile(path, JSON.stringify(legacy));

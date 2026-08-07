@@ -104,6 +104,25 @@ export async function pendingPromotions(
 		throw error;
 	}
 }
+export async function filterWorkingMemoryFiles(
+	project: ResolvedProject,
+	snapshotPaths: Set<string>,
+	files: string[],
+): Promise<string[]> {
+	const allowed = new Set(snapshotPaths);
+	const result: string[] = [];
+	for (const file of files) {
+		if (allowed.has(file)) {
+			result.push(file);
+			continue;
+		}
+		try {
+			await resolveExistingProjectPath(project.projectRoot, file);
+			result.push(file);
+		} catch {}
+	}
+	return result;
+}
 function clipped(value: string, limit: number) {
 	const bytes = Buffer.byteLength(value, "utf8");
 	if (bytes <= limit) return value;

@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-07T15:00:00.000Z",
+  "confirmedAt": "2026-08-07T23:24:54.315904Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:05853efd3cc5387da8a8e9d3792566b69bfffccf2142a57ff8063fcbf6c4b75b",
+      "fingerprint": "sha256:6881ae7959a15f534a455eeda721ef9c5cbb4934fece054e06397373c0ea7366",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,13 +15,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-07T15:00:00.000Z",
-        "reason": "Verified v6.0.2: architecture diagrams fixed, package-root fix, atomic-file scope, deterministic test, mkdtempDisposable, regression tests, 66 tests, source budget 1975/2000, typecheck+style clean."
+        "at": "2026-08-07T23:24:54.315904Z",
+        "reason": "Updated for v6.0.5: worker lifecycle fixes (mkdtempDisposable leak, stop-guard, cleanup), compaction test refactor, diagram script deletion, 66 tests, source budget 1975/2000."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:ce42006f981407ec2ba4e73a69485b57a4ec8d977ccc230823c030e253741eb1",
+      "fingerprint": "sha256:d4945032e254e120d8af3dd28ad1f1603493cca93a1377bd6c36617b563e4636",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,8 +35,8 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-07T15:00:00.000Z",
-        "reason": "Verified v6.0.2: added E-031 for final review-correction pass; 66 tests, source budget 1975/2000, typecheck+style clean."
+        "at": "2026-08-07T23:24:54.315904Z",
+        "reason": "Updated for v6.0.5: worker lifecycle fixes (mkdtempDisposable leak, stop-guard, cleanup), compaction test refactor, diagram script deletion, 66 tests, source budget 1975/2000."
       }
     },
     {
@@ -105,15 +105,15 @@
     },
     {
       "path": "docs/development.md",
-      "fingerprint": "sha256:33f0a44f456dcb1ba2606635ca85c441358db6519f3762834cbfb8bbaf0ae1a6",
+      "fingerprint": "sha256:3bd53fee5368f4eafd2d3cc7146b4d3948d008896cda8f8b4da2317a14448cd4",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "development-checks"
       ],
       "acknowledgement": {
-        "at": "2026-08-06T13:09:49.947Z",
-        "reason": "Applied and independently reviewed the owner's Plannotator feedback: deterministic skill tests are mechanical only, behavioral fixtures are opt-in, intellectual attribution is packaged outside routed context, the review file was deleted, and the final gate passed 30 unit and 5 integration checks."
+        "at": "2026-08-07T23:24:54.315904Z",
+        "reason": "Updated for v6.0.5: worker lifecycle fixes (mkdtempDisposable leak, stop-guard, cleanup), compaction test refactor, diagram script deletion, 66 tests, source budget 1975/2000."
       }
     }
   ]

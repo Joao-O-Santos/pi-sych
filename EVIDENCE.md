@@ -1,27 +1,57 @@
 # Evidence
 
+## E-032 --- v6.0.5 worker lifecycle fixes
+
+**Status:** verified **Kind:** observed deterministic behavior, type
+safety, source budget, and evidence consistency **Source:** current
+source and tests, signed commits, signed tag `v6.0.4`, independent
+review findings, and local gate **Supports:** v6.0.5 release readiness
+with proper worker lifecycle management. **Evidence:**
+`mkdtempDisposable()` now uses `await using` so temporary directories
+are cleaned up on all code paths (timeout, cancellation, spawn failure,
+signal termination, non-zero exit); restore "first stop wins" semantics
+in `launchPiWorker()` so cancellation or timeout classification no
+longer overwrites an earlier decision; retain and clear forced SIGKILL
+timer; remove abort listener when process completes normally; preserve
+actual spawn error message instead of generic "spawn error"; add
+lifecycle regression cases: cancellation before timeout, timeout before
+abort, SIGTERM-resistant process reaching SIGKILL, failed dispatch
+leaving no temporary runtime directory; extract compaction file
+filtering into exported `filterWorkingMemoryFiles()` and exercise
+production code in regression test; simplify config test back to
+`assert.throws()` pattern; remove architecture-image generator script
+and `PLAN.md`. typecheck, Biome style, Pandoc Markdown check, source
+budget (1,975 actual / 2,000 rounded), 56 unit tests, 10 integration
+tests (66 total), packed install passed. **Limits:** The acknowledgement
+read-modify-write race remains identified but not addressed (no
+concurrent writes in current usage). **Checked:** 2026-08-08
+
 ## E-031 --- v6.0.2 final review-correction pass
 
 **Status:** verified **Kind:** observed deterministic behavior, type
 safety, source budget, and evidence consistency **Source:** current
-source and tests, signed commits, signed tag `v6.0.2`, independent
-review findings, and local gate **Supports:** v6.0.2 release readiness
-after the independent review identified two new code issues and a
-release-state/version problem. **Evidence:** fix `PI_SYCH_PACKAGE_ROOT`
-off-by-one directory traversal (use `import.meta.dirname` directly); end
-`writeAtomicFile()` async disposal scope before `rename()` for correct
-cross-platform resource ordering; replace chmod-based observation-error
-test with deterministic `EISDIR` fixture (directory at tracked path);
-use `mkdtempDisposable()` for worker runtime cleanup; add regression
-tests for three-way compaction file filtering and Windows root-relative
-config paths; regenerate four architecture PNGs with proper box heights
-and line-wrapped text. typecheck, Biome style, Pandoc Markdown check,
-source budget (1,975 actual / 2,000 rounded), 56 unit tests, 10
-integration tests (66 total), packed install, and Pages build passed.
-**Limits:** The acknowledgement read-modify-write race and
-async-disposable cleanup remain identified but not addressed (no
-concurrent writes in current usage; try/finally is sufficient for temp
-directories). **Checked:** 2026-08-07
+source and tests, signed commits, signed tags `v6.0.2` (diagram fixes),
+`v6.0.3` (review corrections), `v6.0.4` (CI lint fixes), independent
+review findings, and local gate **Supports:** v6.0.2→6.0.4 release
+readiness after the independent review identified two new code issues
+and a release-state/version problem. **Evidence:** fix
+`PI_SYCH_PACKAGE_ROOT` off-by-one directory traversal (use
+`import.meta.dirname` directly); end `writeAtomicFile()` async disposal
+scope before `rename()` for correct cross-platform resource ordering;
+replace chmod-based observation-error test with deterministic `EISDIR`
+fixture (directory at tracked path); use `mkdtempDisposable()` for
+worker runtime cleanup; add regression tests for three-way compaction
+file filtering and Windows root-relative config paths; regenerate four
+architecture PNGs with proper box heights and line-wrapped text. Note:
+the package-root, atomic-file, EISDIR test, mkdtempDisposable, and
+regression-test fixes were introduced in commits after v6.0.2
+(principally in `41dab332` → v6.0.3), not in the v6.0.2 tag itself.
+typecheck, Biome style, Pandoc Markdown check, source budget (1,975
+actual / 2,000 rounded), 56 unit tests, 10 integration tests (66 total),
+packed install, and Pages build passed. **Limits:** The acknowledgement
+read-modify-write race and async-disposable cleanup remain identified
+but not addressed (no concurrent writes in current usage; try/finally is
+sufficient for temp directories). **Checked:** 2026-08-07
 
 ## E-030 --- v6.0.0 independent review corrective pass
 

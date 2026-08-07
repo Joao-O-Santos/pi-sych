@@ -3,7 +3,51 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
-## v6.0.2 - Unreleased
+## v6.0.5 - Unreleased
+
+### Fixed
+
+- Worker lifecycle: `mkdtempDisposable()` now properly uses
+  `await using` so temporary directories are cleaned up on all code
+  paths (timeout, cancellation, spawn failure, signal termination,
+  non-zero exit).
+- Restore "first stop wins" semantics in `launchPiWorker()`:
+  cancellation or timeout classification no longer overwrites an earlier
+  decision.
+- Retain and clear forced SIGKILL timer; remove abort listener when
+  process completes normally.
+- Preserve actual spawn error message instead of generic "spawn error".
+- Add lifecycle regression cases: cancellation before timeout, timeout
+  before abort, SIGTERM-resistant process reaching SIGKILL, failed
+  dispatch leaving no temporary runtime directory.
+- Extract compaction file filtering into exported
+  `filterWorkingMemoryFiles()` and exercise production code in
+  regression test (no algorithm duplication).
+- Simplify config test back to `assert.throws()` pattern.
+- Remove architecture-image generator script
+  (`scripts/generate-architecture-images.mjs`) and `PLAN.md` (completed
+  transient state).
+- Source budget: 1,975 actual lines (2000/2000 rounded).
+
+## v6.0.4 - 2026-08-07
+
+### Fixed
+
+- Fix Biome lint errors preventing CI verification:
+  - Use template literal for stderr concatenation in `launchPiWorker`
+  - Remove unused `rm` import from `worker-engine.ts`
+  - Remove unused `midX` variable from
+    `generate-architecture-images.mjs`
+  - Rename `escape` function to `escapeHtml` to avoid shadowing global
+    property
+
+## v6.0.3 - 2026-08-07
+
+### Fixed
+
+- Update integration test version expectation from 6.0.2 to 6.0.3
+
+## v6.0.2 - 2026-08-07
 
 ### Fixed
 
