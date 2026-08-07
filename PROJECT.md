@@ -54,12 +54,12 @@ independent substantive review, and no automated workflow controller.
 
 ## Current state
 
-{verified} The `6.0.5` implementation builds on `5.0.4` with a
+{verified} The `6.0.6` implementation builds on `5.0.4` with a
 correctness+simplification pass, an independent review corrective pass
 (v6.0.2), a final review-correction pass (v6.0.3), CI lint fixes
-(v6.0.4), and worker lifecycle fixes (v6.0.5). It raises the Node
-baseline to 26, centralizes Pi configuration-root and named-skill lookup
-with cross-platform validation, distinguishes
+(v6.0.4), v6.0.5, and worker lifecycle fixes (v6.0.6). It raises the
+Node baseline to 26, centralizes Pi configuration-root and named-skill
+lookup with cross-platform validation, distinguishes
 current/changed/missing/error observation states, surfaces artifact
 observation errors, restores dependency impact for missing artifacts,
 requires active untracked compaction files to exist, extracts valid JSON
@@ -70,10 +70,11 @@ existence preflight, fails fast on malformed SYNC.json at startup, fixes
 rename, uses `mkdtempDisposable()` with `await using` for worker cleanup
 with first-stop-wins semantics, restores forced SIGKILL timer cleanup
 and abort listener removal, preserves spawn error messages, and adds
-lifecycle regression cases. Compaction file filtering is extracted to
-exported `filterWorkingMemoryFiles()` and exercised by regression test.
-Source budget: 1,975 actual lines (2000/2000 rounded). Tags: v6.0.0,
-v6.0.1, v6.0.2, v6.0.3, v6.0.4; v6.0.5 is current head.
+four lifecycle regression cases. Compaction file filtering is extracted
+to exported `filterWorkingMemoryFiles()` and exercised in compact()
+regression path. Source budget: 2,000 actual lines (2,000 rounded).
+Tags: v6.0.0, v6.0.1, v6.0.2, v6.0.3, v6.0.4, v6.0.5; v6.0.6 is current
+head.
 
 ## Previous action
 
@@ -83,14 +84,15 @@ final `v6.0.2` pass fixed architecture diagram rendering, package-root
 traversal, atomic-file scope, observation-error test determinism, worker
 cleanup, and added regression tests. `v6.0.3` updated integration test
 version expectations. `v6.0.4` fixed Biome lint errors blocking CI.
-Local gate passed: 66 tests, source budget 1975/2000, typecheck+style
-clean. An independent review confirmed the three previous blockers are
-genuinely fixed and the two new code issues are resolved. `v6.0.5`
-implements worker lifecycle fixes: proper `await using` disposal,
-first-stop-wins semantics, timer cleanup, abort listener removal, spawn
-error preservation, and regression cases.
+`v6.0.5` simplified config test and removed completed transient files.
+`v6.0.6` implements worker lifecycle fixes: proper `await using`
+disposal, first-stop-wins semantics, timer cleanup, abort listener
+removal, spawn error preservation, four lifecycle regression cases, and
+compaction file filtering deduplication. Local gate passed: 70 tests,
+source budget 2000/2000, typecheck+style clean.
 
 ## Immediate next step
 
-{accepted} Run an independent review gate on the `v6.0.5` head, then tag
-and publish `v6.0.5` if the review passes.
+{accepted} Tag and publish `v6.0.6` if the local gate passes. The
+independent review confirmed worker lifecycle fixes are correct. E-033
+supports v6.0.6 release readiness.

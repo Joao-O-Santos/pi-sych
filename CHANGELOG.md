@@ -3,7 +3,7 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
-## v6.0.5 - 2026-08-08
+## v6.0.6 - 2026-08-08
 
 ### Fixed
 
@@ -14,20 +14,26 @@ immutable npm publications unless explicitly marked otherwise.
 - Restore "first stop wins" semantics in `launchPiWorker()`:
   cancellation or timeout classification no longer overwrites an earlier
   decision.
-- Retain and clear forced SIGKILL timer; remove abort listener when
-  process completes normally.
+- Retain and clear forced SIGKILL timer on normal exit; remove abort
+  listener when process completes.
 - Preserve actual spawn error message instead of generic "spawn error".
-- Add lifecycle regression cases: cancellation before timeout, timeout
-  before abort, SIGTERM-resistant process reaching SIGKILL, failed
-  dispatch leaving no temporary runtime directory.
+- Add four lifecycle regression cases: cancellation before timeout,
+  timeout before abort, SIGTERM-resistant process reaching SIGKILL,
+  failed dispatch leaving no temporary runtime directory.
 - Extract compaction file filtering into exported
   `filterWorkingMemoryFiles()` and exercise production code in
-  regression test (no algorithm duplication).
+  `compact()` regression path (no algorithm duplication).
+- Source budget: 2,000 actual lines (2,000 rounded).
+
+## v6.0.5 - 2026-08-08
+
+### Fixed
+
 - Simplify config test back to `assert.throws()` pattern.
 - Remove architecture-image generator script
   (`scripts/generate-architecture-images.mjs`) and `PLAN.md` (completed
   transient state).
-- Source budget: 1,975 actual lines (2000/2000 rounded).
+- Source budget: 1,975 actual lines (2,000 rounded).
 
 ## v6.0.4 - 2026-08-07
 

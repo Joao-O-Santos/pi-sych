@@ -188,6 +188,7 @@ export function validateWorkerResult(value: unknown): WorkerResult {
 export const launchPiWorker: WorkerLauncher = async (spec): Promise<WorkerLaunchOutcome> => {
 	let stderr = "";
 	let stopped: "cancelled" | "timeout" | undefined;
+	let spawnError: Error | undefined;
 	const child = spawn(
 		"pi",
 		[
@@ -232,28 +233,40 @@ export const launchPiWorker: WorkerLauncher = async (spec): Promise<WorkerLaunch
 	child.stderr.on("data", (chunk) => {
 		stderr = (stderr + chunk).slice(-LOG_LIMIT);
 	});
+	child.once("error", (err) => {
+		spawnError = err;
+	});
+	let forcedKillTimer: ReturnType<typeof setTimeout> | undefined;
 	const stop = (kind: "cancelled" | "timeout") => {
+		if (stopped) return;
 		stopped = kind;
 		child.kill("SIGTERM");
-		setTimeout(() => child.kill("SIGKILL"), 2_000);
+		forcedKillTimer = setTimeout(() => child.kill("SIGKILL"), 2_000);
 	};
+	const onAbort = () => stop("cancelled");
 	if (spec.signal?.aborted) stop("cancelled");
-	else spec.signal?.addEventListener("abort", () => stop("cancelled"), { once: true });
+	else spec.signal?.addEventListener("abort", onAbort, { once: true });
 	const timeout = setTimeout(() => stop("timeout"), spec.request.timeoutMs ?? DEFAULT_TIMEOUT_MS);
 	const [exitCode, terminationSignal] = await new Promise<[number | null, NodeJS.Signals | null]>(
 		(resolve) => {
 			child.once("error", () => resolve([null, null]));
-			child.once("close", (code, signal) => resolve([code, signal]));
+			child.once("close", (code, signal) => {
+				if (forcedKillTimer) clearTimeout(forcedKillTimer);
+				resolve([code, signal]);
+			});
 		},
 	);
 	clearTimeout(timeout);
+	spec.signal?.removeEventListener("abort", onAbort);
 	if (stopped) return { exitCode: exitCode ?? null, stderr, classification: stopped };
-	if (exitCode === null)
+	if (exitCode === null) {
+		const msg = spawnError ? spawnError.message : "spawn error";
 		return {
 			exitCode: null,
-			stderr: `${stderr}spawn error`.slice(-LOG_LIMIT),
+			stderr: `${stderr}${msg}`.slice(-LOG_LIMIT),
 			classification: "spawn-failure",
 		};
+	}
 	return { exitCode, stderr, ...(terminationSignal ? { terminationSignal } : {}) };
 };
 export async function dispatchWorker(options: {
@@ -279,8 +292,10 @@ export async function dispatchWorker(options: {
 			`Worker agent directory is not initialized at ${options.workerAgentDir}. Run: node ${resolve(options.packageRoot ?? PI_SYCH_PACKAGE_ROOT, "scripts/bootstrap-worker-agent-dir.mjs")} --agent-dir ${options.workerAgentDir}`,
 		);
 	}
-	const runtime = await mkdtempDisposable(resolve(tmpdir(), "pi-sych-")),
-		resultPath = resolve(runtime.path, "result.json");
+	const runtimeDisposable = await mkdtempDisposable(resolve(tmpdir(), "pi-sych-"));
+	const runtime = runtimeDisposable as { path: string; [Symbol.asyncDispose](): Promise<void> };
+	await using _runtimeHandle = runtime;
+	const resultPath = resolve(runtime.path, "result.json");
 	const spec: WorkerLaunchSpec = {
 		id,
 		request: { ...request, contextFiles, timeoutMs },
@@ -319,7 +334,5 @@ export async function dispatchWorker(options: {
 			launch,
 			error: `Worker result protocol failed: ${reason instanceof Error ? reason.message : String(reason)}`,
 		};
-	} finally {
-		await runtime.remove();
 	}
 }

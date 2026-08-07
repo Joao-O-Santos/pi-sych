@@ -218,18 +218,11 @@ export async function compact(event: SessionBeforeCompactEvent, ctx: ExtensionCo
 				.map((part) => part.text)
 				.join("\n"),
 			output = parseCompactionModelOutput(raw),
-			allowed = new Set(snapshot.paths),
-			files: string[] = [];
-		for (const file of output.workingMemory.files) {
-			if (allowed.has(file)) {
-				files.push(file);
-				continue;
-			}
-			try {
-				await resolveExistingProjectPath(project.projectRoot, file);
-				files.push(file);
-			} catch {}
-		}
+			files = await filterWorkingMemoryFiles(
+				project,
+				new Set(snapshot.paths),
+				output.workingMemory.files,
+			);
 		const memory = { ...output.workingMemory, files };
 		if (output.promotions.length) {
 			await mkdir(dirname(project.canonical.inbox), { recursive: true });

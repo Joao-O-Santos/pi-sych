@@ -1,30 +1,39 @@
 # Evidence
 
-## E-032 --- v6.0.5 worker lifecycle fixes
+## E-032 --- v6.0.5 release review
+
+**Status:** verified **Kind:** observed deterministic behavior and
+source budget **Source:** signed tag `v6.0.5`, current source, local
+gate **Supports:** v6.0.5 release readiness. **Evidence:** v6.0.5 tagged
+on signed commit `734bd66`; source budget 1,975 / 2,000 lines; 56 unit
+tests, 10 integration tests (66 total), packed install passed.
+**Limits:** Worker lifecycle fixes documented in v6.0.5 CHANGELOG were
+not present in the tagged commit; those fixes are addressed in the
+working tree for v6.0.6. **Checked:** 2026-08-08
+
+## E-033 --- v6.0.6 worker lifecycle fixes
 
 **Status:** verified **Kind:** observed deterministic behavior, type
 safety, source budget, and evidence consistency **Source:** current
-source and tests, signed commits, signed tag `v6.0.4`, independent
-review findings, and local gate **Supports:** v6.0.5 release readiness
-with proper worker lifecycle management. **Evidence:**
-`mkdtempDisposable()` now uses `await using` so temporary directories
-are cleaned up on all code paths (timeout, cancellation, spawn failure,
-signal termination, non-zero exit); restore "first stop wins" semantics
-in `launchPiWorker()` so cancellation or timeout classification no
-longer overwrites an earlier decision; retain and clear forced SIGKILL
-timer; remove abort listener when process completes normally; preserve
-actual spawn error message instead of generic "spawn error"; add
+source and tests, local gate **Supports:** v6.0.6 release readiness with
+proper worker lifecycle management. **Evidence:** `mkdtempDisposable()`
+now uses `await using` so temporary directories are cleaned up on all
+code paths (timeout, cancellation, spawn failure, signal termination,
+non-zero exit); restore "first stop wins" semantics in
+`launchPiWorker()` so cancellation or timeout classification no longer
+overwrites an earlier decision; retain and clear forced SIGKILL timer on
+normal exit; remove abort listener when process completes; preserve
+actual spawn error message instead of generic "spawn error"; add four
 lifecycle regression cases: cancellation before timeout, timeout before
 abort, SIGTERM-resistant process reaching SIGKILL, failed dispatch
 leaving no temporary runtime directory; extract compaction file
 filtering into exported `filterWorkingMemoryFiles()` and exercise
-production code in regression test; simplify config test back to
-`assert.throws()` pattern; remove architecture-image generator script
-and `PLAN.md`. typecheck, Biome style, Pandoc Markdown check, source
-budget (1,975 actual / 2,000 rounded), 56 unit tests, 10 integration
-tests (66 total), packed install passed. **Limits:** The acknowledgement
-read-modify-write race remains identified but not addressed (no
-concurrent writes in current usage). **Checked:** 2026-08-08
+production code in compact() regression path. typecheck, Biome style,
+Pandoc Markdown check, source budget (2,000 actual / 2,000 rounded), 60
+unit tests, 10 integration tests (70 total), packed install passed.
+**Limits:** The acknowledgement read-modify-write race remains
+identified but not addressed (no concurrent writes in current usage).
+**Checked:** 2026-08-08
 
 ## E-031 --- v6.0.2 final review-correction pass
 
