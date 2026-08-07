@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-07T00:00:00.000Z",
+  "confirmedAt": "2026-08-07T01:00:00.000Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:ed5567966dd26762ca1892ad28c415ce5a5e1f266fa5354d35a9f37865ffe52e",
+      "fingerprint": "sha256:72e0ed5a9a83d7ed2af0da84511cc4155be09c3b3370166e469b4af7431b88ea",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,13 +15,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-07T00:00:00.000Z",
-        "reason": "Verified v6.0.0 independent review corrective pass: 65 tests, source budget 2000/2000, typecheck+style clean, signed tag v6.0.0."
+        "at": "2026-08-07T01:00:00.000Z",
+        "reason": "Verified v6.0.1 independent review corrective pass: 65 tests, source budget 2000/2000, typecheck+style clean."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:a166af2c508b10cb683081634e78cc5bc940b8dea4440559306705a54e82b630",
+      "fingerprint": "sha256:8aff14c1e86d3105aba466d362d47afbf5098b5d46ae7f5036d571583fa4e703",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,8 +35,8 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-07T00:00:00.000Z",
-        "reason": "Verified v6.0.0 independent review corrective pass: 65 tests, source budget 2000/2000, typecheck+style clean, signed tag v6.0.0."
+        "at": "2026-08-07T01:00:00.000Z",
+        "reason": "Verified v6.0.1 independent review corrective pass: 65 tests, source budget 2000/2000, typecheck+style clean."
       }
     },
     {

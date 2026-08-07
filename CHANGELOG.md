@@ -3,6 +3,25 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
+## v6.0.1 - Unreleased
+
+### Independent review corrections
+
+- Surface artifact observation errors in `ProjectStatusCheck.errors` and
+  add an "Unable to observe" formatter section; include
+  `!state.errors.length` in the all-clear condition.
+- Restore dependency impact for missing artifacts by passing
+  `[...changed, ...missing]` to `impacts()`.
+- Require active untracked compaction files to exist by using
+  `resolveExistingProjectPath()` in an inline loop, not just lexical
+  validation.
+- Fix Windows root-relative config paths using `posix.isAbsolute()` and
+  `win32.isAbsolute()`.
+- Rename the source budget metric from "Estimated production TypeScript"
+  to "runtime source".
+- Modernize with `crypto.hash()`, `import.meta.dirname`, and
+  `Static<typeof schema>` for duplicated request/result types.
+
 ## v6.0.0 - Unreleased
 
 ### Breaking baseline
