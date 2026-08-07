@@ -38,19 +38,37 @@ type Plannotator = {
 	): Promise<CodeReviewSession>;
 };
 const jiti = createJiti(import.meta.url, { interopDefault: true });
-export const plannotatorUnavailable = () =>
-	new Error("Plannotator unavailable; ensure its integration is installed");
-async function load(): Promise<Plannotator> {
+export const plannotatorUnavailable = (reason?: string) =>
+	new Error(
+		`Plannotator unavailable; ensure its integration is installed${reason ? ` and compatible: ${reason}` : ""}`,
+	);
+function validatePlannotator(value: unknown): Plannotator {
+	if (!value || typeof value !== "object")
+		throw plannotatorUnavailable("adapter did not export an API");
+	const api = value as Record<string, unknown>;
+	for (const name of [
+		"startMarkdownAnnotationSession",
+		"getLastAssistantMessageText",
+		"startLastMessageAnnotationSession",
+		"startCodeReviewBrowserSession",
+	])
+		if (typeof api[name] !== "function") throw plannotatorUnavailable(`adapter is missing ${name}`);
+	return api as unknown as Plannotator;
+}
+export async function loadPlannotator(): Promise<Plannotator> {
 	try {
-		return (await jiti.import("@plannotator/pi-extension/plannotator-events.ts")) as Plannotator;
-	} catch {
-		throw plannotatorUnavailable();
+		return validatePlannotator(
+			await jiti.import("@plannotator/pi-extension/plannotator-events.ts"),
+		);
+	} catch (error) {
+		if (error instanceof Error && error.message.startsWith("Plannotator unavailable")) throw error;
+		throw plannotatorUnavailable(error instanceof Error ? error.message : String(error));
 	}
 }
 export const startFileAnnotation = async (ctx: ExtensionContext, path: string, content: string) =>
-	(await load()).startMarkdownAnnotationSession(ctx, path, content, "annotate");
+	(await loadPlannotator()).startMarkdownAnnotationSession(ctx, path, content, "annotate");
 export const startLastMessageAnnotation = async (ctx: ExtensionContext) => {
-	const api = await load(),
+	const api = await loadPlannotator(),
 		text = api.getLastAssistantMessageText(ctx);
 	return text ? api.startLastMessageAnnotationSession(ctx, text) : undefined;
 };
@@ -65,7 +83,11 @@ export function parseCodeReviewArgs(input = ""): CodeReviewRequest {
 		else if (token === "--no-local") useLocal = false;
 		else if (/^https?:\/\//.test(token) && !prUrl) prUrl = token;
 	}
-	return { prUrl, vcsType, useLocal };
+	return {
+		...(prUrl ? { prUrl } : {}),
+		...(vcsType ? { vcsType } : {}),
+		useLocal,
+	};
 }
 export const startCodeReview = async (ctx: ExtensionContext, options: CodeReviewRequest = {}) =>
-	(await load()).startCodeReviewBrowserSession(ctx, options);
+	(await loadPlannotator()).startCodeReviewBrowserSession(ctx, options);

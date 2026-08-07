@@ -24,20 +24,18 @@ workflow controller, repository abstraction, or new policy layer.
 Run the repository gate before opening a pull request:
 
 ``` sh
-npm run typecheck
-npm run style
-npm run test:deps
-npm run source:budget
-npm test
-npm pack --dry-run
-git diff --check
+make verify
 ```
 
-`npm test` compiles TypeScript into ignored `.test-build/`, runs unit
-tests, and exercises package loading and project status through RPC
-integration tests. The package's GitLab pipeline repeats the
-verification and tag-based publication gate. Contributors do not publish
-directly.
+The Makefile remains a thin entry point over the project-native npm
+scripts. Use `make typecheck`, `make style`, `make dependencies`,
+`make budget`, `make test`, `make coverage`, or `make pack` for a
+focused check; `make clean` removes generated site, test-build, and
+coverage output. `npm test` compiles TypeScript into ignored
+`.test-build/`, runs unit tests, and exercises package loading and
+project status through RPC integration tests. The package's GitLab
+pipeline repeats the verification and tag-based publication gate.
+Contributors do not publish directly.
 
 `npm run test:usage` is opt-in. It uses real Pi/model calls against a
 disposable project, requires local credentials, and may incur provider
@@ -72,8 +70,8 @@ deterministic contract or proof of adherence. See
 ## Code and documentation style
 
 Biome formats and lints TypeScript, JavaScript, and tests. Pandoc 3.10.1
-formats human-facing Markdown at 72 columns. Run `npm run markdown:fix`
-when editing prose, then `npm run style`.
+(or greater) formats human-facing Markdown at 72 columns. Run
+`npm run markdown:fix` when editing prose, then `npm run style`.
 
 ``` sh
 npm run lint

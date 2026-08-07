@@ -8,8 +8,15 @@ import { dirname, resolve } from "node:path";
 
 const require = createRequire(import.meta.url);
 const readVersion = async (path) => JSON.parse(await readFile(path, "utf8")).version;
+let entry;
 try {
-	const entry = require.resolve("pi-mcporter/dist/index.js");
+	entry = require.resolve("pi-mcporter/dist/index.js");
+} catch (error) {
+	if (error?.code !== "MODULE_NOT_FOUND") throw error;
+	process.stdout.write("pi-mcporter is not installed; optional dependency check skipped.\n");
+}
+try {
+	if (!entry) process.exit(0);
 	const root = dirname(dirname(entry));
 	let current = root;
 	let mcporterRoot;

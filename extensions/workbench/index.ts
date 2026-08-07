@@ -1,23 +1,23 @@
-import { appendFile, readFile } from "node:fs/promises";
-import { homedir } from "node:os";
-import { extname, isAbsolute, resolve } from "node:path";
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import { compact, pendingPromotions } from "./src/compaction.js";
 import {
+	type ConfigDirectoryOptions,
+	ensurePiSychConfig,
+	loadPiSychConfig,
+	piSychConfigPath,
+} from "./src/config-directory.js";
+import {
 	formatMcporterDiagnostic,
 	inspectMcporter,
+	mcporterConfigPath,
 	remoteResearchExtensionPaths,
 } from "./src/mcporter.js";
 import { loadModelCatalog, loadOptionalModelCatalog } from "./src/model-catalog.js";
-import {
-	parseCodeReviewArgs,
-	startCodeReview,
-	startFileAnnotation,
-	startLastMessageAnnotation,
-} from "./src/plannotator.js";
-import { resolveExistingProjectPath, resolveProject, showPath } from "./src/project-files.js";
+import { resolveProject, showPath } from "./src/project-files.js";
 import {
 	acknowledgeProjectStatus,
 	checkProjectStatus,
@@ -29,7 +29,9 @@ import {
 	dispatchWorker,
 	MAX_TIMEOUT_MS,
 } from "./src/worker-engine.js";
-export const PACKAGE_ROOT = resolve(fileURLToPath(new URL("../..", import.meta.url)));
+export const PACKAGE_ROOT = resolve(
+	process.env.PI_PACKAGE_DIR ?? fileURLToPath(new URL("../..", import.meta.url)),
+);
 export const SUPERVISOR_GUIDANCE = [
 	"Pi Sych is a small mechanical substrate; skills and humans own semantic judgment.",
 	"Keep replies concise. Work directly unless independent context would materially improve the result.",
@@ -68,26 +70,19 @@ export function formatDispatchWorkerOutcome(outcome: DispatchOutcome) {
 }
 const notifyError = (ctx: ExtensionCommandContext, error: unknown) =>
 	ctx.ui.notify(error instanceof Error ? error.message : String(error), "error");
+export const shouldCompactAt100k = (enabled: boolean, tokens?: number | null) =>
+	enabled && (tokens ?? 0) >= 100_000;
+
 export async function configuredSupervisorInstructions(cwd: string, existing = "") {
-	try {
-		const project = await resolveProject(cwd),
-			instructions = await readFile(project.canonical.agents, "utf8").catch(
-				(error: NodeJS.ErrnoException) => {
-					if (error.code === "ENOENT") return "";
-					throw error;
-				},
-			);
-		if (!instructions.trim() || existing.includes(instructions.trim())) return undefined;
-		return `Configured project instructions (${showPath(project.projectRoot, project.canonical.agents)}):\n${instructions.trim()}`;
-	} catch {
-		return undefined;
-	}
-}
-async function projectFile(cwd: string, input: string) {
-	if (!input.trim() || isAbsolute(input)) throw new Error("Path must be a project-local file");
 	const project = await resolveProject(cwd),
-		path = await resolveExistingProjectPath(project.projectRoot, input);
-	return { project, path };
+		instructions = await readFile(project.canonical.agents, "utf8").catch(
+			(error: NodeJS.ErrnoException) => {
+				if (error.code === "ENOENT") return "";
+				throw error;
+			},
+		);
+	if (!instructions.trim() || existing.includes(instructions.trim())) return undefined;
+	return `Configured project instructions (${showPath(project.projectRoot, project.canonical.agents)}):\n${instructions.trim()}`;
 }
 async function statusView(cwd: string) {
 	const state = await checkProjectStatus(cwd);
@@ -104,28 +99,24 @@ async function statusView(cwd: string) {
 		),
 	};
 }
-function annotationResult(
-	pi: ExtensionAPI,
-	ctx: ExtensionCommandContext,
-	session: { waitForDecision(): Promise<{ feedback?: string; exit?: boolean }> },
-	path?: string,
-) {
-	void session
-		.waitForDecision()
-		.then(async (result) => {
-			if (result.feedback) {
-				if (path) await appendFile(path, `${result.feedback.trim()}\n`);
-				else await pi.sendUserMessage(result.feedback, { deliverAs: "followUp" });
-			} else if (result.exit) ctx.ui.notify("Annotation closed.", "info");
-		})
-		.catch((error) => notifyError(ctx, error));
-}
-export default function piSychWorkbench(pi: ExtensionAPI): void {
-	pi.on("before_agent_start", async (event) => {
+export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
+	let startupOptions: ConfigDirectoryOptions = {};
+	try {
+		startupOptions = { projectRoot: (await resolveProject(process.cwd())).projectRoot };
+	} catch (error) {
+		console.error(`Pi Sych project resolution failed during startup: ${String(error)}`);
+	}
+	await ensurePiSychConfig(startupOptions);
+	loadPiSychConfig(startupOptions);
+	pi.on("before_agent_start", async (event, ctx) => {
+		const project = await resolveProject(ctx.cwd);
+		const config = loadPiSychConfig({ projectRoot: project.projectRoot });
+		if (shouldCompactAt100k(config.compaction.compactAt100k, ctx.getContextUsage()?.tokens))
+			ctx.compact();
 		const sections = [event.systemPrompt, SUPERVISOR_GUIDANCE],
-			instructions = await configuredSupervisorInstructions(process.cwd(), event.systemPrompt);
+			instructions = await configuredSupervisorInstructions(ctx.cwd, event.systemPrompt);
 		if (instructions) sections.push(instructions);
-		const catalog = loadOptionalModelCatalog();
+		const catalog = loadOptionalModelCatalog(project.projectRoot);
 		if (catalog) {
 			const models = Object.entries(catalog.models)
 				.map(
@@ -137,7 +128,12 @@ export default function piSychWorkbench(pi: ExtensionAPI): void {
 		}
 		return { systemPrompt: sections.join("\n\n") };
 	});
-	pi.on("session_before_compact", compact);
+	pi.on("session_before_compact", async (event, ctx) => {
+		const project = await resolveProject(ctx.cwd);
+		return loadPiSychConfig({ projectRoot: project.projectRoot }).compaction.custom
+			? compact(event, ctx)
+			: undefined;
+	});
 	pi.registerTool({
 		name: "dispatch_worker",
 		label: "Dispatch worker",
@@ -147,14 +143,14 @@ export default function piSychWorkbench(pi: ExtensionAPI): void {
 			const project = await resolveProject(ctx.cwd),
 				outcome = await dispatchWorker({
 					project,
-					workerAgentDir:
-						process.env.PI_SYCH_WORKER_AGENT_DIR ??
-						resolve(homedir(), ".cache/pi/pi-sych/worker-agent"),
+					workerAgentDir: piSychConfigPath("workerAgentDir", {
+						projectRoot: project.projectRoot,
+					}),
 					request: params,
-					catalog: loadModelCatalog(),
+					catalog: loadModelCatalog(project.projectRoot),
 					packageRoot: PACKAGE_ROOT,
 					extraExtensionPaths: remoteResearchExtensionPaths(params.remoteResearch === true),
-					signal,
+					...(signal ? { signal } : {}),
 				});
 			return {
 				content: [{ type: "text", text: formatDispatchWorkerOutcome(outcome) }],
@@ -204,52 +200,12 @@ export default function piSychWorkbench(pi: ExtensionAPI): void {
 	});
 	pi.registerCommand("pi-sych-mcp", {
 		description: "Show MCPorter configuration diagnostics",
-		handler: async (_args, ctx) =>
-			ctx.ui.notify(formatMcporterDiagnostic(inspectMcporter()), "info"),
-	});
-	pi.registerCommand("plannotator-last", {
-		description: "Open the last assistant message in Plannotator",
 		handler: async (_args, ctx) => {
-			try {
-				const session = await startLastMessageAnnotation(ctx);
-				if (!session) throw new Error("No assistant message is available to annotate");
-				ctx.ui.notify(`Plannotator annotation opened: ${session.url}`, "info");
-				annotationResult(pi, ctx, session);
-			} catch (error) {
-				notifyError(ctx, error);
-			}
-		},
-	});
-	pi.registerCommand("plannotator-annotate", {
-		description: "Open a project-local file in Plannotator",
-		handler: async (args, ctx) => {
-			try {
-				const file = await projectFile(ctx.cwd, args);
-				if (![".md", ".mdx"].includes(extname(file.path)))
-					throw new Error("Usage: /plannotator-annotate <project-local-file>");
-				const session = await startFileAnnotation(
-					ctx,
-					file.path,
-					await readFile(file.path, "utf8"),
-				);
-				ctx.ui.notify(`Plannotator annotation opened: ${session.url}`, "info");
-				annotationResult(pi, ctx, session, `${file.path}.feedback.md`);
-			} catch (error) {
-				notifyError(ctx, error);
-			}
-		},
-	});
-	pi.registerCommand("plannotator-review", {
-		description: "Open Plannotator code review for current changes or a PR URL",
-		handler: async (args, ctx) => {
-			try {
-				const session = await startCodeReview(ctx, parseCodeReviewArgs(args));
-				ctx.ui.notify(`Plannotator code review opened: ${session.url}`, "info");
-				const project = await resolveProject(ctx.cwd);
-				annotationResult(pi, ctx, session, resolve(project.projectRoot, "PLANNOTATOR_REVIEW.md"));
-			} catch (error) {
-				notifyError(ctx, error);
-			}
+			const project = await resolveProject(ctx.cwd);
+			ctx.ui.notify(
+				formatMcporterDiagnostic(inspectMcporter(mcporterConfigPath(project.projectRoot))),
+				"info",
+			);
 		},
 	});
 }

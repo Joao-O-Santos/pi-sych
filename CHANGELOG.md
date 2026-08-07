@@ -3,6 +3,44 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
+## v5.0.0 - Unreleased
+
+### Breaking configuration changes
+
+- Replace the documented `PI_SYCH_MODEL_CATALOG`,
+  `PI_SYCH_WORKER_AGENT_DIR`, and `PI_SYCH_MCPORTER_CONFIG` overrides
+  with one visible, versioned `config.json` under Pi-native project,
+  agent, XDG, or home configuration directories.
+- Relocate the default worker runtime, model catalogue, and MCPorter
+  paths under that resolved directory. Existing users of the removed
+  overrides or former paths must migrate their configuration.
+
+### Added
+
+- Make Plannotator and MCPorter optional integrations, with a separate
+  Plannotator extension entrypoint and early failures only when an
+  absent integration is explicitly enabled or requested.
+- Add configurable custom compaction, optional automatic compaction at
+  100,000 context tokens, and manual or Plannotator review modes.
+- Add three opt-in, real-Pi skill benchmark cases with objective checks,
+  separate candidate and judge roles, immutable result bundles, and
+  deterministic harness tests.
+- Add a Pandoc-based GitLab Pages site, internal-link validation,
+  accessible templates and styling, and packaged licensing notices.
+- Add an explicit public-contract and SemVer policy.
+- Add diagnostic V8 coverage reporting and stricter TypeScript checks.
+
+### Changed
+
+- Add thin Make targets for formatting, verification, coverage,
+  packaging, benchmarking, and Pages generation.
+- Require Pandoc 3.10.1 or newer locally and resolve the latest stable
+  release in online CI.
+- Strengthen coding guidance around direct native mechanisms, explicit
+  interfaces, human-visible state, early actionable failure, and
+  defeaters such as security, accessibility, compatibility, and data
+  integrity.
+
 ## v4.0.6 - 2026-08-06
 
 ### Scientific continuity

@@ -27,17 +27,39 @@ catalog's `default` role. Cost and notes are context for the supervisor;
 the runtime does not rank models or invent fallbacks.
 
 The model catalog is needed when a worker is dispatched, not merely to
-start Pi Sych for direct project work. Set `PI_SYCH_MODEL_CATALOG` to
-use a different file. `PI_SYCH_WORKER_AGENT_DIR` selects the isolated
-worker runtime directory.
+start Pi Sych for direct project work. Pi Sych uses the first applicable
+configuration directory: `<projectRoot>/.pi/pi-sych` when project `.pi`
+exists; `$PI_CODING_AGENT_DIR/pi-sych`; `$XDG_CONFIG_HOME/pi/pi-sych`;
+`~/.config/pi/pi-sych` when that Pi directory exists; then
+`~/.pi/pi-sych`. If none applies it fails before worker startup with
+setup guidance. Pi Sych has no supported `PI_SYCH_*` configuration
+overrides. Migrate the removed `PI_SYCH_MODEL_CATALOG`,
+`PI_SYCH_WORKER_AGENT_DIR`, and `PI_SYCH_MCPORTER_CONFIG` settings to
+the relative `modelCatalog`, `workerAgentDir`, and `mcporterConfig`
+fields in `config.json`; `PI_SYCH_PI_BIN` has no replacement because
+Pi's executable resolution is used. On first agent start it creates
+`config.json` without overwriting an existing file. Its version-1
+defaults include relative paths for the worker agent, model catalog, and
+MCPorter, plus:
+
+``` json
+"compaction": { "custom": true, "compactAt100k": false },
+"review": { "mode": "plannotator" }
+```
+
+`custom` enables Pi Sych's custom compaction handler. `compactAt100k`
+requests compaction before an agent turn at 100,000 context tokens.
+`review.mode` is `plannotator` or `manual`; manual mode does not import
+the optional Plannotator runtime or register its commands. Invalid
+configuration and unknown keys fail loudly.
 
 ## Initialize the worker runtime
 
-Run the packaged bootstrap script once for the directory selected by
-`PI_SYCH_WORKER_AGENT_DIR` (or the default directory):
+Run the packaged bootstrap script once for that directory's
+`worker-agent` subdirectory:
 
 ``` sh
-node /path/to/pi-sych/scripts/bootstrap-worker-agent-dir.mjs
+node /path/to/pi-sych/scripts/bootstrap-worker-agent-dir.mjs --agent-dir /path/to/pi-sych-config/worker-agent
 ```
 
 The script writes a small `settings.json`, loads only the Pi Sych worker
@@ -119,17 +141,36 @@ local deltas---audience, voice, dialect, terminology, citation form,
 venue, and artifact conventions---rather than copy package prose
 doctrine.
 
+## Pi-native resource controls
+
+Pi's package controls, rather than a Pi Sych-specific toggle schema,
+select what loads. Open `pi config` to enable or disable package
+resources, or use a package filter in settings. For example, keep only
+the core extension:
+
+``` json
+{
+  "source": "npm:pi-sych",
+  "extensions": ["extensions/workbench/index.ts"]
+}
+```
+
+Use `"extensions": []` to load no Pi Sych extensions while retaining its
+skills. For a one-off session, `--no-extensions` disables extensions;
+`--tools` allow-lists tools and `--exclude-tools` removes named tools.
+These controls change Pi's loaded resources or visible tools, not
+process permissions. See the [public contract](public-contract.md) for
+the supported paths and behavior.
+
 ## Optional integrations
 
-Plannotator is loaded lazily through its documented browser helpers.
-File annotation writes `<input>.feedback.md`; code-review feedback is
-written at the resolved project root as `PLANNOTATOR_REVIEW.md`.
-Plannotator remains a human review adapter; Pi Sych does not enable its
-plan mode.
+Plannotator is a separate extension loaded lazily through its documented
+browser helpers. File annotation writes `<input>.feedback.md`;
+code-review feedback is written at the resolved project root as
+`PLANNOTATOR_REVIEW.md`. Plannotator remains a human review adapter; Pi
+Sych does not enable its plan mode.
 
 Set `remoteResearch: true` only for an assigned worker call. That worker
-receives MCPorter and the explicit configuration below; ordinary workers
-do not. `PI_SYCH_MCPORTER_CONFIG` defaults to
-`~/.config/pi-sych/mcp/mcporter.json`. `/pi-sych-mcp` reports whether
-the extension and configuration are available without printing
-credentials.
+receives MCPorter and the configuration directory's `mcp/mcporter.json`;
+ordinary workers do not. `/pi-sych-mcp` reports whether the extension
+and configuration are available without printing credentials.

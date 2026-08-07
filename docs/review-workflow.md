@@ -109,7 +109,10 @@ modes do not remove the worker process's underlying host permissions.
   `<projectRoot>/PLANNOTATOR_REVIEW.md`.
 
 These are review interfaces, not a plan controller or automatic approval
-system.
+system. Plannotator is a separate optional extension: disable it with
+`pi config` or package extension filtering without changing the core
+review workflow. See the [public contract](public-contract.md) for the
+supported boundary.
 
 ## What isolation does and does not guarantee
 
@@ -118,8 +121,9 @@ and no supervisor transcript. Fresh processes make it possible to keep
 the accepted edit brief separate from the preceding review debate.
 
 The supervisor still chooses the files, skills, tools, integrations, and
-instructions included in each packet. Context discipline therefore
-remains partly a workflow responsibility. It is context isolation, not a
-host sandbox. It does not guarantee that selected files are free of
-review history, that remote results are correct, or that host access is
-contained.
+instructions included in each packet. `--tools` and `--exclude-tools`
+can narrow visible tools for a Pi session, but do not sandbox a worker.
+Context discipline therefore remains partly a workflow responsibility.
+It is context isolation, not a host sandbox. It does not guarantee that
+selected files are free of review history, that remote results are
+correct, or that host access is contained.

@@ -1,28 +1,31 @@
 image: node:24-bookworm
 
-variables:
-  PANDOC_VERSION: "3.10.1"
-
 before_script:
-  - node -e '(async () => { const response = await fetch(`https://github.com/jgm/pandoc/releases/download/${process.env.PANDOC_VERSION}/pandoc-${process.env.PANDOC_VERSION}-1-amd64.deb`); if (!response.ok) throw new Error(`Pandoc download failed with ${response.status}`); require("node:fs").writeFileSync("/tmp/pandoc.deb", Buffer.from(await response.arrayBuffer())); })().catch(error => { console.error(error); process.exit(1); })'
-  - dpkg --install /tmp/pandoc.deb
+  - node scripts/install-latest-pandoc.mjs
   - pandoc --version
 
 stages:
   - verify
+  - pages
   - release
 
 verify:
   stage: verify
   script:
     - npm ci
-    - npm run typecheck
-    - npm run style
-    - npm run source:budget
-    - npm run test:deps
-    - npm test
-    - npm pack --dry-run
-    - git diff --check
+    - make verify
+
+pages:
+  stage: pages
+  needs: [verify]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  script:
+    - npm ci
+    - make site
+  artifacts:
+    paths:
+      - public
 
 publish-npm:
   stage: release
@@ -42,12 +45,7 @@ publish-npm:
     - |
       package_version="$(node -p 'require("./package.json").version')"
       test "$CI_COMMIT_TAG" = "v${package_version}"
-    - npm run typecheck
-    - npm run style
-    - npm run source:budget
-    - npm run test:deps
-    - npm test
-    - npm pack --dry-run
+    - make verify
     - |
       package_name="$(node -p 'require("./package.json").name')"
       package_version="$(node -p 'require("./package.json").version')"

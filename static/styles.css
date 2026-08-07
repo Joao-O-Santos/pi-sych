@@ -1,0 +1,36 @@
+/* SPDX-License-Identifier: BSD-3-Clause */
+/* Copyright (c) 2023 João Oliveira Santos */
+/* Substantially adapted from make-it-stop for Pi Sych. */
+:root {
+  color-scheme: light dark;
+  --page: #f8fafc;
+  --ink: #172033;
+  --surface: #fff;
+  --accent: #185fa5;
+  --border: #cbd5e1;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font: 1rem/1.6 system-ui, sans-serif;
+}
+.site-header, main, footer { width: min(72rem, calc(100% - 2rem)); margin: auto; }
+.site-header { padding: 1rem 0; }
+.site-name { color: inherit; font-size: 1.3rem; font-weight: 700; text-decoration: none; }
+nav ul { display: flex; flex-wrap: wrap; gap: .25rem; margin: .75rem 0 0; padding: 0; list-style: none; }
+nav a { display: block; padding: .35rem .6rem; color: var(--accent); border-radius: .25rem; }
+a:focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
+main { padding: 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: .4rem; }
+h1, h2, h3 { line-height: 1.2; }
+img { max-width: 100%; height: auto; }
+pre { overflow-x: auto; padding: 1rem; background: color-mix(in srgb, var(--ink) 8%, var(--surface)); }
+code { overflow-wrap: anywhere; }
+table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+th, td { padding: .4rem; border: 1px solid var(--border); text-align: left; }
+footer { padding: 1rem 0 2rem; font-size: .9rem; }
+.skip-link { position: absolute; left: -9999px; }
+.skip-link:focus { left: 1rem; top: 1rem; z-index: 1; padding: .5rem; background: var(--surface); }
+@media (max-width: 38rem) { main { width: 100%; border-radius: 0; } nav a { padding: .4rem; } }

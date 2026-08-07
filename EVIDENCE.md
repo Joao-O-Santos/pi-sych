@@ -1,5 +1,50 @@
 # Evidence
 
+## E-028 --- unreleased v5.0.0 implementation gate and benchmark pilot
+
+**Status:** verified for the local pre-tag release gate **Kind:**
+observed deterministic behavior, package contents, packed install, Pages
+build, dependency audit, independent coverage views, and bounded
+live-model benchmarks **Source:** current source and tests,
+`package.json` 5.0.0, Git-tracked public-contract documentation, local
+package dry run, packed optional-dependency install, diagnostic coverage
+runs, Pages build, production audit, benchmark bundles under
+`/tmp/pi-sych-benchmark-results*`, and independent read-only review
+findings that were addressed or recorded **Supports:** local release
+readiness for the approved `5.0.0` boundary, including the unified
+visible configuration migration, optional integrations, stricter
+configuration paths, benchmark preflight and timeout hardening, Make
+workflow ordering, and independent coverage metrics. **Evidence:**
+formatting, strict typecheck, Biome and Pandoc checks, optional
+dependency validation, source budget, 52 unit tests, 10 integration
+tests, package dry run, and whitespace checks passed. The packed `5.0.0`
+install with `--omit=optional` retained the core package and omitted
+direct optional Plannotator and MCPorter packages. Pages generation and
+production audit passed with zero vulnerabilities after compatible
+`latest` dependency updates. The combined 62-test Node coverage report
+observed 88.85% lines, 80.28% branches, and 83.43% functions; the
+independent dev-only c8 report observed 88.84% lines, 80.65% branches,
+and 92.7% functions. Production TypeScript was about 1,900/2,000 lines.
+The first bounded pilot with distinct candidate and judge models
+completed 3/3 cases, passed 8/9 objective checks, had mean judge score
+3.89/4, and recorded no judge critical failures; the failed check was a
+case-sensitive `verification` expectation against `Verification:`. A
+second three-case pilot under timeout-escalation preserved a code-case
+timeout while the other two cases passed 6/6 objective checks with mean
+judge score 4/4; a bounded one-case code rerun completed and passed 2/3
+objective checks with mean judge score 3.67/4 and no critical failures.
+Independent review found release blockers; strict nested/path
+configuration validation, bootstrap migration guidance, benchmark
+preflight/output safety/timeout evidence fields, packed-install
+coverage, and test isolation were corrected or explicitly recorded.
+**Limits:** The benchmark results are observations from these configured
+models and disposable cases, not proof of general skill adherence.
+Benchmark bundles retain result and manifest records, timings, artifact
+and post-judge diffs, and limitations, but not raw complete transcripts.
+The local release gate does not establish GitLab pipeline, signed-tag,
+npm-provenance, or post-push verification state. Image files were not
+replaced. **Checked:** 2026-08-06
+
 ## E-027 --- v4.0.6 release and live-evaluation verification
 
 **Status:** verified **Kind:** observed live-model behavior, signed Git

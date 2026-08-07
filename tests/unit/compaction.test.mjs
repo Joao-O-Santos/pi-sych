@@ -8,7 +8,9 @@ import {
 	COMPACTION_FILE_BYTE_LIMIT,
 	COMPACTION_TOTAL_BYTE_LIMIT,
 	compactionSnapshot,
+	parseCompactionModelOutput,
 	pendingPromotions,
+	renderWorkingMemory,
 	validateWorkingMemory,
 } from "../../.test-build/workbench/src/compaction.js";
 import { resolveProject } from "../../.test-build/workbench/src/project-files.js";
@@ -43,6 +45,39 @@ test("working-memory validation trims values and standardizes array errors", () 
 		() => validateWorkingMemory({ ...memory, constraints: {} }),
 		/constraints must be an array of strings/,
 	);
+	assert.throws(() => validateWorkingMemory(null), /must be an object/);
+	assert.throws(() => validateWorkingMemory({ ...memory, next: "" }), /next/);
+});
+
+test("compaction output validates promotion combinations and renders optional sections", () => {
+	const workingMemory = {
+		task: "Continue",
+		constraints: ["Keep scope"],
+		active: ["Review"],
+		blockers: [],
+		next: "Test",
+		files: ["PROJECT.md", "outside.md"],
+	};
+	const parsed = parseCompactionModelOutput(
+		JSON.stringify({
+			workingMemory,
+			promotions: [{ target: "todo", proposal: "Retain the regression case" }],
+		}),
+	);
+	assert.equal(parsed.promotions[0].target, "todo");
+	assert.match(renderWorkingMemory(parsed.workingMemory), /## Constraints/);
+	assert.doesNotMatch(renderWorkingMemory(parsed.workingMemory), /## Blockers/);
+	assert.deepEqual(validateWorkingMemory(workingMemory, new Set(["PROJECT.md"])).files, [
+		"PROJECT.md",
+	]);
+	for (const value of [
+		{ workingMemory, promotions: {} },
+		{ workingMemory, promotions: Array(6).fill({ target: "todo", proposal: "x" }) },
+		{ workingMemory, promotions: [{ target: "unknown", proposal: "x" }] },
+		{ workingMemory, promotions: ["invalid"] },
+	])
+		assert.throws(() => parseCompactionModelOutput(JSON.stringify(value)));
+	assert.throws(() => parseCompactionModelOutput("not json"), /Unexpected token/);
 });
 
 test("compaction prompt retains scientific continuity without expanding memory", () => {
@@ -76,12 +111,17 @@ test("compaction prompt retains scientific continuity without expanding memory",
 			"Put these in the existing workingMemory fields—constraints, active, blockers, or next—as appropriate; do not add workingMemory fields.",
 		),
 	);
+	assert.match(
+		prompt,
+		/when no next action is known, set next to exactly "Await user direction\."/,
+	);
 });
 
 test("compaction excludes inbox contents and bounds canonical snapshots", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-compaction-"));
 	await writeFile(join(root, "PROJECT.md"), "project\n".repeat(20_000));
 	await writeFile(join(root, "TODO.md"), "todo\n");
+	await writeFile(join(root, "DECISIONS.md"), "decisions\n");
 	await writeFile(join(root, "INBOX.md"), "SECRET proposal content\n");
 	await writeFile(join(root, "artifact.md"), "artifact\n");
 	await writeFile(
@@ -100,7 +140,15 @@ test("compaction excludes inbox contents and bounds canonical snapshots", async 
 	);
 	const project = await resolveProject(root);
 	const snapshot = await compactionSnapshot(project, await checkProjectStatus(root, project));
+	const empty = await compactionSnapshot(
+		await resolveProject(await mkdtemp(join(tmpdir(), "pi-sych-empty-"))),
+		{ manifest: { artifacts: [] } },
+	);
+	assert.deepEqual(empty.files, []);
+	assert.deepEqual(empty.paths, ["PROJECT.md", "TODO.md", "DECISIONS.md"]);
 	assert.ok(snapshot.files.some((file) => file.path === "PROJECT.md"));
+	assert.ok(snapshot.files.some((file) => file.path === "DECISIONS.md"));
+	assert.equal(snapshot.files[0].path, "PROJECT.md");
 	assert.equal(
 		snapshot.files.some((file) => file.path === "INBOX.md"),
 		false,
@@ -122,4 +170,5 @@ test("pending promotions count proposal entries, including nested inboxes", asyn
 	await mkdir(join(root, "state"));
 	await writeFile(inbox, "heading\n- {todo} One\ncommentary\n- {agents} Two\n");
 	assert.equal(await pendingPromotions({ canonical: { inbox } }), 2);
+	assert.equal(await pendingPromotions({ canonical: { inbox: join(root, "missing.md") } }), 0);
 });

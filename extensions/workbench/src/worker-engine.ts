@@ -6,6 +6,7 @@ import { homedir, tmpdir } from "node:os";
 import { dirname, isAbsolute, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Type } from "typebox";
+import { mcporterConfigPath, remoteResearchExtensionPaths } from "./mcporter.js";
 import type { ModelCatalog } from "./model-catalog.js";
 import {
 	type ResolvedProject,
@@ -26,7 +27,9 @@ const MODE_TOOLS: Record<WorkerMode, readonly string[]> = {
 export const DEFAULT_TIMEOUT_MS = 90_000;
 export const MAX_TIMEOUT_MS = 30 * 60_000;
 const LOG_LIMIT = 8_192;
-export const PI_SYCH_PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
+export const PI_SYCH_PACKAGE_ROOT = resolve(
+	process.env.PI_PACKAGE_DIR ?? resolve(dirname(fileURLToPath(import.meta.url)), "../../.."),
+);
 
 export interface ContextFile {
 	path: string;
@@ -91,8 +94,6 @@ export const toolsForRequest = (request: Pick<DispatchRequest, "mode" | "remoteR
 	...MODE_TOOLS[request.mode],
 	...(request.remoteResearch ? ["mcporter"] : []),
 ];
-export const mcporterConfigPath = (env: NodeJS.ProcessEnv = process.env, home = homedir()) =>
-	resolve(env.HOME ?? home, ".config/pi-sych/mcp/mcporter.json");
 export function skillPaths(
 	selectors: string[] = [],
 	projectRoot: string,
@@ -199,7 +200,7 @@ export const launchPiWorker: WorkerLauncher = (spec) =>
 			forced: ReturnType<typeof setTimeout> | undefined,
 			stopped: "cancelled" | "timeout" | undefined;
 		const child = spawn(
-			process.env.PI_SYCH_PI_BIN ?? "pi",
+			"pi",
 			[
 				"--mode",
 				"json",
@@ -232,7 +233,7 @@ export const launchPiWorker: WorkerLauncher = (spec) =>
 					PI_SYCH_TASK_ID: spec.id,
 					PI_SYCH_RESULT_PATH: spec.resultPath,
 					...(spec.request.remoteResearch
-						? { MCPORTER_CONFIG: process.env.PI_SYCH_MCPORTER_CONFIG ?? mcporterConfigPath() }
+						? { MCPORTER_CONFIG: mcporterConfigPath(spec.projectRoot) }
 						: {}),
 				},
 				stdio: ["ignore", "ignore", "pipe"],
@@ -268,7 +269,12 @@ export const launchPiWorker: WorkerLauncher = (spec) =>
 			}),
 		);
 		child.once("close", (exitCode, terminationSignal) =>
-			finish({ exitCode, stderr, classification: stopped, terminationSignal }),
+			finish({
+				exitCode,
+				stderr,
+				...(stopped ? { classification: stopped } : {}),
+				...(terminationSignal ? { terminationSignal } : {}),
+			}),
 		);
 	});
 export async function dispatchWorker(options: {
@@ -306,8 +312,10 @@ export async function dispatchWorker(options: {
 			model,
 			prompt: "",
 			packageRoot: options.packageRoot ?? PI_SYCH_PACKAGE_ROOT,
-			extraExtensionPaths: options.extraExtensionPaths ?? [],
-			signal: options.signal,
+			extraExtensionPaths:
+				options.extraExtensionPaths ??
+				remoteResearchExtensionPaths(request.remoteResearch === true),
+			...(options.signal ? { signal: options.signal } : {}),
 		};
 		spec.prompt = taskPrompt(spec, contextFiles);
 		const launch = await (options.launcher ?? launchPiWorker)(spec);

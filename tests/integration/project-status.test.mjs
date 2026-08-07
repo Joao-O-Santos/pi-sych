@@ -98,7 +98,7 @@ test("status command reports a malformed manifest without crashing", async () =>
 	);
 	await writeFile(join(root, "SYNC.json"), "{ not valid json");
 	const { event, stderr } = await invokeStatus(root, agentDir);
-	assert.equal(stderr, "");
+	assert.match(stderr, /project resolution failed during startup/);
 	assert.match(event.message, /Project status/);
 	assert.match(event.message, /State unavailable:/);
 });

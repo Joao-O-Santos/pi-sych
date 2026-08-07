@@ -140,7 +140,9 @@ export async function resolveProject(startPath: string): Promise<ResolvedProject
 	};
 }
 export function validateProjectMarkdown(markdown: string): ProjectValidation {
-	const headings = [...markdown.matchAll(/^#{1,6}\s+(.+?)\s*$/gm)].map((match) => match[1].trim()),
+	const headings = [...markdown.matchAll(/^#{1,6}\s+(.+?)\s*$/gm)].map(
+			(match) => match[1]?.trim() ?? "",
+		),
 		errors: string[] = [];
 	if (!/^#\s+\S/m.test(markdown)) errors.push("PROJECT.md must contain a level-one title");
 	for (const name of [

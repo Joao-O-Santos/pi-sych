@@ -13,6 +13,7 @@ import {
 	validateWorkerResult,
 	writeImmutableResult,
 } from "../../.test-build/workbench/src/worker-engine.js";
+import piSychWorker from "../../.test-build/worker/index.js";
 
 const catalog = { default: "junior", models: { junior: { model: "x/y" } } };
 test("worker request and result retain the bounded protocol", () => {
@@ -22,12 +23,38 @@ test("worker request and result retain the bounded protocol", () => {
 			.files,
 		["A.md"],
 	);
+	for (const status of ["partial", "failed"])
+		assert.equal(
+			validateWorkerResult({ status, summary: "x", files: [], limitations: [] }).status,
+			status,
+		);
+	assert.throws(() => validateWorkerResult(null), /must be an object/);
+	assert.throws(
+		() => validateWorkerResult({ status: "unknown", summary: "x", files: [], limitations: [] }),
+		/Invalid worker result status/,
+	);
+	assert.throws(
+		() =>
+			validateWorkerResult({
+				status: "complete",
+				summary: "x",
+				files: ["../escape"],
+				limitations: [],
+			}),
+		/leaves/,
+	);
+	assert.throws(
+		() => validateWorkerResult({ status: "complete", summary: "x", files: [], limitations: {} }),
+		/limitations must be an array/,
+	);
 	assert.throws(() => validateWorkerResult({ status: "complete", summary: "x" }), /files/);
 	assert.throws(
 		() => validateWorkerResult({ status: "complete", summary: "x", files: {}, limitations: [] }),
 		/files must be an array of strings/,
 	);
 	assert.equal(modelFor(parseModelCatalog(catalog), "junior"), "x/y");
+	assert.equal(modelFor(parseModelCatalog(catalog)), "x/y");
+	assert.throws(() => modelFor(catalog, "missing"), /Unknown worker model/);
 	assert.deepEqual(toolsForRequest({ mode: "read-only", remoteResearch: false }), [
 		"read",
 		"grep",
@@ -67,6 +94,10 @@ test("named skills retain project, user, and package precedence", async (t) => {
 	assert.equal(skillPaths(["write"], projectRoot, packageRoot, userRoot)[0], paths[1]);
 	await rm(dirname(paths[1]), { recursive: true });
 	assert.equal(skillPaths(["write"], projectRoot, packageRoot, userRoot)[0], paths[0]);
+	const direct = join(projectRoot, "direct.md");
+	await writeFile(direct, "direct\n");
+	assert.equal(skillPaths([direct], projectRoot, packageRoot, userRoot)[0], direct);
+	assert.throws(() => skillPaths(["missing"], projectRoot, packageRoot, userRoot), /unavailable/);
 });
 
 test("worker prompt requires routed method and module reads", () => {
@@ -94,6 +125,52 @@ test("worker prompt requires routed method and module reads", () => {
 	assert.match(prompt, /local modules and shared methods.*routes to for this task/i);
 	assert.match(prompt, /state missing context as a limitation instead of guessing/i);
 	assert.match(prompt, /submit_artifact by itself as the final tool call/i);
+	const research = taskPrompt(
+		{
+			id: "task-2",
+			request: {
+				task: "research",
+				mode: "read-only",
+				expectedOutput: "notes",
+				contextFiles: [],
+				remoteResearch: true,
+			},
+			packageRoot: "/package",
+			projectRoot: "/project",
+			model: "m",
+			prompt: "",
+			workerAgentDir: "/worker",
+			resultPath: "/result",
+			extraExtensionPaths: [],
+		},
+		[],
+	);
+	assert.match(research, /MCPorter is available/);
+});
+
+test("worker extension writes and terminates a submitted artifact", async () => {
+	const tools = [];
+	piSychWorker({
+		registerTool(tool) {
+			tools.push(tool);
+		},
+	});
+	const resultPath = join(await mkdtemp(join(tmpdir(), "pi-sych-submit-")), "result.json");
+	const previous = process.env.PI_SYCH_RESULT_PATH;
+	process.env.PI_SYCH_RESULT_PATH = resultPath;
+	try {
+		const response = await tools[0].execute("id", {
+			status: "complete",
+			summary: "done",
+			files: [],
+			limitations: [],
+		});
+		assert.equal(response.terminate, true);
+		assert.equal(JSON.parse(await readFile(resultPath, "utf8")).summary, "done");
+	} finally {
+		if (previous === undefined) delete process.env.PI_SYCH_RESULT_PATH;
+		else process.env.PI_SYCH_RESULT_PATH = previous;
+	}
 });
 
 test("worker result is immutable", async () => {
