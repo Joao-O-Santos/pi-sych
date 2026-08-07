@@ -16,9 +16,22 @@ const COLORS = {
 };
 
 // Render text by computing character positions; SVG <text> cannot wrap on its own.
-function textLines(x, y, lines, { size = 14, weight = 400, color = "#1f2937", family = "system-ui, -apple-system, sans-serif" } = {}) {
+function textLines(
+	x,
+	y,
+	lines,
+	{
+		size = 14,
+		weight = 400,
+		color = "#1f2937",
+		family = "system-ui, -apple-system, sans-serif",
+	} = {},
+) {
 	return lines
-		.map((line, i) => `<text x="${x}" y="${y + i * (size + 4)}" font-family='${family}' font-size="${size}" font-weight="${weight}" fill="${color}" text-anchor="middle">${escape(line)}</text>`)
+		.map(
+			(line, i) =>
+				`<text x="${x}" y="${y + i * (size + 4)}" font-family='${family}' font-size="${size}" font-weight="${weight}" fill="${color}" text-anchor="middle">${escape(line)}</text>`,
+		)
 		.join("");
 }
 

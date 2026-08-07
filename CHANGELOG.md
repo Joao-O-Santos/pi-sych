@@ -3,7 +3,14 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
-## v6.0.1 - Unreleased
+## v6.0.2 - Unreleased
+
+### Fixed
+
+- Regenerate the four architecture PNGs with proper box widths and
+  line-wrapped text; the v6.0.0 and v6.0.1 renderings had boxes too
+  narrow for Mermaid to lay out, so each character appeared on its
+  own line.
 
 ### Independent review corrections
 

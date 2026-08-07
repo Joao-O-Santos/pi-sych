@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-07T01:00:00.000Z",
+  "confirmedAt": "2026-08-07T02:00:00.000Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -15,8 +15,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-07T01:00:00.000Z",
-        "reason": "Verified v6.0.1 independent review corrective pass: 65 tests, source budget 2000/2000, typecheck+style clean."
+        "at": "2026-08-07T02:00:00.000Z",
+        "reason": "Verified v6.0.2: architecture diagrams fixed, 65 tests, source budget 2000/2000, typecheck+style clean."
       }
     },
     {
@@ -35,8 +35,8 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-07T01:00:00.000Z",
-        "reason": "Verified v6.0.1 independent review corrective pass: 65 tests, source budget 2000/2000, typecheck+style clean."
+        "at": "2026-08-07T02:00:00.000Z",
+        "reason": "Verified v6.0.2: architecture diagrams fixed, 65 tests, source budget 2000/2000, typecheck+style clean."
       }
     },
     {
