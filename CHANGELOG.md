@@ -3,13 +3,13 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
-## v5.0.2 - Unreleased
+## v5.0.3 - Unreleased
 
 ### Fixed
 
-- Fixed unit tests that depend on a Pi Sych configuration directory
-  to create a temporary agent directory when none exists, so the tests
-  pass in CI containers without user configuration.
+- Fixed unit tests that depend on a Pi Sych configuration directory to
+  create a temporary agent directory when none exists, so the tests pass
+  in CI containers without user configuration.
 
 ## v5.0.0 - 2026-08-07
 
