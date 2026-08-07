@@ -46,7 +46,7 @@ const targets = new Set<PromotionTarget>([
 	"decisions",
 	"todo",
 ]);
-export function validateWorkingMemory(value: unknown, allowed?: Set<string>): Memory {
+export function validateWorkingMemory(value: unknown): Memory {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error("workingMemory must be an object");
 	const item = value as Record<string, unknown>;
@@ -56,7 +56,7 @@ export function validateWorkingMemory(value: unknown, allowed?: Set<string>): Me
 		active: stringArray(item.active, "active"),
 		blockers: stringArray(item.blockers, "blockers"),
 		next: nonEmptyString(item.next, "next"),
-		files: stringArray(item.files, "files").filter((path) => !allowed || allowed.has(path)),
+		files: stringArray(item.files, "files"),
 	};
 }
 function promotion(value: unknown): Promotion {
@@ -71,7 +71,9 @@ export function parseCompactionModelOutput(raw: string): {
 	workingMemory: Memory;
 	promotions: Promotion[];
 } {
-	const value = JSON.parse(raw) as Record<string, unknown>;
+	const jsonMatch = raw.match(/\{[\s\S]*\}/);
+	if (!jsonMatch) throw new Error("compaction output contains no JSON object");
+	const value = JSON.parse(jsonMatch[0]) as Record<string, unknown>;
 	if (!Array.isArray(value.promotions) || value.promotions.length > 5)
 		throw new Error("promotions must be an array of at most five entries");
 	return {
@@ -137,22 +139,12 @@ export async function compactionSnapshot(
 	}
 	return { files, paths: [...new Set([...paths, ...artifactPaths])] };
 }
-function statusProjection(status: Awaited<ReturnType<typeof checkProjectStatus>>) {
-	return {
-		projectRoot: status.projectRoot,
-		syncError: status.syncError,
-		changed: status.changed,
-		missing: status.missing,
-		impacted: status.impacted,
-		cycles: status.cycles,
-		missingCore: status.missingCore,
-		projectErrors: status.projectErrors,
-	};
-}
+
 export function buildCompactionPrompt(
 	event: SessionBeforeCompactEvent,
 	snapshot: Awaited<ReturnType<typeof compactionSnapshot>>,
 	status: Awaited<ReturnType<typeof checkProjectStatus>>,
+	inboxPath: string,
 ) {
 	const conversation = serializeConversation(
 		convertToLlm([
@@ -160,7 +152,7 @@ export function buildCompactionPrompt(
 			...event.preparation.turnPrefixMessages,
 		]),
 	);
-	return `Return JSON with workingMemory {task,constraints,active,blockers,next,files} and at most five promotions {target,proposal}. task and next must be non-empty strings; when no next action is known, set next to exactly "Await user direction." Preserve only information needed to continue. Retain continuity-critical information even when it is not current active work: unresolved alternatives; consequential negative results; failed approaches that constrain the next action; and decisions or commitments not yet represented in canonical project files. Put these in the existing workingMemory fields—constraints, active, blockers, or next—as appropriate; do not add workingMemory fields. Promotions are usually empty and are unreviewed lines in INBOX.md.\nPrevious summary:\n${event.preparation.previousSummary ?? "none"}\nConversation:\n${conversation}\nRelevant project files (bounded text snapshot; INBOX is intentionally excluded):\n${JSON.stringify(snapshot.files)}\nRelevant artifact paths (contents are not included):\n${JSON.stringify(snapshot.paths)}\nProject status:\n${JSON.stringify(statusProjection(status))}`;
+	return `Return only valid JSON with no prose, no markdown fences, and no commentary. Return an object with workingMemory {task,constraints,active,blockers,next,files} and at most five promotions {target,proposal}. task and next must be non-empty strings; when no next action is known, set next to exactly "Await user direction." Preserve only information needed to continue. Retain continuity-critical information even when it is not current active work: unresolved alternatives; consequential negative results; failed approaches that constrain the next action; and decisions or commitments not yet represented in canonical project files. Put these in the existing workingMemory fields—constraints, active, blockers, or next—as appropriate; do not add workingMemory fields. Promotions are usually empty and are unreviewed lines in ${inboxPath}.\nPrevious summary:\n${event.preparation.previousSummary ?? "none"}\nConversation:\n${conversation}\nRelevant project files (bounded text snapshot; proposal inbox is intentionally excluded):\n${JSON.stringify(snapshot.files)}\nRelevant artifact paths (contents are not included):\n${JSON.stringify(snapshot.paths)}\nProject status:\n${JSON.stringify({ changed: status.changed, missing: status.missing, impacted: status.impacted, syncError: status.syncError })}`;
 }
 export async function compact(event: SessionBeforeCompactEvent, ctx: ExtensionContext) {
 	try {
@@ -176,7 +168,17 @@ export async function compact(event: SessionBeforeCompactEvent, ctx: ExtensionCo
 				messages: [
 					{
 						role: "user",
-						content: [{ type: "text", text: buildCompactionPrompt(event, snapshot, status) }],
+						content: [
+							{
+								type: "text",
+								text: buildCompactionPrompt(
+									event,
+									snapshot,
+									status,
+									showPath(project.projectRoot, project.canonical.inbox),
+								),
+							},
+						],
 						timestamp: Date.now(),
 					},
 				],
@@ -197,18 +199,23 @@ export async function compact(event: SessionBeforeCompactEvent, ctx: ExtensionCo
 				.join("\n"),
 			output = parseCompactionModelOutput(raw),
 			allowed = new Set(snapshot.paths),
-			memory = validateWorkingMemory(output.workingMemory, allowed);
+			memory = {
+				...output.workingMemory,
+				files: output.workingMemory.files.filter((file) => {
+					if (allowed.has(file)) return true;
+					try {
+						resolveProjectPath(project.projectRoot, file);
+						return true;
+					} catch {
+						return false;
+					}
+				}),
+			};
 		if (output.promotions.length) {
 			await mkdir(dirname(project.canonical.inbox), { recursive: true });
-			const prefix = await readFile(project.canonical.inbox, "utf8").catch(
-				(error: NodeJS.ErrnoException) => {
-					if (error.code === "ENOENT") return "";
-					throw error;
-				},
-			);
 			await appendFile(
 				project.canonical.inbox,
-				`${prefix && !prefix.endsWith("\n") ? "\n" : ""}${output.promotions.map((item) => `- {${item.target}} ${item.proposal}`).join("\n")}\n`,
+				`\n${output.promotions.map((item) => `- {${item.target}} ${item.proposal}`).join("\n")}\n`,
 			);
 		}
 		const pending = await pendingPromotions(project);

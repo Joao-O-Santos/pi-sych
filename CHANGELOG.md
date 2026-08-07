@@ -3,13 +3,36 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
-## v5.0.4 - Unreleased
+## v6.0.0 - Unreleased
 
-### Fixed
+### Breaking baseline
 
-- Fixed unit tests that depend on a Pi Sych configuration directory to
-  create a temporary agent directory when none exists, so the tests pass
-  in CI containers without user configuration.
+- Require Node 26 or newer and use the Node 26 CI baseline.
+- Centralize Pi configuration-root and named-skill lookup, including
+  cross-platform lexical path validation.
+
+### Correctness and simplification
+
+- Distinguish current, changed, missing, and observation-error project
+  states; unchanged acknowledgements no longer invalidate dependants.
+- Report worker process failures before attempting to read a missing
+  result.
+- Extract valid JSON from compaction model output that includes prose or
+  fences; strengthen the prompt to request JSON-only responses.
+- Preserve active existing untracked files during compaction and
+  simplify bounded filesystem handling.
+- Consolidate model-catalog loading into one internal reader.
+- Fail fast on malformed SYNC.json at startup instead of silently
+  falling back.
+- Share the worker result TypeBox schema between the workbench and
+  worker extensions.
+- Remove the MCPorter config existence preflight; read directly and
+  distinguish ENOENT.
+- Make the Plannotator `projectFile` helper return the resolved path
+  directly.
+- Refresh the runtime source budget to include worker bootstrap code.
+- Replace the architecture and workflow diagrams with current simplified
+  PNG summaries and improve the accessible GitLab Pages presentation.
 
 ## v5.0.0 - 2026-08-07
 

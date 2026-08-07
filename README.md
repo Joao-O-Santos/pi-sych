@@ -18,12 +18,12 @@ visible, separating tasks when fresh context helps, reviewing changes
 independently, and handing work between people or models without relying
 on hidden conversational memory.
 
-Pi Sych is installed as a package for [Pi](https://pi.dev/). In this
-README, the **supervisor** is the model in your main Pi session. A
-**worker** is a separate, short-lived model process created for one
-bounded task. A **skill** is reusable model guidance, not a persistent
-agent. `project_status` is the mechanical tool that checks or
-acknowledges project state.
+Pi Sych requires Node 26 or newer and is installed as a package for
+[Pi](https://pi.dev/). In this README, the **supervisor** is the model
+in your main Pi session. A **worker** is a separate, short-lived model
+process created for one bounded task. A **skill** is reusable model
+guidance, not a persistent agent. `project_status` is the mechanical
+tool that checks or acknowledges project state.
 
 ## A typical research workflow
 

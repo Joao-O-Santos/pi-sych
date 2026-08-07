@@ -98,6 +98,7 @@ test("named skills retain project, user, and package precedence", async (t) => {
 	await writeFile(direct, "direct\n");
 	assert.equal(skillPaths([direct], projectRoot, packageRoot, userRoot)[0], direct);
 	assert.throws(() => skillPaths(["missing"], projectRoot, packageRoot, userRoot), /unavailable/);
+	assert.equal(skillPaths(["write"], projectRoot, packageRoot)[0], paths[0]);
 });
 
 test("worker prompt requires routed method and module reads", () => {
@@ -122,9 +123,9 @@ test("worker prompt requires routed method and module reads", () => {
 		[{ path: "DRAFT.md", purpose: "artifact under review" }],
 	);
 	assert.match(prompt, /Read every context file and selected skill/i);
-	assert.match(prompt, /local modules and shared methods.*routes to for this task/i);
-	assert.match(prompt, /state missing context as a limitation instead of guessing/i);
-	assert.match(prompt, /submit_artifact by itself as the final tool call/i);
+	assert.match(prompt, /routed modules/i);
+	assert.match(prompt, /state missing context as a limitation/i);
+	assert.match(prompt, /submit_artifact.*final tool call/i);
 	const research = taskPrompt(
 		{
 			id: "task-2",

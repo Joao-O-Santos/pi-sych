@@ -17,7 +17,10 @@ async function files(path) {
 	return nested.flat();
 }
 
-const sources = (await files(join(root, "extensions"))).filter((path) => path.endsWith(".ts"));
+const sources = [
+	...(await files(join(root, "extensions"))).filter((path) => path.endsWith(".ts")),
+	join(root, "scripts/bootstrap-worker-agent-dir.mjs"),
+];
 const counts = await Promise.all(
 	sources.map(async (path) => ({
 		path: relative(root, path),

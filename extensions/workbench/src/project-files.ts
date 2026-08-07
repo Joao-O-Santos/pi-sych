@@ -46,10 +46,6 @@ export interface ProjectValidation {
 	errors: string[];
 	headings: string[];
 }
-const exists = async (path: string) =>
-	access(path, constants.F_OK)
-		.then(() => true)
-		.catch(() => false);
 export const showPath = (root: string, path: string) => {
 	const display = relative(root, path);
 	return display && !display.startsWith("..") ? display : path;
@@ -88,8 +84,10 @@ export const formatSyncManifest = (manifest: SyncManifest) =>
 async function directory(path: string) {
 	try {
 		return (await stat(path)).isDirectory() ? resolve(path) : dirname(resolve(path));
-	} catch {
-		return dirname(resolve(path));
+	} catch (error) {
+		const code = (error as NodeJS.ErrnoException).code;
+		if (code === "ENOENT" || code === "ENOTDIR") return dirname(resolve(path));
+		throw error;
 	}
 }
 async function workspace(cwd: string) {
@@ -114,7 +112,7 @@ export async function resolveProject(startPath: string): Promise<ResolvedProject
 	let current = cwd;
 	while (true) {
 		const syncPath = resolve(current, "SYNC.json");
-		if (await exists(syncPath)) {
+		try {
 			const manifest = parseSyncManifest(await readFile(syncPath, "utf8"));
 			const projectRoot = resolve(current, manifest.projectRoot ?? ".");
 			return {
@@ -125,6 +123,9 @@ export async function resolveProject(startPath: string): Promise<ResolvedProject
 				manifest,
 				canonical: canonicalPaths(projectRoot, manifest),
 			};
+		} catch (error) {
+			const code = (error as NodeJS.ErrnoException).code;
+			if (code !== "ENOENT" && code !== "ENOTDIR") throw error;
 		}
 		if (current === workspaceRoot) break;
 		const parent = dirname(current);
@@ -140,9 +141,7 @@ export async function resolveProject(startPath: string): Promise<ResolvedProject
 	};
 }
 export function validateProjectMarkdown(markdown: string): ProjectValidation {
-	const headings = [...markdown.matchAll(/^#{1,6}\s+(.+?)\s*$/gm)].map(
-			(match) => match[1]?.trim() ?? "",
-		),
+	const headings = [...markdown.matchAll(/^#{1,6}\s+(.+?)\s*$/gm)].map((m) => m[1]?.trim() ?? ""),
 		errors: string[] = [];
 	if (!/^#\s+\S/m.test(markdown)) errors.push("PROJECT.md must contain a level-one title");
 	for (const name of [
@@ -152,7 +151,7 @@ export function validateProjectMarkdown(markdown: string): ProjectValidation {
 		"Previous action",
 		"Immediate next step",
 	])
-		if (!headings.some((heading) => heading.toLowerCase() === name.toLowerCase()))
+		if (!headings.some((h) => h.toLowerCase() === name.toLowerCase()))
 			errors.push(`PROJECT.md is missing the '${name}' heading`);
 	return { valid: !errors.length, errors, headings };
 }

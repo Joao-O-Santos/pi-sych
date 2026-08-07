@@ -60,6 +60,22 @@ test("status exposes missing core files and project validation problems", async 
 	assert.ok(state.projectErrors.length > 0);
 	assert.match(formatProjectStatusCheck(state), /Project-file problems:/);
 });
+test("status distinguishes missing observations from changed files", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-missing-"));
+	await writeFile(join(root, "PROJECT.md"), project);
+	await writeFile(
+		join(root, "SYNC.json"),
+		JSON.stringify({
+			version: 2,
+			confirmedAt: "now",
+			artifacts: [{ path: "missing.md", fingerprint: hash("missing"), status: "current" }],
+		}),
+	);
+	const state = await checkProjectStatus(root);
+	assert.equal(state.artifacts[0].observation.state, "missing");
+	assert.deepEqual(state.missing, ["missing.md"]);
+	assert.doesNotMatch(formatProjectStatusCheck(state), /Changed:/);
+});
 test("acknowledgement recheck rejects content changed after the status read", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-race-"));
 	await writeFile(join(root, "PROJECT.md"), project);
@@ -105,4 +121,18 @@ test("status fingerprints files and traverses declared dependencies", async () =
 	const saved = JSON.parse(await readFile(join(root, "SYNC.json"), "utf8"));
 	assert.equal(saved.artifacts[0].fingerprint, hash("a"));
 	assert.equal(saved.artifacts[1].status, "needs-review");
+	await writeFile(
+		join(root, "SYNC.json"),
+		JSON.stringify({
+			version: 2,
+			confirmedAt: "now",
+			artifacts: [
+				{ path: "A.md", fingerprint: hash("a"), status: "current" },
+				{ path: "B.md", fingerprint: hash("b"), status: "current", dependsOn: ["A.md"] },
+			],
+		}),
+	);
+	await acknowledgeProjectStatus(root, ["A.md"], "unchanged review");
+	const unchanged = JSON.parse(await readFile(join(root, "SYNC.json"), "utf8"));
+	assert.equal(unchanged.artifacts[1].status, "current");
 });

@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { piSychConfigPath } from "./config-directory.js";
 
@@ -31,7 +31,6 @@ export function inspectMcporter(configPath = mcporterConfigPath()): McporterDiag
 	} catch {
 		available = false;
 	}
-	if (!existsSync(configPath)) return { available, configPath, configExists: false, servers: [] };
 	try {
 		const config: unknown = JSON.parse(readFileSync(configPath, "utf8"));
 		if (!config || typeof config !== "object" || Array.isArray(config))
@@ -50,6 +49,8 @@ export function inspectMcporter(configPath = mcporterConfigPath()): McporterDiag
 			servers: Object.keys(servers ?? {}),
 		};
 	} catch (error) {
+		if ((error as NodeJS.ErrnoException).code === "ENOENT")
+			return { available, configPath, configExists: false, servers: [] };
 		return {
 			available,
 			configPath,

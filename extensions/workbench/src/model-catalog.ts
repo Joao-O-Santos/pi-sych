@@ -50,32 +50,29 @@ export function modelCatalogPath(
 		...(projectRoot ? { projectRoot } : {}),
 	});
 }
-export function loadModelCatalog(
-	projectRoot?: string,
-	env: NodeJS.ProcessEnv = process.env,
-): ModelCatalog {
-	const path = modelCatalogPath(projectRoot, env);
-	try {
-		return parseModelCatalog(JSON.parse(readFileSync(path, "utf8")));
-	} catch (error) {
-		throw new Error(`Worker model catalog is unavailable or invalid at ${path}: ${String(error)}`);
-	}
-}
-export function loadOptionalModelCatalog(
-	projectRoot?: string,
-	env: NodeJS.ProcessEnv = process.env,
-): ModelCatalog | undefined {
-	const path = modelCatalogPath(projectRoot, env);
+function readModelCatalog(path: string, required: boolean): ModelCatalog | undefined {
 	let value: string;
 	try {
 		value = readFileSync(path, "utf8");
 	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
-		throw new Error(`Worker model catalog is unavailable at ${path}: ${String(error)}`);
+		if (!required && (error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
+		throw new Error(`Worker model catalog is unavailable or invalid at ${path}: ${String(error)}`);
 	}
 	try {
 		return parseModelCatalog(JSON.parse(value));
 	} catch (error) {
 		throw new Error(`Worker model catalog is unavailable or invalid at ${path}: ${String(error)}`);
 	}
+}
+export function loadModelCatalog(
+	projectRoot?: string,
+	env: NodeJS.ProcessEnv = process.env,
+): ModelCatalog {
+	return readModelCatalog(modelCatalogPath(projectRoot, env), true) as ModelCatalog;
+}
+export function loadOptionalModelCatalog(
+	projectRoot?: string,
+	env: NodeJS.ProcessEnv = process.env,
+): ModelCatalog | undefined {
+	return readModelCatalog(modelCatalogPath(projectRoot, env), false);
 }

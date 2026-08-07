@@ -70,18 +70,20 @@ for this work.
 
 ## Previous action
 
-{verified} Released `pi-sych@4.0.6`. Signed tag `v4.0.6` points to
-`1ca2723fb76cb7f85a94a1687d0af3c3f0116e7a`; GitLab main pipeline #69 and
-tag pipeline #70 passed; npm reports `4.0.6` with provenance; and the
-published 130-file tarball contains the reviewed scientific-continuity
-changes. The real disposable-project workflow and final prompt-quality
-live evaluation passed before release.
+{verified} Released `pi-sych@5.0.4`. Signed commit
+`198df03911fe9cd5bf91dec09dc08df73a46c0bc` and tag `v5.0.4` passed
+GitLab verify and publish-npm; npm reports `5.0.4` with provenance
+metadata. The release included realistic benchmarks, optional
+integrations, Pages foundations, visible configuration, and independent
+coverage tooling. The next unreleased correctness pass is being prepared
+as `6.0.0` because it raises the Node baseline to 26 and changes runtime
+observation and failure semantics.
 
 ## Immediate next step
 
-{accepted} The owner approved `PLAN.md` for `5.0.0` and separately
-authorized the release tag and push after final verification. Complete
-the canonical evidence update, final gate, signed commit and signed
-annotated tag, push `main` and the tag, and record external
-pipeline/publication state only after it is observed. No image
-replacement is authorized.
+{accepted} Implement and verify the approved correctness+simplification
+pass for unreleased `6.0.0`: finish the shared Pi-root and worker/status
+refactors, reduce runtime source below the strict budget, complete
+focused coverage and integration tests, review the replacement diagrams
+and Pages rendering, then update evidence and synchronization. Do not
+tag or publish until those gates and independent review are complete.

@@ -235,13 +235,6 @@ test("workbench lifecycle and status commands cover configured branches", async 
 test("worker output is reduced to result essentials", () => {
 	assert.match(
 		formatDispatchWorkerOutcome({
-			launch: { exitCode: 1, stderr: "", classification: "timeout", terminationSignal: "SIGTERM" },
-			error: "worker timed out",
-		}),
-		/Process warning: timeout/,
-	);
-	assert.match(
-		formatDispatchWorkerOutcome({
 			launch: { exitCode: 0, stderr: "" },
 			error: "no result",
 		}),

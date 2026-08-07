@@ -4,12 +4,7 @@ import { fileURLToPath } from "node:url";
 import type { ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import { compact, pendingPromotions } from "./src/compaction.js";
-import {
-	type ConfigDirectoryOptions,
-	ensurePiSychConfig,
-	loadPiSychConfig,
-	piSychConfigPath,
-} from "./src/config-directory.js";
+import { ensurePiSychConfig, loadPiSychConfig, piSychConfigPath } from "./src/config-directory.js";
 import {
 	formatMcporterDiagnostic,
 	inspectMcporter,
@@ -38,7 +33,7 @@ export const SUPERVISOR_GUIDANCE = [
 	"Use project_status for mechanical state; changed content is not conceptual drift.",
 	`For Pi Sych questions, read ${PACKAGE_ROOT}/README.md and its linked documentation.`,
 	"dispatch_worker defaults to 90 seconds; choose context, skills, model role, and timeout deliberately. Worker modes are not sandboxes.",
-	"Treat INBOX.md as human-review proposal state: report its pending count through project_status and read it only when the user requests inbox review.",
+	"Treat the configured proposal inbox as human-review proposal state: report its pending count through project_status and read it only when the user requests inbox review.",
 ].join("\n");
 const statusSchema = Type.Object({
 	action: Type.Union([Type.Literal("check"), Type.Literal("acknowledge")]),
@@ -57,15 +52,6 @@ export function formatDispatchWorkerOutcome(outcome: DispatchOutcome) {
 		result?.limitations.length ? "Limitations:" : "Limitations: none",
 		...(result?.limitations ?? []).map((item) => `- ${item}`),
 	];
-	if (
-		outcome.launch.classification ||
-		outcome.launch.terminationSignal ||
-		outcome.launch.exitCode !== 0
-	)
-		lines.push(
-			"",
-			`Process warning: ${outcome.launch.classification ?? "abnormal exit"}; exit code ${outcome.launch.exitCode ?? "none"}; signal ${outcome.launch.terminationSignal ?? "none"}.`,
-		);
 	return lines.join("\n");
 }
 const notifyError = (ctx: ExtensionCommandContext, error: unknown) =>
@@ -100,12 +86,8 @@ async function statusView(cwd: string) {
 	};
 }
 export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
-	let startupOptions: ConfigDirectoryOptions = {};
-	try {
-		startupOptions = { projectRoot: (await resolveProject(process.cwd())).projectRoot };
-	} catch (error) {
-		console.error(`Pi Sych project resolution failed during startup: ${String(error)}`);
-	}
+	const project = await resolveProject(process.cwd());
+	const startupOptions = { projectRoot: project.projectRoot };
 	await ensurePiSychConfig(startupOptions);
 	loadPiSychConfig(startupOptions);
 	pi.on("before_agent_start", async (event, ctx) => {

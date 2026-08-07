@@ -97,8 +97,8 @@ test("status command reports a malformed manifest without crashing", async () =>
 		"# Project\n\n## Objective\nX\n## Current direction\nY\n## Definition of done\nZ\n## Previous action\nNone yet.\n## Immediate next step\nNone at present.\n",
 	);
 	await writeFile(join(root, "SYNC.json"), "{ not valid json");
-	const { event, stderr } = await invokeStatus(root, agentDir);
-	assert.match(stderr, /project resolution failed during startup/);
-	assert.match(event.message, /Project status/);
-	assert.match(event.message, /State unavailable:/);
+	await assert.rejects(invokeStatus(root, agentDir), (error) => {
+		assert.match(error.message, /SYNC.json/);
+		return true;
+	});
 });

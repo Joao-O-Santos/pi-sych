@@ -80,6 +80,9 @@ test("Pi Sych config rejects malformed, unknown, and mistyped values", async () 
 		[{ ...DEFAULT_CONFIG, typo: true }, /Unknown/],
 		[{ ...DEFAULT_CONFIG, workerAgentDir: "" }, /workerAgentDir/],
 		[{ ...DEFAULT_CONFIG, workerAgentDir: "/tmp/worker" }, /relative path/],
+		[{ ...DEFAULT_CONFIG, workerAgentDir: "C:\\worker" }, /relative path/],
+		[{ ...DEFAULT_CONFIG, workerAgentDir: "\\\\server\\share" }, /relative path/],
+		[{ ...DEFAULT_CONFIG, modelCatalog: "foo\\..\\models.json" }, /relative path/],
 		[{ ...DEFAULT_CONFIG, modelCatalog: "../models.json" }, /relative path/],
 		[{ ...DEFAULT_CONFIG, compaction: null }, /compaction must be an object/],
 		[

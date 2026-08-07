@@ -28,38 +28,42 @@ export interface ConfigDirectoryOptions {
 	exists?: (path: string) => boolean;
 }
 
-export function piSychConfigDirectory({
+export function piConfigRoot({
 	projectRoot,
 	env = process.env,
 	home = homedir(),
 	exists = existsSync,
 }: ConfigDirectoryOptions = {}): string {
-	if (projectRoot && exists(resolve(projectRoot, ".pi")))
-		return resolve(projectRoot, ".pi/pi-sych");
-	if (env.PI_CODING_AGENT_DIR) return resolve(env.PI_CODING_AGENT_DIR, "pi-sych");
-	if (env.XDG_CONFIG_HOME) return resolve(env.XDG_CONFIG_HOME, "pi/pi-sych");
+	if (projectRoot && exists(resolve(projectRoot, ".pi"))) return resolve(projectRoot, ".pi");
+	if (env.PI_CODING_AGENT_DIR) return resolve(env.PI_CODING_AGENT_DIR);
+	if (env.XDG_CONFIG_HOME) return resolve(env.XDG_CONFIG_HOME, "pi");
 	const configPi = resolve(home, ".config/pi"),
 		dotPi = resolve(home, ".pi");
-	if (exists(configPi)) return resolve(configPi, "pi-sych");
-	if (exists(dotPi)) return resolve(dotPi, "pi-sych");
+	if (exists(configPi)) return configPi;
+	if (exists(dotPi)) return dotPi;
 	throw new Error(
-		`Pi Sych configuration directory is unavailable. Create one of: ${projectRoot ? `${resolve(projectRoot, ".pi/pi-sych")}; ` : ""}$XDG_CONFIG_HOME/pi/pi-sych; ${configPi}/pi-sych; ${dotPi}/pi-sych.`,
+		`Pi Sych configuration directory is unavailable. Create one of: ${projectRoot ? `${resolve(projectRoot, ".pi")}; ` : ""}$XDG_CONFIG_HOME/pi; ${configPi}; ${dotPi}.`,
 	);
 }
+export const piSychConfigDirectory = (options: ConfigDirectoryOptions = {}) =>
+	resolve(piConfigRoot(options), "pi-sych");
+export const piSkillDirectory = (options: ConfigDirectoryOptions = {}) =>
+	resolve(piConfigRoot(options), "skills");
 
 const rejectUnknown = (item: Record<string, unknown>, keys: string[], path: string) => {
 	const unknown = Object.keys(item).filter((key) => !keys.includes(key));
 	if (unknown.length)
 		throw new Error(`Unknown Pi Sych config key at ${path}: ${unknown.join(", ")}`);
 };
-
 const configString = (item: Record<string, unknown>, key: string, path: string) => {
 	const value = item[key];
 	if (
 		typeof value !== "string" ||
 		!value ||
 		value.startsWith("/") ||
-		value.split("/").includes("..")
+		/^[A-Za-z]:[\\/]/.test(value) ||
+		value.startsWith("\\\\") ||
+		value.split(/[\\/]/).includes("..")
 	)
 		throw new Error(`Pi Sych config ${key} must be a non-empty relative path at ${path}`);
 	return value;

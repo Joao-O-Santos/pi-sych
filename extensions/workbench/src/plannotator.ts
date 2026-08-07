@@ -83,11 +83,7 @@ export function parseCodeReviewArgs(input = ""): CodeReviewRequest {
 		else if (token === "--no-local") useLocal = false;
 		else if (/^https?:\/\//.test(token) && !prUrl) prUrl = token;
 	}
-	return {
-		...(prUrl ? { prUrl } : {}),
-		...(vcsType ? { vcsType } : {}),
-		useLocal,
-	};
+	return { ...(prUrl ? { prUrl } : {}), ...(vcsType ? { vcsType } : {}), useLocal };
 }
 export const startCodeReview = async (ctx: ExtensionContext, options: CodeReviewRequest = {}) =>
 	(await loadPlannotator()).startCodeReviewBrowserSession(ctx, options);

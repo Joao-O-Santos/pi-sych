@@ -67,9 +67,7 @@ test("compaction output validates promotion combinations and renders optional se
 	assert.equal(parsed.promotions[0].target, "todo");
 	assert.match(renderWorkingMemory(parsed.workingMemory), /## Constraints/);
 	assert.doesNotMatch(renderWorkingMemory(parsed.workingMemory), /## Blockers/);
-	assert.deepEqual(validateWorkingMemory(workingMemory, new Set(["PROJECT.md"])).files, [
-		"PROJECT.md",
-	]);
+	assert.deepEqual(validateWorkingMemory(workingMemory).files, ["PROJECT.md", "outside.md"]);
 	for (const value of [
 		{ workingMemory, promotions: {} },
 		{ workingMemory, promotions: Array(6).fill({ target: "todo", proposal: "x" }) },
@@ -77,7 +75,7 @@ test("compaction output validates promotion combinations and renders optional se
 		{ workingMemory, promotions: ["invalid"] },
 	])
 		assert.throws(() => parseCompactionModelOutput(JSON.stringify(value)));
-	assert.throws(() => parseCompactionModelOutput("not json"), /Unexpected token/);
+	assert.throws(() => parseCompactionModelOutput("not json"), /no JSON object/);
 });
 
 test("compaction prompt retains scientific continuity without expanding memory", () => {
@@ -100,6 +98,7 @@ test("compaction prompt retains scientific continuity without expanding memory",
 			missingCore: [],
 			projectErrors: [],
 		},
+		"INBOX.md",
 	);
 	assert.ok(
 		prompt.includes(

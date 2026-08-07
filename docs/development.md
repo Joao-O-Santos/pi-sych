@@ -35,7 +35,10 @@ coverage output. `npm test` compiles TypeScript into ignored
 `.test-build/`, runs unit tests, and exercises package loading and
 project status through RPC integration tests. The package's GitLab
 pipeline repeats the verification and tag-based publication gate.
-Contributors do not publish directly.
+Development and CI use Node 26 or newer; TypeScript and c8 follow the
+current `latest` dev-tool policy. Node's built-in coverage report
+remains the primary diagnostic, with c8 providing an independent V8
+view. Contributors do not publish directly.
 
 `npm run test:usage` is opt-in. It uses real Pi/model calls against a
 disposable project, requires local credentials, and may incur provider

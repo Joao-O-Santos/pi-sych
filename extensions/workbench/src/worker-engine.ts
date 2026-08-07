@@ -2,10 +2,12 @@ import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { constants, existsSync, statSync } from "node:fs";
 import { access, mkdir, mkdtemp, open, readFile, rm } from "node:fs/promises";
-import { homedir, tmpdir } from "node:os";
+import { tmpdir } from "node:os";
 import { dirname, isAbsolute, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { StringEnum } from "@earendil-works/pi-ai";
 import { Type } from "typebox";
+import { piSkillDirectory } from "./config-directory.js";
 import { mcporterConfigPath, remoteResearchExtensionPaths } from "./mcporter.js";
 import type { ModelCatalog } from "./model-catalog.js";
 import {
@@ -98,16 +100,25 @@ export function skillPaths(
 	selectors: string[] = [],
 	projectRoot: string,
 	packageRoot: string,
-	userRoot = resolve(homedir(), ".pi/agent/skills"),
+	userRoot?: string,
 ): string[] {
+	const resolvedUserRoot =
+		userRoot ??
+		(() => {
+			try {
+				return piSkillDirectory({ projectRoot });
+			} catch {
+				return undefined;
+			}
+		})();
 	return selectors.map((selector) => {
-		const direct = selector.includes("/") || selector.endsWith(".md");
+		const direct = selector.includes("/") || selector.includes("\\") || selector.endsWith(".md");
 		const options = direct
 			? [isAbsolute(selector) ? selector : resolve(projectRoot, selector)]
 			: [
 					resolve(projectRoot, ".pi/skills", selector, "SKILL.md"),
 					resolve(projectRoot, ".agents/skills", selector, "SKILL.md"),
-					resolve(userRoot, selector, "SKILL.md"),
+					...(resolvedUserRoot ? [resolve(resolvedUserRoot, selector, "SKILL.md")] : []),
 					resolve(packageRoot, "skills", selector, "SKILL.md"),
 				];
 		const path = options.find(
@@ -148,19 +159,15 @@ async function contexts(
 }
 export function taskPrompt(spec: WorkerLaunchSpec, files: ContextFile[]) {
 	return [
-		"You are one short-lived Pi Sych worker. You cannot dispatch another worker.",
-		`Task ID: ${spec.id}`,
-		`Task: ${spec.request.task}`,
-		`Expected output: ${spec.request.expectedOutput}`,
-		`Capability mode: ${spec.request.mode}`,
+		"You are one short-lived Pi Sych worker. Read every context file and selected skill, then read the routed modules.",
+		`Task ID: ${spec.id} | Task: ${spec.request.task}`,
+		`Expected output: ${spec.request.expectedOutput} | Mode: ${spec.request.mode}`,
 		`Context files: ${files.map((f) => `${f.path} (${f.purpose})`).join("; ") || "none"}`,
 		`Selected skills: ${(spec.request.skills ?? []).join(", ") || "none"}`,
-		"Read every context file and selected skill, then read the local modules and shared methods that the selected skill routes to for this task.",
-		"Treat this packet as complete; state missing context as a limitation instead of guessing.",
+		"Treat this packet as complete; state missing context as a limitation. Call submit_artifact as the final tool call, then stop.",
 		...(spec.request.remoteResearch
 			? ["MCPorter is available only for this assigned remote research."]
 			: []),
-		"Call submit_artifact by itself as the final tool call, then stop.",
 	].join("\n");
 }
 export async function writeImmutableResult(path: string, result: WorkerResult) {
@@ -177,6 +184,12 @@ export async function writeImmutableResult(path: string, result: WorkerResult) {
 		await handle.close();
 	}
 }
+export const workerResultSchema = Type.Object({
+	status: StringEnum(["complete", "partial", "failed"] as const),
+	summary: Type.String(),
+	files: Type.Array(Type.String()),
+	limitations: Type.Array(Type.String()),
+});
 export function validateWorkerResult(value: unknown): WorkerResult {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error("Worker result must be an object");
@@ -319,23 +332,30 @@ export async function dispatchWorker(options: {
 		};
 		spec.prompt = taskPrompt(spec, contextFiles);
 		const launch = await (options.launcher ?? launchPiWorker)(spec);
-		let result: WorkerResult | undefined, error: string | undefined;
+		if (launch.classification || launch.terminationSignal || launch.exitCode !== 0)
+			return {
+				id,
+				model,
+				timeoutMs,
+				launch,
+				error: launch.classification
+					? `Worker ${launch.classification}`
+					: `Worker exited ${launch.exitCode ?? "without an exit code"}${launch.stderr ? `: ${launch.stderr}` : ""}`,
+			};
 		try {
-			result = validateWorkerResult(JSON.parse(await readFile(resultPath, "utf8")));
+			const result = validateWorkerResult(JSON.parse(await readFile(resultPath, "utf8")));
 			for (const file of result.files)
 				await resolveExistingProjectPath(options.project.projectRoot, file);
+			return { id, model, timeoutMs, launch, result };
 		} catch (reason) {
-			error = reason instanceof Error ? reason.message : String(reason);
+			return {
+				id,
+				model,
+				timeoutMs,
+				launch,
+				error: `Worker result protocol failed: ${reason instanceof Error ? reason.message : String(reason)}`,
+			};
 		}
-		return result && !launch.classification && !launch.terminationSignal && launch.exitCode === 0
-			? { id, model, timeoutMs, launch, result }
-			: {
-					id,
-					model,
-					timeoutMs,
-					launch,
-					error: error ?? `Worker ${launch.classification ?? `exited ${launch.exitCode}`}`,
-				};
 	} finally {
 		await rm(runtime, { recursive: true, force: true });
 	}

@@ -15,9 +15,8 @@ const notifyError = (ctx: ExtensionCommandContext, error: unknown) =>
 
 async function projectFile(cwd: string, input: string) {
 	if (!input.trim() || isAbsolute(input)) throw new Error("Path must be a project-local file");
-	const project = await resolveProject(cwd),
-		path = await resolveExistingProjectPath(project.projectRoot, input);
-	return { project, path };
+	const project = await resolveProject(cwd);
+	return resolveExistingProjectPath(project.projectRoot, input);
 }
 
 function annotationResult(
@@ -81,11 +80,11 @@ export async function registerPlannotator(
 		handler: async (args, ctx) => {
 			try {
 				const file = await projectFile(ctx.cwd, args);
-				if (![".md", ".mdx"].includes(extname(file.path)))
+				if (![".md", ".mdx"].includes(extname(file)))
 					throw new Error("Usage: /plannotator-annotate <project-local-file>");
-				const session = await runtime.file(ctx, file.path, await readFile(file.path, "utf8"));
+				const session = await runtime.file(ctx, file, await readFile(file, "utf8"));
 				ctx.ui.notify(`Plannotator annotation opened: ${session.url}`, "info");
-				annotationResult(pi, ctx, session, `${file.path}.feedback.md`);
+				annotationResult(pi, ctx, session, `${file}.feedback.md`);
 			} catch (error) {
 				notifyError(ctx, error);
 			}

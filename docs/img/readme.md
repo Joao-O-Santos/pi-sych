@@ -1,15 +1,14 @@
 # Architecture diagrams
 
-- `review_workflow.png` illustrates one optional, user-guided review,
-  revision, verification, and acknowledgement pattern.
-- `architecture.png`, `supervisors_context.png`, and
-  `skills_architecture.png` are preserved v4.0.4 documentation images.
-  Their one-level skill-module wording predates the shared-method
-  architecture and should not be used as the current skill contract.
-- `README.md`, `ARCHITECTURE.md`, the skill task recipes, and the
-  implementation remain authoritative for current behavior.
-- Replacement architecture artwork requires a separate visual review;
-  preserved images are not silently rewritten during a text and skill
-  refactor. Package gallery image metadata is omitted while no reviewed
-  current architecture image exists.
-- Superseded draft artwork is not retained.
+- `architecture.png` shows the two supervisor tools, project state, one
+  bounded worker, and optional adapters.
+- `supervisors_context.png` shows the bounded six-field compaction flow
+  and human review of proposal lines.
+- `skills_architecture.png` shows the six public skills, shared methods,
+  and local modules as a composition boundary rather than extra public
+  skills.
+- `review_workflow.png` shows optional Plannotator feedback and the
+  human decision to revise, verify, or acknowledge.
+- These PNGs are deliberately simple summaries, not executable diagrams.
+  `README.md`, `ARCHITECTURE.md`, the skill recipes, and implementation
+  remain authoritative for exact behavior.
