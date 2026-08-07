@@ -3,7 +3,7 @@
 All notable changes to Pi Sych are documented here. Versions are
 immutable npm publications unless explicitly marked otherwise.
 
-## v6.0.5 - Unreleased
+## v6.0.5 - 2026-08-08
 
 ### Fixed
 
