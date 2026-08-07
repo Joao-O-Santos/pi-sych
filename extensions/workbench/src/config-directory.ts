@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
-import { resolve } from "node:path";
+import { posix, resolve, win32 } from "node:path";
 
 export interface PiSychConfig {
 	version: 1;
@@ -60,9 +60,8 @@ const configString = (item: Record<string, unknown>, key: string, path: string) 
 	if (
 		typeof value !== "string" ||
 		!value ||
-		value.startsWith("/") ||
-		/^[A-Za-z]:[\\/]/.test(value) ||
-		value.startsWith("\\\\") ||
+		posix.isAbsolute(value) ||
+		win32.isAbsolute(value) ||
 		value.split(/[\\/]/).includes("..")
 	)
 		throw new Error(`Pi Sych config ${key} must be a non-empty relative path at ${path}`);

@@ -76,6 +76,55 @@ test("status distinguishes missing observations from changed files", async () =>
 	assert.deepEqual(state.missing, ["missing.md"]);
 	assert.doesNotMatch(formatProjectStatusCheck(state), /Changed:/);
 });
+test("status surfaces observation errors and prevents false all-clear", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-error-"));
+	await writeFile(join(root, "PROJECT.md"), project);
+	await writeFile(join(root, "A.md"), "a");
+	await writeFile(
+		join(root, "SYNC.json"),
+		JSON.stringify({
+			version: 2,
+			confirmedAt: "now",
+			artifacts: [{ path: "A.md", fingerprint: hash("a"), status: "current" }],
+		}),
+	);
+	// Make A.md unreadable to trigger observation error
+	const { chmod } = await import("node:fs/promises");
+	await chmod(join(root, "A.md"), 0);
+	try {
+		const state = await checkProjectStatus(root);
+		assert.equal(state.artifacts[0].observation.state, "error");
+		assert.equal(state.errors.length, 1);
+		assert.equal(state.errors[0].path, "A.md");
+		assert.match(state.errors[0].message, /permission|EACCES/);
+		assert.match(formatProjectStatusCheck(state), /Unable to observe:/);
+		assert.doesNotMatch(formatProjectStatusCheck(state), /All tracked files match/);
+	} finally {
+		await chmod(join(root, "A.md"), 0o644);
+	}
+});
+test("missing artifacts propagate dependency impact", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-impact-"));
+	await writeFile(join(root, "PROJECT.md"), project);
+	await writeFile(join(root, "B.md"), "b"); // B.md exists on disk
+	// A.md is tracked but missing; B.md depends on A.md
+	await writeFile(
+		join(root, "SYNC.json"),
+		JSON.stringify({
+			version: 2,
+			confirmedAt: "now",
+			artifacts: [
+				{ path: "A.md", fingerprint: hash("a"), status: "current" },
+				{ path: "B.md", fingerprint: hash("b"), status: "current", dependsOn: ["A.md"] },
+			],
+		}),
+	);
+	const state = await checkProjectStatus(root);
+	assert.deepEqual(state.missing, ["A.md"]);
+	assert.equal(state.impacted.length, 1);
+	assert.equal(state.impacted[0].path, "B.md");
+	assert.deepEqual(state.impacted[0].from, ["A.md"]);
+});
 test("acknowledgement recheck rejects content changed after the status read", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-race-"));
 	await writeFile(join(root, "PROJECT.md"), project);

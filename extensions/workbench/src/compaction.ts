@@ -10,6 +10,7 @@ import {
 } from "@earendil-works/pi-coding-agent";
 import {
 	type ResolvedProject,
+	resolveExistingProjectPath,
 	resolveProject,
 	resolveProjectPath,
 	showPath,
@@ -199,18 +200,20 @@ export async function compact(event: SessionBeforeCompactEvent, ctx: ExtensionCo
 				.join("\n"),
 			output = parseCompactionModelOutput(raw),
 			allowed = new Set(snapshot.paths),
-			memory = {
-				...output.workingMemory,
-				files: output.workingMemory.files.filter((file) => {
-					if (allowed.has(file)) return true;
-					try {
-						resolveProjectPath(project.projectRoot, file);
-						return true;
-					} catch {
-						return false;
-					}
-				}),
-			};
+			files: string[] = [];
+		for (const file of output.workingMemory.files) {
+			if (allowed.has(file)) {
+				files.push(file);
+				continue;
+			}
+			try {
+				await resolveExistingProjectPath(project.projectRoot, file);
+				files.push(file);
+			} catch {
+				// not an existing project-local file
+			}
+		}
+		const memory = { ...output.workingMemory, files };
 		if (output.promotions.length) {
 			await mkdir(dirname(project.canonical.inbox), { recursive: true });
 			await appendFile(

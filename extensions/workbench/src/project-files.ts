@@ -1,7 +1,7 @@
 import { execFile as exec } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { constants } from "node:fs";
-import { access, type FileHandle, mkdir, open, readFile, rename, rm, stat } from "node:fs/promises";
+import { access, mkdir, open, readFile, rename, rm, stat } from "node:fs/promises";
 import { dirname, isAbsolute, parse, relative, resolve, sep } from "node:path";
 import { promisify } from "node:util";
 
@@ -182,15 +182,12 @@ export async function writeAtomicFile(path: string, content: string) {
 	const parent = dirname(path),
 		temporary = resolve(parent, `.${parse(path).base}.${randomUUID()}.tmp`);
 	await mkdir(parent, { recursive: true });
-	let handle: FileHandle | undefined;
 	try {
-		handle = await open(temporary, "wx", 0o600);
+		await using handle = await open(temporary, "wx", 0o600);
 		await handle.writeFile(content);
 		await handle.sync();
-		await handle.close();
 		await rename(temporary, path);
 	} catch (error) {
-		await handle?.close().catch(() => undefined);
 		await rm(temporary, { force: true }).catch(() => undefined);
 		throw error;
 	}

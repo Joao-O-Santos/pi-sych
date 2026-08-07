@@ -4,9 +4,8 @@ import { constants, existsSync, statSync } from "node:fs";
 import { access, mkdir, mkdtemp, open, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import { StringEnum } from "@earendil-works/pi-ai";
-import { Type } from "typebox";
+import { type Static, Type } from "typebox";
 import { piSkillDirectory } from "./config-directory.js";
 import { mcporterConfigPath, remoteResearchExtensionPaths } from "./mcporter.js";
 import type { ModelCatalog } from "./model-catalog.js";
@@ -30,29 +29,15 @@ export const DEFAULT_TIMEOUT_MS = 90_000;
 export const MAX_TIMEOUT_MS = 30 * 60_000;
 const LOG_LIMIT = 8_192;
 export const PI_SYCH_PACKAGE_ROOT = resolve(
-	process.env.PI_PACKAGE_DIR ?? resolve(dirname(fileURLToPath(import.meta.url)), "../../.."),
+	process.env.PI_PACKAGE_DIR ?? resolve(dirname(import.meta.dirname), "../../.."),
 );
 
 export interface ContextFile {
 	path: string;
 	purpose: string;
 }
-export interface DispatchRequest {
-	task: string;
-	mode: WorkerMode;
-	expectedOutput: string;
-	contextFiles: ContextFile[];
-	skills?: string[];
-	modelRole?: string;
-	remoteResearch?: boolean;
-	timeoutMs?: number;
-}
-export interface WorkerResult {
-	status: "complete" | "partial" | "failed";
-	summary: string;
-	files: string[];
-	limitations: string[];
-}
+export type DispatchRequest = Static<typeof dispatchSchema>;
+export type WorkerResult = Static<typeof workerResultSchema>;
 export interface WorkerLaunchSpec {
 	id: string;
 	request: DispatchRequest;
@@ -140,11 +125,9 @@ async function contexts(
 	project: ResolvedProject,
 	request: DispatchRequest,
 ): Promise<ContextFile[]> {
-	const files = [...request.contextFiles];
 	const unique = new Map<string, ContextFile>();
-	for (const file of files) {
+	for (const file of request.contextFiles) {
 		const path = await resolveExistingProjectPath(project.projectRoot, file.path);
-		await access(path, constants.R_OK);
 		unique.set(path, { ...file, path: showPath(project.projectRoot, path) });
 	}
 	for (const role of ["agents", "style"] as const) {
@@ -172,17 +155,13 @@ export function taskPrompt(spec: WorkerLaunchSpec, files: ContextFile[]) {
 }
 export async function writeImmutableResult(path: string, result: WorkerResult) {
 	await mkdir(dirname(path), { recursive: true });
-	const handle = await open(path, "wx", 0o600).catch((error: NodeJS.ErrnoException) => {
+	await using handle = await open(path, "wx", 0o600).catch((error: NodeJS.ErrnoException) => {
 		if (error.code === "EEXIST")
 			throw new Error("Worker result is immutable and has already been submitted");
 		throw error;
 	});
-	try {
-		await handle.writeFile(`${JSON.stringify(result)}\n`);
-		await handle.sync();
-	} finally {
-		await handle.close();
-	}
+	await handle.writeFile(`${JSON.stringify(result)}\n`);
+	await handle.sync();
 }
 export const workerResultSchema = Type.Object({
 	status: StringEnum(["complete", "partial", "failed"] as const),

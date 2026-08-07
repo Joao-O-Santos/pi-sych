@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { hash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import {
@@ -52,6 +52,7 @@ export interface ProjectStatusCheck {
 	artifacts: CheckedArtifact[];
 	changed: string[];
 	missing: string[];
+	errors: Array<{ path: string; message: string }>;
 	impacted: Array<{ path: string; from: string[]; direct: boolean }>;
 	cycles: string[][];
 	missingCore: string[];
@@ -110,9 +111,7 @@ export function parseProjectStatusManifest(value: string | SyncManifest): Projec
 	return { ...manifest, artifacts };
 }
 export async function fingerprintFile(path: string) {
-	return `sha256:${createHash("sha256")
-		.update(await readFile(path))
-		.digest("hex")}`;
+	return `sha256:${hash("sha256", await readFile(path), "hex")}`;
 }
 const inputs = (artifact: ProjectArtifact) =>
 	[...(artifact.updateFrom ?? []), ...(artifact.dependsOn ?? [])].map((item) =>
@@ -174,6 +173,7 @@ const unavailable = (startPath: string, error: unknown): ProjectStatusCheck => (
 	artifacts: [],
 	changed: [],
 	missing: [],
+	errors: [],
 	impacted: [],
 	cycles: [],
 	missingCore: [],
@@ -209,6 +209,7 @@ export async function checkProjectStatus(
 			artifacts: [],
 			changed: [],
 			missing: [],
+			errors: [],
 			impacted: [],
 			cycles: [],
 			missingCore,
@@ -243,7 +244,13 @@ export async function checkProjectStatus(
 				.map((item) => item.path),
 			missing = artifacts
 				.filter((item) => item.observation.state === "missing")
-				.map((item) => item.path);
+				.map((item) => item.path),
+			errors = artifacts
+				.filter(
+					(item): item is CheckedArtifact & { observation: { state: "error"; message: string } } =>
+						item.observation.state === "error",
+				)
+				.map((item) => ({ path: item.path, message: item.observation.message }));
 		return {
 			projectRoot: resolved.projectRoot,
 			syncPath: resolved.syncPath,
@@ -251,7 +258,8 @@ export async function checkProjectStatus(
 			artifacts,
 			changed,
 			missing,
-			impacted: impacts(manifest.artifacts, changed),
+			errors,
+			impacted: impacts(manifest.artifacts, [...changed, ...missing]),
 			cycles: cycles(manifest.artifacts),
 			missingCore,
 			projectErrors,
@@ -280,6 +288,10 @@ export function formatProjectStatusCheck(
 			...bullet("Project-file problems:", state.projectErrors),
 			...bullet("Changed:", state.changed),
 			...bullet("Missing:", state.missing),
+			...bullet(
+				"Unable to observe:",
+				state.errors.map((item) => `${item.path} (${item.message})`),
+			),
 		);
 		for (const status of PROJECT_STATUSES.filter((s) => s !== "current")) {
 			const files = state.artifacts.filter((a) => a.status === status).map((a) => a.path);
@@ -298,6 +310,7 @@ export function formatProjectStatusCheck(
 		if (
 			!state.changed.length &&
 			!state.missing.length &&
+			!state.errors.length &&
 			!state.missingCore.length &&
 			!state.projectErrors.length
 		)

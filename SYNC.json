@@ -4,7 +4,7 @@
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:c3a526e71c4d43276c29280f667d0a1fcbd2fdf71eb81c06e6ec27cff52ed571",
+      "fingerprint": "sha256:ed5567966dd26762ca1892ad28c415ce5a5e1f266fa5354d35a9f37865ffe52e",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -16,12 +16,12 @@
       ],
       "acknowledgement": {
         "at": "2026-08-07T00:00:00.000Z",
-        "reason": "Verified v6.0.0 correctness+simplification pass: 63 tests, source budget 2000/2000, typecheck+style clean, signed commit 0ae415e8."
+        "reason": "Verified v6.0.0 independent review corrective pass: 65 tests, source budget 2000/2000, typecheck+style clean, signed tag v6.0.0."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:0e53c88f544126960731f077d6af0908f85b98b8524eb2648d56122a9a3b5eba",
+      "fingerprint": "sha256:a166af2c508b10cb683081634e78cc5bc940b8dea4440559306705a54e82b630",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,8 +35,8 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-06T22:21:29.294Z",
-        "reason": "Verified v4.0.6 release state: live usage and final prompt-quality evaluation, signed tag target, successful GitLab main/tag pipelines and release jobs, npm publication with SLSA provenance, integrity, and reviewed 130-file tarball."
+        "at": "2026-08-07T00:00:00.000Z",
+        "reason": "Verified v6.0.0 independent review corrective pass: 65 tests, source budget 2000/2000, typecheck+style clean, signed tag v6.0.0."
       }
     },
     {

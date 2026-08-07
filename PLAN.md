@@ -1,377 +1,299 @@
-# Pi Sych 5.0.0 plan
+Yes. I compared the current `main` against the v5.0.4 baseline we reviewed. Current head is `7545a407…`; the substantive v6 implementation is `0ae415e8…`, followed by the project-state/evidence update.
 
-## Recommendation and release boundary
+The broad direction is good, and several important fixes landed correctly. I would **not tag v6.0.0 yet**, though. I found three real correctness issues plus a handful of incomplete simplifications.
 
-Prepare an unreleased `5.0.0`. Independently selectable extensions, optional
-dependency behavior, and the Pages and benchmark capabilities add public
-surface. Removing the documented `PI_SYCH_*` configuration overrides and
-moving configuration into one visible Pi-native directory require migration
-for some supported `4.0.6` workflows, so the release is major.
+### The important fixes that are correct
 
-Do not tag, push, or publish without a separate release instruction. Preserve
-the owner's existing uncommitted edits in `docs/attribution.md` and
-`docs/development.md`; reconcile them rather than overwriting them. Do not edit
-or replace any image.
+The shared Pi-root work is basically the right architecture now. `piConfigRoot()` owns project `.pi` → `PI_CODING_AGENT_DIR` → XDG → `~/.config/pi` → `~/.pi`, and both Pi Sych config and skill locations derive from it. That is much better than duplicating environment/home logic in the worker.
 
-## 1. Realistic benchmark v1
+The acknowledgement bug is also fixed correctly. `actuallyChanged` is now derived from the observation state, so acknowledging an unchanged A does not invalidate B, while changed A still does. There is an explicit regression test for both cases.
 
-Keep the current real-Pi smoke test and guidance-level prompt-quality fixtures,
-but describe them as diagnostics rather than high-level benchmarks. Add a
-separate opt-in benchmark layer that invokes actual public umbrella skills in
-disposable synthetic projects.
+Worker failure precedence is fixed in the right direction: abnormal launch results return before `result.json` is read. So a timeout no longer gets masked by an `ENOENT`. The redundant process-warning presentation was removed too.
 
-Start with three cases rather than a generic evaluation platform:
+Project discovery now reads `SYNC.json` directly and walks upward only on `ENOENT`/`ENOTDIR`, while malformed state fails. Startup also no longer swallows project-resolution errors. Good fail-fast behavior.
 
-1. `code`: diagnose and repair a small Node defect, add a focused regression
-   test, and truthfully report verification;
-2. `review` + `write`: review supplied source excerpts and revise an evidence
-   memo containing a compound unsupported claim; and
-3. `project`: recover direction from accepted, stale, tentative, and unreviewed
-   project state without mutating canonical state.
+The model-catalog consolidation, MCPorter preflight deletion, Plannotator helper cleanup, Node 26 floor, `latest` tooling and `ESNext` target are all sensible.
 
-Each case will declare its skills, synthetic fixture, task, expected artifacts,
-objective checks, a versioned semantic rubric, and critical failures. The
-runner will:
+## 1. Blocker: observation errors are still effectively hidden
 
-- validate all cases and fixture paths before a paid call;
-- launch real Pi with the packaged skills in a fresh temporary project;
-- take explicit candidate and capable judge selectors from private
-  configuration, record the resolved models, and reject an accidental
-  candidate/judge identity unless explicitly overridden;
-- retain a local review bundle containing manifest, transcript, artifact diff,
-  objective checks, structured 0--4 judge scores with evidence locators,
-  critical failures, timings, and limitations; and
-- emit a Markdown report that a human can accept, annotate, or reject.
+The new state model itself is good:
 
-Semantic scores remain advisory and opt-in. They will not become deterministic
-keyword assertions or required ordinary CI gates. Ordinary CI will test only
-case schema validation, safe disposable paths, command/check execution,
-structured judge parsing, timeout/budget handling, and report aggregation with
-fake launchers. Raw run bundles will be ignored; only an explicitly reviewed,
-sanitary baseline summary may be committed. Run one bounded v1 pilot after the
-harness passes and preserve failures rather than tuning directly to them.
+```ts
+current | changed | missing | error
+```
 
-## 2. GitLab Pages documentation
+But `ProjectStatusCheck` only exposes top-level `changed` and `missing`. An artifact whose observation is `"error"` stays buried inside `artifacts`. More seriously, `formatProjectStatusCheck()` doesn't print observation errors at all.
 
-Adapt the small Make-based model from `make-it-stop` commit
-`4784c8b507c3c8748c97d7d14e25facf6174af85`, rather than copying it unchanged.
-Use existing Markdown as canonical content and generate an ignored `public/`
-artifact. Add a focused Make/config/template/static site layer that:
+That means this situation:
 
-- renders `README.md`, selected `docs/*.md`, `ARCHITECTURE.md`, and
-  `CONTRIBUTING.md` with Pandoc;
-- provides accessible navigation, responsive original CSS, meaningful page
-  titles, existing image assets, and repository-correct versus site-correct
-  links;
-- cleans and rebuilds atomically enough that stale output is not deployed;
-- treats renderer, template, missing-input, and link/build failures as fatal;
-  and
-- never uses `make-it-stop`'s intentionally ignored `grep` failures.
+```text
+tracked A.md
+permission/I/O failure reading A.md
+```
 
-Add a GitLab Pages job for `main` without weakening the existing verify and
-trusted tag-publication jobs. Keep generated HTML out of the npm tarball and
-Git history. Update the npm homepage and README documentation links only after
-the Pages URL is verified.
+can produce:
 
-The adapted Make structure will retain the source BSD-3-Clause notice where
-required. CC0-derived configuration/templates will be identified accurately.
-Create `COPYING.md` and package the applicable `LICENSES/` notices so copied,
-adapted, and influence-only material are distinguishable.
+```text
+All tracked files match their recorded hashes.
+```
 
-## 3. Pandoc policy
+because the success condition only checks:
 
-Replace the exact Pandoc pin with a minimum supported version of `3.10.1` for
-local formatting. Parse and compare versions numerically; reject missing,
-older, or malformed versions with a precise error. CI will resolve and install
-the latest stable Pandoc release at run time through a small fail-fast helper,
-rather than embedding one release number in `.gitlab-ci.yml`.
+```text
+changed
+missing
+missingCore
+projectErrors
+```
 
-Add deterministic tests for version parsing/comparison and latest-release
-metadata/asset selection without making network calls. Document that allowing
-newer formatters trades byte-for-byte cross-version reproducibility for the
-owner-requested current-version policy.
+and none of those contains artifact observation failures.
 
-## 4. Modular runtime and optional integrations
+That contradicts the point of introducing the fourth state.
 
-Use Pi's public package controls instead of introducing a second configuration
-system. Resolve Pi Sych's private configuration directory without supported
-`PI_SYCH_*` user overrides: use `<projectRoot>/.pi/pi-sych` when the project
-has `.pi`; otherwise use `$PI_CODING_AGENT_DIR/pi-sych` when Pi configured an
-agent directory; otherwise `$XDG_CONFIG_HOME/pi/pi-sych`; otherwise
-`~/.config/pi/pi-sych` when that Pi directory exists; otherwise `~/.pi/pi-sych`
-when it exists. If none exists, fail before side effects with every checked
-location and setup guidance. Use `PI_PACKAGE_DIR` only to locate package
-resources where Pi's installation environment requires it, not as private
-configuration. Honor `PI_OFFLINE` by refusing the latest-Pandoc network lookup
-before a request. `PI_CODING_AGENT_SESSION_DIR`, telemetry, and sharing
-variables are not Pi Sych configuration.
+I would make this extremely small. Add something like:
 
-Use the resulting directory for model catalog, MCPorter configuration, worker
-agent runtime, and private benchmark selector configuration. Existing
-`PI_SYCH_MODEL_CATALOG`, `PI_SYCH_WORKER_AGENT_DIR`,
-`PI_SYCH_MCPORTER_CONFIG`, and `PI_SYCH_PI_BIN` overrides will be removed from
-the documented and supported surface. Worker-only result/task environment
-values remain an internal process protocol, not user configuration.
+```ts
+errors: Array<{ path: string; message: string }>
+```
 
-Then:
+derived from `"error"` observations, print an `Errors:`/`Unable to observe:` section, and include `!state.errors.length` in the all-clear condition.
 
-- keep the core workbench extension for supervisor guidance, compaction,
-  `dispatch_worker`, `project_status`, `/pi-sych-status`, and `/pi-sych-mcp`;
-- move the three Plannotator commands into a separately declared
-  `extensions/plannotator/index.ts` entry point;
-- move Plannotator and its adapter-only loader to optional dependencies, and
-  make `pi-mcporter` optional while retaining `remoteResearch: true` as its only
-  activation path;
-- keep both extensions enabled in the default package so existing complete
-  installs retain their command surface;
-- document and test disabling Plannotator through `pi config` or package
-  extension filters before installing with optional dependencies omitted;
-- document `--tools` and `--exclude-tools` for per-session tool selection;
-- document `pi config`, package `extensions: []`, and `--no-extensions` for
-  disabling the whole workbench while optionally retaining skills; and
-- avoid an internal `enabled` switch or a parallel tool-toggle schema.
+The current tests cover missing-vs-changed but not an artifact observation error, which is probably why this escaped.
 
-An explicitly enabled Plannotator extension with a missing or incompatible
-integration must fail during extension startup before registering commands.
-An explicitly requested remote-research worker with missing MCPorter must fail
-before spawn. A disabled extension or an optional feature that was not
-requested is legitimate absence, not an error. Tests will cover default,
-Plannotator-disabled, optional-dependencies-omitted, individual-tool-excluded,
-all-extensions-disabled, and explicit-missing-integration behavior using packed
-installs where applicable.
+**Priority: P0.**
 
-## 5. Public contract, userland, and SemVer boundary
+## 2. Blocker: missing artifacts stopped propagating dependency impact
 
-Add `docs/public-contract.md` as the explicit human-readable authority for what
-Pi Sych supports as public userland. Link it from the README, architecture,
-configuration, contributing, development, and release documentation where
-relevant. Do not infer public API merely because npm ships inspectable source.
-Use documented `4.0.6` behavior as the initial compatibility baseline; resolve
-ambiguity conservatively rather than retroactively declaring an existing
-promised workflow internal. Track the new document in `SYNC.json` as authority
-for the public-contract and SemVer boundary.
+This looks accidental.
 
-Classify the supported surface in a reviewable table:
+Before v6, dependency impact was calculated from:
 
-- npm identity, install behavior, supported Node/Pi compatibility policy, and
-  declared Pi package resources;
-- the six public skill names and their documented invocation/capability scope;
-- extension entrypoint paths that users need for `pi config` and package
-  filtering;
-- agent tool names, input schemas, documented result categories, and material
-  side effects;
-- human command names, accepted arguments, output files, and material failure
-  behavior;
-- documented configuration files, environment variables, precedence, defaults,
-  and strict-versus-optional absence rules;
-- supported on-disk project formats, including `SYNC.json` versions, required
-  `PROJECT.md` headings, acknowledgement semantics, proposal-line grammar, and
-  stable template paths;
-- documented generated files and locations such as `INBOX.md`, feedback files,
-  review files, and worker bootstrap settings; and
-- public documentation and license/notice files promised in the package.
+```ts
+[...changed, ...missing]
+```
 
-Create two adjacent non-public categories so maintenance decisions remain
-honest:
+The new implementation does:
 
-1. **Compatibility-sensitive internals:** model-facing compaction/worker
-   protocols and persisted session behavior. They are not a TypeScript API, but
-   changes require migration analysis, regression tests, and explicit release
-   notes because existing sessions or model behavior may be affected.
-2. **Internal implementation:** TypeScript helpers and named exports not
-   explicitly documented as imports, deep `extensions/**/src` paths, local
-   modules and hidden shared methods, test fixtures, exact human-readable error
-   wording, and generated benchmark internals. Pi Sych exposes no supported
-   JavaScript/TypeScript library-import API unless one is deliberately added in
-   a future release.
+```ts
+impacted: impacts(manifest.artifacts, changed)
+```
 
-Clarify edge cases. The six public skills are API; hidden methods and local
-module layout are architecture, not independently invokable userland. A copied
-skill override becomes user-owned and version-decoupled. Exact model prose is
-not deterministic API, but documented capability scope, human ownership,
-non-invention boundaries, and material side effects are contract. Error
-categories and fail/omit behavior are contract; punctuation and incidental
-wording are not unless declared machine-readable.
+So if:
 
-Define the release rule around user migration rather than implementation size:
+```text
+B depends on A
+A is deleted
+```
 
-- **major:** remove/rename a public resource; narrow previously supported input;
-  change a file/config/tool schema incompatibly; change defaults or side effects
-  so an existing supported workflow behaves materially differently; remove a
-  promised template/path; require users to migrate stored state; or raise a
-  supported runtime/integration requirement outside the published compatibility
-  policy;
-- **minor:** add an optional/backward-compatible public capability, field,
-  command, tool, skill, extension, or configuration option; deprecate while
-  preserving behavior; or materially improve behavior without invalidating a
-  supported existing use; and
-- **patch:** correct behavior within the documented contract, refine defeasible
-  skill guidance without changing its supported scope, update documentation or
-  tests, or refactor internals with no required user migration.
+Pi Sych now reports A as missing but no longer reports B as impacted.
 
-A security or correctness reason may justify an incompatible change but does
-not make it non-breaking: release it as major or document an exceptional
-supported migration. Deprecations land in a minor release and removals wait for
-an authorized major release. Default-on to default-off is breaking when users
-materially lose behavior; adding an independently disableable resource while
-preserving the default is minor.
+Deletion/absence is exactly the sort of mechanical change dependency propagation should detect. No semantic judgment is involved.
 
-Add a concise release checklist requiring maintainers to name the touched
-contract row, state whether an existing documented use needs migration, check
-stored-state/default-side-effect changes, and justify major/minor/patch in the
-changelog. Extend mechanical tests around public names, schemas, package
-resources, templates, and file behavior, but do not create a second registry
-that can drift from implementation or freeze prose with keyword assertions.
+The fix is probably literally:
 
-Under this policy, independently selectable Plannotator, optional dependencies,
-Pages, and benchmark commands would be backward-compatible additions. This
-release is nevertheless `5.0.0` because it intentionally removes documented
-`PI_SYCH_*` overrides and relocates configuration, requiring affected users to
-migrate. Plannotator remains default-on and tool schemas and command names stay
-compatible.
+```ts
+impacted: impacts(manifest.artifacts, [...changed, ...missing])
+```
 
-## 6. Coding philosophy and project application
+I would **not** automatically propagate observation errors as impact, because an observation error does not establish changed content. Report the error loudly instead.
 
-Update the `code` umbrella and its architecture/testing/web guidance with
-strong but defeasible preferences derived from:
+The missing-artifact test doesn't give the missing artifact a dependent, so it doesn't catch this regression.
 
-- Dietrich Gebert's Ponytail: understand the real flow first; question
-  speculative need; prefer deletion, direct reuse, standard-library/native
-  mechanisms, and the smallest complete checked change;
-- Eric S. Raymond's Unix philosophy: simple parts and explicit interfaces,
-  policy/mechanism separation, inspectability, representation over procedural
-  complexity, least surprise, silence on success where appropriate, and early
-  loud failure; and
-- cautiously scoped human-factors literature: visible state and feedback,
-  recognition over recall, user control, error prevention/recovery, and
-  progressive disclosure where it reduces rather than hides complexity.
+**Priority: P0.**
 
-Do not copy Ponytail's persona, exact ladder, slogans, intensity system, output
-caps, or comment convention. Do not treat Unix text streams, minimal line
-count, fail-fast behavior, or any UX heuristic as universal. State explicit
-defeaters: security, accessibility, data integrity, compatibility, cohesive
-implementation, anticipated user error, and systems where graceful degradation
-is required.
+## 3. Blocker-ish: compaction does not actually require an untracked file to exist
 
-Apply the philosophy to Pi Sych with a targeted error audit, not mass deletion
-of catches. Distinguish expected optional absence and safe cancellation from
-invalid explicit configuration, corrupt invariants, malformed installed
-integrations, and programmer errors. At minimum, stop hiding malformed
-MCPorter diagnostics and installed-but-broken Plannotator APIs; ensure site and
-benchmark configuration fails before side effects; and inspect broad catches
-for precise classification. Preserve safe state and actionable diagnostics.
+The intended fix was:
 
-Update `docs/attribution.md` with narrow influence statements and exact source
-links. `COPYING.md` will record Ponytail's MIT terms as influence-only unless
-substantial text/code is actually copied; Raymond's online book is CC BY-ND
-1.0, so Pi Sych will paraphrase and cite rather than adapt its prose.
-Psychology-to-developer-tool implications will be labeled design inferences,
-not direct empirical validation.
+> preserve an active untracked file if it is an existing project-local file.
 
-## 7. Modern TypeScript only where it pays
+The implementation currently does:
 
-Keep the current latest TypeScript and ES2024 target. Enable
-`noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`: a dry run exposed
-one unchecked-index issue and several objects that explicitly pass `undefined`
-instead of omitting optional properties. Correct those sites directly and add
-focused tests where behavior changes. Also enable the currently clean
-`noImplicitReturns`, `noFallthroughCasesInSwitch`, and `noImplicitOverride`
-checks as low-cost guards.
+```ts
+try {
+    resolveProjectPath(project.projectRoot, file);
+    return true;
+} catch {
+    return false;
+}
+```
 
-Do not introduce newer syntax, decorators, explicit resource management,
-advanced generics, or helper abstractions merely because TypeScript supports
-them. Adopt a language feature only when it removes code, represents an
-invariant more accurately, or makes ownership/cleanup easier to read on the
-supported Node runtime.
+That proves only that the string is lexically project-local.
 
-## 8. Medium- and long-term test assurance
+So these both survive:
 
-Adopt SQLite's testing discipline as an aspiration, not an equivalence claim.
-SQLite documents 100% MC/DC for its core and execution in both directions of
-every compiler-generated machine-code branch, backed by fault simulation,
-fuzzing, and mutation testing. Pi Sych runs as TypeScript under Node/V8, whose
-JIT-generated native instructions change with runtime, platform, optimization,
-and execution history. Stable exhaustive native-opcode or machine-branch
-coverage is therefore neither a truthful nor useful package-level target.
+```text
+src/real-new-file.ts
+src/completely-invented-file-that-does-not-exist.ts
+```
 
-Use the following explicit coverage taxonomy:
+That is contrary to both the plan and the commit message, which says “active existing untracked files.”
 
-- line/function coverage asks whether source or compiled JavaScript locations
-  executed;
-- branch coverage asks whether every decision edge executed;
-- condition coverage asks whether each atomic condition was true and false;
-- MC/DC additionally demonstrates that each condition can independently change
-  the enclosing decision; and
-- multiple-condition coverage executes every feasible truth combination. For
-  `a === 1 && b === 2`, the requested matrix is `TT`, `TF`, `FT`, and `FF`, not
-  merely the true and false outcomes of the complete `if`.
+Use `resolveExistingProjectPath()`, not `resolveProjectPath()`.
 
-For `5.0.0`, add a diagnostic `test:coverage` command using Node's built-in V8
-coverage on the compiled deterministic runtime, record the observed baseline,
-and do not hide weak areas behind an arbitrary initial threshold. New or
-changed high-consequence compound decisions must include a reviewed decision
-table. Exercise every feasible combination for small predicates (normally up
-to three Boolean conditions); when the cross-product is materially larger,
-require at least MC/DC plus boundary and interaction cases, and document
-infeasible combinations.
+Because existence checking is asynchronous, don't force it into `.filter()`. A boring loop is clearer:
 
-The medium-term target is ratcheted 100% reachable source branch coverage for
-the mechanically decidable TypeScript core, with every unreachable or excluded
-branch carrying a reviewable rationale. Coverage must include normal,
-short-circuit, malformed-input, cancellation, timeout, partial-I/O, and
-explicit optional-integration paths. It does not apply deterministic prose
-assertions to semantic skills or convert live-model judgments into branch
-coverage.
+```ts
+const files: string[] = [];
 
-Add fault injection at filesystem, process, clock, loader, and persistence
-boundaries; property/fuzz tests for parsers, manifests, paths, and schemas; and
-scoped mutation testing for the mechanical core. The long-term standard is to
-kill every non-equivalent mutant in consequential modules or retain an explicit
-reviewed survivor rationale. Preserve minimized regressions. Coverage,
-condition matrices, MC/DC, mutation scores, and fuzzing are complementary
-evidence and never proof of correctness, security, or model behavior.
+for (const file of output.workingMemory.files) {
+    if (allowed.has(file)) {
+        files.push(file);
+        continue;
+    }
 
-Record this aspiration in project/development documentation as staged work, not
-as a completed `5.0.0` guarantee. Future releases should raise thresholds only
-after actual baselines and independent review, without deleting meaningful
-error paths or tests to improve a percentage.
+    try {
+        await resolveExistingProjectPath(project.projectRoot, file);
+        files.push(file);
+    } catch {
+        // not an existing project-local file
+    }
+}
+```
 
-## 9. Image-generation prompts
+No additional abstraction needed.
 
-After the implementation architecture and Pages navigation are final, write
-`~/prompts.md` with standalone image-model prompts for:
+And add exactly the tests from the plan:
 
-- the skills architecture diagram;
-- the overall package/runtime architecture;
-- supervisor context and compaction flow; and
-- the human review/optional Plannotator workflow if its current image is stale.
+```text
+existing untracked → retained
+nonexistent local → removed
+outside project → removed
+```
 
-Each prompt will specify exact nodes, arrows, labels, exclusions, visual
-hierarchy, accessibility, aspect ratio, and consistency with the existing Pi
-Sych visual identity. The prompts will explicitly forbid depicting hidden
-methods as public skills, workers as sandboxes or persistent agents,
-Plannotator/MCPorter as mandatory, automatic semantic reconciliation, schema
-expansion, or autonomous promotion. No image file will be opened for editing,
-regenerated, or replaced.
+The current compaction tests don't test this behavior.
 
-## Verification and review
+**Priority: P0/P1.**
 
-Before implementation, obtain independent test design for modular installation,
-Pages failure behavior, benchmark harness mechanics, and the stricter compiler
-flags. During implementation, use small coherent changes and preserve the
-owner's two existing documentation edits. Before declaring completion:
+## 4. The modern-Node simplification pass was largely not implemented
 
-- run formatter, stricter typecheck, Biome, dependency checks, source budget,
-  unit/integration tests, the diagnostic coverage baseline, package dry run,
-  whitespace checks, and production audit;
-- build and inspect the Pages artifact and test its internal links;
-- test packed default and optional-dependencies-omitted installations;
-- run the bounded benchmark pilot with separate candidate/judge models and
-  report actual cost/time/model limitations;
-- obtain independent read-only code, public-contract/SemVer, documentation,
-  attribution/licensing, benchmark-methodology, and release-readiness review;
-  and
-- update `PROJECT.md`, `EVIDENCE.md`, `ARCHITECTURE.md`, `README.md`,
-  `CHANGELOG.md`, and `SYNC.json` only when their claims are true.
+This surprised me.
 
-No tag, push, npm publication, or image replacement is included in this plan.
+The project now requires Node >=26 and targets ESNext, which is good.
+
+But much of the reason we agreed to raise the baseline was to delete lifecycle machinery. The current code still has:
+
+* `mkdtemp()` + `try/finally` + recursive `rm()` for workers;
+* manual `FileHandle | undefined` cleanup in atomic writes;
+* manual `try/finally` handle closing for immutable worker results;
+* `fileURLToPath(import.meta.url)` boilerplate;
+* `createHash().update().digest()`;
+* a hand-written recursive source-tree walker;
+* manual `DispatchRequest` and `WorkerResult` interfaces alongside TypeBox schemas;
+* the redundant `access()` immediately after `resolveExistingProjectPath()`;
+* an unnecessary `const files = [...request.contextFiles]`.
+
+Node 26 definitely provides `fsPromises.mkdtempDisposable()` and stable `FileHandle[Symbol.asyncDispose]`, so the `await using` simplifications we discussed are available under the project's new minimum. ([Node.js][1])
+
+Current TypeBox also directly supports deriving static types with `Type.Static<typeof schema>`, so the duplicated request/result type declarations can genuinely disappear. ([GitHub][2])
+
+I would therefore do this **after the three correctness fixes**, because it should give you source-budget headroom instead of consuming it.
+
+## 5. Cross-platform config validation has one Windows hole
+
+The new checks correctly catch:
+
+```text
+/absolute
+C:\absolute
+\\server\share
+..\escape
+foo\..\escape
+```
+
+and there are tests for most of these.
+
+But a Windows root-relative path can be:
+
+```text
+\foo
+```
+
+A single leading backslash is rooted on the current Windows drive. The current code only rejects two leading backslashes (`\\`) for UNC.
+
+So `\foo` can pass `configString()`.
+
+Rather than expand the regex collection, this is a good place to simplify:
+
+```ts
+import { posix, win32 } from "node:path";
+
+if (
+    ...
+    posix.isAbsolute(value) ||
+    win32.isAbsolute(value) ||
+    value.split(/[\\/]/).includes("..")
+)
+```
+
+Still purely lexical. Still no `realpath()`. Still no symlink restriction.
+
+**Priority: P1.**
+
+## 6. The source budget is at the ceiling, but the intended slimming didn't really happen
+
+The checker now correctly includes the worker bootstrap, which I agree with. But it still contains its custom recursive walker, and it still prints:
+
+> `Estimated production TypeScript`
+
+even though it now counts an `.mjs` file.
+
+More importantly, the project records **exactly 2000/2000**.
+
+That's not much headroom, and some prompt strings have been compressed fairly aggressively while most of the actual modern-runtime deletion opportunities remain untouched.
+
+I would rename the metric to something like:
+
+```text
+runtime source
+```
+
+and use the modern Node simplifications above to get comfortably below the cap—ideally 1850–1950 rather than exactly 2000.
+
+The budget should constrain architecture, not force sentence packing.
+
+## 7. Durable project state has already gone stale again
+
+This one is particularly ironic given Pi Sych's philosophy.
+
+The latest `PROJECT.md` says:
+
+> “Evidence and synchronization need updating.”
+
+But the latest commit is specifically the commit that updated `EVIDENCE.md` and `SYNC.json`.
+
+It also says:
+
+> “No … image replacement has occurred”
+
+and E-029 repeats that claim.
+
+But the implementation commit explicitly says it replaced the architecture/workflow diagrams, and the diff includes the PNG replacements.
+
+So those claims are false.
+
+There is also a terminology mismatch: `PROJECT.md` says “Production TypeScript is exactly 2,000 lines,” whereas the budget now includes the JavaScript worker bootstrap.
+
+These are easy edits, but I would fix them before release because authoritative state being demonstrably wrong is worse for Pi Sych than it would be for an ordinary package.
+
+---
+
+### What I would do next
+
+I think this needs **one small corrective pass, not another refactor**:
+
+1. Surface artifact observation errors and prevent false all-clear status.
+2. Restore dependency impact for missing artifacts.
+3. Require active untracked compaction files actually to exist.
+4. Fix Windows `\root-relative` config paths.
+5. Add the four focused regression tests.
+6. Then use Node 26/TypeBox features to delete the still-manual lifecycle/type duplication until there's meaningful budget headroom.
+7. Finally correct `PROJECT.md`, E-029 and `SYNC.json` after the independent review.
+
+I would leave the graph code, MCPorter, Plannotator argument behavior, model-catalog fail-fast semantics, two-tool architecture, symlink behavior, and overall v6 design alone.
+
+So the result is **quite close**, and the two concerns you originally cared most about—worker failure masking and unchanged acknowledgements—were addressed well. But the status error presentation and missing-dependency regression are release blockers in my view, and the simplification portion of the plan is only partially complete.
+
+[1]: https://nodejs.org/api/fs.html?utm_source=chatgpt.com "File system | Node.js v26.5.1 Documentation"
+[2]: https://github.com/sinclairzx81/typebox?utm_source=chatgpt.com "GitHub - sinclairzx81/typebox: JSON Schema Type Builder with Static Type Resolution for TypeScript · GitHub"
+

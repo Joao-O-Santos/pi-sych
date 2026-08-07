@@ -55,26 +55,29 @@ independent substantive review, and no automated workflow controller.
 ## Current state
 
 {verified} The unreleased `6.0.0` implementation builds on `5.0.4` with
-a correctness+simplification pass. It raises the Node baseline to 26,
-centralizes Pi configuration-root and named-skill lookup with
-cross-platform validation, distinguishes current/changed/missing/error
-observation states, extracts valid JSON from compaction model output,
-consolidates the model-catalog loader, shares the worker result TypeBox
-schema, removes the MCPorter config existence preflight, and fails fast
-on malformed SYNC.json at startup. Production TypeScript is exactly
-2,000 lines within the strict budget. No tag, push, npm publication, or
-image replacement has occurred for this work.
+a correctness+simplification pass and an independent review corrective
+pass. It raises the Node baseline to 26, centralizes Pi
+configuration-root and named-skill lookup with cross-platform
+validation, distinguishes current/changed/missing/error observation
+states, surfaces artifact observation errors, restores dependency impact
+for missing artifacts, requires active untracked compaction files to
+exist, extracts valid JSON from compaction model output, consolidates
+the model-catalog loader, shares the worker result TypeBox schema,
+removes the MCPorter config existence preflight, and fails fast on
+malformed SYNC.json at startup. Runtime source is 2000/2000 lines within
+the strict budget. v6.0.0 was tagged and pushed to `main`; npm
+publication and Pages publication remain pending an independent review
+gate.
 
 ## Previous action
 
-{verified} Committed the v6.0.0 implementation as `0ae415e8`. Signed
-commit passed local typecheck, style, 63/63 tests, source budget
-(2000/2000), and site build. Evidence and synchronization need updating.
-The next step is to update SYNC.json and EVIDENCE.md, then run an
-independent review gate before tagging.
+{verified} Committed the v6.0.0 implementation as `0ae415e8`, updated
+evidence as `7545a407`, and tagged `v6.0.0`. Local gate passed: 65
+tests, source budget 2000/2000, typecheck+style clean. An independent
+review identified three P0 blockers and several P1 simplifications,
+which have been addressed in the current commit set.
 
 ## Immediate next step
 
-{accepted} Update EVIDENCE.md and SYNC.json to reflect the verified
-v6.0.0 implementation, run an independent review gate, then tag and
-publish if the review passes.
+{accepted} Run an independent review gate, then tag and publish `v6.0.0`
+if the review passes.

@@ -31,6 +31,6 @@ const total = counts.reduce((sum, file) => sum + file.lines, 0);
 const estimate = Math.ceil(total / 50) * 50;
 if (estimate > limit)
 	throw new Error(
-		`Estimated production TypeScript is about ${estimate} lines; limit is ${limit}.\n${counts.map((file) => `${Math.ceil(file.lines / 50) * 50}\t${file.path}`).join("\n")}`,
+		`runtime source is about ${estimate} lines; limit is ${limit}.\n${counts.map((file) => `${Math.ceil(file.lines / 50) * 50}\t${file.path}`).join("\n")}`,
 	);
-console.log(`Estimated production TypeScript: about ${estimate}/${limit} lines`);
+console.log(`runtime source: about ${estimate}/${limit} lines`);

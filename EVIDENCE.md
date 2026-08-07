@@ -1,5 +1,31 @@
 # Evidence
 
+## E-030 --- v6.0.0 independent review corrective pass
+
+**Status:** verified **Kind:** observed deterministic behavior, type
+safety, source budget, and evidence consistency **Source:** current
+source and tests, signed commits `0ae415e8` and `7545a407`, signed tag
+`v6.0.0`, independent review findings, and local gate **Supports:**
+v6.0.0 release readiness after the independent review identified three
+P0 blockers and several P1 simplifications. **Evidence:** surface
+artifact observation errors in `ProjectStatusCheck.errors` and the
+"Unable to observe" formatter section, restore dependency impact for
+missing artifacts by passing `[...changed, ...missing]` to `impacts()`,
+require active untracked compaction files to exist by using
+`resolveExistingProjectPath()` in an inline loop, fix Windows
+root-relative config paths using `posix.isAbsolute()` and
+`win32.isAbsolute()`, rename the source budget metric to "runtime
+source", modernize with `crypto.hash()`, `import.meta.dirname`, and
+`Static<typeof schema>` for duplicated request/result types, share the
+worker result TypeBox schema, consolidate model-catalog loading, and
+inline the compaction file filter. typecheck, Biome style, Pandoc
+Markdown check, source budget, 55 unit tests, 10 integration tests (65
+total), packed install, and Pages build passed. Source budget is
+2000/2000 lines. **Limits:** The acknowledgement read-modify-write race
+and async-disposable cleanup remain identified but not addressed (no
+concurrent writes in current usage; try/finally is sufficient for temp
+directories). **Checked:** 2026-08-07
+
 ## E-029 --- v6.0.0 correctness+simplification implementation
 
 **Status:** verified **Kind:** observed deterministic behavior, type
