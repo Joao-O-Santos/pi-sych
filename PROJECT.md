@@ -54,22 +54,19 @@ independent substantive review, and no automated workflow controller.
 
 ## Current state
 
-{verified} The current implementation keeps direct `SYNC.json` version 2
-resolution, SHA-256 status checks, declared dependency impact, bounded
-workers, and explicit acknowledgement. It uses a small working-memory
-summary, append-only human-review proposals in `INBOX.md`, direct named
-model roles, shared primitive validation, and narrow MCPorter and
-Plannotator adapters. The six public skills compose plain shared methods
-and local modules through ordered Markdown recipes; no loader or
-workflow controller was added. Routes distinguish routine work from
-specialist inference, retrieval, and verification. Intellectual
-influences and platform acknowledgements live in packaged
-`docs/attribution.md`, outside routed worker context. Signed tag
-`v4.0.6` and npm publication with provenance are verified for the
-scientific-grounding, regression-aware retrospective, and
-continuity-preserving compaction changes. The six-field memory schema is
-unchanged. Production TypeScript remains about 1,650 lines within the
-2,000-line cap.
+{verified} The current unreleased `5.0.0` implementation keeps direct
+`SYNC.json` version 2 resolution, SHA-256 status checks, declared
+dependency impact, bounded workers, explicit acknowledgement, the
+unchanged six-field working-memory schema, and append-only human-review
+proposals in `INBOX.md`. It adds one visible strict `config.json`,
+configurable custom and 100,000-token compaction, independently
+selectable Plannotator, optional MCPorter and Plannotator dependencies,
+a strict relative-path configuration contract, Pi-native
+`PI_PACKAGE_DIR` support, three held-in real-Pi benchmarks, Make/Pandoc
+Pages generation, and an explicit public-contract and SemVer boundary.
+Production TypeScript remains about 1,900 lines within the 2,000-line
+cap. No tag, push, npm publication, or image replacement has occurred
+for this work.
 
 ## Previous action
 
@@ -82,5 +79,9 @@ live evaluation passed before release.
 
 ## Immediate next step
 
-{verified} The `v4.0.6` release, live evaluation, provenance, and
-package contents are verified. No further release action is pending.
+{accepted} The owner approved `PLAN.md` for `5.0.0` and separately
+authorized the release tag and push after final verification. Complete
+the canonical evidence update, final gate, signed commit and signed
+annotated tag, push `main` and the tag, and record external
+pipeline/publication state only after it is observed. No image
+replacement is authorized.

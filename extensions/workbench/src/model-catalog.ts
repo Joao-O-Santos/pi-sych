@@ -1,6 +1,5 @@
 import { readFileSync } from "node:fs";
-import { homedir } from "node:os";
-import { resolve } from "node:path";
+import { piSychConfigPath } from "./config-directory.js";
 
 export interface ModelEntry {
 	model: string;
@@ -42,14 +41,20 @@ export function parseModelCatalog(value: unknown): ModelCatalog {
 	return { default: catalog.default, models };
 }
 
-export function modelCatalogPath(env: NodeJS.ProcessEnv = process.env): string {
-	return (
-		env.PI_SYCH_MODEL_CATALOG ??
-		resolve(env.PI_CODING_AGENT_DIR ?? resolve(homedir(), ".config/pi"), "pi-sych/models.json")
-	);
+export function modelCatalogPath(
+	projectRoot?: string,
+	env: NodeJS.ProcessEnv = process.env,
+): string {
+	return piSychConfigPath("modelCatalog", {
+		env,
+		...(projectRoot ? { projectRoot } : {}),
+	});
 }
-export function loadModelCatalog(env: NodeJS.ProcessEnv = process.env): ModelCatalog {
-	const path = modelCatalogPath(env);
+export function loadModelCatalog(
+	projectRoot?: string,
+	env: NodeJS.ProcessEnv = process.env,
+): ModelCatalog {
+	const path = modelCatalogPath(projectRoot, env);
 	try {
 		return parseModelCatalog(JSON.parse(readFileSync(path, "utf8")));
 	} catch (error) {
@@ -57,9 +62,10 @@ export function loadModelCatalog(env: NodeJS.ProcessEnv = process.env): ModelCat
 	}
 }
 export function loadOptionalModelCatalog(
+	projectRoot?: string,
 	env: NodeJS.ProcessEnv = process.env,
 ): ModelCatalog | undefined {
-	const path = modelCatalogPath(env);
+	const path = modelCatalogPath(projectRoot, env);
 	let value: string;
 	try {
 		value = readFileSync(path, "utf8");

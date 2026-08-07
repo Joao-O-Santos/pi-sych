@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { chmod, mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { chmod, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -87,10 +87,10 @@ test("dispatch explains how to initialize a missing worker directory", async () 
 
 test("worker launcher reports timeout, cancellation, and spawn failure", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-launcher-"));
-	const fake = join(root, "fake-pi.sh");
-	await writeFile(fake, "#!/bin/sh\ntrap 'exit 0' TERM\nwhile :; do sleep 1; done\n");
+	const fake = join(root, "pi");
+	await writeFile(fake, "#!/bin/sh\ntrap 'exit 0' TERM\nwhile :; do /bin/sleep 1; done\n");
 	await chmod(fake, 0o755);
-	const previous = process.env.PI_SYCH_PI_BIN;
+	const previous = process.env.PATH;
 	const spec = {
 		id: "test",
 		request: { ...request, timeoutMs: 20 },
@@ -103,7 +103,7 @@ test("worker launcher reports timeout, cancellation, and spawn failure", async (
 		extraExtensionPaths: [],
 	};
 	try {
-		process.env.PI_SYCH_PI_BIN = fake;
+		process.env.PATH = root;
 		assert.equal((await launchPiWorker(spec)).classification, "timeout");
 		const controller = new AbortController();
 		controller.abort();
@@ -111,10 +111,10 @@ test("worker launcher reports timeout, cancellation, and spawn failure", async (
 			(await launchPiWorker({ ...spec, signal: controller.signal })).classification,
 			"cancelled",
 		);
-		process.env.PI_SYCH_PI_BIN = join(root, "does-not-exist");
+		await rm(fake);
 		assert.equal((await launchPiWorker(spec)).classification, "spawn-failure");
 	} finally {
-		if (previous === undefined) delete process.env.PI_SYCH_PI_BIN;
-		else process.env.PI_SYCH_PI_BIN = previous;
+		if (previous === undefined) delete process.env.PATH;
+		else process.env.PATH = previous;
 	}
 });

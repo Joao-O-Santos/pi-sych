@@ -5,7 +5,23 @@ import { readFile, rename, writeFile } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-export const PANDOC_VERSION = "3.10.1";
+export const PANDOC_MINIMUM_VERSION = "3.10.1";
+
+export function parsePandocVersion(value) {
+	if (typeof value !== "string" || !/^\d+\.\d+\.\d+$/.test(value)) return undefined;
+	return value.split(".").map(Number);
+}
+
+export function comparePandocVersions(left, right) {
+	const leftParts = parsePandocVersion(left);
+	const rightParts = parsePandocVersion(right);
+	if (!leftParts || !rightParts)
+		throw new TypeError("Pandoc versions must be numeric major.minor.patch values.");
+	for (let index = 0; index < 3; index += 1) {
+		if (leftParts[index] !== rightParts[index]) return leftParts[index] - rightParts[index];
+	}
+	return 0;
+}
 
 export const MARKDOWN_FILES = [
 	"AGENTS.md",
@@ -44,13 +60,19 @@ function verifyPandoc() {
 	const result = spawnSync("pandoc", ["--version"], { encoding: "utf8" });
 	if (result.error?.code === "ENOENT")
 		throw new Error(
-			`Pandoc ${PANDOC_VERSION} is required for Markdown checks; install that release on a contributor host.`,
+			`Pandoc ${PANDOC_MINIMUM_VERSION} or newer is required for Markdown checks; ` +
+				"the executable was not found.",
 		);
 	if (result.error) throw new Error(`Unable to inspect Pandoc: ${result.error.message}`);
+	if (result.status !== 0) throw new Error(`Pandoc --version failed with exit ${result.status}.`);
 	const actual = result.stdout.match(/^pandoc\s+(\S+)/)?.[1];
-	if (result.status !== 0 || actual !== PANDOC_VERSION)
+	if (!parsePandocVersion(actual))
 		throw new Error(
-			`Pandoc ${PANDOC_VERSION} is required for reproducible Markdown; found ${actual ?? "unknown"}.`,
+			`Pandoc version is malformed; expected numeric major.minor.patch, found ${actual ?? "unknown"}.`,
+		);
+	if (comparePandocVersions(actual, PANDOC_MINIMUM_VERSION) < 0)
+		throw new Error(
+			`Pandoc ${PANDOC_MINIMUM_VERSION} or newer is required for Markdown checks; found ${actual}.`,
 		);
 	pandocVerified = true;
 }

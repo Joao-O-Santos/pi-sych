@@ -20,14 +20,13 @@ test("real Pi can inspect a disposable project and write an artifact", {
 	await execFile("git", ["init", "-q", root]);
 	const session = join(root, "session.jsonl");
 	const agentDir = await mkdtemp(join(tmpdir(), "pi-sych-usage-agent-"));
-	const workerAgentDir = await mkdtemp(join(tmpdir(), "pi-sych-usage-worker-agent-"));
+	const workerAgentDir = join(agentDir, "pi-sych", "worker-agent");
 	t.after(() =>
-		Promise.all(
-			[root, agentDir, workerAgentDir].map((path) => rm(path, { recursive: true, force: true })),
-		),
+		Promise.all([root, agentDir].map((path) => rm(path, { recursive: true, force: true }))),
 	);
 	const supervisorAgentDir = process.env.PI_CODING_AGENT_DIR ?? join(homedir(), ".config/pi");
-	const modelCatalog = join(root, "models.json");
+	const modelCatalog = join(agentDir, "pi-sych", "models.json");
+	await mkdir(join(agentDir, "pi-sych"), { recursive: true });
 	await writeFile(
 		modelCatalog,
 		JSON.stringify({
@@ -110,8 +109,6 @@ test("real Pi can inspect a disposable project and write an artifact", {
 				env: {
 					...process.env,
 					PI_CODING_AGENT_DIR: agentDir,
-					PI_SYCH_MODEL_CATALOG: modelCatalog,
-					PI_SYCH_WORKER_AGENT_DIR: workerAgentDir,
 				},
 				stdio: ["ignore", "pipe", "pipe"],
 			},

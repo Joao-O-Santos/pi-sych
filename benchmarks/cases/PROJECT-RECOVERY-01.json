@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "PROJECT-RECOVERY-01",
+  "heldIn": "held-in",
+  "skills": ["project"],
+  "fixture": "benchmarks/fixtures/project-recovery-01",
+  "task": "Recover a concise direction note from the supplied accepted, stale, tentative, and unreviewed state. Write RECOVERY.md that distinguishes those statuses and recommends the next human decision. Do not edit any supplied state file.",
+  "expectedArtifacts": ["RECOVERY.md"],
+  "objectiveChecks": [
+    { "type": "exists", "path": "RECOVERY.md" },
+    { "type": "includes", "path": "RECOVERY.md", "value": "accepted" },
+    { "type": "includes", "path": "RECOVERY.md", "value": "human" }
+  ],
+  "rubric": { "version": 1, "criteria": ["status separation", "no canonical mutation", "bounded next step"] },
+  "criticalFailures": ["presents tentative state as accepted", "mutates canonical state"],
+  "budgets": { "timeoutMs": 120000, "judgeTimeoutMs": 60000 }
+}

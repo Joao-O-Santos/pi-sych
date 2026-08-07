@@ -196,9 +196,22 @@ Human-facing commands:
 - `/plannotator-review` --- open Plannotator code review for current
   changes or a pull request.
 
-Plannotator is a human review adapter. It does not add a plan
-controller, automatically accept feedback, or promote generated output
-into project state.
+Plannotator is a separately selectable human review adapter. It does not
+add a plan controller, automatically accept feedback, or promote
+generated output into project state.
+
+### Enable, disable, and narrow runtime resources
+
+Pi Sych's package enables its workbench and Plannotator extensions by
+default. Use `pi config` to disable either extension or use a package
+filter such as `"extensions": ["extensions/workbench/index.ts"]` to keep
+the core while omitting Plannotator; use `"extensions": []` to load no
+package extensions while retaining package skills. Use `--no-extensions`
+for a session with no extensions. For a selected session, `--tools`
+allow-lists tools and `--exclude-tools` removes named tools; these
+control visible Pi tools, not host permissions. See
+[configuration](docs/configuration.md#pi-native-resource-controls) and
+the [public contract](docs/public-contract.md).
 
 ### Tools available to the supervising model
 
@@ -219,7 +232,8 @@ initialize the worker runtime once:
 ``` sh
 mkdir -p ~/.config/pi/pi-sych
 $EDITOR ~/.config/pi/pi-sych/models.json
-node /path/to/pi-sych/scripts/bootstrap-worker-agent-dir.mjs
+node /path/to/pi-sych/scripts/bootstrap-worker-agent-dir.mjs \
+  --agent-dir ~/.config/pi/pi-sych/worker-agent
 ```
 
 Replace `/path/to/pi-sych` with the package location used by your Pi
@@ -355,8 +369,10 @@ changes.
   user-guided pattern for independent review, clean-context editing, and
   fresh verification;
 - [Configuration](docs/configuration.md) --- private models, worker
-  setup, project roots, canonical paths, skill customization, and
-  optional integrations;
+  setup, project roots, canonical paths, skill customization, Pi-native
+  resource controls, and optional integrations;
+- [Public contract](docs/public-contract.md) --- supported userland,
+  compatibility-sensitive internals, and SemVer/migration rules;
 - [Architecture](ARCHITECTURE.md) --- supervisor-facing runtime
   boundaries and mechanical invariants;
 - [Development](docs/development.md) --- checks, tests, style, and

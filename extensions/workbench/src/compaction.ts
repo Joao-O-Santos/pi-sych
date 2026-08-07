@@ -160,7 +160,7 @@ export function buildCompactionPrompt(
 			...event.preparation.turnPrefixMessages,
 		]),
 	);
-	return `Return JSON with workingMemory {task,constraints,active,blockers,next,files} and at most five promotions {target,proposal}. Preserve only information needed to continue. Retain continuity-critical information even when it is not current active work: unresolved alternatives; consequential negative results; failed approaches that constrain the next action; and decisions or commitments not yet represented in canonical project files. Put these in the existing workingMemory fields—constraints, active, blockers, or next—as appropriate; do not add workingMemory fields. Promotions are usually empty and are unreviewed lines in INBOX.md.\nPrevious summary:\n${event.preparation.previousSummary ?? "none"}\nConversation:\n${conversation}\nRelevant project files (bounded text snapshot; INBOX is intentionally excluded):\n${JSON.stringify(snapshot.files)}\nRelevant artifact paths (contents are not included):\n${JSON.stringify(snapshot.paths)}\nProject status:\n${JSON.stringify(statusProjection(status))}`;
+	return `Return JSON with workingMemory {task,constraints,active,blockers,next,files} and at most five promotions {target,proposal}. task and next must be non-empty strings; when no next action is known, set next to exactly "Await user direction." Preserve only information needed to continue. Retain continuity-critical information even when it is not current active work: unresolved alternatives; consequential negative results; failed approaches that constrain the next action; and decisions or commitments not yet represented in canonical project files. Put these in the existing workingMemory fields—constraints, active, blockers, or next—as appropriate; do not add workingMemory fields. Promotions are usually empty and are unreviewed lines in INBOX.md.\nPrevious summary:\n${event.preparation.previousSummary ?? "none"}\nConversation:\n${conversation}\nRelevant project files (bounded text snapshot; INBOX is intentionally excluded):\n${JSON.stringify(snapshot.files)}\nRelevant artifact paths (contents are not included):\n${JSON.stringify(snapshot.paths)}\nProject status:\n${JSON.stringify(statusProjection(status))}`;
 }
 export async function compact(event: SessionBeforeCompactEvent, ctx: ExtensionContext) {
 	try {
@@ -183,10 +183,10 @@ export async function compact(event: SessionBeforeCompactEvent, ctx: ExtensionCo
 			},
 			{
 				apiKey: auth.apiKey,
-				headers: auth.headers,
-				env: auth.env,
+				...(auth.headers ? { headers: auth.headers } : {}),
+				...(auth.env ? { env: auth.env } : {}),
 				maxTokens: Math.min(4096, ctx.model.maxTokens),
-				signal: event.signal,
+				...(event.signal ? { signal: event.signal } : {}),
 				cacheRetention: "none",
 				sessionId: uuidv7(),
 			},

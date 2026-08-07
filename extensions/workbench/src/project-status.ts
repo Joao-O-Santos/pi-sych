@@ -66,8 +66,7 @@ const fingerprint = (value: unknown, label: string) => {
 		throw new Error(`${label} must be a SHA-256 fingerprint`);
 	return result;
 };
-function dependencies(value: unknown, label: string): Dependency[] | undefined {
-	if (value === undefined) return undefined;
+function dependencies(value: unknown, label: string): Dependency[] {
 	if (!Array.isArray(value)) throw new Error(`${label} must be an array`);
 	return value.map((entry, i) =>
 		typeof entry === "string"
@@ -298,12 +297,7 @@ export function formatProjectStatusCheck(
 		)
 			lines.push("", "All tracked files match their recorded hashes.");
 	}
-	if (pending)
-		lines.push(
-			"",
-			`Pending memory proposals: ${pending}`,
-			`Review: /plannotator-annotate ${inboxPath}`,
-		);
+	if (pending) lines.push("", `Pending memory proposals: ${pending}`, `Review: ${inboxPath}`);
 	lines.push("", "A changed hash establishes changed content, not conceptual drift or authority.");
 	return lines.join("\n");
 }

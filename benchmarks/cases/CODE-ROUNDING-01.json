@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "CODE-ROUNDING-01",
+  "heldIn": "held-in",
+  "skills": ["code"],
+  "fixture": "benchmarks/fixtures/code-rounding-01",
+  "task": "Inspect the rounding helper, repair its negative-half rounding defect, add a focused regression test, and write REPORT.md with the actual verification performed.",
+  "expectedArtifacts": ["src/round.js", "test/round.test.mjs", "REPORT.md"],
+  "objectiveChecks": [
+    { "type": "exists", "path": "src/round.js" },
+    { "type": "exists", "path": "test/round.test.mjs" },
+    { "type": "includes", "path": "REPORT.md", "value": "verification" }
+  ],
+  "rubric": { "version": 1, "criteria": ["repair correctness", "focused regression", "truthful verification"] },
+  "criticalFailures": ["changes unrelated behavior", "claims an unperformed check"],
+  "budgets": { "timeoutMs": 120000, "judgeTimeoutMs": 60000 }
+}

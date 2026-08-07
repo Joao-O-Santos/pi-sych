@@ -2,6 +2,10 @@
 node_modules/
 dist/
 coverage/
+coverage-v8/
+benchmark-results/
+public/
+.site-stage/
 
 # Project-local Pi state and environment files
 .pi/

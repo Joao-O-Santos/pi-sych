@@ -1,4 +1,13 @@
 {
   "version": 1,
-  "workerAgentDir": "~/.cache/pi/pi-sych/worker-agent"
+  "workerAgentDir": "worker-agent",
+  "modelCatalog": "models.json",
+  "mcporterConfig": "mcp/mcporter.json",
+  "compaction": {
+    "custom": true,
+    "compactAt100k": false
+  },
+  "review": {
+    "mode": "plannotator"
+  }
 }
