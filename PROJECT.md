@@ -54,36 +54,27 @@ independent substantive review, and no automated workflow controller.
 
 ## Current state
 
-{verified} The current unreleased `5.0.0` implementation keeps direct
-`SYNC.json` version 2 resolution, SHA-256 status checks, declared
-dependency impact, bounded workers, explicit acknowledgement, the
-unchanged six-field working-memory schema, and append-only human-review
-proposals in `INBOX.md`. It adds one visible strict `config.json`,
-configurable custom and 100,000-token compaction, independently
-selectable Plannotator, optional MCPorter and Plannotator dependencies,
-a strict relative-path configuration contract, Pi-native
-`PI_PACKAGE_DIR` support, three held-in real-Pi benchmarks, Make/Pandoc
-Pages generation, and an explicit public-contract and SemVer boundary.
-Production TypeScript remains about 1,900 lines within the 2,000-line
-cap. No tag, push, npm publication, or image replacement has occurred
-for this work.
+{verified} The unreleased `6.0.0` implementation builds on `5.0.4` with
+a correctness+simplification pass. It raises the Node baseline to 26,
+centralizes Pi configuration-root and named-skill lookup with
+cross-platform validation, distinguishes current/changed/missing/error
+observation states, extracts valid JSON from compaction model output,
+consolidates the model-catalog loader, shares the worker result TypeBox
+schema, removes the MCPorter config existence preflight, and fails fast
+on malformed SYNC.json at startup. Production TypeScript is exactly
+2,000 lines within the strict budget. No tag, push, npm publication, or
+image replacement has occurred for this work.
 
 ## Previous action
 
-{verified} Released `pi-sych@5.0.4`. Signed commit
-`198df03911fe9cd5bf91dec09dc08df73a46c0bc` and tag `v5.0.4` passed
-GitLab verify and publish-npm; npm reports `5.0.4` with provenance
-metadata. The release included realistic benchmarks, optional
-integrations, Pages foundations, visible configuration, and independent
-coverage tooling. The next unreleased correctness pass is being prepared
-as `6.0.0` because it raises the Node baseline to 26 and changes runtime
-observation and failure semantics.
+{verified} Committed the v6.0.0 implementation as `0ae415e8`. Signed
+commit passed local typecheck, style, 63/63 tests, source budget
+(2000/2000), and site build. Evidence and synchronization need updating.
+The next step is to update SYNC.json and EVIDENCE.md, then run an
+independent review gate before tagging.
 
 ## Immediate next step
 
-{accepted} Implement and verify the approved correctness+simplification
-pass for unreleased `6.0.0`: finish the shared Pi-root and worker/status
-refactors, reduce runtime source below the strict budget, complete
-focused coverage and integration tests, review the replacement diagrams
-and Pages rendering, then update evidence and synchronization. Do not
-tag or publish until those gates and independent review are complete.
+{accepted} Update EVIDENCE.md and SYNC.json to reflect the verified
+v6.0.0 implementation, run an independent review gate, then tag and
+publish if the review passes.

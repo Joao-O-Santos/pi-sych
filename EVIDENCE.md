@@ -1,5 +1,26 @@
 # Evidence
 
+## E-029 --- v6.0.0 correctness+simplification implementation
+
+**Status:** verified **Kind:** observed deterministic behavior, type
+safety, and source budget **Source:** current source and tests,
+`package.json` 6.0.0, signed commit `0ae415e8`, and local gate
+**Supports:** v6.0.0 implementation readiness for the approved
+correctness+simplification pass. **Evidence:** typecheck, Biome style,
+Pandoc Markdown check, source budget, 53 unit tests, 10 integration
+tests (63 total), packed install, and Pages build passed. Source budget
+is exactly 2000/2000 lines including worker bootstrap script. The
+changes include Node 26 baseline, centralized Pi config-root and skill
+lookup, current/changed/missing/error observation states, worker failure
+precedence, JSON extraction from compaction model output, model catalog
+consolidation, shared worker result schema, startup fail-fast on
+malformed SYNC.json, MCPorter preflight removal, Plannotator projectFile
+simplification, and improved Pages styling with responsive CSS and dark
+mode. No tag, push, npm publication, or image replacement has occurred.
+**Limits:** independent review gate has not been run for this entry. The
+acknowledgement read-modify-write race was identified but not addressed
+(no concurrent writes in current usage). **Checked:** 2026-08-07
+
 ## E-028 --- unreleased v5.0.0 implementation gate and benchmark pilot
 
 **Status:** verified for the local pre-tag release gate **Kind:**
