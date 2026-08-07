@@ -68,11 +68,11 @@ function arrow(x1, y1, x2, y2) {
 
 function buildArchitecture() {
 	const width = 1200;
-	const height = 600;
+	const height = 680;
 	const boxW = 220;
 	const boxH = 160;
 	const y1 = 180;
-	const y2 = 440;
+	const y2 = 460;
 	const x1 = 40;
 	const x2 = (width - boxW) / 2;
 	const x3 = width - boxW - 40;
@@ -92,11 +92,11 @@ function buildArchitecture() {
 
 function buildSupervisorContext() {
 	const width = 1200;
-	const height = 600;
+	const height = 680;
 	const boxW = 240;
 	const boxH = 180;
 	const y1 = 200;
-	const y2 = 440;
+	const y2 = 460;
 	const x1 = 40;
 	const x2 = (width - boxW) / 2;
 	const x3 = width - boxW - 40;
@@ -116,11 +116,11 @@ function buildSupervisorContext() {
 
 function buildSkillsArchitecture() {
 	const width = 1200;
-	const height = 600;
+	const height = 680;
 	const boxW = 240;
 	const boxH = 200;
 	const y1 = 200;
-	const y2 = 440;
+	const y2 = 460;
 	const x1 = 40;
 	const x2 = (width - boxW) / 2;
 	const x3 = width - boxW - 40;
@@ -140,11 +140,11 @@ function buildSkillsArchitecture() {
 
 function buildReviewWorkflow() {
 	const width = 1200;
-	const height = 600;
+	const height = 680;
 	const boxW = 240;
 	const boxH = 180;
 	const y1 = 200;
-	const y2 = 440;
+	const y2 = 460;
 	const x1 = 40;
 	const x2 = (width - boxW) / 2;
 	const x3 = width - boxW - 40;

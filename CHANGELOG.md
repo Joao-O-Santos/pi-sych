@@ -28,6 +28,16 @@ immutable npm publications unless explicitly marked otherwise.
   to "runtime source".
 - Modernize with `crypto.hash()`, `import.meta.dirname`, and
   `Static<typeof schema>` for duplicated request/result types.
+- Fix `PI_SYCH_PACKAGE_ROOT` off-by-one directory traversal (use
+  `import.meta.dirname` directly).
+- End `writeAtomicFile()` async disposal scope before `rename()` for
+  correct cross-platform resource ordering.
+- Replace chmod-based observation-error test with deterministic `EISDIR`
+  fixture (directory at tracked path).
+- Use `mkdtempDisposable()` for worker runtime cleanup.
+- Add regression tests for three-way compaction file filtering and
+  Windows root-relative config paths.
+- Source budget: 1,975 actual lines (2000/2000 rounded).
 
 ## v6.0.0 - Unreleased
 

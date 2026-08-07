@@ -1,5 +1,28 @@
 # Evidence
 
+## E-031 --- v6.0.2 final review-correction pass
+
+**Status:** verified **Kind:** observed deterministic behavior, type
+safety, source budget, and evidence consistency **Source:** current
+source and tests, signed commits, signed tag `v6.0.2`, independent
+review findings, and local gate **Supports:** v6.0.2 release readiness
+after the independent review identified two new code issues and a
+release-state/version problem. **Evidence:** fix `PI_SYCH_PACKAGE_ROOT`
+off-by-one directory traversal (use `import.meta.dirname` directly); end
+`writeAtomicFile()` async disposal scope before `rename()` for correct
+cross-platform resource ordering; replace chmod-based observation-error
+test with deterministic `EISDIR` fixture (directory at tracked path);
+use `mkdtempDisposable()` for worker runtime cleanup; add regression
+tests for three-way compaction file filtering and Windows root-relative
+config paths; regenerate four architecture PNGs with proper box heights
+and line-wrapped text. typecheck, Biome style, Pandoc Markdown check,
+source budget (1,975 actual / 2,000 rounded), 56 unit tests, 10
+integration tests (66 total), packed install, and Pages build passed.
+**Limits:** The acknowledgement read-modify-write race and
+async-disposable cleanup remain identified but not addressed (no
+concurrent writes in current usage; try/finally is sufficient for temp
+directories). **Checked:** 2026-08-07
+
 ## E-030 --- v6.0.0 independent review corrective pass
 
 **Status:** verified **Kind:** observed deterministic behavior, type

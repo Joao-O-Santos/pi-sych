@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { constants, existsSync, statSync } from "node:fs";
-import { access, mkdir, mkdtemp, open, readFile, rm } from "node:fs/promises";
+import { access, mkdir, mkdtempDisposable, open, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, resolve } from "node:path";
 import { StringEnum } from "@earendil-works/pi-ai";
@@ -29,7 +29,7 @@ export const DEFAULT_TIMEOUT_MS = 90_000;
 export const MAX_TIMEOUT_MS = 30 * 60_000;
 const LOG_LIMIT = 8_192;
 export const PI_SYCH_PACKAGE_ROOT = resolve(
-	process.env.PI_PACKAGE_DIR ?? resolve(dirname(import.meta.dirname), "../../.."),
+	process.env.PI_PACKAGE_DIR ?? resolve(import.meta.dirname, "../../.."),
 );
 
 export interface ContextFile {
@@ -279,50 +279,47 @@ export async function dispatchWorker(options: {
 			`Worker agent directory is not initialized at ${options.workerAgentDir}. Run: node ${resolve(options.packageRoot ?? PI_SYCH_PACKAGE_ROOT, "scripts/bootstrap-worker-agent-dir.mjs")} --agent-dir ${options.workerAgentDir}`,
 		);
 	}
-	const runtime = await mkdtemp(resolve(tmpdir(), "pi-sych-")),
-		resultPath = resolve(runtime, "result.json");
-	try {
-		const spec: WorkerLaunchSpec = {
+	const runtime = await mkdtempDisposable(resolve(tmpdir(), "pi-sych-")),
+		resultPath = resolve(runtime.path, "result.json");
+	const spec: WorkerLaunchSpec = {
+		id,
+		request: { ...request, contextFiles, timeoutMs },
+		workerAgentDir: options.workerAgentDir,
+		resultPath,
+		projectRoot: options.project.projectRoot,
+		model,
+		prompt: "",
+		packageRoot: options.packageRoot ?? PI_SYCH_PACKAGE_ROOT,
+		extraExtensionPaths:
+			options.extraExtensionPaths ?? remoteResearchExtensionPaths(request.remoteResearch === true),
+		...(options.signal ? { signal: options.signal } : {}),
+	};
+	spec.prompt = taskPrompt(spec, contextFiles);
+	const launch = await (options.launcher ?? launchPiWorker)(spec);
+	if (launch.classification || launch.terminationSignal || launch.exitCode !== 0)
+		return {
 			id,
-			request: { ...request, contextFiles, timeoutMs },
-			workerAgentDir: options.workerAgentDir,
-			resultPath,
-			projectRoot: options.project.projectRoot,
 			model,
-			prompt: "",
-			packageRoot: options.packageRoot ?? PI_SYCH_PACKAGE_ROOT,
-			extraExtensionPaths:
-				options.extraExtensionPaths ??
-				remoteResearchExtensionPaths(request.remoteResearch === true),
-			...(options.signal ? { signal: options.signal } : {}),
+			timeoutMs,
+			launch,
+			error: launch.classification
+				? `Worker ${launch.classification}`
+				: `Worker exited ${launch.exitCode ?? "without an exit code"}${launch.stderr ? `: ${launch.stderr}` : ""}`,
 		};
-		spec.prompt = taskPrompt(spec, contextFiles);
-		const launch = await (options.launcher ?? launchPiWorker)(spec);
-		if (launch.classification || launch.terminationSignal || launch.exitCode !== 0)
-			return {
-				id,
-				model,
-				timeoutMs,
-				launch,
-				error: launch.classification
-					? `Worker ${launch.classification}`
-					: `Worker exited ${launch.exitCode ?? "without an exit code"}${launch.stderr ? `: ${launch.stderr}` : ""}`,
-			};
-		try {
-			const result = validateWorkerResult(JSON.parse(await readFile(resultPath, "utf8")));
-			for (const file of result.files)
-				await resolveExistingProjectPath(options.project.projectRoot, file);
-			return { id, model, timeoutMs, launch, result };
-		} catch (reason) {
-			return {
-				id,
-				model,
-				timeoutMs,
-				launch,
-				error: `Worker result protocol failed: ${reason instanceof Error ? reason.message : String(reason)}`,
-			};
-		}
+	try {
+		const result = validateWorkerResult(JSON.parse(await readFile(resultPath, "utf8")));
+		for (const file of result.files)
+			await resolveExistingProjectPath(options.project.projectRoot, file);
+		return { id, model, timeoutMs, launch, result };
+	} catch (reason) {
+		return {
+			id,
+			model,
+			timeoutMs,
+			launch,
+			error: `Worker result protocol failed: ${reason instanceof Error ? reason.message : String(reason)}`,
+		};
 	} finally {
-		await rm(runtime, { recursive: true, force: true });
+		await runtime.remove();
 	}
 }

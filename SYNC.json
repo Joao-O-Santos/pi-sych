@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-07T02:00:00.000Z",
+  "confirmedAt": "2026-08-07T15:00:00.000Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:72e0ed5a9a83d7ed2af0da84511cc4155be09c3b3370166e469b4af7431b88ea",
+      "fingerprint": "sha256:05853efd3cc5387da8a8e9d3792566b69bfffccf2142a57ff8063fcbf6c4b75b",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,13 +15,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-07T02:00:00.000Z",
-        "reason": "Verified v6.0.2: architecture diagrams fixed, 65 tests, source budget 2000/2000, typecheck+style clean."
+        "at": "2026-08-07T15:00:00.000Z",
+        "reason": "Verified v6.0.2: architecture diagrams fixed, package-root fix, atomic-file scope, deterministic test, mkdtempDisposable, regression tests, 66 tests, source budget 1975/2000, typecheck+style clean."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:8aff14c1e86d3105aba466d362d47afbf5098b5d46ae7f5036d571583fa4e703",
+      "fingerprint": "sha256:ce42006f981407ec2ba4e73a69485b57a4ec8d977ccc230823c030e253741eb1",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,8 +35,8 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-07T02:00:00.000Z",
-        "reason": "Verified v6.0.2: architecture diagrams fixed, 65 tests, source budget 2000/2000, typecheck+style clean."
+        "at": "2026-08-07T15:00:00.000Z",
+        "reason": "Verified v6.0.2: added E-031 for final review-correction pass; 66 tests, source budget 1975/2000, typecheck+style clean."
       }
     },
     {

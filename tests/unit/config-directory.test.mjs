@@ -84,6 +84,8 @@ test("Pi Sych config rejects malformed, unknown, and mistyped values", async () 
 		[{ ...DEFAULT_CONFIG, workerAgentDir: "\\\\server\\share" }, /relative path/],
 		[{ ...DEFAULT_CONFIG, modelCatalog: "foo\\..\\models.json" }, /relative path/],
 		[{ ...DEFAULT_CONFIG, modelCatalog: "../models.json" }, /relative path/],
+		[{ ...DEFAULT_CONFIG, workerAgentDir: "\\worker" }, /relative path/],
+		[{ ...DEFAULT_CONFIG, modelCatalog: "\\models.json" }, /relative path/],
 		[{ ...DEFAULT_CONFIG, compaction: null }, /compaction must be an object/],
 		[
 			{ ...DEFAULT_CONFIG, compaction: { custom: false, compactAt100k: false, typo: true } },
@@ -94,7 +96,23 @@ test("Pi Sych config rejects malformed, unknown, and mistyped values", async () 
 		[{ ...DEFAULT_CONFIG, review: { mode: "manual", typo: true } }, /Unknown/],
 	]) {
 		await writeFile(path, typeof value === "string" ? value : JSON.stringify(value));
-		assert.throws(load, pattern);
+		try {
+			load();
+			console.error("NO ERROR for:", JSON.stringify(value));
+			throw new Error("Missing expected exception");
+		} catch (e) {
+			if (!pattern.test(e.message)) {
+				console.error(
+					"WRONG ERROR for:",
+					JSON.stringify(value),
+					"expected",
+					pattern,
+					"got",
+					e.message,
+				);
+				throw e;
+			}
+		}
 	}
 	const { review: _review, ...legacy } = DEFAULT_CONFIG;
 	await writeFile(path, JSON.stringify(legacy));

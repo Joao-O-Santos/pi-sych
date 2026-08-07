@@ -183,9 +183,11 @@ export async function writeAtomicFile(path: string, content: string) {
 		temporary = resolve(parent, `.${parse(path).base}.${randomUUID()}.tmp`);
 	await mkdir(parent, { recursive: true });
 	try {
-		await using handle = await open(temporary, "wx", 0o600);
-		await handle.writeFile(content);
-		await handle.sync();
+		{
+			await using handle = await open(temporary, "wx", 0o600);
+			await handle.writeFile(content);
+			await handle.sync();
+		}
 		await rename(temporary, path);
 	} catch (error) {
 		await rm(temporary, { force: true }).catch(() => undefined);

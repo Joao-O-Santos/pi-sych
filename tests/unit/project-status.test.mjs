@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -88,20 +88,16 @@ test("status surfaces observation errors and prevents false all-clear", async ()
 			artifacts: [{ path: "A.md", fingerprint: hash("a"), status: "current" }],
 		}),
 	);
-	// Make A.md unreadable to trigger observation error
-	const { chmod } = await import("node:fs/promises");
-	await chmod(join(root, "A.md"), 0);
-	try {
-		const state = await checkProjectStatus(root);
-		assert.equal(state.artifacts[0].observation.state, "error");
-		assert.equal(state.errors.length, 1);
-		assert.equal(state.errors[0].path, "A.md");
-		assert.match(state.errors[0].message, /permission|EACCES/);
-		assert.match(formatProjectStatusCheck(state), /Unable to observe:/);
-		assert.doesNotMatch(formatProjectStatusCheck(state), /All tracked files match/);
-	} finally {
-		await chmod(join(root, "A.md"), 0o644);
-	}
+	// Create a directory at the tracked path: readFile() will fail with EISDIR
+	await rm(join(root, "A.md"));
+	await mkdir(join(root, "A.md"));
+	const state = await checkProjectStatus(root);
+	assert.equal(state.artifacts[0].observation.state, "error");
+	assert.equal(state.errors.length, 1);
+	assert.equal(state.errors[0].path, "A.md");
+	assert.match(state.errors[0].message, /EISDIR/);
+	assert.match(formatProjectStatusCheck(state), /Unable to observe:/);
+	assert.doesNotMatch(formatProjectStatusCheck(state), /All tracked files match/);
 });
 test("missing artifacts propagate dependency impact", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-impact-"));

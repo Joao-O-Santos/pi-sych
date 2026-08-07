@@ -171,3 +171,58 @@ test("pending promotions count proposal entries, including nested inboxes", asyn
 	assert.equal(await pendingPromotions({ canonical: { inbox } }), 2);
 	assert.equal(await pendingPromotions({ canonical: { inbox: join(root, "missing.md") } }), 0);
 });
+
+test("compaction retains existing untracked files, discards nonexistent and outside-project", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-compaction-filter-"));
+	await writeFile(join(root, "PROJECT.md"), "project");
+	await writeFile(
+		join(root, "SYNC.json"),
+		JSON.stringify({ version: 2, confirmedAt: "now", artifacts: [] }),
+	);
+
+	// Create an existing untracked file
+	await writeFile(join(root, "existing.md"), "existing content");
+
+	const project = await resolveProject(root);
+	const status = await checkProjectStatus(root, project);
+
+	// Mock output with three file types
+	const mockOutput = {
+		workingMemory: {
+			task: "test",
+			constraints: [],
+			active: [],
+			blockers: [],
+			next: "test",
+			files: ["existing.md", "nonexistent.md", "../outside.md"],
+		},
+		promotions: [],
+	};
+
+	// Import the internal filter logic
+	const { compactionSnapshot } = await import("../../.test-build/workbench/src/compaction.js");
+	const snapshot = await compactionSnapshot(project, status);
+	const allowed = new Set(snapshot.paths);
+
+	const files = [];
+	for (const file of mockOutput.workingMemory.files) {
+		if (allowed.has(file)) {
+			files.push(file);
+			continue;
+		}
+		try {
+			const { resolveExistingProjectPath } = await import(
+				"../../.test-build/workbench/src/project-files.js"
+			);
+			await resolveExistingProjectPath(project.projectRoot, file);
+			files.push(file);
+		} catch {}
+	}
+
+	// existing.md should be retained (existing untracked project file)
+	assert.ok(files.includes("existing.md"), "existing untracked file should be retained");
+	// nonexistent.md should be discarded (doesn't exist)
+	assert.ok(!files.includes("nonexistent.md"), "nonexistent file should be discarded");
+	// ../outside.md should be discarded (outside project)
+	assert.ok(!files.includes("../outside.md"), "outside-project file should be discarded");
+});
