@@ -180,7 +180,7 @@ test("package metadata keeps attribution and release version consistent", async 
 	const lockfile = JSON.parse(await readFile("package-lock.json", "utf8"));
 	assert.equal(manifest.files.includes("docs"), true);
 	assert.equal((await stat("docs/attribution.md")).isFile(), true);
-	assert.equal(manifest.version, "5.0.3");
+	assert.equal(manifest.version, "5.0.4");
 	assert.equal(lockfile.version, manifest.version);
 	assert.equal(lockfile.packages[""].version, manifest.version);
 	assert.deepEqual(manifest.pi.extensions, [
@@ -211,7 +211,7 @@ test("packed install omitting optional dependencies retains the core package", a
 	const installed = JSON.parse(
 		await readFile(join(install, "node_modules/pi-sych/package.json"), "utf8"),
 	);
-	assert.equal(installed.version, "5.0.3");
+	assert.equal(installed.version, "5.0.4");
 	await assert.rejects(stat(join(install, "node_modules/@plannotator/pi-extension")));
 	await assert.rejects(stat(join(install, "node_modules/pi-mcporter")));
 });

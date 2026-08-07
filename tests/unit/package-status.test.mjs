@@ -42,6 +42,7 @@ async function capturedExtension(extension) {
 }
 
 test("core and Plannotator extensions register separate public surfaces", async () => {
+	process.env.PI_CODING_AGENT_DIR = await mkdtemp(join(tmpdir(), "pi-sych-public-ext-"));
 	const core = await capturedExtension(piSychWorkbench);
 	assert.deepEqual(
 		core.tools.map((tool) => tool.name),
