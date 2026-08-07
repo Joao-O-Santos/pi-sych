@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { constants, existsSync, statSync } from "node:fs";
-import { access, mkdir, mkdtempDisposable, open, readFile, rm } from "node:fs/promises";
+import { access, mkdir, mkdtempDisposable, open, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, resolve } from "node:path";
 import { StringEnum } from "@earendil-works/pi-ai";
@@ -251,7 +251,7 @@ export const launchPiWorker: WorkerLauncher = async (spec): Promise<WorkerLaunch
 	if (exitCode === null)
 		return {
 			exitCode: null,
-			stderr: (stderr + "spawn error").slice(-LOG_LIMIT),
+			stderr: `${stderr}spawn error`.slice(-LOG_LIMIT),
 			classification: "spawn-failure",
 		};
 	return { exitCode, stderr, ...(terminationSignal ? { terminationSignal } : {}) };

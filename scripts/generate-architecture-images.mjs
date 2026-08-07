@@ -30,12 +30,12 @@ function textLines(
 	return lines
 		.map(
 			(line, i) =>
-				`<text x="${x}" y="${y + i * (size + 4)}" font-family='${family}' font-size="${size}" font-weight="${weight}" fill="${color}" text-anchor="middle">${escape(line)}</text>`,
+				`<text x="${x}" y="${y + i * (size + 4)}" font-family='${family}' font-size="${size}" font-weight="${weight}" fill="${color}" text-anchor="middle">${escapeHtml(line)}</text>`,
 		)
 		.join("");
 }
 
-function escape(s) {
+function escapeHtml(s) {
 	return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
@@ -49,13 +49,12 @@ function box(x, y, width, height, title, subtitle, palette) {
 		<rect x="${x}" y="${y}" width="${width}" height="${height}" rx="12" ry="12"
 			fill="${palette.fill}" stroke="${palette.stroke}" stroke-width="2"/>
 		<text x="${x + width / 2}" y="${startY + titleSize}" font-family="system-ui, -apple-system, sans-serif"
-			font-size="${titleSize}" font-weight="700" fill="${palette.stroke}" text-anchor="middle">${escape(title)}</text>
+			font-size="${titleSize}" font-weight="700" fill="${palette.stroke}" text-anchor="middle">${escapeHtml(title)}</text>
 		${textLines(x + width / 2, startY + titleSize + 12, lines, { size: subtitleSize })}
 	`;
 }
 
 function arrow(x1, y1, x2, y2) {
-	const midX = (x1 + x2) / 2;
 	return `
 		<defs>
 			<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
