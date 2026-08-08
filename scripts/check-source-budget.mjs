@@ -4,7 +4,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { join, relative } from "node:path";
 
 const root = process.cwd();
-const limit = 2_000;
+const limit = 2_100;
 
 async function files(path) {
 	const entries = await readdir(path, { withFileTypes: true });

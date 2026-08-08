@@ -44,12 +44,24 @@ test("worker request and result retain the bounded protocol", () => {
 		/leaves/,
 	);
 	assert.throws(
-		() => validateWorkerResult({ status: "complete", summary: "x", files: [], limitations: {} }),
-		/limitations must be an array/,
+		() =>
+			validateWorkerResult({
+				status: "complete",
+				summary: "x",
+				files: [],
+				limitations: {},
+			}),
+		/limitations must be an array of strings/,
 	);
 	assert.throws(() => validateWorkerResult({ status: "complete", summary: "x" }), /files/);
 	assert.throws(
-		() => validateWorkerResult({ status: "complete", summary: "x", files: {}, limitations: [] }),
+		() =>
+			validateWorkerResult({
+				status: "complete",
+				summary: "x",
+				files: {},
+				limitations: [],
+			}),
 		/files must be an array of strings/,
 	);
 	assert.equal(modelFor(parseModelCatalog(catalog), "junior"), "x/y");

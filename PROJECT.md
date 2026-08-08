@@ -72,7 +72,7 @@ with first-stop-wins semantics, restores forced SIGKILL timer cleanup
 and abort listener removal, preserves spawn error messages, and adds
 four lifecycle regression cases. Compaction file filtering is extracted
 to exported `filterWorkingMemoryFiles()` and exercised in compact()
-regression path. Source budget: 2,000 actual lines (2,000 rounded).
+regression path. Source budget: 2,050 actual lines (2,100 rounded).
 Tags: v6.0.0, v6.0.1, v6.0.2, v6.0.3, v6.0.4, v6.0.5; v6.0.6 is current
 head.
 
@@ -89,7 +89,7 @@ version expectations. `v6.0.4` fixed Biome lint errors blocking CI.
 disposal, first-stop-wins semantics, timer cleanup, abort listener
 removal, spawn error preservation, four lifecycle regression cases, and
 compaction file filtering deduplication. Local gate passed: 70 tests,
-source budget 2000/2000, typecheck+style clean.
+source budget 2050/2100, typecheck+style clean.
 
 ## Immediate next step
 

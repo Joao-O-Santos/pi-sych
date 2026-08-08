@@ -23,7 +23,12 @@ immutable npm publications unless explicitly marked otherwise.
 - Extract compaction file filtering into exported
   `filterWorkingMemoryFiles()` and exercise production code in
   `compact()` regression path (no algorithm duplication).
-- Source budget: 2,000 actual lines (2,000 rounded).
+- Make `stringArray` coercion lenient: a string input is wrapped in an
+  array, and array items that are not strings are coerced with
+  `String()`. Missing arrays still throw.
+- Make `nonEmptyString` coercion lenient: non-string values are coerced
+  with `String()` before trimming.
+- Source budget: 2,050 actual lines (2,100 rounded).
 
 ## v6.0.5 - 2026-08-08
 
