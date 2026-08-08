@@ -12,8 +12,7 @@ export const stringArray = (value: unknown, label: string): string[] => {
 		const trimmed = value.trim();
 		return trimmed ? [trimmed] : [];
 	}
-	if (!Array.isArray(value))
-		throw new Error(`${label} must be an array of strings`);
+	if (!Array.isArray(value)) throw new Error(`${label} must be an array of strings`);
 	return value
 		.map((item) => {
 			if (typeof item === "string") return item.trim();
