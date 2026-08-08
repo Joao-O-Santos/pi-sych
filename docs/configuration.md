@@ -39,19 +39,22 @@ the relative `modelCatalog`, `workerAgentDir`, and `mcporterConfig`
 fields in `config.json`; `PI_SYCH_PI_BIN` has no replacement because
 Pi's executable resolution is used. On first agent start it creates
 `config.json` without overwriting an existing file. Its version-1
-defaults include relative paths for the worker agent, model catalog, and
-MCPorter, plus:
+defaults include relative paths for the worker agent, model catalog,
+MCPorter, and the fallback literature database (`literature.sqlite`):
 
 ``` json
 "compaction": { "custom": true, "compactAt100k": false },
 "review": { "mode": "plannotator" }
 ```
 
-`custom` enables Pi Sych's custom compaction handler. `compactAt100k`
-requests compaction before an agent turn at 100,000 context tokens.
-`review.mode` is `plannotator` or `manual`; manual mode does not import
-the optional Plannotator runtime or register its commands. Invalid
-configuration and unknown keys fail loudly.
+`custom` enables Pi Sych's custom compaction handler, which calls the
+active supervisor model rather than a role from `models.json`. If it is
+disabled or cannot produce a valid result, Pi leaves compaction to its
+standard handler. `compactAt100k` requests compaction before an agent
+turn at 100,000 context tokens. `review.mode` is `plannotator` or
+`manual`; manual mode does not import the optional Plannotator runtime
+or register its commands. Invalid configuration and unknown keys fail
+loudly.
 
 ## Initialize the worker runtime
 
@@ -69,6 +72,44 @@ missing, `dispatch_worker` reports the exact bootstrap command it needs.
 
 Remote research has a separate opt-in configuration. The worker
 bootstrap does not create or guess that configuration.
+
+## Local literature search
+
+`literature_search` is available only to a dispatched worker whose
+selected skills include the exact `research` selector. It is a local
+lookup tool, not a supervisor service. The database is selected in this
+order:
+
+1.  `<projectRoot>/LITERATURE.sqlite`, when it exists;
+2.  `literatureDatabase` in the resolved `pi-sych/config.json`; or
+3.  `<resolved-config-directory>/literature.sqlite`.
+
+A configured relative `literatureDatabase` is relative to that
+configuration directory; an absolute value is used directly. It must be
+non-empty and may not contain parent traversal. An explicitly configured
+missing database is an error, not a fallback to the default.
+
+The supported database is a SQLite index with canonical metadata in
+`papers` and an external-content FTS5 table named `papers_fts`:
+
+``` sql
+CREATE TABLE papers (
+  id INTEGER PRIMARY KEY, filepath TEXT, directory TEXT, filename TEXT,
+  year INTEGER, first_author TEXT, title TEXT, abstract TEXT,
+  topic_tags TEXT, doi TEXT
+);
+CREATE VIRTUAL TABLE papers_fts USING fts5(
+  filepath, title, abstract, topic_tags, doi,
+  content='papers', content_rowid='id'
+);
+```
+
+Search joins `papers_fts` to `papers`, searches the indexed filepath,
+title, abstract, tags, and DOI fields, ranks with `bm25`, and snippets
+the abstract column. Results map `filepath`, `title`, `first_author`,
+`year`, and `doi` to the returned source path and metadata. Paths may be
+absolute or relative to the database. Pi Sych opens the database
+read-only and does not create, migrate, infer, or adapt schemas.
 
 ## Project canonical paths
 

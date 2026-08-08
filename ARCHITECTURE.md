@@ -28,9 +28,11 @@ The supervisor should pass the smallest complete worker packet: task,
 expected output, capability mode, context files, selected skills, model
 role, and a bounded timeout. Workers receive no supervisor transcript.
 After reading a selected umbrella skill, workers read the local modules
-and shared methods its task recipe routes to, in the stated order. Tool
-modes control visible Pi tools; they are not sandboxes and do not remove
-host permissions.
+and shared methods its task recipe routes to, in the stated order. A
+worker selected with the exact `research` skill receives
+`literature_search` in addition to its mode's tools; other workers do
+not. Tool modes control visible Pi tools; they are not sandboxes and do
+not remove host permissions.
 
 ## Worker lifecycle
 
@@ -43,12 +45,17 @@ A worker is a clean Pi process with one terminal result. The launcher:
     MCPorter extension;
 5.  stops it on cancellation or timeout, escalating from `SIGTERM` to
     `SIGKILL`; and
-6.  accepts a result only when it is valid, immutable, complete, and the
-    process exits normally.
+6.  accepts a result only when it is valid, immutable, and the process
+    exits normally.
 
+The worker result protocol has `status` (`complete`, `partial`, or
+`failed`), non-empty `summary`, and string arrays `files` and
+`limitations`. `complete` is a worker report, not an approval claim.
 Reported files must be relative, remain inside the project root, and
-exist when the result is accepted. The temporary result directory is
-removed whether the worker succeeds or fails.
+exist when the result is accepted. Cancellation, timeout, spawn failure,
+a signal exit, or a non-zero exit takes precedence over any result file.
+The temporary result directory is removed whether the worker succeeds or
+fails.
 
 ## Project state
 
@@ -71,10 +78,14 @@ sandbox boundary.
 
 ## Compaction
 
-Compaction sends the previous summary, compacted conversation, a concise
-status projection, and bounded snapshots of the configured `project`,
-`todo`, and `decisions` files when present. It retains relevant artifact
-paths without loading every artifact. The prompt explicitly preserves
+When `compaction.custom` is enabled, Pi Sych calls the active supervisor
+model through the custom-compaction seam; it does not use a worker role.
+Returning no custom result on unavailable model/authentication or
+failure leaves Pi's normal compactor in control. Compaction sends the
+previous summary, compacted conversation, a concise status projection,
+and bounded snapshots of the configured `project`, `todo`, and
+`decisions` files when present. It retains relevant artifact paths
+without loading every artifact. The prompt explicitly preserves
 continuity-critical unresolved alternatives, negative results, failed
 approaches that constrain the next action, and commitments not yet
 written to canonical files, using the existing memory fields. `INBOX.md`
@@ -84,6 +95,17 @@ Text snapshots are capped per file and in total. Truncation is reported
 to the model. At most five validated proposals may be appended to the
 configured inbox, which is created as needed and counted by proposal
 lines, not by newline accidents.
+
+## Local literature
+
+`literature_search` is registered only by the worker extension. It opens
+the selected database read-only and queries the supported SQLite FTS5
+`papers` plus external-content `papers_fts` schema. Search joins the
+index to canonical metadata, searches filepath, title, abstract, tags,
+and DOI, and ranks with FTS5, snippets `abstract`, and returns source
+paths resolved relative to the database. Database selection and the
+`literatureDatabase` setting are documented in
+[configuration](docs/configuration.md#local-literature-search).
 
 ## Skills, MCPorter, and Plannotator
 

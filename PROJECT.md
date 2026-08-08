@@ -54,49 +54,36 @@ independent substantive review, and no automated workflow controller.
 
 ## Current state
 
-{verified} The `6.0.9` implementation builds on `5.0.4` with a
-correctness+simplification pass, an independent review corrective pass
-(v6.0.2), a final review-correction pass (v6.0.3), CI lint fixes
-(v6.0.4), v6.0.5, worker lifecycle fixes (v6.0.6), integration test fix
-(v6.0.7), lenient validation (v6.0.8), and validation restoration
-(v6.0.9). It raises the Node baseline to 26, centralizes Pi
-configuration-root and named-skill lookup with cross-platform
-validation, distinguishes current/changed/missing/error observation
-states, surfaces artifact observation errors, restores dependency impact
-for missing artifacts, requires active untracked compaction files to
-exist, extracts valid JSON from compaction model output, consolidates
-the model-catalog loader, shares the worker result TypeBox schema,
-removes the MCPorter config existence preflight, fails fast on malformed
-SYNC.json at startup, fixes `PI_SYCH_PACKAGE_ROOT` off-by-one, ends
-atomic-file disposal before rename, uses `mkdtempDisposable()` with
-`await using` for worker cleanup with first-stop-wins semantics,
-restores forced SIGKILL timer cleanup and abort listener removal,
-preserves spawn error messages, and adds four lifecycle regression
-cases. Compaction file filtering is extracted to exported
-`filterWorkingMemoryFiles()` and exercised in compact() regression path.
-Source budget: 2,001 actual lines (2,100 rounded). Tags: v6.0.0 through
-v6.0.9; v6.0.9 is current head.
+{verified} The unreleased `6.1.0` implementation extends v6.0.9 with
+worker-only local literature search over a canonical `papers` plus
+external-content `papers_fts` SQLite schema, custom-compaction seams,
+expanded worker lifecycle/result-protocol coverage, live generated code
+reference and code-tour documentation, simplified Node coverage
+reporting, and the complete deterministic package/site gate. It uses
+Node 26 `node:sqlite`, keeps the supplied index schema as the sole
+literature contract, and maps `filepath`, `title`, `first_author`,
+`year`, and `doi` while searching filepath, title, abstract, tags, and
+DOI. Compaction clipping preserves valid UTF-8 boundaries and promotion
+proposals are constrained to single-line inbox entries. Source budget is
+2,099 actual lines (2,100 rounded). Version is 6.1.0; the release tag
+and package publication have not occurred.
 
 ## Previous action
 
-{verified} Committed the v6.0.0 implementation, updated evidence, and
-tagged `v6.0.0`. A corrective `v6.0.1` tag addressed review findings. A
-final `v6.0.2` pass fixed architecture diagram rendering, package-root
-traversal, atomic-file scope, observation-error test determinism, worker
-cleanup, and added regression tests. `v6.0.3` updated integration test
-version expectations. `v6.0.4` fixed Biome lint errors blocking CI.
-`v6.0.5` simplified config test and removed completed transient files.
-`v6.0.6` implements worker lifecycle fixes: proper `await using`
-disposal, first-stop-wins semantics, timer cleanup, abort listener
-removal, spawn error preservation, four lifecycle regression cases,
-compaction file filtering deduplication, and removes hardcoded version
-from integration test. `v6.0.7` added lenient `stringArray` and
-`nonEmptyString` coercion. `v6.0.8` was version housekeeping. `v6.0.9`
-restored strict shared validation and added compaction-specific
-`scalarStringArray`. Local gate passed: 60 unit tests, source budget
-2001/2100, typecheck+style clean.
+{verified} Implemented the v6.1.0 plan: added worker-only literature
+search, expanded deterministic lifecycle/protocol and workbench tests,
+introduced the custom-compaction seam, simplified diagnostic coverage,
+added live code-reference generation and a code tour, aligned package
+load and documentation, and standardized literature search on the
+supplied `papers`/`papers_fts` schema. Meaningful boundary coverage also
+identified and corrected UTF-8 clipping, multiline promotion, and test
+fixture-cleanup defects. The full local gate passed: 121 unit tests, 12
+integration tests, typecheck, style, dependency check, source budget
+(2,099/2,100 actual/rounded), package dry run, Pages build, coverage,
+and whitespace checks.
 
 ## Immediate next step
 
-{accepted} Update SYNC.json fingerprints and acknowledgements to match
-v6.0.9.
+{accepted} Push the verified v6.1.0 commit to main, confirm the remote
+verification job succeeds, then create and push tag `v6.1.0`. Do not
+publish the package or perform other release actions.

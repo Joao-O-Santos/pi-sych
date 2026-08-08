@@ -77,8 +77,11 @@ export const dispatchSchema = Type.Object({
 	timeoutMs: Type.Optional(Type.Integer({ minimum: 1, maximum: MAX_TIMEOUT_MS })),
 });
 
-export const toolsForRequest = (request: Pick<DispatchRequest, "mode" | "remoteResearch">) => [
+export const toolsForRequest = (
+	request: Pick<DispatchRequest, "mode" | "remoteResearch" | "skills">,
+) => [
 	...MODE_TOOLS[request.mode],
+	...(request.skills?.includes("research") ? ["literature_search"] : []),
 	...(request.remoteResearch ? ["mcporter"] : []),
 ];
 export function skillPaths(
@@ -185,11 +188,14 @@ export function validateWorkerResult(value: unknown): WorkerResult {
 		limitations: stringArray(item.limitations, "limitations"),
 	};
 }
-export const launchPiWorker: WorkerLauncher = async (spec): Promise<WorkerLaunchOutcome> => {
+export async function launchPiWorker(
+	spec: WorkerLaunchSpec,
+	spawnWorker = spawn,
+): Promise<WorkerLaunchOutcome> {
 	let stderr = "";
 	let stopped: "cancelled" | "timeout" | undefined;
 	let spawnError: Error | undefined;
-	const child = spawn(
+	const child = spawnWorker(
 		"pi",
 		[
 			"--mode",
@@ -230,12 +236,8 @@ export const launchPiWorker: WorkerLauncher = async (spec): Promise<WorkerLaunch
 		},
 	);
 	child.stderr.setEncoding("utf8");
-	child.stderr.on("data", (chunk) => {
-		stderr = (stderr + chunk).slice(-LOG_LIMIT);
-	});
-	child.once("error", (err) => {
-		spawnError = err;
-	});
+	child.stderr.on("data", (chunk) => (stderr = (stderr + chunk).slice(-LOG_LIMIT)));
+	child.once("error", (err) => (spawnError = err));
 	let forcedKillTimer: ReturnType<typeof setTimeout> | undefined;
 	const stop = (kind: "cancelled" | "timeout") => {
 		if (stopped) return;
@@ -268,7 +270,7 @@ export const launchPiWorker: WorkerLauncher = async (spec): Promise<WorkerLaunch
 		};
 	}
 	return { exitCode, stderr, ...(terminationSignal ? { terminationSignal } : {}) };
-};
+}
 export async function dispatchWorker(options: {
 	project: ResolvedProject;
 	workerAgentDir: string;

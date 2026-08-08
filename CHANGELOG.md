@@ -5,6 +5,27 @@ immutable npm publications unless explicitly marked otherwise.
 
 ## Unreleased
 
+### Added
+
+- Add worker-only `literature_search` for dispatches that select the
+  `research` skill, with documented local SQLite FTS5 schema, database
+  resolution, and `literatureDatabase` configuration.
+- Document the worker request/result protocol, lifecycle precedence,
+  custom compaction model seam, deterministic test posture, code tour,
+  and live generated code reference.
+
+### Changed
+
+- Simplify diagnostic coverage to the Node built-in coverage command; it
+  is not a verification or CI gate. Add meaningful path, status,
+  acknowledgement, worker-process, compaction, and literature-tool
+  boundary coverage, with systematic temporary-fixture cleanup.
+- Clip compaction snapshots only at valid UTF-8 boundaries and require
+  promotion proposals to remain single-line inbox entries.
+- Keep worker package-load registration deterministic: the worker
+  surface is exactly `submit_artifact` and `literature_search`.
+- Release version 6.1.0.
+
 ## v6.0.9 - 2026-08-08
 
 ### Fixed

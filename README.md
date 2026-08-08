@@ -1,5 +1,13 @@
 # Pi Sych
 
+[![pipeline
+status](https://gitlab.com/Joao-O-Santos/pi-sych/badges/main/pipeline.svg)](https://gitlab.com/Joao-O-Santos/pi-sych/-/commits/main)
+[![npm
+version](https://img.shields.io/npm/v/pi-sych.svg)](https://www.npmjs.com/package/pi-sych)
+[![npm
+downloads](https://img.shields.io/npm/dt/pi-sych.svg)](https://www.npmjs.com/package/pi-sych)
+[![license](https://img.shields.io/npm/l/pi-sych.svg)](https://gitlab.com/Joao-O-Santos/pi-sych/-/blob/main/LICENSE)
+
 Pi Sych is a small Pi package for research, writing, analysis, and code
 projects that need to remain understandable beyond a single LLM
 conversation.
@@ -223,6 +231,19 @@ Pi Sych gives the supervisor two mechanical tools:
 These tools support a workflow; they do not decide what the workflow
 must be.
 
+### Research workers and local literature
+
+A worker selected with the `research` skill also receives
+`literature_search`; it is not a supervisor tool and is not added for
+other skills. The tool searches a local, read-only SQLite FTS5 database.
+Its supported schema stores canonical metadata in `papers` and uses an
+external-content FTS5 table named `papers_fts`. It searches filepath,
+title, abstract, tags, and DOI; returns ranked metadata (`title`,
+`first_author`, `year`, and `doi`), a marked snippet from `abstract`, a
+score, and each source path resolved relative to the database. See
+[configuration](docs/configuration.md#local-literature-search) for
+database resolution and `literatureDatabase`.
+
 ## Optional: enable workers
 
 Direct work does not require a worker model catalogue. To let the
@@ -260,11 +281,16 @@ orchestration system:
   files and affected dependants. Human review supplies the meaning.
 - **Bounded delegation:** `dispatch_worker` starts one fresh worker with
   an explicit task, context packet, skills, model role, mode, and
-  timeout.
-- **Small working memory:** compaction retains a bounded continuation
-  summary, including consequential unresolved alternatives, negative
-  results, and failed approaches, and may place plainly marked proposals
-  in `INBOX.md`.
+  timeout. A worker submits one immutable `status`, `summary`, `files`,
+  and `limitations` result; Pi Sych accepts it only after normal process
+  exit and validates reported project files.
+- **Small working memory:** configured custom compaction uses the active
+  supervisor model to produce bounded structured continuation memory,
+  with Pi's standard compactor remaining available when it is disabled
+  or custom compaction fails. It retains a bounded continuation summary,
+  including consequential unresolved alternatives, negative results, and
+  failed approaches, and may place plainly marked proposals in
+  `INBOX.md`.
 - **Human review:** Plannotator provides annotation and code-review
   interfaces without becoming a workflow controller.
 
@@ -375,8 +401,10 @@ changes.
   compatibility-sensitive internals, and SemVer/migration rules;
 - [Architecture](ARCHITECTURE.md) --- supervisor-facing runtime
   boundaries and mechanical invariants;
-- [Development](docs/development.md) --- checks, tests, style, and
-  design constraints for contributors; and
+- [Development](docs/development.md) --- checks, deterministic test
+  posture, style, and design constraints for contributors;
+- [Code tour](docs/code-tour.md) --- a guided map of the current runtime
+  and its [live generated code reference](code-reference.html); and
 - [Contributing](CONTRIBUTING.md) --- issues, pull requests, and release
   ownership; and
 - [Attribution](docs/attribution.md) --- cited influences behind the

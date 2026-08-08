@@ -9,6 +9,7 @@ const pagePaths = new Map([
 	["ARCHITECTURE.md", "architecture.html"],
 	["CONTRIBUTING.md", "contributing.html"],
 	["docs/configuration.md", "configuration.html"],
+	["docs/code-tour.md", "code-tour.html"],
 	["docs/development.md", "development.html"],
 	["docs/review-workflow.md", "review-workflow.html"],
 	["docs/attribution.md", "attribution.html"],

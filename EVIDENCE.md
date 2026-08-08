@@ -1,5 +1,34 @@
 # Evidence
 
+## E-035 --- v6.1.0 implementation gate
+
+**Status:** verified **Kind:** observed deterministic behavior, package
+contents, source budget, coverage, and evidence consistency **Source:**
+current source and tests, supplied local SQLite index schema, local
+gate, Pages build, package dry run, and independent read-only literature
+review **Supports:** v6.1.0 implementation readiness, including
+worker-only literature search, lifecycle/result-protocol coverage,
+custom-compaction seams, generated code reference, and the canonical
+`papers`/`papers_fts` literature contract. **Evidence:** the worker
+exposes `literature_search` only for dispatches selecting the exact
+`research` skill; the read-only `node:sqlite` implementation joins
+external-content `papers_fts` to `papers`, maps filepath, title,
+first_author, year, and DOI, and searches filepath, title, abstract,
+tags, and DOI. The supplied index was queried successfully for
+`agentic`, returning ranked metadata and source paths. The full gate
+passed: 121 unit tests, 12 integration tests, typecheck, Biome/Pandoc
+style, MCPorter dependency check, source budget (2,099 actual / 2,100
+rounded), package dry run, Pages build, Node built-in diagnostic
+coverage (98.28% lines, 91.73% branches, 94.94% functions), and
+whitespace checks. Critical-module line coverage is 100% for compaction,
+literature search, and project status, 98.85% for worker engine, and
+95.40% for project files. Coverage additions exercise behavior and
+failure boundaries rather than establishing a percentage gate. Package
+and lockfile are version 6.1.0. **Limits:** coverage is diagnostic, not
+a release gate; the private index path and contents are not packaged; no
+tag, push, publication, release, audit fix, or node-pty install-script
+approval was performed. **Checked:** 2026-08-08
+
 ## E-032 --- v6.0.5 release review
 
 **Status:** verified **Kind:** observed deterministic behavior and

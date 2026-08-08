@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFile, spawn } from "node:child_process";
-import { mkdir, mkdtemp, readdir, readFile, stat, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
@@ -10,6 +10,12 @@ import piSychWorker from "../../.test-build/worker/index.js";
 import { bootstrapWorkerAgentDir } from "../../scripts/bootstrap-worker-agent-dir.mjs";
 
 const run = promisify(execFile);
+
+async function tempRoot(t, prefix) {
+	const root = await mkdtemp(join(tmpdir(), prefix));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	return root;
+}
 
 function getCommands(args, env) {
 	return new Promise((resolvePromise, reject) => {
@@ -58,8 +64,8 @@ function getCommands(args, env) {
 	});
 }
 
-test("core workbench extension loads without optional integrations", async () => {
-	const agentDir = await mkdtemp(join(tmpdir(), "pi-sych-public-"));
+test("core workbench extension loads without optional integrations", async (t) => {
+	const agentDir = await tempRoot(t, "pi-sych-public-");
 	const extension = resolve("extensions/workbench/index.ts");
 	const { commands, stderr } = await getCommands(
 		[
@@ -89,8 +95,8 @@ test("core workbench extension loads without optional integrations", async () =>
 	);
 });
 
-test("Plannotator extension registers only its three commands", async () => {
-	const agentDir = await mkdtemp(join(tmpdir(), "pi-sych-plannotator-"));
+test("Plannotator extension registers only its three commands", async (t) => {
+	const agentDir = await tempRoot(t, "pi-sych-plannotator-");
 	const { commands, stderr } = await getCommands(
 		[
 			"--mode",
@@ -116,8 +122,8 @@ test("Plannotator extension registers only its three commands", async () => {
 	);
 });
 
-test("manual review mode omits Plannotator commands", async () => {
-	const agentDir = await mkdtemp(join(tmpdir(), "pi-sych-manual-review-"));
+test("manual review mode omits Plannotator commands", async (t) => {
+	const agentDir = await tempRoot(t, "pi-sych-manual-review-");
 	await mkdir(join(agentDir, "pi-sych"));
 	await writeFile(
 		join(agentDir, "pi-sych", "config.json"),
@@ -195,8 +201,8 @@ test("package metadata keeps attribution and release version consistent", async 
 	assert.deepEqual(lockfile.packages[""].optionalDependencies, manifest.optionalDependencies);
 });
 
-test("packed install omitting optional dependencies retains the core package", async () => {
-	const root = await mkdtemp(join(tmpdir(), "pi-sych-packed-"));
+test("packed install omitting optional dependencies retains the core package", async (t) => {
+	const root = await tempRoot(t, "pi-sych-packed-");
 	const tarballs = join(root, "tarballs"),
 		install = join(root, "install");
 	await mkdir(tarballs);
@@ -216,8 +222,8 @@ test("packed install omitting optional dependencies retains the core package", a
 	await assert.rejects(stat(join(install, "node_modules/pi-mcporter")));
 });
 
-test("bootstrapped worker starts with only the worker extension", async () => {
-	const root = await mkdtemp(join(tmpdir(), "pi-sych-worker-load-"));
+test("bootstrapped worker starts with only the worker extension", async (t) => {
+	const root = await tempRoot(t, "pi-sych-worker-load-");
 	const agentDir = join(root, "agent");
 	const supervisorAgentDir = join(root, "supervisor");
 	await bootstrapWorkerAgentDir({
@@ -247,7 +253,7 @@ test("bootstrapped worker starts with only the worker extension", async () => {
 	});
 	assert.deepEqual(
 		tools.map((tool) => tool.name),
-		["submit_artifact"],
+		["submit_artifact", "literature_search"],
 	);
 	assert.deepEqual(tools[0].parameters.properties.status.enum, ["complete", "partial", "failed"]);
 });

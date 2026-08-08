@@ -1,4 +1,5 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { registerLiteratureSearch } from "../workbench/src/literature-search.js";
 import {
 	validateWorkerResult,
 	workerResultSchema,
@@ -22,4 +23,5 @@ export default function piSychWorker(pi: ExtensionAPI): void {
 			};
 		},
 	});
+	registerLiteratureSearch(pi);
 }

@@ -2,16 +2,15 @@ import { existsSync, readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { posix, resolve, win32 } from "node:path";
-
 export interface PiSychConfig {
 	version: 1;
 	workerAgentDir: string;
 	modelCatalog: string;
 	mcporterConfig: string;
+	literatureDatabase?: string;
 	compaction: { custom: boolean; compactAt100k: boolean };
 	review: { mode: "plannotator" | "manual" };
 }
-
 export const DEFAULT_CONFIG = {
 	version: 1,
 	workerAgentDir: "worker-agent",
@@ -20,14 +19,12 @@ export const DEFAULT_CONFIG = {
 	compaction: { custom: true, compactAt100k: false },
 	review: { mode: "plannotator" },
 } satisfies PiSychConfig;
-
 export interface ConfigDirectoryOptions {
 	projectRoot?: string;
 	env?: NodeJS.ProcessEnv;
 	home?: string;
 	exists?: (path: string) => boolean;
 }
-
 export function piConfigRoot({
 	projectRoot,
 	env = process.env,
@@ -49,7 +46,6 @@ export const piSychConfigDirectory = (options: ConfigDirectoryOptions = {}) =>
 	resolve(piConfigRoot(options), "pi-sych");
 export const piSkillDirectory = (options: ConfigDirectoryOptions = {}) =>
 	resolve(piConfigRoot(options), "skills");
-
 const rejectUnknown = (item: Record<string, unknown>, keys: string[], path: string) => {
 	const unknown = Object.keys(item).filter((key) => !keys.includes(key));
 	if (unknown.length)
@@ -67,6 +63,10 @@ const configString = (item: Record<string, unknown>, key: string, path: string) 
 		throw new Error(`Pi Sych config ${key} must be a non-empty relative path at ${path}`);
 	return value;
 };
+const configKeys =
+	"version workerAgentDir modelCatalog mcporterConfig literatureDatabase compaction review".split(
+		" ",
+	);
 
 export function loadPiSychConfig(options: ConfigDirectoryOptions = {}): PiSychConfig {
 	const path = resolve(piSychConfigDirectory(options), "config.json");
@@ -80,11 +80,7 @@ export function loadPiSychConfig(options: ConfigDirectoryOptions = {}): PiSychCo
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error(`Pi Sych config must be an object at ${path}`);
 	const item = value as Record<string, unknown>;
-	rejectUnknown(
-		item,
-		["version", "workerAgentDir", "modelCatalog", "mcporterConfig", "compaction", "review"],
-		path,
-	);
+	rejectUnknown(item, configKeys, path);
 	if (!item.compaction || typeof item.compaction !== "object" || Array.isArray(item.compaction))
 		throw new Error(`Pi Sych config compaction must be an object at ${path}`);
 	const compaction = item.compaction as Record<string, unknown>,
@@ -98,26 +94,32 @@ export function loadPiSychConfig(options: ConfigDirectoryOptions = {}): PiSychCo
 		!(["plannotator", "manual"] as string[]).includes(review.mode as string)
 	)
 		throw new Error(`Pi Sych config is invalid at ${path}`);
+	const literatureDatabase = item.literatureDatabase;
+	if (
+		literatureDatabase !== undefined &&
+		(typeof literatureDatabase !== "string" ||
+			!literatureDatabase ||
+			literatureDatabase.split(/[\\/]/).includes(".."))
+	)
+		throw new Error(
+			`Pi Sych config literatureDatabase must be a non-empty path without parent traversal at ${path}`,
+		);
 	return {
 		version: 1,
 		workerAgentDir: configString(item, "workerAgentDir", path),
 		modelCatalog: configString(item, "modelCatalog", path),
 		mcporterConfig: configString(item, "mcporterConfig", path),
-		compaction: {
-			custom: compaction.custom,
-			compactAt100k: compaction.compactAt100k,
-		},
+		...(literatureDatabase ? { literatureDatabase } : {}),
+		compaction: { custom: compaction.custom, compactAt100k: compaction.compactAt100k },
 		review: { mode: review.mode as PiSychConfig["review"]["mode"] },
 	};
 }
-
 export function piSychConfigPath(
 	key: "workerAgentDir" | "modelCatalog" | "mcporterConfig",
 	options: ConfigDirectoryOptions = {},
 ): string {
 	return resolve(piSychConfigDirectory(options), loadPiSychConfig(options)[key]);
 }
-
 export async function ensurePiSychConfig(options: ConfigDirectoryOptions = {}): Promise<string> {
 	const directory = piSychConfigDirectory(options),
 		path = resolve(directory, "config.json");

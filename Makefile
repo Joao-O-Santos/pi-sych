@@ -50,6 +50,7 @@ site:
 	mkdir -p "$$stage"; \
 	cp -R "$(STATIC_DIR)/." "$$stage/"; \
 	cp -R "$(IMAGE_DIR)" "$$stage/img"; \
+	node scripts/generate-code-reference.mjs "$$stage/code-reference.md"; \
 	set -- $(SITE_PAGES); \
 	while [ "$$#" -gt 0 ]; do \
 		source="$$1"; target="$$2"; shift 2; \
@@ -66,4 +67,4 @@ site:
 	echo "Built $(PUBLIC_DIR)/"
 
 clean:
-	@rm -rf "$(STAGE_DIR)" "$(PUBLIC_DIR)" .test-build coverage-v8 coverage-c8
+	@rm -rf "$(STAGE_DIR)" "$(PUBLIC_DIR)" .test-build coverage-v8

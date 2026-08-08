@@ -74,7 +74,18 @@ test("worker request and result retain the bounded protocol", () => {
 		"ls",
 		"submit_artifact",
 	]);
-	assert.ok(toolsForRequest({ mode: "edit", remoteResearch: true }).includes("mcporter"));
+	const remoteTools = toolsForRequest({ mode: "edit", remoteResearch: true });
+	assert.ok(remoteTools.includes("mcporter"));
+	assert.ok(!remoteTools.includes("literature_search"));
+	assert.deepEqual(
+		toolsForRequest({ mode: "read-only", remoteResearch: true, skills: ["research"] }).slice(-2),
+		["literature_search", "mcporter"],
+	);
+	assert.ok(
+		!toolsForRequest({ mode: "read-only", remoteResearch: false, skills: ["Research"] }).includes(
+			"literature_search",
+		),
+	);
 	assert.deepEqual(toolsForRequest({ mode: "full-host", remoteResearch: false }), [
 		"read",
 		"edit",
@@ -168,6 +179,10 @@ test("worker extension writes and terminates a submitted artifact", async () => 
 			tools.push(tool);
 		},
 	});
+	assert.deepEqual(
+		tools.map((tool) => tool.name),
+		["submit_artifact", "literature_search"],
+	);
 	const resultPath = join(await mkdtemp(join(tmpdir(), "pi-sych-submit-")), "result.json");
 	const previous = process.env.PI_SYCH_RESULT_PATH;
 	process.env.PI_SYCH_RESULT_PATH = resultPath;

@@ -34,11 +34,12 @@ focused check; `make clean` removes generated site, test-build, and
 coverage output. `npm test` compiles TypeScript into ignored
 `.test-build/`, runs unit tests, and exercises package loading and
 project status through RPC integration tests. The package's GitLab
-pipeline repeats the verification and tag-based publication gate.
-Development and CI use Node 26 or newer; TypeScript and c8 follow the
-current `latest` dev-tool policy. Node's built-in coverage report
-remains the primary diagnostic, with c8 providing an independent V8
-view. Contributors do not publish directly.
+pipeline runs the verification and Pages-site setup, and retains the
+tag-based publication gate. Development and CI use Node 26 or newer;
+TypeScript follows the current `latest` dev-tool policy. `make coverage`
+runs the single Node built-in coverage command over the compiled unit
+and integration tests. Coverage is diagnostic evidence, not a gate, and
+CI does not repeat it. Contributors do not publish directly.
 
 `npm run test:usage` is opt-in. It uses real Pi/model calls against a
 disposable project, requires local credentials, and may incur provider
@@ -54,7 +55,9 @@ persistence boundaries is not simpler for its users.
 
 Use temporary directories and fake launchers in deterministic tests.
 Never place credentials in fixtures. For package-load tests, use an
-empty `PI_CODING_AGENT_DIR` and explicit `--no-*` resource flags.
+empty `PI_CODING_AGENT_DIR`, explicit `--no-*` resource flags, and exact
+registered surface assertions. Keep deterministic tests local:
+`npm run test:usage` is the separate opt-in live-model evidence path.
 
 Skill-architecture tests mechanically verify the six public `SKILL.md`
 files, hidden shared methods, required guidance and examples, resolvable
@@ -85,11 +88,14 @@ npm run style
 ```
 
 Use accessible headings, concrete verbs, short paragraphs, meaningful
-link text, and alt text when an image carries information. Write general
-usage documentation for users. Put runtime contracts and model-facing
-instructions in supervisor-facing sections. Write contributor material
-for developers other than the owner: explain setup, checks, limits,
-issue reports, and pull requests without assuming private context.
+link text, and alt text when an image carries information. Run the
+Markdown formatter after prose changes. `make site` generates the live
+code reference from current runtime source; do not hand-edit its staged
+output. Write general usage documentation for users. Put runtime
+contracts and model-facing instructions in supervisor-facing sections.
+Write contributor material for developers other than the owner: explain
+setup, checks, limits, issue reports, and pull requests without assuming
+private context.
 
 ## Design constraints
 

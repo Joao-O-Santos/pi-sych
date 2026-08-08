@@ -1,3 +1,4 @@
+import { isUtf8 } from "node:buffer";
 import { appendFile, mkdir, readFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { uuidv7 } from "@earendil-works/pi-ai";
@@ -41,15 +42,7 @@ export interface Promotion {
 	target: PromotionTarget;
 	proposal: string;
 }
-const targets = new Set<PromotionTarget>([
-	"project",
-	"agents",
-	"personal-agents",
-	"style",
-	"evidence",
-	"decisions",
-	"todo",
-]);
+
 export function validateWorkingMemory(value: unknown): Memory {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error("workingMemory must be an object");
@@ -67,9 +60,16 @@ function promotion(value: unknown): Promotion {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error("promotion must be an object");
 	const item = value as Record<string, unknown>,
-		target = nonEmptyString(item.target, "target") as PromotionTarget;
-	if (!targets.has(target)) throw new Error("promotion.target is not allowed");
-	return { target, proposal: nonEmptyString(item.proposal, "proposal") };
+		target = nonEmptyString(item.target, "target") as PromotionTarget,
+		proposal = nonEmptyString(item.proposal, "proposal");
+	if (
+		!(
+			["project", "agents", "personal-agents", "style", "evidence", "decisions", "todo"] as string[]
+		).includes(target)
+	)
+		throw new Error("promotion.target is not allowed");
+	if (/\r|\n/.test(proposal)) throw new Error("promotion.proposal must be one line");
+	return { target, proposal };
 }
 export function parseCompactionModelOutput(raw: string): {
 	workingMemory: Memory;
@@ -130,7 +130,9 @@ function clipped(value: string, limit: number) {
 	if (bytes <= limit) return value;
 	const marker = `\n[truncated after ${limit} bytes]`,
 		available = Math.max(0, limit - Buffer.byteLength(marker, "utf8"));
-	return `${Buffer.from(value).subarray(0, available).toString("utf8")}${marker}`;
+	let prefix = Buffer.from(value).subarray(0, available);
+	while (!isUtf8(prefix)) prefix = prefix.subarray(0, -1);
+	return `${prefix.toString("utf8")}${marker}`;
 }
 export async function compactionSnapshot(
 	project: ResolvedProject,
@@ -174,9 +176,13 @@ export function buildCompactionPrompt(
 			...event.preparation.turnPrefixMessages,
 		]),
 	);
-	return `Return only valid JSON with no prose, no markdown fences, and no commentary. Return an object with workingMemory {task,constraints,active,blockers,next,files} and at most five promotions {target,proposal}. task and next must be non-empty strings; when no next action is known, set next to exactly "Await user direction." Preserve only information needed to continue. Retain continuity-critical information even when it is not current active work: unresolved alternatives; consequential negative results; failed approaches that constrain the next action; and decisions or commitments not yet represented in canonical project files. Put these in the existing workingMemory fields—constraints, active, blockers, or next—as appropriate; do not add workingMemory fields. Promotions are usually empty and are unreviewed lines in ${inboxPath}.\nPrevious summary:\n${event.preparation.previousSummary ?? "none"}\nConversation:\n${conversation}\nRelevant project files (bounded text snapshot; proposal inbox is intentionally excluded):\n${JSON.stringify(snapshot.files)}\nRelevant artifact paths (contents are not included):\n${JSON.stringify(snapshot.paths)}\nProject status:\n${JSON.stringify({ changed: status.changed, missing: status.missing, impacted: status.impacted, syncError: status.syncError })}`;
+	return `Return only valid JSON with no prose, no markdown fences, and no commentary. Return an object with workingMemory {task,constraints,active,blockers,next,files} and at most five promotions {target,proposal}. task and next must be non-empty strings; when no next action is known, set next to exactly "Await user direction." Preserve only information needed to continue. Retain continuity-critical information even when it is not current active work: unresolved alternatives; consequential negative results; failed approaches that constrain the next action; and decisions or commitments not yet represented in canonical project files. Put these in the existing workingMemory fields—constraints, active, blockers, or next—as appropriate; do not add workingMemory fields. Promotion proposals must each be one line with no CR or LF. Promotions are usually empty and are unreviewed lines in ${inboxPath}.\nPrevious summary:\n${event.preparation.previousSummary ?? "none"}\nConversation:\n${conversation}\nRelevant project files (bounded text snapshot; proposal inbox is intentionally excluded):\n${JSON.stringify(snapshot.files)}\nRelevant artifact paths (contents are not included):\n${JSON.stringify(snapshot.paths)}\nProject status:\n${JSON.stringify({ changed: status.changed, missing: status.missing, impacted: status.impacted, syncError: status.syncError })}`;
 }
-export async function compact(event: SessionBeforeCompactEvent, ctx: ExtensionContext) {
+export async function compact(
+	event: SessionBeforeCompactEvent,
+	ctx: ExtensionContext,
+	completeModel = complete,
+) {
 	try {
 		if (!ctx.model) return undefined;
 		const project = await resolveProject(ctx.cwd),
@@ -184,7 +190,7 @@ export async function compact(event: SessionBeforeCompactEvent, ctx: ExtensionCo
 			snapshot = await compactionSnapshot(project, status),
 			auth = await ctx.modelRegistry.getApiKeyAndHeaders(ctx.model);
 		if (!auth.ok || !auth.apiKey) return undefined;
-		const response = await complete(
+		const response = await completeModel(
 			ctx.model,
 			{
 				messages: [

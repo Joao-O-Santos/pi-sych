@@ -69,6 +69,16 @@ test("Pi Sych writes visible defaults once without overwriting configuration", a
 	assert.deepEqual(JSON.parse(await readFile("config/defaults.json", "utf8")), DEFAULT_CONFIG);
 });
 
+test("Pi Sych config accepts a dedicated relative or absolute literature database path", async () => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-literature-config-"));
+	await mkdir(join(root, ".pi/pi-sych"), { recursive: true });
+	const path = join(root, ".pi/pi-sych/config.json");
+	for (const literatureDatabase of ["indexes/papers.sqlite", join(root, "papers.sqlite")]) {
+		await writeFile(path, JSON.stringify({ ...DEFAULT_CONFIG, literatureDatabase }));
+		assert.equal(loadPiSychConfig({ projectRoot: root }).literatureDatabase, literatureDatabase);
+	}
+});
+
 test("Pi Sych config rejects malformed, unknown, and mistyped values", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-config-invalid-"));
 	await mkdir(join(root, ".pi/pi-sych"), { recursive: true });
@@ -84,6 +94,9 @@ test("Pi Sych config rejects malformed, unknown, and mistyped values", async () 
 		[{ ...DEFAULT_CONFIG, workerAgentDir: "\\\\server\\share" }, /relative path/],
 		[{ ...DEFAULT_CONFIG, modelCatalog: "foo\\..\\models.json" }, /relative path/],
 		[{ ...DEFAULT_CONFIG, modelCatalog: "../models.json" }, /relative path/],
+		[{ ...DEFAULT_CONFIG, literatureDatabase: "" }, /literatureDatabase/],
+		[{ ...DEFAULT_CONFIG, literatureDatabase: 7 }, /literatureDatabase/],
+		[{ ...DEFAULT_CONFIG, literatureDatabase: "../papers.sqlite" }, /parent traversal/],
 		[{ ...DEFAULT_CONFIG, workerAgentDir: "\\worker" }, /relative path/],
 		[{ ...DEFAULT_CONFIG, modelCatalog: "\\models.json" }, /relative path/],
 		[{ ...DEFAULT_CONFIG, compaction: null }, /compaction must be an object/],
