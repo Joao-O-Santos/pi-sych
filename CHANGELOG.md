@@ -5,6 +5,21 @@ immutable npm publications unless explicitly marked otherwise.
 
 ## Unreleased
 
+## v6.0.8 - 2026-08-08
+
+### Fixed
+
+- Lenient `stringArray` coercion (string-to-array, non-string item
+  coercion) and lenient `nonEmptyString` coercion.
+
+## v6.0.7 - 2026-08-08
+
+### Fixed
+
+- Remove hardcoded version from integration test.
+
+## v6.0.6 - 2026-08-08
+
 ### Fixed
 
 - Worker lifecycle: `mkdtempDisposable()` now properly uses
@@ -23,12 +38,6 @@ immutable npm publications unless explicitly marked otherwise.
 - Extract compaction file filtering into exported
   `filterWorkingMemoryFiles()` and exercise production code in
   `compact()` regression path (no algorithm duplication).
-- Make `stringArray` coercion lenient: a string input is wrapped in an
-  array, and array items that are not strings are coerced with
-  `String()`. Missing arrays still throw.
-- Make `nonEmptyString` coercion lenient: non-string values are coerced
-  with `String()` before trimming.
-- Source budget: 2,050 actual lines (2,100 rounded).
 
 ## v6.0.5 - 2026-08-08
 

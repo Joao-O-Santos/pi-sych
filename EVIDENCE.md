@@ -28,14 +28,27 @@ lifecycle regression cases: cancellation before timeout, timeout before
 abort, SIGTERM-resistant process reaching SIGKILL, failed dispatch
 leaving no temporary runtime directory; extract compaction file
 filtering into exported `filterWorkingMemoryFiles()` and exercise
-production code in compact() regression path; lenient `stringArray`
-coercion (string-to-array, non-string item coercion) and lenient
-`nonEmptyString` coercion. typecheck, Biome style, Pandoc Markdown
-check, source budget (2,050 actual / 2,100 rounded), 60 unit tests, 10
-integration tests (70 total), packed install passed. **Limits:** The
-acknowledgement read-modify-write race remains identified but not
-addressed (no concurrent writes in current usage). **Checked:**
-2026-08-08
+production code in compact() regression path. typecheck, Biome style,
+Pandoc Markdown check, source budget (2,000 actual / 2,000 rounded), 60
+unit tests, 10 integration tests (70 total), packed install passed.
+**Limits:** The acknowledgement read-modify-write race remains
+identified but not addressed (no concurrent writes in current usage).
+**Checked:** 2026-08-08
+
+## E-034 --- v6.0.9 validation restoration
+
+**Status:** verified **Kind:** mechanical property, source budget, and
+evidence consistency **Source:** current source and tests, local gate
+**Supports:** v6.0.9 release readiness. **Evidence:** shared
+`nonEmptyString` and `stringArray` helpers restored to strict
+type-checked behavior; compaction-specific `coerceScalar` normalization
+applied only at the LLM output boundary in `validateWorkingMemory()`;
+source budget restored to 2,100 lines. typecheck, Biome style, Pandoc
+Markdown check, source budget (2,001 actual / 2,100 rounded), 60 unit
+tests, 10 integration tests (70 total), packed install passed.
+**Limits:** The acknowledgement read-modify-write race remains
+identified but not addressed (no concurrent writes in current usage).
+**Checked:** 2026-08-08
 
 ## E-031 --- v6.0.2 final review-correction pass
 

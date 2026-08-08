@@ -18,6 +18,9 @@ import {
 import { checkProjectStatus } from "./project-status.js";
 import { nonEmptyString, stringArray } from "./validation.js";
 
+const coerceScalar = (value: unknown): unknown =>
+	typeof value === "string" ? value.trim() : value;
+
 export interface Memory {
 	task: string;
 	constraints: string[];
@@ -53,11 +56,11 @@ export function validateWorkingMemory(value: unknown): Memory {
 	const item = value as Record<string, unknown>;
 	return {
 		task: nonEmptyString(item.task, "task"),
-		constraints: stringArray(item.constraints, "constraints"),
-		active: stringArray(item.active, "active"),
-		blockers: stringArray(item.blockers, "blockers"),
+		constraints: stringArray(coerceScalar(item.constraints), "constraints"),
+		active: stringArray(coerceScalar(item.active), "active"),
+		blockers: stringArray(coerceScalar(item.blockers), "blockers"),
 		next: nonEmptyString(item.next, "next"),
-		files: stringArray(item.files, "files"),
+		files: stringArray(coerceScalar(item.files), "files"),
 	};
 }
 function promotion(value: unknown): Promotion {
