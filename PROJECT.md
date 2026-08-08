@@ -54,27 +54,28 @@ independent substantive review, and no automated workflow controller.
 
 ## Current state
 
-{verified} The `6.0.8` implementation builds on `5.0.4` with a
+{verified} The `6.0.9` implementation builds on `5.0.4` with a
 correctness+simplification pass, an independent review corrective pass
 (v6.0.2), a final review-correction pass (v6.0.3), CI lint fixes
 (v6.0.4), v6.0.5, worker lifecycle fixes (v6.0.6), integration test fix
-(v6.0.7), and lenient validation (v6.0.8). It raises the Node baseline
-to 26, centralizes Pi configuration-root and named-skill lookup with
-cross-platform validation, distinguishes current/changed/missing/error
-observation states, surfaces artifact observation errors, restores
-dependency impact for missing artifacts, requires active untracked
-compaction files to exist, extracts valid JSON from compaction model
-output, consolidates the model-catalog loader, shares the worker result
-TypeBox schema, removes the MCPorter config existence preflight, fails
-fast on malformed SYNC.json at startup, fixes `PI_SYCH_PACKAGE_ROOT`
-off-by-one, ends atomic-file disposal before rename, uses
-`mkdtempDisposable()` with `await using` for worker cleanup with
-first-stop-wins semantics, restores forced SIGKILL timer cleanup and
-abort listener removal, preserves spawn error messages, and adds four
-lifecycle regression cases. Compaction file filtering is extracted to
-exported `filterWorkingMemoryFiles()` and exercised in compact()
-regression path. Source budget: 2,001 actual lines (2,100 rounded).
-Tags: v6.0.0 through v6.0.8; v6.0.8 is current head.
+(v6.0.7), lenient validation (v6.0.8), and validation restoration
+(v6.0.9). It raises the Node baseline to 26, centralizes Pi
+configuration-root and named-skill lookup with cross-platform
+validation, distinguishes current/changed/missing/error observation
+states, surfaces artifact observation errors, restores dependency impact
+for missing artifacts, requires active untracked compaction files to
+exist, extracts valid JSON from compaction model output, consolidates
+the model-catalog loader, shares the worker result TypeBox schema,
+removes the MCPorter config existence preflight, fails fast on malformed
+SYNC.json at startup, fixes `PI_SYCH_PACKAGE_ROOT` off-by-one, ends
+atomic-file disposal before rename, uses `mkdtempDisposable()` with
+`await using` for worker cleanup with first-stop-wins semantics,
+restores forced SIGKILL timer cleanup and abort listener removal,
+preserves spawn error messages, and adds four lifecycle regression
+cases. Compaction file filtering is extracted to exported
+`filterWorkingMemoryFiles()` and exercised in compact() regression path.
+Source budget: 2,001 actual lines (2,100 rounded). Tags: v6.0.0 through
+v6.0.9; v6.0.9 is current head.
 
 ## Previous action
 
@@ -87,15 +88,15 @@ version expectations. `v6.0.4` fixed Biome lint errors blocking CI.
 `v6.0.5` simplified config test and removed completed transient files.
 `v6.0.6` implements worker lifecycle fixes: proper `await using`
 disposal, first-stop-wins semantics, timer cleanup, abort listener
-removal, spawn error preservation, four lifecycle regression cases, and
-compaction file filtering deduplication. `v6.0.7` removed hardcoded
-version from integration test. `v6.0.8` added lenient `stringArray` and
-`nonEmptyString` coercion. Local gate passed: 60 unit tests, source
-budget 2001/2100, typecheck+style clean.
+removal, spawn error preservation, four lifecycle regression cases,
+compaction file filtering deduplication, and removes hardcoded version
+from integration test. `v6.0.7` added lenient `stringArray` and
+`nonEmptyString` coercion. `v6.0.8` was version housekeeping. `v6.0.9`
+restored strict shared validation and added compaction-specific
+`scalarStringArray`. Local gate passed: 60 unit tests, source budget
+2001/2100, typecheck+style clean.
 
 ## Immediate next step
 
-{accepted} Restore strict shared validation, add compaction-specific
-scalar-string normalization, restore source budget to 2,100, fix
-CHANGELOG/PROJECT/EVIDENCE to preserve release provenance, and publish
-as v6.0.9.
+{accepted} Update SYNC.json fingerprints and acknowledgements to match
+v6.0.9.

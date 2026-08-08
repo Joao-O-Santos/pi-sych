@@ -41,12 +41,12 @@ identified but not addressed (no concurrent writes in current usage).
 evidence consistency **Source:** current source and tests, local gate
 **Supports:** v6.0.9 release readiness. **Evidence:** shared
 `nonEmptyString` and `stringArray` helpers restored to strict
-type-checked behavior; compaction-specific `coerceScalar` normalization
-applied only at the LLM output boundary in `validateWorkingMemory()`;
-source budget restored to 2,100 lines. typecheck, Biome style, Pandoc
-Markdown check, source budget (2,001 actual / 2,100 rounded), 60 unit
-tests, 10 integration tests (70 total), packed install passed.
-**Limits:** The acknowledgement read-modify-write race remains
+type-checked behavior; compaction-specific `scalarStringArray` wraps
+scalar strings as one-element arrays at the LLM output boundary in
+`validateWorkingMemory()`; source budget set to 2,100 lines. typecheck,
+Biome style, Pandoc Markdown check, source budget (2,001 actual / 2,100
+rounded), 60 unit tests, 10 integration tests (70 total), packed install
+passed. **Limits:** The acknowledgement read-modify-write race remains
 identified but not addressed (no concurrent writes in current usage).
 **Checked:** 2026-08-08
 

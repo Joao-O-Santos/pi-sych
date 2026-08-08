@@ -5,18 +5,26 @@ immutable npm publications unless explicitly marked otherwise.
 
 ## Unreleased
 
+## v6.0.9 - 2026-08-08
+
+### Fixed
+
+- Restore strict `nonEmptyString` / `stringArray` validation in shared
+  helpers; add compaction-specific `scalarStringArray` that wraps scalar
+  strings as one-element arrays at the LLM output boundary.
+
 ## v6.0.8 - 2026-08-08
 
 ### Fixed
 
-- Lenient `stringArray` coercion (string-to-array, non-string item
-  coercion) and lenient `nonEmptyString` coercion.
+- Version housekeeping.
 
 ## v6.0.7 - 2026-08-08
 
 ### Fixed
 
-- Remove hardcoded version from integration test.
+- Lenient `stringArray` coercion (string-to-array, non-string item
+  coercion) and lenient `nonEmptyString` coercion.
 
 ## v6.0.6 - 2026-08-08
 
@@ -35,6 +43,12 @@ immutable npm publications unless explicitly marked otherwise.
 - Add four lifecycle regression cases: cancellation before timeout,
   timeout before abort, SIGTERM-resistant process reaching SIGKILL,
   failed dispatch leaving no temporary runtime directory.
+- Extract compaction file filtering into exported
+  `filterWorkingMemoryFiles()` and exercise production code in
+  `compact()` regression path (no algorithm duplication).
+- Remove hardcoded version from integration test. timeout before abort,
+  SIGTERM-resistant process reaching SIGKILL, failed dispatch leaving no
+  temporary runtime directory.
 - Extract compaction file filtering into exported
   `filterWorkingMemoryFiles()` and exercise production code in
   `compact()` regression path (no algorithm duplication).

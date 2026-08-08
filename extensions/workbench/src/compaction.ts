@@ -18,8 +18,8 @@ import {
 import { checkProjectStatus } from "./project-status.js";
 import { nonEmptyString, stringArray } from "./validation.js";
 
-const coerceScalar = (value: unknown): unknown =>
-	typeof value === "string" ? value.trim() : value;
+const scalarStringArray = (value: unknown, label: string): string[] =>
+	stringArray(typeof value === "string" ? [value] : value, label);
 
 export interface Memory {
 	task: string;
@@ -56,11 +56,11 @@ export function validateWorkingMemory(value: unknown): Memory {
 	const item = value as Record<string, unknown>;
 	return {
 		task: nonEmptyString(item.task, "task"),
-		constraints: stringArray(coerceScalar(item.constraints), "constraints"),
-		active: stringArray(coerceScalar(item.active), "active"),
-		blockers: stringArray(coerceScalar(item.blockers), "blockers"),
+		constraints: scalarStringArray(item.constraints, "constraints"),
+		active: scalarStringArray(item.active, "active"),
+		blockers: scalarStringArray(item.blockers, "blockers"),
 		next: nonEmptyString(item.next, "next"),
-		files: stringArray(coerceScalar(item.files), "files"),
+		files: scalarStringArray(item.files, "files"),
 	};
 }
 function promotion(value: unknown): Promotion {

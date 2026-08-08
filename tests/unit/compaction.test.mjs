@@ -47,6 +47,24 @@ test("working-memory validation trims values and standardizes array errors", () 
 	);
 	assert.throws(() => validateWorkingMemory(null), /must be an object/);
 	assert.throws(() => validateWorkingMemory({ ...memory, next: "" }), /next/);
+	const coerced = validateWorkingMemory({
+		task: "t",
+		constraints: "one",
+		active: [],
+		blockers: [],
+		next: "n",
+		files: ["f"],
+	});
+	assert.deepEqual(coerced.constraints, ["one"]);
+	assert.throws(
+		() =>
+			validateWorkingMemory({
+				task: "t",
+				constraints: 42,
+				next: "n",
+			}),
+		/constraints must be an array of strings/,
+	);
 });
 
 test("compaction output validates promotion combinations and renders optional sections", () => {
