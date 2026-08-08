@@ -109,10 +109,9 @@ export async function filterWorkingMemoryFiles(
 	snapshotPaths: Set<string>,
 	files: string[],
 ): Promise<string[]> {
-	const allowed = new Set(snapshotPaths);
 	const result: string[] = [];
 	for (const file of files) {
-		if (allowed.has(file)) {
+		if (snapshotPaths.has(file)) {
 			result.push(file);
 			continue;
 		}

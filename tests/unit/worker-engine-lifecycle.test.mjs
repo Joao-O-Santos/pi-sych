@@ -168,6 +168,7 @@ test("timeout before abort yields timeout classification", async () => {
 	try {
 		process.env.PATH = root;
 		const controller = new AbortController();
+		setTimeout(() => controller.abort(), 200);
 		const outcome = await launchPiWorker({ ...spec, signal: controller.signal });
 		assert.equal(outcome.classification, "timeout");
 	} finally {
@@ -176,7 +177,7 @@ test("timeout before abort yields timeout classification", async () => {
 	}
 });
 
-test("SIGTERM-resistant worker reaches SIGKILL", async () => {
+test("SIGTERM-resistant worker reaches SIGKILL", { timeout: 10_000 }, async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-sigterm-resistant-"));
 	const fake = join(root, "pi");
 	await writeFile(fake, "#!/bin/sh\ntrap '' TERM\nwhile :; do /bin/sleep 1; done\n");

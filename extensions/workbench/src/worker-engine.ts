@@ -292,8 +292,7 @@ export async function dispatchWorker(options: {
 			`Worker agent directory is not initialized at ${options.workerAgentDir}. Run: node ${resolve(options.packageRoot ?? PI_SYCH_PACKAGE_ROOT, "scripts/bootstrap-worker-agent-dir.mjs")} --agent-dir ${options.workerAgentDir}`,
 		);
 	}
-	const runtimeDisposable = await mkdtempDisposable(resolve(tmpdir(), "pi-sych-"));
-	const runtime = runtimeDisposable as { path: string; [Symbol.asyncDispose](): Promise<void> };
+	const runtime = await mkdtempDisposable(resolve(tmpdir(), "pi-sych-"));
 	await using _runtimeHandle = runtime;
 	const resultPath = resolve(runtime.path, "result.json");
 	const spec: WorkerLaunchSpec = {

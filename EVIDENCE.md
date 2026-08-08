@@ -5,7 +5,7 @@
 **Status:** verified **Kind:** observed deterministic behavior and
 source budget **Source:** signed tag `v6.0.5`, current source, local
 gate **Supports:** v6.0.5 release readiness. **Evidence:** v6.0.5 tagged
-on signed commit `734bd66`; source budget 1,975 / 2,000 lines; 56 unit
+on signed commit `0042bb30`; source budget 1,975 / 2,000 lines; 56 unit
 tests, 10 integration tests (66 total), packed install passed.
 **Limits:** Worker lifecycle fixes documented in v6.0.5 CHANGELOG were
 not present in the tagged commit; those fixes are addressed in the
