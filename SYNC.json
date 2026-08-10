@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-10T11:07:56.888Z",
+  "confirmedAt": "2026-08-10T11:19:44.849Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -21,7 +21,7 @@
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:aa5d4f7e21ed234f723dfac481491d23d98bb4ae347ba33fdbe0006d1bbabe73",
+      "fingerprint": "sha256:51cd240e780a1eed3e028a7c72117ac3e6679cb2abcb173506ab679a13fcfa08",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,8 +35,8 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T11:07:56.888Z",
-        "reason": "Verified v6.1.3 provenance and release-hygiene patch: nonblank source metric, restored readability spacing, literature schema minimum, bounded post-publish registry checks, corrected v6.0.9/v6.0.10 attribution, 139 tests and full local gate."
+        "at": "2026-08-10T11:19:44.849Z",
+        "reason": "Refresh the v6.1.3 evidence fingerprint after final Pandoc formatting; prose and reviewed claims are unchanged."
       }
     },
     {
