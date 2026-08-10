@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-10T10:44:39.358Z",
+  "confirmedAt": "2026-08-10T10:53:43.442Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:61068186af835bda01ee3ca7b6c669278de73ded4afb9a044604c9cf8b6a0232",
+      "fingerprint": "sha256:640fe81ec74f116244d068ad6458cf119b6658c2e520362ca6d37c26b7ef2ff7",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,13 +15,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T10:44:39.358Z",
-        "reason": "Record completed v6.1.1 signed release, successful main/tag pipelines, GitLab coverage extraction, Pages, trusted npm publication, and npm latest state."
+        "at": "2026-08-10T10:52:21.470Z",
+        "reason": "Verified v6.1.2 documentation-only release preparation: release-neutral current-state narrative, historical release evidence retained, corrected changelog history, package metadata 6.1.2, full local gate passed."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:8faf391580c85f34e3f6796a3830fbac1dbfc5d175194a4464012b0c3cc35a6b",
+      "fingerprint": "sha256:e2f9c4bf03f934e8cdb54c7c29af0cb5e1dd16f9423099d8058d3bb27de82eae",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,8 +35,8 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T10:44:39.358Z",
-        "reason": "Record completed v6.1.1 signed release, successful main/tag pipelines, GitLab coverage extraction, Pages, trusted npm publication, and npm latest state."
+        "at": "2026-08-10T10:52:21.470Z",
+        "reason": "Verified v6.1.2 documentation-only release preparation: release-neutral current-state narrative, historical release evidence retained, corrected changelog history, package metadata 6.1.2, full local gate passed."
       }
     },
     {
@@ -66,13 +66,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T10:27:36.981Z",
-        "reason": "Verified v6.1.1 corrective pass: isolated-worker literature config propagation, child-error timer cleanup, 90% native coverage gate, public contract/release synchronization, 137 tests, 2,080 source lines, independent review corrected."
+        "at": "2026-08-10T10:53:43.442Z",
+        "reason": "Reviewed dependent user documentation after release-neutral project-state update; it contains no current-version claim and remains accurate."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:d5fa389268675b67fe80dbf8aa4434bb423ab41b75ae85551f96956589bc55fa",
+      "fingerprint": "sha256:15d406d57cd38048a2819fbeb9050c4f753906e696040b3395c7b25c644bc890",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -86,8 +86,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T10:27:36.981Z",
-        "reason": "Verified v6.1.1 corrective pass: isolated-worker literature config propagation, child-error timer cleanup, 90% native coverage gate, public contract/release synchronization, 137 tests, 2,080 source lines, independent review corrected."
+        "at": "2026-08-10T10:52:21.470Z",
+        "reason": "Verified v6.1.2 documentation-only release preparation: release-neutral current-state narrative, historical release evidence retained, corrected changelog history, package metadata 6.1.2, full local gate passed."
       }
     },
     {

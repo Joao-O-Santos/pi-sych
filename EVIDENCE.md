@@ -13,7 +13,8 @@ verify and trusted `publish-npm` jobs, and npm `latest` resolves to
 `pi-sych@6.1.1`. The working tree was clean after release. **Limits:**
 npm's previously reported dependency vulnerabilities remain
 unremediated, and the blocked `node-pty@1.1.0` install script was not
-approved. No later release has been authorized. **Checked:** 2026-08-10
+approved. Later releases require separate owner authorization.
+**Checked:** 2026-08-10
 
 ## E-036 --- v6.1.1 corrective release gate
 

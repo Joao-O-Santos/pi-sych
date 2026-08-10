@@ -1,9 +1,20 @@
 # Changelog
 
-All notable changes to Pi Sych are documented here. Versions are
-immutable npm publications unless explicitly marked otherwise.
+All notable changes to Pi Sych are documented here. Signed Git tags and
+npm registry metadata establish publication status and dates; headings
+below record versioned changes without duplicating that live release
+state.
 
 ## Unreleased
+
+## v6.1.2
+
+### Changed
+
+- Keep current-release project state release-neutral and direct readers
+  to signed tags and npm registry metadata for the current identifier.
+- Clarify historical release evidence and correct older changelog
+  formatting without changing runtime behavior.
 
 ## v6.1.1 - 2026-08-10
 

@@ -54,26 +54,27 @@ independent substantive review, and no automated workflow controller.
 
 ## Current state
 
-{verified} v6.1.1 is the current signed, tagged, and published release.
-It forwards the resolved supervisor Pi Sych configuration directory to
-isolated workers without replacing their Pi agent directory, so
-configured external literature databases work in normal research
-dispatches. It also clears termination timers when a worker errors
-without closing, declares the literature surface in the public contract,
-makes native Node coverage a 90% gate, and cleans deterministic
-temporary fixtures. Runtime source is 2,080 actual lines (2,100
-rounded); package, lockfile, Git tag, and npm `latest` are version
-6.1.1.
+{verified} The current release forwards the resolved supervisor Pi Sych
+configuration directory to isolated workers without replacing their Pi
+agent directory, so configured external literature databases work in
+normal research dispatches. It clears termination timers when a worker
+errors without closing, declares the literature surface in the public
+contract, makes native Node coverage a 90% gate, and cleans
+deterministic temporary fixtures. Runtime source is 2,080 actual lines
+(2,100 rounded). Use the signed Git tag and npm registry metadata---not
+this narrative---for the current release identifier.
 
 ## Previous action
 
-{verified} Released v6.1.1 from signed commit `cd96e5ba` through signed
-tag `v6.1.1`. The main pipeline and tag pipeline passed; GitLab
-extracted 98.3% line coverage, Pages succeeded, trusted npm publication
-succeeded, and npm `latest` resolves to 6.1.1.
+{verified} The release procedure verifies a signed main commit, waits
+for its verify and Pages jobs, then creates the final signed tag. The
+tag pipeline verifies and publishes through trusted npm publishing. The
+v6.1.1 release completed this procedure with 98.3% GitLab line coverage;
+historical identifiers and observed release evidence remain in
+`CHANGELOG.md` and `EVIDENCE.md`.
 
 ## Immediate next step
 
-{accepted} Keep main at the released v6.1.1 state until the owner
+{accepted} Keep main at the reviewed release state until the owner
 selects further work. Do not approve node-pty scripts, run npm audit
 remediation, or perform another release without explicit instruction.
