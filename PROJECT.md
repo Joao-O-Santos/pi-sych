@@ -54,29 +54,26 @@ independent substantive review, and no automated workflow controller.
 
 ## Current state
 
-{verified} Released v6.1.0 adds worker-only local literature search,
-custom-compaction seams, expanded deterministic coverage, and generated
-code documentation. The v6.1.1 patch candidate forwards the resolved
-supervisor Pi Sych configuration directory to isolated workers without
-replacing their Pi agent directory, so configured external literature
-databases work in normal research dispatches. It also clears termination
-timers when a worker errors without closing, declares the literature
-surface in the public contract, makes native Node coverage a 90% gate,
-and cleans deterministic temporary fixtures. Runtime source is 2,080
-actual lines (2,100 rounded); package and lockfile are version 6.1.1.
+{verified} v6.1.1 is the current signed, tagged, and published release.
+It forwards the resolved supervisor Pi Sych configuration directory to
+isolated workers without replacing their Pi agent directory, so
+configured external literature databases work in normal research
+dispatches. It also clears termination timers when a worker errors
+without closing, declares the literature surface in the public contract,
+makes native Node coverage a 90% gate, and cleans deterministic
+temporary fixtures. Runtime source is 2,080 actual lines (2,100
+rounded); package, lockfile, Git tag, and npm `latest` are version
+6.1.1.
 
 ## Previous action
 
-{verified} Completed the v6.1.1 corrective pass after independent test
-design and review. The full local gate passed with 125 unit and 12
-integration tests, typecheck, style, dependency validation, 2,080/2,100
-actual/rounded runtime lines, package dry run, Pages build, whitespace
-checks, and thresholded coverage of 98.30% lines, 91.55% branches, and
-94.44% functions.
+{verified} Released v6.1.1 from signed commit `cd96e5ba` through signed
+tag `v6.1.1`. The main pipeline and tag pipeline passed; GitLab
+extracted 98.3% line coverage, Pages succeeded, trusted npm publication
+succeeded, and npm `latest` resolves to 6.1.1.
 
 ## Immediate next step
 
-{accepted} Commit and push v6.1.1 to main, confirm the remote
-verification and coverage extraction succeed, then create and push the
-final `v6.1.1` release tag. Do not approve node-pty scripts or run npm
-audit remediation.
+{accepted} Keep main at the released v6.1.1 state until the owner
+selects further work. Do not approve node-pty scripts, run npm audit
+remediation, or perform another release without explicit instruction.

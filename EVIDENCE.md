@@ -1,5 +1,20 @@
 # Evidence
 
+## E-037 --- v6.1.1 release completion
+
+**Status:** verified **Kind:** signed repository state, remote CI,
+coverage extraction, and package publication **Source:** local Git
+signature verification, GitLab pipelines 2746974774 and 2746982742, and
+npm registry metadata **Supports:** v6.1.1 release completion.
+**Evidence:** signed commit `cd96e5ba` was pushed to main; its verify
+and Pages jobs passed, and GitLab extracted 98.3% line coverage. Signed
+tag `v6.1.1` resolves to that commit. The tag pipeline passed both
+verify and trusted `publish-npm` jobs, and npm `latest` resolves to
+`pi-sych@6.1.1`. The working tree was clean after release. **Limits:**
+npm's previously reported dependency vulnerabilities remain
+unremediated, and the blocked `node-pty@1.1.0` install script was not
+approved. No later release has been authorized. **Checked:** 2026-08-10
+
 ## E-036 --- v6.1.1 corrective release gate
 
 **Status:** verified **Kind:** observed deterministic behavior, public
@@ -25,7 +40,8 @@ already signed, tagged, and published before this corrective pass; npm
 reported one moderate and one high dependency vulnerability during user
 update, and blocked the unapproved `node-pty@1.1.0` install script. No
 audit fix, dependency update, script approval, v6.1.1 push, tag, or
-publication has been performed. **Checked:** 2026-08-08
+publication had been performed as of this pre-release check.
+**Checked:** 2026-08-10
 
 ## E-035 --- v6.1.0 implementation gate
 

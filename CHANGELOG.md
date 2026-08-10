@@ -5,7 +5,7 @@ immutable npm publications unless explicitly marked otherwise.
 
 ## Unreleased
 
-## v6.1.1 - 2026-08-08
+## v6.1.1 - 2026-08-10
 
 ### Fixed
 
@@ -93,12 +93,7 @@ immutable npm publications unless explicitly marked otherwise.
 - Extract compaction file filtering into exported
   `filterWorkingMemoryFiles()` and exercise production code in
   `compact()` regression path (no algorithm duplication).
-- Remove hardcoded version from integration test. timeout before abort,
-  SIGTERM-resistant process reaching SIGKILL, failed dispatch leaving no
-  temporary runtime directory.
-- Extract compaction file filtering into exported
-  `filterWorkingMemoryFiles()` and exercise production code in
-  `compact()` regression path (no algorithm duplication).
+- Remove the hardcoded version from the integration test.
 
 ## v6.0.5 - 2026-08-08
 
@@ -164,7 +159,7 @@ immutable npm publications unless explicitly marked otherwise.
   Windows root-relative config paths.
 - Source budget: 1,975 actual lines (2000/2000 rounded).
 
-## v6.0.0 - Unreleased
+## v6.0.0 - 2026-08-07
 
 ### Breaking baseline
 
