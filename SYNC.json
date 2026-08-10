@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-10T10:53:43.442Z",
+  "confirmedAt": "2026-08-10T11:07:56.888Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:640fe81ec74f116244d068ad6458cf119b6658c2e520362ca6d37c26b7ef2ff7",
+      "fingerprint": "sha256:e4f28592e9e41b47c410eeaf83a4401c77c6f7e09048720b8ab87a82053f895b",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,13 +15,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T10:52:21.470Z",
-        "reason": "Verified v6.1.2 documentation-only release preparation: release-neutral current-state narrative, historical release evidence retained, corrected changelog history, package metadata 6.1.2, full local gate passed."
+        "at": "2026-08-10T11:07:56.888Z",
+        "reason": "Verified v6.1.3 provenance and release-hygiene patch: nonblank source metric, restored readability spacing, literature schema minimum, bounded post-publish registry checks, corrected v6.0.9/v6.0.10 attribution, 139 tests and full local gate."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:e2f9c4bf03f934e8cdb54c7c29af0cb5e1dd16f9423099d8058d3bb27de82eae",
+      "fingerprint": "sha256:aa5d4f7e21ed234f723dfac481491d23d98bb4ae347ba33fdbe0006d1bbabe73",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,8 +35,8 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T10:52:21.470Z",
-        "reason": "Verified v6.1.2 documentation-only release preparation: release-neutral current-state narrative, historical release evidence retained, corrected changelog history, package metadata 6.1.2, full local gate passed."
+        "at": "2026-08-10T11:07:56.888Z",
+        "reason": "Verified v6.1.3 provenance and release-hygiene patch: nonblank source metric, restored readability spacing, literature schema minimum, bounded post-publish registry checks, corrected v6.0.9/v6.0.10 attribution, 139 tests and full local gate."
       }
     },
     {
@@ -66,13 +66,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T10:53:43.442Z",
-        "reason": "Reviewed dependent user documentation after release-neutral project-state update; it contains no current-version claim and remains accurate."
+        "at": "2026-08-10T11:07:56.888Z",
+        "reason": "Verified v6.1.3 provenance and release-hygiene patch: nonblank source metric, restored readability spacing, literature schema minimum, bounded post-publish registry checks, corrected v6.0.9/v6.0.10 attribution, 139 tests and full local gate."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:15d406d57cd38048a2819fbeb9050c4f753906e696040b3395c7b25c644bc890",
+      "fingerprint": "sha256:af93f7577f937fba128aab025b5923bc3be4e0618e6cfa61becbac060144f08e",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -86,8 +86,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T10:52:21.470Z",
-        "reason": "Verified v6.1.2 documentation-only release preparation: release-neutral current-state narrative, historical release evidence retained, corrected changelog history, package metadata 6.1.2, full local gate passed."
+        "at": "2026-08-10T11:07:56.888Z",
+        "reason": "Verified v6.1.3 provenance and release-hygiene patch: nonblank source metric, restored readability spacing, literature schema minimum, bounded post-publish registry checks, corrected v6.0.9/v6.0.10 attribution, 139 tests and full local gate."
       }
     },
     {
@@ -105,15 +105,15 @@
     },
     {
       "path": "docs/development.md",
-      "fingerprint": "sha256:a7fa28a7592d7931dc64cdc7d2da4458ba2523e9c51127c63eee5e67f2480d35",
+      "fingerprint": "sha256:eee255499dc7c1e269a8b3485286536c1e2ed4ec24d1cb1a7736745708883fc2",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "development-checks"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T10:27:36.981Z",
-        "reason": "Verified v6.1.1 corrective pass: isolated-worker literature config propagation, child-error timer cleanup, 90% native coverage gate, public contract/release synchronization, 137 tests, 2,080 source lines, independent review corrected."
+        "at": "2026-08-10T11:07:56.888Z",
+        "reason": "Verified v6.1.3 provenance and release-hygiene patch: nonblank source metric, restored readability spacing, literature schema minimum, bounded post-publish registry checks, corrected v6.0.9/v6.0.10 attribution, 139 tests and full local gate."
       }
     }
   ]

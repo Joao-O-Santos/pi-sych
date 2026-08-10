@@ -1,10 +1,12 @@
 #!/usr/bin/env node
+
 import { lstat, mkdir, rm, symlink, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const scriptRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+
 export function expandHome(path) {
 	return path === "~"
 		? homedir()
@@ -12,6 +14,7 @@ export function expandHome(path) {
 			? resolve(homedir(), path.slice(2))
 			: resolve(path);
 }
+
 export async function linkIfPresent(source, target) {
 	try {
 		await lstat(source);
@@ -19,10 +22,12 @@ export async function linkIfPresent(source, target) {
 		if (error && error.code === "ENOENT") return false;
 		throw error;
 	}
+
 	await rm(target, { force: true, recursive: true });
 	await symlink(source, target);
 	return true;
 }
+
 export async function bootstrapWorkerAgentDir({
 	agentDir,
 	packageRoot = scriptRoot,
@@ -35,7 +40,9 @@ export async function bootstrapWorkerAgentDir({
 	const resolvedAgentDir = expandHome(agentDir);
 	const resolvedPackageRoot = resolve(packageRoot);
 	const resolvedSupervisorDir = expandHome(supervisorAgentDir);
+
 	await mkdir(resolvedAgentDir, { recursive: true, mode: 0o700 });
+
 	const settings = {
 		packages: [],
 		extensions: [resolve(resolvedPackageRoot, "extensions/worker/index.ts")],
@@ -44,6 +51,7 @@ export async function bootstrapWorkerAgentDir({
 		themes: [],
 		quietStartup: true,
 	};
+
 	await writeFile(
 		resolve(resolvedAgentDir, "settings.json"),
 		`${JSON.stringify(settings, null, 2)}\n`,
@@ -51,6 +59,7 @@ export async function bootstrapWorkerAgentDir({
 			mode: 0o600,
 		},
 	);
+
 	const linked = {};
 	for (const file of ["auth.json", "models.json", "models-store.json"]) {
 		linked[file] = await linkIfPresent(
@@ -58,6 +67,7 @@ export async function bootstrapWorkerAgentDir({
 			resolve(resolvedAgentDir, file),
 		);
 	}
+
 	const readme = [
 		"# Pi Sych worker agent directory",
 		"",
@@ -69,6 +79,7 @@ export async function bootstrapWorkerAgentDir({
 	await writeFile(resolve(resolvedAgentDir, "README.md"), readme, {
 		mode: 0o600,
 	});
+
 	return {
 		agentDir: resolvedAgentDir,
 		packageRoot: resolvedPackageRoot,
@@ -76,6 +87,7 @@ export async function bootstrapWorkerAgentDir({
 		settings,
 	};
 }
+
 function parseArguments(argv) {
 	const options = {};
 	for (let index = 0; index < argv.length; index += 1) {
@@ -89,6 +101,7 @@ function parseArguments(argv) {
 	}
 	return options;
 }
+
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
 	const result = await bootstrapWorkerAgentDir(parseArguments(process.argv.slice(2)));
 	process.stdout.write(`${JSON.stringify(result)}\n`);

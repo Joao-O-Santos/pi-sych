@@ -66,7 +66,7 @@ export function registerLiteratureSearch(pi: ExtensionAPI, configDirectory?: str
 		label: "Search local literature",
 		description: "Search the configured local FTS5 literature database.",
 		parameters: Type.Object({
-			query: Type.String(),
+			query: Type.String({ minLength: 1 }),
 			limit: Type.Optional(Type.Integer({ minimum: 1, maximum: 50 })),
 		}),
 		async execute(_id, params, _signal, _update, ctx) {

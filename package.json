@@ -1,6 +1,6 @@
 {
   "name": "pi-sych",
-  "version": "6.1.2",
+  "version": "6.1.3",
   "description": "General project and artifact development workbench for Pi",
   "files": [
     "config",

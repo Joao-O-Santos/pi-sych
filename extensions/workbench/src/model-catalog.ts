@@ -1,14 +1,17 @@
 import { readFileSync } from "node:fs";
 import { piSychConfigPath } from "./config-directory.js";
+
 export interface ModelEntry {
 	model: string;
 	cost?: string;
 	notes?: string;
 }
+
 export interface ModelCatalog {
 	default: string;
 	models: Record<string, ModelEntry>;
 }
+
 export function parseModelCatalog(value: unknown): ModelCatalog {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error("Model catalog must be an object");
@@ -37,6 +40,7 @@ export function parseModelCatalog(value: unknown): ModelCatalog {
 	if (!models[catalog.default]) throw new Error(`Unknown default model: ${catalog.default}`);
 	return { default: catalog.default, models };
 }
+
 export function modelCatalogPath(
 	projectRoot?: string,
 	env: NodeJS.ProcessEnv = process.env,

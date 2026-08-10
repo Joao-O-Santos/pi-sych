@@ -21,6 +21,7 @@ import { nonEmptyString, stringArray } from "./validation.js";
 
 const scalarStringArray = (value: unknown, label: string): string[] =>
 	stringArray(typeof value === "string" ? [value] : value, label);
+
 export interface Memory {
 	task: string;
 	constraints: string[];
@@ -41,6 +42,7 @@ export interface Promotion {
 	target: PromotionTarget;
 	proposal: string;
 }
+
 export function validateWorkingMemory(value: unknown): Memory {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error("workingMemory must be an object");
@@ -92,6 +94,7 @@ export const COMPACTION_FILE_BYTE_LIMIT = 16 * 1024;
 export const COMPACTION_TOTAL_BYTE_LIMIT = 48 * 1024;
 const SNAPSHOT_ROLES = ["project", "todo", "decisions"] as const;
 const proposalLine = /^- \{(?:project|agents|personal-agents|style|evidence|decisions|todo)\}\s+/;
+
 export async function pendingPromotions(
 	project: Pick<ResolvedProject, "canonical">,
 ): Promise<number> {
@@ -160,6 +163,7 @@ export async function compactionSnapshot(
 	}
 	return { files, paths: [...new Set([...paths, ...artifactPaths])] };
 }
+
 export function buildCompactionPrompt(
 	event: SessionBeforeCompactEvent,
 	snapshot: Awaited<ReturnType<typeof compactionSnapshot>>,

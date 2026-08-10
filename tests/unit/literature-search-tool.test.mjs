@@ -54,7 +54,7 @@ test("registered literature tool exposes the bounded schema and exact real execu
 	assert.equal(tool.description, "Search the configured local FTS5 literature database.");
 	assert.equal(tool.parameters.type, "object");
 	assert.deepEqual(tool.parameters.required, ["query"]);
-	assert.deepEqual(tool.parameters.properties.query, { type: "string" });
+	assert.deepEqual(tool.parameters.properties.query, { type: "string", minLength: 1 });
 	assert.deepEqual(tool.parameters.properties.limit, {
 		minimum: 1,
 		maximum: 50,

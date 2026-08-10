@@ -1,5 +1,30 @@
 # Evidence
 
+## E-038 --- v6.1.3 provenance and release hygiene gate
+
+**Status:** verified **Kind:** historical provenance, source metric,
+schema contract, release automation, package contents, and independent
+test design **Source:** signed v6.0.9/v6.0.10 diffs, current source and
+tests, GitLab CI lint, local full gate, Pages build, and package dry run
+**Supports:** v6.1.3 patch readiness. **Evidence:** changelog and E-034
+now attribute working scalar-array normalization to v6.0.10; the source
+budget counts 2,074 nonblank physical runtime lines (2,100 rounded), and
+blank declaration spacing was restored without consuming budget;
+`literature_search` declares `query` with `minLength: 1`; the npm
+release job checks both the exact published version and
+`dist-tags.latest` with 12 bounded attempts. Focused metric, schema, and
+CI-source contract tests passed. The full gate passed with 127 unit and
+12 integration tests, typecheck, style, dependency validation, coverage
+of 98.30% lines, 91.55% branches, and 94.44% functions, package dry run,
+Pages build, and whitespace checks. GitLab CI lint accepted the pipeline
+with no warning. Package and lockfile are 6.1.3. **Limits:** registry
+retry behavior is verified structurally rather than against a disposable
+npm publication; the actual registry and `latest` checks run only after
+trusted publication. The previously reported dependency advisories
+remain unremediated, and the blocked node-pty install script remains
+unapproved. No v6.1.3 commit, push, tag, or publication has occurred.
+**Checked:** 2026-08-10
+
 ## E-037 --- v6.1.1 release completion
 
 **Status:** verified **Kind:** signed repository state, remote CI,
@@ -114,12 +139,12 @@ identified but not addressed (no concurrent writes in current usage).
 evidence consistency **Source:** current source and tests, local gate
 **Supports:** v6.0.9 release readiness. **Evidence:** shared
 `nonEmptyString` and `stringArray` helpers restored to strict
-type-checked behavior; compaction-specific `scalarStringArray` wraps
-scalar strings as one-element arrays at the LLM output boundary in
-`validateWorkingMemory()`; source budget set to 2,100 lines. typecheck,
+type-checked behavior; source budget set to 2,100 lines. typecheck,
 Biome style, Pandoc Markdown check, source budget (2,001 actual / 2,100
 rounded), 60 unit tests, 10 integration tests (70 total), packed install
-passed. **Limits:** The acknowledgement read-modify-write race remains
+passed. **Limits:** v6.0.9's `coerceScalar()` did not successfully wrap
+scalar strings as arrays; v6.0.10 introduced the working
+`scalarStringArray`. The acknowledgement read-modify-write race remains
 identified but not addressed (no concurrent writes in current usage).
 **Checked:** 2026-08-08
 

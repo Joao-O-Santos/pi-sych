@@ -7,6 +7,23 @@ state.
 
 ## Unreleased
 
+## v6.1.3
+
+### Fixed
+
+- Correct the historical attribution of compaction scalar-array
+  normalization to v6.0.10.
+- Declare the literature query's non-empty constraint in its tool
+  schema.
+
+### Changed
+
+- Count nonblank runtime source lines so readability spacing does not
+  consume the source budget, and restore useful separation between
+  declarations.
+- Verify the exact published npm version and `latest` dist-tag with
+  bounded retries in the release job.
+
 ## v6.1.2
 
 ### Changed
@@ -59,17 +76,17 @@ state.
 
 ## v6.0.10 - 2026-08-08
 
-### Changed
+### Fixed
 
-- Version housekeeping.
+- Add compaction-specific `scalarStringArray` so scalar strings become
+  one-element arrays at the LLM output boundary.
 
 ## v6.0.9 - 2026-08-08
 
 ### Fixed
 
 - Restore strict `nonEmptyString` / `stringArray` validation in shared
-  helpers; add compaction-specific `scalarStringArray` that wraps scalar
-  strings as one-element arrays at the LLM output boundary.
+  helpers.
 
 ## v6.0.8 - 2026-08-08
 

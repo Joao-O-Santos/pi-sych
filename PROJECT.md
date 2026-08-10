@@ -60,17 +60,18 @@ agent directory, so configured external literature databases work in
 normal research dispatches. It clears termination timers when a worker
 errors without closing, declares the literature surface in the public
 contract, makes native Node coverage a 90% gate, and cleans
-deterministic temporary fixtures. Runtime source is 2,080 actual lines
-(2,100 rounded). Use the signed Git tag and npm registry metadata---not
-this narrative---for the current release identifier.
+deterministic temporary fixtures. Runtime source is 2,074 nonblank lines
+(2,100 rounded); blank readability spacing is excluded. Use the signed
+Git tag and npm registry metadata---not this narrative---for the current
+release identifier.
 
 ## Previous action
 
-{verified} The release procedure verifies a signed main commit, waits
-for its verify and Pages jobs, then creates the final signed tag. The
-tag pipeline verifies and publishes through trusted npm publishing. The
-v6.1.1 release completed this procedure with 98.3% GitLab line coverage;
-historical identifiers and observed release evidence remain in
+{verified} Corrected historical scalar-normalization provenance, changed
+the source budget to exclude blank lines, restored useful readability
+spacing, declared the literature query's non-empty schema constraint,
+and added bounded post-publication npm version and `latest` checks.
+Historical release identifiers and observed evidence remain in
 `CHANGELOG.md` and `EVIDENCE.md`.
 
 ## Immediate next step
