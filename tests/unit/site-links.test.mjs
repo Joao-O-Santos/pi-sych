@@ -23,6 +23,13 @@ test("site links rewrite canonical Markdown pages and images", () => {
 		),
 		"[![Flow](img/review_workflow.png)](review-workflow.html)",
 	);
+	assert.equal(
+		rewriteMarkdownLinks(
+			"[Architecture](docs/ARCHITECTURE.md#worker-lifecycle) [Contributing](docs/CONTRIBUTING.md)",
+			"README.md",
+		),
+		"[Architecture](architecture.html#worker-lifecycle) [Contributing](contributing.html)",
+	);
 });
 
 test("site link validation accepts pages, images, and fragments and rejects broken links", () => {

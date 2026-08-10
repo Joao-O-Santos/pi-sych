@@ -61,3 +61,10 @@ implementation and an independent read-only review afterwards. Run the
 repository's formatter, type checker, tests, smoke checks, package
 validation, production audit, and source-budget check as applicable.
 Report actual outcomes and known upstream limitations.
+
+## TREAT AS TEMPORARY
+
+Treat `TODO.md`, `PLAN.md` and `EVIDENCE.md` as temporary files, or
+files that can be routinely overwritten to prevent them from becoming
+long changelog-like historical records. Use them to write down what you
+need to in order to finish the current task/goal.

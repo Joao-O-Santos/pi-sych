@@ -27,8 +27,8 @@ truthful about what was checked. Explain the user-facing behavior, the
 mechanical invariant, the regression test, and any known limitations.
 
 Before requesting review, identify the affected row in the [public
-contract](docs/public-contract.md), whether an existing documented use
-needs migration, and the justified SemVer level. Then run:
+contract](public-contract.md), whether an existing documented use needs
+migration, and the justified SemVer level. Then run:
 
 ``` sh
 make verify
@@ -58,11 +58,11 @@ unverified claim.
 
 Most contributions do not need release work. When a maintainer requests
 one, apply the [public-contract release
-rules](docs/public-contract.md#releases-and-migration), prepare a
-focused changelog entry, verify the next patch version from Git tags and
-package metadata rather than trusting a stale document, and run the
-complete documented gate. Inspect `npm pack --dry-run` so the package
-contains only intended public files.
+rules](public-contract.md#releases-and-migration), prepare a focused
+changelog entry, verify the next patch version from Git tags and package
+metadata rather than trusting a stale document, and run the complete
+documented gate. Inspect `npm pack --dry-run` so the package contains
+only intended public files.
 
 Maintainers create the signed release commit and annotated `v<version>`
 tag after explicit authorization. The GitLab tag pipeline reruns checks

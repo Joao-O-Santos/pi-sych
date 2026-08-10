@@ -17,7 +17,7 @@ Human commands are separate: `/pi-sych-status`, `/pi-sych-mcp`,
 `/plannotator-last`, `/plannotator-annotate`, and `/plannotator-review`.
 There is no plan controller, worker registry, semantic reconciliation
 tool, or automatic promotion mechanism. The supported surface and SemVer
-boundary are defined in [the public contract](docs/public-contract.md).
+boundary are defined in [the public contract](public-contract.md).
 
 When a turn starts, Pi Sych adds its static guidance and, when present,
 the configured project `agents` file. The private model catalog is
@@ -107,7 +107,7 @@ index to canonical metadata, searches filepath, title, abstract, tags,
 and DOI, and ranks with FTS5, snippets `abstract`, and returns source
 paths resolved relative to the database. Database selection and the
 `literatureDatabase` setting are documented in
-[configuration](docs/configuration.md#local-literature-search).
+[configuration](configuration.md#local-literature-search).
 
 ## Skills, MCPorter, and Plannotator
 

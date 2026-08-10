@@ -4,7 +4,19 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
-import { formatMarkdown } from "../../scripts/format-markdown.mjs";
+import { formatMarkdown, MARKDOWN_FILES } from "../../scripts/format-markdown.mjs";
+
+test("Markdown inventory follows the grouped documentation layout", () => {
+	for (const path of [
+		"docs/ARCHITECTURE.md",
+		"docs/CHANGELOG.md",
+		"docs/CONTRIBUTING.md",
+		"docs/public-contract.md",
+	])
+		assert.ok(MARKDOWN_FILES.includes(path));
+	for (const path of ["ARCHITECTURE.md", "CHANGELOG.md", "CONTRIBUTING.md", "EVIDENCE.md"])
+		assert.equal(MARKDOWN_FILES.includes(path), false);
+});
 
 test("Pandoc wraps prose while preserving brace labels, tables, and fences", async () => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-markdown-"));

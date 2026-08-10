@@ -1,6 +1,6 @@
 # Copying and provenance
 
-Pi Sych is distributed under the MIT license in [LICENSE](LICENSE). That
+Pi Sych is distributed under the MIT license in [docs/LICENSE.md](docs/LICENSE.md). That
 license covers Pi Sych's original code and documentation except where a file
 identifies a separate provenance or notice below.
 
@@ -9,11 +9,11 @@ identifies a separate provenance or notice below.
 [Makefile](Makefile) is adapted from `make-it-stop` commit
 `4784c8b507c3c8748c97d7d14e25facf6174af85` and identifies that adaptation in
 its SPDX header. Its BSD-3-Clause notice is retained at
-[LICENSES/BSD-3-Clause](LICENSES/BSD-3-Clause).
+[docs/LICENSES/BSD-3-Clause](docs/LICENSES/BSD-3-Clause).
 
 [config.mk](config.mk) is adapted site configuration from the same project and
 identifies CC0-1.0 in its SPDX header. The CC0 notice is retained at
-[LICENSES/CC0-1.0](LICENSES/CC0-1.0). Those notices describe the adapted
+[docs/LICENSES/CC0-1.0](docs/LICENSES/CC0-1.0). Those notices describe the adapted
 components; they do not replace the repository's MIT license for Pi Sych as a
 whole.
 

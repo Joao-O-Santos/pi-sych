@@ -6,8 +6,8 @@ import { fileURLToPath } from "node:url";
 
 const pagePaths = new Map([
 	["README.md", "index.html"],
-	["ARCHITECTURE.md", "architecture.html"],
-	["CONTRIBUTING.md", "contributing.html"],
+	["docs/ARCHITECTURE.md", "architecture.html"],
+	["docs/CONTRIBUTING.md", "contributing.html"],
 	["docs/configuration.md", "configuration.html"],
 	["docs/code-tour.md", "code-tour.html"],
 	["docs/development.md", "development.html"],

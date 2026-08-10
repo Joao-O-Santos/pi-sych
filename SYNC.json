@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-10T11:19:44.849Z",
+  "confirmedAt": "2026-08-10T23:43:04.157Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:e4f28592e9e41b47c410eeaf83a4401c77c6f7e09048720b8ab87a82053f895b",
+      "fingerprint": "sha256:7ef432d1a4f948653a4ce17914ed4b036327e9dbb24e2e66934e0bc27ab76c2b",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,46 +15,26 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T11:07:56.888Z",
-        "reason": "Verified v6.1.3 provenance and release-hygiene patch: nonblank source metric, restored readability spacing, literature schema minimum, bounded post-publish registry checks, corrected v6.0.9/v6.0.10 attribution, 139 tests and full local gate."
+        "at": "2026-08-10T23:43:04.157Z",
+        "reason": "Release candidate 6.1.4: grouped layout and optional EVIDENCE cleanup are treated as a patch because supported workflows/configuration/interfaces remain compatible; package scripts are complete and full verification passed."
       }
     },
     {
-      "path": "EVIDENCE.md",
-      "fingerprint": "sha256:51cd240e780a1eed3e028a7c72117ac3e6679cb2abcb173506ab679a13fcfa08",
-      "status": "current",
-      "role": "evidence",
-      "authoritativeFor": [
-        "verification-support",
-        "skill-corpus-support",
-        "limitations"
-      ],
-      "updateFrom": [
-        "package.json",
-        "tests/unit",
-        "tests/integration"
-      ],
-      "acknowledgement": {
-        "at": "2026-08-10T11:19:44.849Z",
-        "reason": "Refresh the v6.1.3 evidence fingerprint after final Pandoc formatting; prose and reviewed claims are unchanged."
-      }
-    },
-    {
-      "path": "ARCHITECTURE.md",
-      "fingerprint": "sha256:2dc81a63294e4dedcc00242d2b1f2a847e3c11485e55d2d8dbf45c1676dcaed4",
+      "path": "docs/ARCHITECTURE.md",
+      "fingerprint": "sha256:841fe1b0b38be590d571f600b0d97b9eb1811e1ec1a6ac260fc1453e318d5e04",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T10:27:36.981Z",
-        "reason": "Verified v6.1.1 corrective pass: isolated-worker literature config propagation, child-error timer cleanup, 90% native coverage gate, public contract/release synchronization, 137 tests, 2,080 source lines, independent review corrected."
+        "at": "2026-08-10T23:43:04.157Z",
+        "reason": "Release candidate 6.1.4: grouped layout and optional EVIDENCE cleanup are treated as a patch because supported workflows/configuration/interfaces remain compatible; package scripts are complete and full verification passed."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:8d518547f2fb394ab2ec1111f3e22e103f08d41a2bedc2ac150be53bd35ce770",
+      "fingerprint": "sha256:ef600957192a4e723a7ed97511b72e4ae814e53477cbd247507e86f3ae4fca64",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -62,17 +42,17 @@
         "human-review-limits"
       ],
       "updateFrom": [
-        "ARCHITECTURE.md",
+        "docs/ARCHITECTURE.md",
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T11:07:56.888Z",
-        "reason": "Verified v6.1.3 provenance and release-hygiene patch: nonblank source metric, restored readability spacing, literature schema minimum, bounded post-publish registry checks, corrected v6.0.9/v6.0.10 attribution, 139 tests and full local gate."
+        "at": "2026-08-10T23:43:04.157Z",
+        "reason": "Release candidate 6.1.4: grouped layout and optional EVIDENCE cleanup are treated as a patch because supported workflows/configuration/interfaces remain compatible; package scripts are complete and full verification passed."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:af93f7577f937fba128aab025b5923bc3be4e0618e6cfa61becbac060144f08e",
+      "fingerprint": "sha256:75dddb44efacb5f2c0e2d3e4e410aa18d8db322db552792b63e228cb8ba65876",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -86,8 +66,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T11:07:56.888Z",
-        "reason": "Verified v6.1.3 provenance and release-hygiene patch: nonblank source metric, restored readability spacing, literature schema minimum, bounded post-publish registry checks, corrected v6.0.9/v6.0.10 attribution, 139 tests and full local gate."
+        "at": "2026-08-10T23:43:04.157Z",
+        "reason": "Release candidate 6.1.4: grouped layout and optional EVIDENCE cleanup are treated as a patch because supported workflows/configuration/interfaces remain compatible; package scripts are complete and full verification passed."
       }
     },
     {
@@ -105,15 +85,15 @@
     },
     {
       "path": "docs/development.md",
-      "fingerprint": "sha256:eee255499dc7c1e269a8b3485286536c1e2ed4ec24d1cb1a7736745708883fc2",
+      "fingerprint": "sha256:3cab987b640972e7fe5e068d44c948dc1cda8f6e3976dd2f4ca13a1dbf02571e",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "development-checks"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T11:07:56.888Z",
-        "reason": "Verified v6.1.3 provenance and release-hygiene patch: nonblank source metric, restored readability spacing, literature schema minimum, bounded post-publish registry checks, corrected v6.0.9/v6.0.10 attribution, 139 tests and full local gate."
+        "at": "2026-08-10T23:43:04.157Z",
+        "reason": "Release candidate 6.1.4: grouped layout and optional EVIDENCE cleanup are treated as a patch because supported workflows/configuration/interfaces remain compatible; package scripts are complete and full verification passed."
       }
     }
   ]

@@ -43,6 +43,12 @@ printf '<!doctype html><main id="content"></main>' > "$output"
 		await assert.doesNotReject(() =>
 			import("node:fs/promises").then(({ stat }) => stat("public/index.html")),
 		);
+		await assert.doesNotReject(() =>
+			import("node:fs/promises").then(({ stat }) => stat("public/styles.css")),
+		);
+		await assert.rejects(() =>
+			import("node:fs/promises").then(({ stat }) => stat("public/page.html")),
+		);
 		await assert.rejects(
 			() => make([`PANDOC=${renderer}`, "SITE_PAGES=missing.md missing"]),
 			/Missing site input/,

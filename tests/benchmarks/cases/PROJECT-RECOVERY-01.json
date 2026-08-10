@@ -3,7 +3,7 @@
   "id": "PROJECT-RECOVERY-01",
   "heldIn": "held-in",
   "skills": ["project"],
-  "fixture": "benchmarks/fixtures/project-recovery-01",
+  "fixture": "tests/benchmarks/fixtures/project-recovery-01",
   "task": "Recover a concise direction note from the supplied accepted, stale, tentative, and unreviewed state. Write RECOVERY.md that distinguishes those statuses and recommends the next human decision. Do not edit any supplied state file.",
   "expectedArtifacts": ["RECOVERY.md"],
   "objectiveChecks": [

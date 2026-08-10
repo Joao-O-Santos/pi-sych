@@ -7,7 +7,7 @@ status](https://gitlab.com/Joao-O-Santos/pi-sych/badges/main/pipeline.svg)](http
 version](https://img.shields.io/npm/v/pi-sych.svg)](https://www.npmjs.com/package/pi-sych)
 [![npm
 downloads](https://img.shields.io/npm/dt/pi-sych.svg)](https://www.npmjs.com/package/pi-sych)
-[![license](https://img.shields.io/npm/l/pi-sych.svg)](https://gitlab.com/Joao-O-Santos/pi-sych/-/blob/main/LICENSE)
+[![license](https://img.shields.io/npm/l/pi-sych.svg)](https://gitlab.com/Joao-O-Santos/pi-sych/-/blob/main/docs/LICENSE.md)
 
 Pi Sych is a small Pi package for research, writing, analysis, and code
 projects that need to remain understandable beyond a single LLM
@@ -100,7 +100,8 @@ record of a project. Durable information belongs in ordinary files that
 a collaborator, another model, or a future session can inspect.
 
 A project can begin with `PROJECT.md` and add other files only when they
-become useful.
+become useful. `EVIDENCE.md` is optional task evidence, not a required
+repository file.
 
 | File | Typical purpose |
 |------------------------------------|------------------------------------|
@@ -122,7 +123,6 @@ For example, a small manuscript project might contain:
 my-paper/
 ├── PROJECT.md
 ├── manuscript.qmd
-├── EVIDENCE.md
 ├── DECISIONS.md
 ├── TODO.md
 ├── STYLE.md
@@ -366,7 +366,8 @@ When working in a Pi Sych project:
 - report only retrieval, execution, review, and verification that
   actually occurred.
 
-See [architecture](ARCHITECTURE.md) for the complete runtime contract.
+See [architecture](docs/ARCHITECTURE.md) for the complete runtime
+contract.
 
 ## Status and contributions
 
@@ -387,8 +388,8 @@ Useful contributions include:
 - accessibility improvements; and
 - reports of where the file-first approach does or does not work well.
 
-See [contributing](CONTRIBUTING.md) before proposing code or release
-changes.
+See [contributing](docs/CONTRIBUTING.md) before proposing code or
+release changes.
 
 ## Detailed documentation
 
@@ -400,14 +401,14 @@ changes.
   resource controls, and optional integrations;
 - [Public contract](docs/public-contract.md) --- supported userland,
   compatibility-sensitive internals, and SemVer/migration rules;
-- [Architecture](ARCHITECTURE.md) --- supervisor-facing runtime
+- [Architecture](docs/ARCHITECTURE.md) --- supervisor-facing runtime
   boundaries and mechanical invariants;
 - [Development](docs/development.md) --- checks, deterministic test
   posture, style, and design constraints for contributors;
 - [Code tour](docs/code-tour.md) --- a guided map of the current runtime
   and its [live generated code reference](code-reference.html); and
-- [Contributing](CONTRIBUTING.md) --- issues, pull requests, and release
-  ownership; and
+- [Contributing](docs/CONTRIBUTING.md) --- issues, pull requests, and
+  release ownership; and
 - [Attribution](docs/attribution.md) --- cited influences behind the
   skills and package design, plus platform and integration
   acknowledgements.

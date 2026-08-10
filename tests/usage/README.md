@@ -27,8 +27,8 @@ human review of skill guidance.
 
 ## Benchmark pilot
 
-The separate synthetic benchmark cases live under `benchmarks/`. Live
-execution requires an explicit private selector configuration path:
+The separate synthetic benchmark cases live under `tests/benchmarks/`.
+Live execution requires an explicit private selector configuration path:
 `node scripts/benchmark.mjs /absolute/path/to/benchmark.json`. Candidate
 and judge models are recorded in local result bundles and must differ
 unless explicitly overridden. `benchmark-results/` and `coverage-v8/`

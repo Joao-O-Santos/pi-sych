@@ -3,7 +3,7 @@
   "id": "CODE-ROUNDING-01",
   "heldIn": "held-in",
   "skills": ["code"],
-  "fixture": "benchmarks/fixtures/code-rounding-01",
+  "fixture": "tests/benchmarks/fixtures/code-rounding-01",
   "task": "Inspect the rounding helper, repair its negative-half rounding defect, add a focused regression test, and write REPORT.md with the actual verification performed.",
   "expectedArtifacts": ["src/round.js", "test/round.test.mjs", "REPORT.md"],
   "objectiveChecks": [

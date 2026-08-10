@@ -34,9 +34,10 @@ verification, or final review.
 ## Project rules and preferences
 
 {accepted} Prefer direct and minimal implementations. Keep durable state
-explicit in `PROJECT.md`, `EVIDENCE.md`, and `SYNC.json`. Give workers
-exact resources, retain immutable results, report unexpected changes,
-and require human approval for consequential durable changes.
+explicit in `PROJECT.md` and `SYNC.json`; use optional `EVIDENCE.md` as
+bounded task evidence rather than an accumulating release log. Give
+workers exact resources, retain immutable results, report unexpected
+changes, and require human approval for consequential durable changes.
 
 ## Definition of done
 
@@ -67,15 +68,15 @@ release identifier.
 
 ## Previous action
 
-{verified} Corrected historical scalar-normalization provenance, changed
-the source budget to exclude blank lines, restored useful readability
-spacing, declared the literature query's non-empty schema constraint,
-and added bounded post-publication npm version and `latest` checks.
-Historical release identifiers and observed evidence remain in
-`CHANGELOG.md` and `EVIDENCE.md`.
+{verified} Grouped public documentation and licenses under `docs/`,
+benchmark material and fixtures under `tests/`, site sources under
+`site/`, and visible defaults under `templates/`. Updated package,
+build, test, formatter, link, and synchronization paths while retaining
+the intentionally optional, temporary status of `EVIDENCE.md`.
 
 ## Immediate next step
 
-{accepted} Keep main at the reviewed release state until the owner
-selects further work. Do not approve node-pty scripts, run npm audit
-remediation, or perform another release without explicit instruction.
+{accepted} Verify the reorganized repository and review the replacement
+diagrams against runtime and documentation. Do not approve node-pty
+scripts, run npm audit remediation, or release the public path changes
+without explicit migration/version approval.

@@ -378,7 +378,7 @@ async function main() {
 	const prepared = await Promise.all(
 		caseIds.map(async (id) => {
 			const definition = validateCase(
-				JSON.parse(await readFile(join("benchmarks", "cases", `${id}.json`), "utf8")),
+				JSON.parse(await readFile(join("tests", "benchmarks", "cases", `${id}.json`), "utf8")),
 			);
 			const fixtureRoot = resolve(definition.fixture);
 			await validateFixtureManifest(fixtureRoot);

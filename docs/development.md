@@ -8,7 +8,7 @@ inspectable.
 
 ## Before changing code
 
-Read `AGENTS.md`, `PROJECT.md`, `ARCHITECTURE.md`, and the relevant
+Read `AGENTS.md`, `PROJECT.md`, `docs/ARCHITECTURE.md`, and the relevant
 tests. Treat `PLAN.md` as the accepted task boundary when one is
 present. Keep semantic interpretation in skills and normal supervisor
 conversation; keep path, process, schema, hash, and persistence

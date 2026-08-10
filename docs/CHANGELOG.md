@@ -7,6 +7,18 @@ state.
 
 ## Unreleased
 
+## v6.1.4
+
+### Changed
+
+- Group public documentation and licenses under `docs/`, benchmark
+  material and fixtures under `tests/`, site sources under `site/`, and
+  visible defaults under `templates/`; update package, build, tests,
+  links, and synchronization paths accordingly.
+- Remove the repository's optional task-local `EVIDENCE.md`.
+- Include all package scripts required by the documented verification
+  commands.
+
 ## v6.1.3
 
 ### Fixed

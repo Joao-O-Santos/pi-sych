@@ -10,5 +10,9 @@
 - `review_workflow.png` shows optional Plannotator feedback and the
   human decision to revise, verify, or acknowledge.
 - These PNGs are deliberately simple summaries, not executable diagrams.
-  `README.md`, `ARCHITECTURE.md`, the skill recipes, and implementation
-  remain authoritative for exact behavior.
+  Their labels must not be read as a complete runtime contract: in
+  particular, workers receive the selected artifact and context, custom
+  compaction receives bounded snapshots plus conversation material, and
+  acknowledgement is mechanical rather than semantic approval.
+  `README.md`, `docs/ARCHITECTURE.md`, the skill recipes, and
+  implementation remain authoritative for exact behavior.

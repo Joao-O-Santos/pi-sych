@@ -49,7 +49,7 @@ const validCase = {
 
 test("the three synthetic held-in cases validate without private material", async () => {
 	for (const id of ["CODE-ROUNDING-01", "REVIEW-COMPOUND-01", "PROJECT-RECOVERY-01"]) {
-		const definition = JSON.parse(await readFile(`benchmarks/cases/${id}.json`, "utf8"));
+		const definition = JSON.parse(await readFile(`tests/benchmarks/cases/${id}.json`, "utf8"));
 		validateCase(definition);
 		await validateFixtureManifest(definition.fixture);
 		assert.match(candidatePrompt(definition), /public/);

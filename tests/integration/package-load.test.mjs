@@ -184,7 +184,19 @@ test("Pi discovers exactly the six public skills without exposing modules", asyn
 test("package metadata keeps attribution and release version consistent", async () => {
 	const manifest = JSON.parse(await readFile("package.json", "utf8"));
 	const lockfile = JSON.parse(await readFile("package-lock.json", "utf8"));
-	assert.equal(manifest.files.includes("docs"), true);
+	assert.deepEqual(
+		manifest.files.filter((path) =>
+			["docs", "site", "templates", "tests/benchmarks"].includes(path),
+		),
+		["templates", "docs", "site", "tests/benchmarks"],
+	);
+	for (const retired of ["config", "benchmarks", "static", "LICENSES", "ARCHITECTURE.md"])
+		assert.equal(manifest.files.includes(retired), false);
+	for (const script of [
+		"scripts/check-mcporter-dependencies.mjs",
+		"scripts/check-source-budget.mjs",
+	])
+		assert.equal(manifest.files.includes(script), true);
 	assert.equal((await stat("docs/attribution.md")).isFile(), true);
 	assert.equal(manifest.version, lockfile.version);
 	assert.equal(lockfile.packages[""].version, manifest.version);
@@ -218,6 +230,23 @@ test("packed install omitting optional dependencies retains the core package", a
 	);
 	const pkg = JSON.parse(await readFile("package.json", "utf8"));
 	assert.equal(installed.version, pkg.version);
+	const packageRoot = join(install, "node_modules/pi-sych");
+	for (const path of [
+		"docs/ARCHITECTURE.md",
+		"docs/CHANGELOG.md",
+		"docs/CONTRIBUTING.md",
+		"docs/LICENSE.md",
+		"docs/LICENSES/BSD-3-Clause",
+		"templates/config.json",
+		"site/page.html",
+		"site/static/styles.css",
+		"scripts/check-mcporter-dependencies.mjs",
+		"scripts/check-source-budget.mjs",
+		"tests/benchmarks/cases/CODE-ROUNDING-01.json",
+	])
+		assert.equal((await stat(join(packageRoot, path))).isFile(), true, path);
+	for (const retired of ["ARCHITECTURE.md", "LICENSE", "config", "benchmarks", "static"])
+		await assert.rejects(stat(join(packageRoot, retired)));
 	await assert.rejects(stat(join(install, "node_modules/@plannotator/pi-extension")));
 	await assert.rejects(stat(join(install, "node_modules/pi-mcporter")));
 });

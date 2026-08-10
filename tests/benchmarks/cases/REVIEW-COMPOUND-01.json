@@ -3,7 +3,7 @@
   "id": "REVIEW-COMPOUND-01",
   "heldIn": "held-in",
   "skills": ["review", "write"],
-  "fixture": "benchmarks/fixtures/review-compound-01",
+  "fixture": "tests/benchmarks/fixtures/review-compound-01",
   "task": "Review the supplied source excerpt and revise MEMO.md so it preserves the supported recall finding but removes or qualifies the unsupported relapse claim. Write REVIEW.md locating the compound-claim defect.",
   "expectedArtifacts": ["MEMO.md", "REVIEW.md"],
   "objectiveChecks": [

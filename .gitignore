@@ -26,8 +26,8 @@ auth.json
 .test-build/
 
 # Rendered evaluation fixtures
-fixtures/revealjs-build/slides.html
-fixtures/r-quarto-alignment/report.html
-fixtures/r-quarto-alignment/report.knit.md
-fixtures/revealjs-build/slides_files/
-fixtures/r-quarto-alignment/report_files/
+tests/fixtures/revealjs-build/slides.html
+tests/fixtures/r-quarto-alignment/report.html
+tests/fixtures/r-quarto-alignment/report.knit.md
+tests/fixtures/revealjs-build/slides_files/
+tests/fixtures/r-quarto-alignment/report_files/

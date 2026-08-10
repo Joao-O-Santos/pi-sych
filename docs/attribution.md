@@ -1,12 +1,12 @@
 # Attribution and intellectual influences
 
-Pi Sych is distributed under the repository's MIT `LICENSE`. This file
-records the known direct influences identified in project history, the
-owner's source inventory, and the current package design. It also
-separates intellectual influence from host platforms, integrations, and
-first-party material. Pi Sych does not include or relicense source text
-or code from the works and projects cited below unless a file says
-otherwise.
+Pi Sych is distributed under the repository's MIT `docs/LICENSE.md`.
+This file records the known direct influences identified in project
+history, the owner's source inventory, and the current package design.
+It also separates intellectual influence from host platforms,
+integrations, and first-party material. Pi Sych does not include or
+relicense source text or code from the works and projects cited below
+unless a file says otherwise.
 
 ## Writing and reasoning methods
 

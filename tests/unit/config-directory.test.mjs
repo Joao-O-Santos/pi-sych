@@ -74,7 +74,7 @@ test("Pi Sych writes visible defaults once without overwriting configuration", a
 		piSychConfigPath("workerAgentDir", { projectRoot: root }),
 		join(directory, "workers/runtime"),
 	);
-	assert.deepEqual(JSON.parse(await readFile("config/defaults.json", "utf8")), DEFAULT_CONFIG);
+	assert.deepEqual(JSON.parse(await readFile("templates/config.json", "utf8")), DEFAULT_CONFIG);
 });
 
 test("Pi Sych config accepts a dedicated relative or absolute literature database path", async (t) => {
