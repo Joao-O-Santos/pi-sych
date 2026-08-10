@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -16,6 +16,13 @@ const exists =
 	(...paths) =>
 	(path) =>
 		paths.includes(path);
+
+test("explicit Pi Sych configuration directory wins", () => {
+	assert.equal(
+		piSychConfigDirectory({ configDirectory: "/supervisor/pi-sych", env: {}, exists: exists() }),
+		"/supervisor/pi-sych",
+	);
+});
 
 test("Pi Sych configuration follows project, Pi, XDG, and home precedence", () => {
 	const home = "/home/test";
@@ -47,8 +54,9 @@ test("Pi Sych configuration follows project, Pi, XDG, and home precedence", () =
 	assert.throws(() => piSychConfigDirectory({ env: {}, home, exists: exists() }), /unavailable/);
 });
 
-test("Pi Sych writes visible defaults once without overwriting configuration", async () => {
+test("Pi Sych writes visible defaults once without overwriting configuration", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-config-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await mkdir(join(root, ".pi"));
 	const directory = await ensurePiSychConfig({ projectRoot: root });
 	const path = join(directory, "config.json");
@@ -69,8 +77,9 @@ test("Pi Sych writes visible defaults once without overwriting configuration", a
 	assert.deepEqual(JSON.parse(await readFile("config/defaults.json", "utf8")), DEFAULT_CONFIG);
 });
 
-test("Pi Sych config accepts a dedicated relative or absolute literature database path", async () => {
+test("Pi Sych config accepts a dedicated relative or absolute literature database path", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-literature-config-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await mkdir(join(root, ".pi/pi-sych"), { recursive: true });
 	const path = join(root, ".pi/pi-sych/config.json");
 	for (const literatureDatabase of ["indexes/papers.sqlite", join(root, "papers.sqlite")]) {
@@ -79,8 +88,9 @@ test("Pi Sych config accepts a dedicated relative or absolute literature databas
 	}
 });
 
-test("Pi Sych config rejects malformed, unknown, and mistyped values", async () => {
+test("Pi Sych config rejects malformed, unknown, and mistyped values", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-config-invalid-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await mkdir(join(root, ".pi/pi-sych"), { recursive: true });
 	const path = join(root, ".pi/pi-sych/config.json"),
 		load = () => loadPiSychConfig({ projectRoot: root });

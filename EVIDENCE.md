@@ -1,5 +1,32 @@
 # Evidence
 
+## E-036 --- v6.1.1 corrective release gate
+
+**Status:** verified **Kind:** observed deterministic behavior, public
+contract, package contents, source budget, coverage thresholds, and
+independent review **Source:** current source and tests, local full
+gate, Pages build, package dry run, and independent read-only review
+**Supports:** v6.1.1 patch readiness. **Evidence:** normal worker launch
+keeps its isolated `PI_CODING_AGENT_DIR` and receives the supervisor's
+resolved Pi Sych configuration directory separately; a regression test
+uses no project `.pi`, an isolated worker directory, supervisor config
+outside the project, and an absolute external SQLite database. Timeout
+and cancellation followed by child `error` without `close` clear forced
+termination. Native Node coverage now gates lines, branches, and
+functions at 90%, with observed results of 98.30%, 91.55%, and 94.44%.
+The full gate passed with 125 unit and 12 integration tests, typecheck,
+style, dependency validation, 2,080 actual / 2,100 rounded runtime
+lines, package dry run, Pages build, and whitespace checks. Public
+contract and release history are synchronized, temporary fixtures are
+cleaned through test lifecycles, and the independent corrective review
+found no remaining high or medium issue; its sole low cleanup finding
+was corrected. Package and lockfile are 6.1.1. **Limits:** v6.1.0 was
+already signed, tagged, and published before this corrective pass; npm
+reported one moderate and one high dependency vulnerability during user
+update, and blocked the unapproved `node-pty@1.1.0` install script. No
+audit fix, dependency update, script approval, v6.1.1 push, tag, or
+publication has been performed. **Checked:** 2026-08-08
+
 ## E-035 --- v6.1.0 implementation gate
 
 **Status:** verified **Kind:** observed deterministic behavior, package

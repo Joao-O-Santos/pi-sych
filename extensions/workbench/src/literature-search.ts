@@ -3,11 +3,7 @@ import { dirname, isAbsolute, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
-import {
-	type ConfigDirectoryOptions,
-	loadPiSychConfig,
-	piSychConfigDirectory,
-} from "./config-directory.js";
+import { loadPiSychConfig, piSychConfigDirectory } from "./config-directory.js";
 
 const query =
 	"SELECT p.filepath AS source_path, p.title, p.first_author AS authors, p.year, p.doi, snippet(papers_fts, 2, '[', ']', ' … ', 32) AS snippet, bm25(papers_fts) AS score FROM papers_fts JOIN papers AS p ON p.id = papers_fts.rowid WHERE papers_fts MATCH ? ORDER BY score LIMIT ?";
@@ -17,13 +13,10 @@ export interface LiteratureResult {
 	score: unknown;
 	sourcePath: string;
 }
-export function literatureDatabasePath(
-	projectRoot: string,
-	options: Omit<ConfigDirectoryOptions, "projectRoot"> = {},
-): string {
+export function literatureDatabasePath(projectRoot: string, configDirectory?: string): string {
 	const projectDatabase = resolve(projectRoot, "LITERATURE.sqlite");
 	if (existsSync(projectDatabase)) return projectDatabase;
-	const configOptions = { ...options, projectRoot },
+	const configOptions = { projectRoot, ...(configDirectory ? { configDirectory } : {}) },
 		directory = piSychConfigDirectory(configOptions),
 		configured = loadPiSychConfig(configOptions).literatureDatabase;
 	if (!configured) return resolve(directory, "literature.sqlite");
@@ -36,12 +29,13 @@ export function searchLiterature(
 	projectRoot: string,
 	queryText: string,
 	limit = 10,
+	configDirectory?: string,
 ): LiteratureResult[] {
 	if (typeof queryText !== "string" || !queryText.trim())
 		throw new Error("Literature search query must be a non-empty string");
 	if (!Number.isInteger(limit) || limit < 1 || limit > 50)
 		throw new Error("Literature search limit must be an integer from 1 to 50");
-	const path = literatureDatabasePath(projectRoot);
+	const path = literatureDatabasePath(projectRoot, configDirectory);
 	if (!existsSync(path)) throw new Error(`Literature database is unavailable at ${path}`);
 	let database: DatabaseSync | undefined;
 	try {
@@ -66,7 +60,7 @@ export function searchLiterature(
 		database?.close();
 	}
 }
-export function registerLiteratureSearch(pi: ExtensionAPI): void {
+export function registerLiteratureSearch(pi: ExtensionAPI, configDirectory?: string): void {
 	pi.registerTool({
 		name: "literature_search",
 		label: "Search local literature",
@@ -76,7 +70,7 @@ export function registerLiteratureSearch(pi: ExtensionAPI): void {
 			limit: Type.Optional(Type.Integer({ minimum: 1, maximum: 50 })),
 		}),
 		async execute(_id, params, _signal, _update, ctx) {
-			const results = searchLiterature(ctx.cwd, params.query, params.limit);
+			const results = searchLiterature(ctx.cwd, params.query, params.limit, configDirectory);
 			return {
 				content: [{ type: "text", text: JSON.stringify(results, null, 2) }],
 				details: { results },

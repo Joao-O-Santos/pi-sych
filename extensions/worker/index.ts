@@ -23,5 +23,5 @@ export default function piSychWorker(pi: ExtensionAPI): void {
 			};
 		},
 	});
-	registerLiteratureSearch(pi);
+	registerLiteratureSearch(pi, process.env.PI_SYCH_CONFIG_DIRECTORY);
 }

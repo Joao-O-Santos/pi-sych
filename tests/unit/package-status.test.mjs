@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -13,12 +13,13 @@ import piSychWorkbench, {
 } from "../../.test-build/workbench/index.js";
 import { DEFAULT_CONFIG } from "../../.test-build/workbench/src/config-directory.js";
 
-async function capturedExtension(extension) {
+async function capturedExtension(extension, t) {
 	const tools = [];
 	const commands = [];
 	const commandHandlers = new Map();
 	const events = new Map();
 	const agentDir = await mkdtemp(join(tmpdir(), "pi-sych-ext-"));
+	t.after(() => rm(agentDir, { recursive: true, force: true }));
 	const prev = process.env.PI_CODING_AGENT_DIR;
 	process.env.PI_CODING_AGENT_DIR = agentDir;
 	try {
@@ -41,9 +42,11 @@ async function capturedExtension(extension) {
 	return { tools, commands, commandHandlers, events };
 }
 
-test("core and Plannotator extensions register separate public surfaces", async () => {
-	process.env.PI_CODING_AGENT_DIR = await mkdtemp(join(tmpdir(), "pi-sych-public-ext-"));
-	const core = await capturedExtension(piSychWorkbench);
+test("core and Plannotator extensions register separate public surfaces", async (t) => {
+	const publicAgentDir = await mkdtemp(join(tmpdir(), "pi-sych-public-ext-"));
+	t.after(() => rm(publicAgentDir, { recursive: true, force: true }));
+	process.env.PI_CODING_AGENT_DIR = publicAgentDir;
+	const core = await capturedExtension(piSychWorkbench, t);
 	assert.deepEqual(
 		core.tools.map((tool) => tool.name),
 		["dispatch_worker", "project_status"],
@@ -80,7 +83,7 @@ test("core and Plannotator extensions register separate public surfaces", async 
 	assert.doesNotMatch(SUPERVISOR_GUIDANCE, /submit_plan/);
 });
 
-test("Plannotator handlers report results and recover from invalid input", async () => {
+test("Plannotator handlers report results and recover from invalid input", async (t) => {
 	const commands = new Map(),
 		messages = [],
 		notices = [];
@@ -93,6 +96,7 @@ test("Plannotator handlers report results and recover from invalid input", async
 		},
 	};
 	const cwd = await mkdtemp(join(tmpdir(), "pi-sych-annotation-"));
+	t.after(() => rm(cwd, { recursive: true, force: true }));
 	await writeFile(join(cwd, "note.md"), "note");
 	const ctx = { cwd, ui: { notify: (message, type) => notices.push({ message, type }) } };
 	const session = {
@@ -157,8 +161,9 @@ test("code-review arguments omit absent optional keys and preserve the small con
 	});
 });
 
-test("configured project instructions are available to the supervisor without a model catalog", async () => {
+test("configured project instructions are available to the supervisor without a model catalog", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-supervisor-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await writeFile(join(root, "AGENTS.md"), "Prefer direct evidence.\n");
 	const instructions = await configuredSupervisorInstructions(root);
 	assert.match(instructions ?? "", /Prefer direct evidence/);
@@ -171,8 +176,9 @@ test("100k compaction threshold covers disabled, below, boundary, and above case
 	assert.equal(shouldCompactAt100k(true, 100_001), true);
 });
 
-test("workbench lifecycle and status commands cover configured branches", async () => {
+test("workbench lifecycle and status commands cover configured branches", async (t) => {
 	const cwd = await mkdtemp(join(tmpdir(), "pi-sych-workbench-"));
+	t.after(() => rm(cwd, { recursive: true, force: true }));
 	await mkdir(join(cwd, ".pi/pi-sych"), { recursive: true });
 	await writeFile(
 		join(cwd, "SYNC.json"),
@@ -185,7 +191,7 @@ test("workbench lifecycle and status commands cover configured branches", async 
 	);
 	const notifications = [],
 		compacted = [];
-	const extension = await capturedExtension(piSychWorkbench);
+	const extension = await capturedExtension(piSychWorkbench, t);
 	const ctx = {
 		cwd,
 		model: undefined,

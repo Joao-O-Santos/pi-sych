@@ -48,8 +48,9 @@ test("dependency arrays retain clear validation and object entries", () => {
 		/artifacts\[0\]\.updateFrom must be an array/,
 	);
 });
-test("status exposes missing core files and project validation problems", async () => {
+test("status exposes missing core files and project validation problems", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-errors-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await writeFile(join(root, "PROJECT.md"), "# Project\n\n## Objective\nIncomplete\n");
 	await writeFile(
 		join(root, "SYNC.json"),
@@ -60,8 +61,9 @@ test("status exposes missing core files and project validation problems", async 
 	assert.ok(state.projectErrors.length > 0);
 	assert.match(formatProjectStatusCheck(state), /Project-file problems:/);
 });
-test("status distinguishes missing observations from changed files", async () => {
+test("status distinguishes missing observations from changed files", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-missing-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await writeFile(join(root, "PROJECT.md"), project);
 	await writeFile(
 		join(root, "SYNC.json"),
@@ -76,8 +78,9 @@ test("status distinguishes missing observations from changed files", async () =>
 	assert.deepEqual(state.missing, ["missing.md"]);
 	assert.doesNotMatch(formatProjectStatusCheck(state), /Changed:/);
 });
-test("status surfaces observation errors and prevents false all-clear", async () => {
+test("status surfaces observation errors and prevents false all-clear", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-error-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await writeFile(join(root, "PROJECT.md"), project);
 	await writeFile(join(root, "A.md"), "a");
 	await writeFile(
@@ -99,8 +102,9 @@ test("status surfaces observation errors and prevents false all-clear", async ()
 	assert.match(formatProjectStatusCheck(state), /Unable to observe:/);
 	assert.doesNotMatch(formatProjectStatusCheck(state), /All tracked files match/);
 });
-test("missing artifacts propagate dependency impact", async () => {
+test("missing artifacts propagate dependency impact", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-impact-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await writeFile(join(root, "PROJECT.md"), project);
 	await writeFile(join(root, "B.md"), "b"); // B.md exists on disk
 	// A.md is tracked but missing; B.md depends on A.md
@@ -121,8 +125,9 @@ test("missing artifacts propagate dependency impact", async () => {
 	assert.equal(state.impacted[0].path, "B.md");
 	assert.deepEqual(state.impacted[0].from, ["A.md"]);
 });
-test("acknowledgement recheck rejects content changed after the status read", async () => {
+test("acknowledgement recheck rejects content changed after the status read", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-race-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await writeFile(join(root, "PROJECT.md"), project);
 	await writeFile(join(root, "A.md"), "before");
 	await writeFile(
@@ -140,8 +145,9 @@ test("acknowledgement recheck rejects content changed after the status read", as
 		/changed during review/,
 	);
 });
-test("status fingerprints files and traverses declared dependencies", async () => {
+test("status fingerprints files and traverses declared dependencies", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await writeFile(join(root, "PROJECT.md"), project);
 	await writeFile(join(root, "A.md"), "a");
 	await writeFile(join(root, "B.md"), "b");

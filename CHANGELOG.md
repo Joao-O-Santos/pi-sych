@@ -5,6 +5,28 @@ immutable npm publications unless explicitly marked otherwise.
 
 ## Unreleased
 
+## v6.1.1 - 2026-08-08
+
+### Fixed
+
+- Forward the resolved supervisor Pi Sych configuration directory to
+  isolated worker runtime lookup without replacing the worker's own Pi
+  directory. This makes configured external literature databases usable
+  by dispatched research workers.
+- Clear worker timeout and forced-kill timers when a child emits `error`
+  without a later `close` event.
+
+### Changed
+
+- Make native Node coverage a verification gate at 90% lines, branches,
+  and functions, and record its line percentage in GitLab.
+- Declare worker-only `literature_search`, `literatureDatabase`, and the
+  supported `papers`/`papers_fts` schema in the public contract.
+- Complete patch-release bookkeeping and add systematic
+  temporary-fixture cleanup in deterministic tests.
+
+## v6.1.0 - 2026-08-08
+
 ### Added
 
 - Add worker-only `literature_search` for dispatches that select the
@@ -16,15 +38,19 @@ immutable npm publications unless explicitly marked otherwise.
 
 ### Changed
 
-- Simplify diagnostic coverage to the Node built-in coverage command; it
-  is not a verification or CI gate. Add meaningful path, status,
-  acknowledgement, worker-process, compaction, and literature-tool
-  boundary coverage, with systematic temporary-fixture cleanup.
+- Simplify diagnostic coverage to the Node built-in coverage command and
+  add meaningful path, status, acknowledgement, worker-process,
+  compaction, and literature-tool boundary coverage.
 - Clip compaction snapshots only at valid UTF-8 boundaries and require
   promotion proposals to remain single-line inbox entries.
 - Keep worker package-load registration deterministic: the worker
   surface is exactly `submit_artifact` and `literature_search`.
-- Release version 6.1.0.
+
+## v6.0.10 - 2026-08-08
+
+### Changed
+
+- Version housekeeping.
 
 ## v6.0.9 - 2026-08-08
 

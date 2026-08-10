@@ -42,7 +42,9 @@ bounded delegation, and human-owned judgment.
 
 - Work directly on `main` using small verified commits unless the user
   establishes another convention.
-- Do not push, tag, publish, or release without separate instruction.
+- Do not push, tag, publish, or release without separate instruction. A
+  release tag is the final release operation: complete verification and
+  remote main-job confirmation before creating or pushing it.
 - Consequential architecture and synchronization decisions require an
   approved plan. Long or consequential plans stay in project-local
   Markdown and wait for browser or file review.

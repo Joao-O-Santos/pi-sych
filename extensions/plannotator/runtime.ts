@@ -12,13 +12,11 @@ import { resolveExistingProjectPath, resolveProject } from "../workbench/src/pro
 
 const notifyError = (ctx: ExtensionCommandContext, error: unknown) =>
 	ctx.ui.notify(error instanceof Error ? error.message : String(error), "error");
-
 async function projectFile(cwd: string, input: string) {
 	if (!input.trim() || isAbsolute(input)) throw new Error("Path must be a project-local file");
 	const project = await resolveProject(cwd);
 	return resolveExistingProjectPath(project.projectRoot, input);
 }
-
 function annotationResult(
 	pi: ExtensionAPI,
 	ctx: ExtensionCommandContext,
@@ -35,7 +33,6 @@ function annotationResult(
 		})
 		.catch((error) => notifyError(ctx, error));
 }
-
 export interface PlannotatorRuntime {
 	preload(): Promise<unknown>;
 	last(ctx: ExtensionCommandContext): ReturnType<typeof startLastMessageAnnotation>;
@@ -49,14 +46,12 @@ export interface PlannotatorRuntime {
 		args: ReturnType<typeof parseCodeReviewArgs>,
 	): ReturnType<typeof startCodeReview>;
 }
-
 const defaultRuntime: PlannotatorRuntime = {
 	preload: loadPlannotator,
 	last: startLastMessageAnnotation,
 	file: startFileAnnotation,
 	review: startCodeReview,
 };
-
 export async function registerPlannotator(
 	pi: ExtensionAPI,
 	runtime: PlannotatorRuntime = defaultRuntime,

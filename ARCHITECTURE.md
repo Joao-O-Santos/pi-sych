@@ -100,7 +100,9 @@ lines, not by newline accidents.
 
 `literature_search` is registered only by the worker extension. It opens
 the selected database read-only and queries the supported SQLite FTS5
-`papers` plus external-content `papers_fts` schema. Search joins the
+`papers` plus external-content `papers_fts` schema. The supervisor
+forwards only the resolved Pi Sych configuration-directory path to the
+worker while retaining its isolated Pi agent directory. Search joins the
 index to canonical metadata, searches filepath, title, abstract, tags,
 and DOI, and ranks with FTS5, snippets `abstract`, and returns source
 paths resolved relative to the database. Database selection and the

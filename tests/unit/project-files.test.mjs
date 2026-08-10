@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, symlink, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -20,8 +20,9 @@ test("manifest validates required project mechanics but permits metadata", () =>
 	assert.throws(() => parseSyncManifest(manifest({ artifacts: {} })), /artifacts/);
 	assert.throws(() => resolveProjectPath("/project", "../outside"), /leaves/);
 });
-test("resolver uses nearest manifest and configured root", async () => {
+test("resolver uses nearest manifest and configured root", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-files-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await writeFile(
 		join(root, "SYNC.json"),
 		manifest({ projectRoot: "work", canonical: { project: "state/PROJECT.md" } }),
@@ -30,9 +31,11 @@ test("resolver uses nearest manifest and configured root", async () => {
 	assert.match(project.projectRoot, /work$/);
 	assert.match(project.canonical.project, /work\/state\/PROJECT\.md$/);
 });
-test("project-local symlinks and configured external paths remain usable", async () => {
+test("project-local symlinks and configured external paths remain usable", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-symlink-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	const outside = join(tmpdir(), `pi-sych-outside-${Date.now()}.md`);
+	t.after(() => rm(outside, { force: true }));
 	const link = join(root, "escape.md");
 	await writeFile(outside, "outside");
 	await symlink(outside, link);

@@ -24,6 +24,7 @@ export interface ConfigDirectoryOptions {
 	env?: NodeJS.ProcessEnv;
 	home?: string;
 	exists?: (path: string) => boolean;
+	configDirectory?: string;
 }
 export function piConfigRoot({
 	projectRoot,
@@ -43,7 +44,7 @@ export function piConfigRoot({
 	);
 }
 export const piSychConfigDirectory = (options: ConfigDirectoryOptions = {}) =>
-	resolve(piConfigRoot(options), "pi-sych");
+	options.configDirectory ?? resolve(piConfigRoot(options), "pi-sych");
 export const piSkillDirectory = (options: ConfigDirectoryOptions = {}) =>
 	resolve(piConfigRoot(options), "skills");
 const rejectUnknown = (item: Record<string, unknown>, keys: string[], path: string) => {
@@ -67,7 +68,6 @@ const configKeys =
 	"version workerAgentDir modelCatalog mcporterConfig literatureDatabase compaction review".split(
 		" ",
 	);
-
 export function loadPiSychConfig(options: ConfigDirectoryOptions = {}): PiSychConfig {
 	const path = resolve(piSychConfigDirectory(options), "config.json");
 	if (!existsSync(path)) return structuredClone(DEFAULT_CONFIG);

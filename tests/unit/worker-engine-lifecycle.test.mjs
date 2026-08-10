@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { EventEmitter } from "node:events";
-import { access, mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { access, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { PassThrough } from "node:stream";
@@ -29,8 +29,9 @@ const project = (root) => ({
 const request = { task: "inspect", mode: "read-only", expectedOutput: "summary", contextFiles: [] };
 const catalog = { default: "worker", models: { worker: { model: "provider/model" } } };
 
-async function readyProject() {
+async function readyProject(t) {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-worker-lifecycle-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	const agentDir = join(root, "worker-agent");
 	await writeFile(join(root, "A.md"), "a");
 	await mkdir(agentDir, { recursive: true });
@@ -38,8 +39,8 @@ async function readyProject() {
 	return { root, agentDir, resolved: project(root) };
 }
 
-test("dispatch accepts a valid result and rejects reported path escapes", async () => {
-	const { agentDir, resolved } = await readyProject();
+test("dispatch accepts a valid result and rejects reported path escapes", async (t) => {
+	const { agentDir, resolved } = await readyProject(t);
 	const outcome = await dispatchWorker({
 		project: resolved,
 		workerAgentDir: agentDir,
@@ -74,8 +75,9 @@ test("dispatch accepts a valid result and rejects reported path escapes", async 
 	assert.match(invalid.error ?? "", /leaves the project root/);
 });
 
-test("dispatch explains how to initialize a missing worker directory", async () => {
+test("dispatch explains how to initialize a missing worker directory", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-worker-missing-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await assert.rejects(
 		dispatchWorker({
 			project: project(root),
@@ -114,6 +116,7 @@ function fakeSpawn() {
 test("abort then timeout then close stays cancelled and sends one SIGTERM", async (t) => {
 	t.mock.timers.enable({ apis: ["setTimeout"] });
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-launcher-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	const controller = new AbortController();
 	const fake = fakeSpawn();
 	const launched = launchPiWorker(launchSpec(root, { signal: controller.signal }), fake.spawn);
@@ -127,6 +130,7 @@ test("abort then timeout then close stays cancelled and sends one SIGTERM", asyn
 test("timeout then abort then close stays timeout and sends one SIGTERM", async (t) => {
 	t.mock.timers.enable({ apis: ["setTimeout"] });
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-launcher-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	const controller = new AbortController();
 	const fake = fakeSpawn();
 	const launched = launchPiWorker(launchSpec(root, { signal: controller.signal }), fake.spawn);
@@ -137,9 +141,33 @@ test("timeout then abort then close stays timeout and sends one SIGTERM", async 
 	assert.deepEqual(fake.child.kills, ["SIGTERM"]);
 });
 
+for (const [label, signal] of [
+	["timeout", undefined],
+	["abort", "abort"],
+]) {
+	test(`${label} followed by child error clears forced termination`, async (t) => {
+		t.mock.timers.enable({ apis: ["setTimeout"] });
+		const root = await mkdtemp(join(tmpdir(), "pi-sych-launcher-error-"));
+		t.after(() => rm(root, { recursive: true, force: true }));
+		const controller = new AbortController(),
+			fake = fakeSpawn(),
+			launched = launchPiWorker(
+				launchSpec(root, { ...(signal ? { signal: controller.signal } : {}) }),
+				fake.spawn,
+			);
+		if (signal) controller.abort();
+		else t.mock.timers.tick(100);
+		fake.child.emit("error", new Error("closed unexpectedly"));
+		assert.deepEqual((await launched).classification, signal ? "cancelled" : "timeout");
+		t.mock.timers.tick(2_000);
+		assert.deepEqual(fake.child.kills, ["SIGTERM"]);
+	});
+}
+
 test("ignored SIGTERM reaches SIGKILL after the grace period", async (t) => {
 	t.mock.timers.enable({ apis: ["setTimeout"] });
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-launcher-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	const fake = fakeSpawn();
 	const launched = launchPiWorker(launchSpec(root), fake.spawn);
 	t.mock.timers.tick(100);
@@ -155,6 +183,7 @@ test("ignored SIGTERM reaches SIGKILL after the grace period", async (t) => {
 test("normal close before timeout preserves stderr and exit code", async (t) => {
 	t.mock.timers.enable({ apis: ["setTimeout"] });
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-launcher-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	const fake = fakeSpawn();
 	const launched = launchPiWorker(launchSpec(root), fake.spawn);
 	fake.child.stderr.write("warning");
@@ -167,6 +196,7 @@ test("normal close before timeout preserves stderr and exit code", async (t) => 
 test("spawn errors preserve prior stderr and the error message", async (t) => {
 	t.mock.timers.enable({ apis: ["setTimeout"] });
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-launcher-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	const fake = fakeSpawn();
 	const launched = launchPiWorker(launchSpec(root), fake.spawn);
 	fake.child.stderr.write("diagnostic: ");
@@ -181,6 +211,7 @@ test("spawn errors preserve prior stderr and the error message", async (t) => {
 test("worker stderr is truncated to the most recent 8192 characters", async (t) => {
 	t.mock.timers.enable({ apis: ["setTimeout"] });
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-launcher-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	const fake = fakeSpawn();
 	const launched = launchPiWorker(launchSpec(root), fake.spawn);
 	fake.child.stderr.write(`${"x".repeat(9_000)}tail`);
@@ -193,6 +224,7 @@ test("worker stderr is truncated to the most recent 8192 characters", async (t) 
 test("normal signal termination is reported", async (t) => {
 	t.mock.timers.enable({ apis: ["setTimeout"] });
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-launcher-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	const fake = fakeSpawn();
 	const launched = launchPiWorker(launchSpec(root), fake.spawn);
 	fake.child.emit("close", 0, "SIGUSR1");
@@ -203,8 +235,8 @@ test("normal signal termination is reported", async (t) => {
 	});
 });
 
-test("failed dispatch removes its temporary runtime directory", async () => {
-	const { agentDir, resolved } = await readyProject();
+test("failed dispatch removes its temporary runtime directory", async (t) => {
+	const { agentDir, resolved } = await readyProject(t);
 	let runtimePath;
 	const outcome = await dispatchWorker({
 		project: resolved,

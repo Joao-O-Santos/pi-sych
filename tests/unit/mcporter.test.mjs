@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -29,8 +29,9 @@ test("MCPorter resolves only when remote research is requested", () => {
 	);
 });
 
-test("MCPorter treats a missing optional config as legitimate and reports malformed config", async () => {
+test("MCPorter treats a missing optional config as legitimate and reports malformed config", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-mcporter-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	const missing = join(root, "missing.json");
 	assert.deepEqual(inspectMcporter(missing).configExists, false);
 

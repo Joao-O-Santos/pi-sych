@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-08T22:53:35.779Z",
+  "confirmedAt": "2026-08-10T10:27:36.981Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:e7cf70e9924c499497b10dea3168a626ade67bf0662fabcd15c56078e023248a",
+      "fingerprint": "sha256:001134bf8b0f262dee5913c039a693b9c1024aedbe69940590486de6f70984fa",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,13 +15,13 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-08T22:52:25.387Z",
-        "reason": "Final v6.1.0 implementation verification: 121 unit and 12 integration tests, 2,099 actual runtime lines, 98.28% line coverage, critical boundary tests, UTF-8-safe compaction clipping, single-line promotions, package/site gates."
+        "at": "2026-08-10T10:27:36.981Z",
+        "reason": "Verified v6.1.1 corrective pass: isolated-worker literature config propagation, child-error timer cleanup, 90% native coverage gate, public contract/release synchronization, 137 tests, 2,080 source lines, independent review corrected."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:b26356805af646646f49cbdaffcc13041a501c6ec0ffb88c197dd3caaf6470c6",
+      "fingerprint": "sha256:a3333ea4857edb59ca2f87c07d34a387ba71b8a48a4a83a70826ab0f5eb6a1c9",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -35,26 +35,26 @@
         "tests/integration"
       ],
       "acknowledgement": {
-        "at": "2026-08-08T22:52:25.387Z",
-        "reason": "Final v6.1.0 implementation verification: 121 unit and 12 integration tests, 2,099 actual runtime lines, 98.28% line coverage, critical boundary tests, UTF-8-safe compaction clipping, single-line promotions, package/site gates."
+        "at": "2026-08-10T10:27:36.981Z",
+        "reason": "Verified v6.1.1 corrective pass: isolated-worker literature config propagation, child-error timer cleanup, 90% native coverage gate, public contract/release synchronization, 137 tests, 2,080 source lines, independent review corrected."
       }
     },
     {
       "path": "ARCHITECTURE.md",
-      "fingerprint": "sha256:68e63eb4db9f87f5a82f74ca917cf062b554e717f632f5ffae5a9e20c6d9d529",
+      "fingerprint": "sha256:2dc81a63294e4dedcc00242d2b1f2a847e3c11485e55d2d8dbf45c1676dcaed4",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-08-08T22:52:25.387Z",
-        "reason": "Final v6.1.0 implementation verification: 121 unit and 12 integration tests, 2,099 actual runtime lines, 98.28% line coverage, critical boundary tests, UTF-8-safe compaction clipping, single-line promotions, package/site gates."
+        "at": "2026-08-10T10:27:36.981Z",
+        "reason": "Verified v6.1.1 corrective pass: isolated-worker literature config propagation, child-error timer cleanup, 90% native coverage gate, public contract/release synchronization, 137 tests, 2,080 source lines, independent review corrected."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:21ddb3df6688e031c6781a4a88cfea81673758cdede084c822a16e9ace6a8418",
+      "fingerprint": "sha256:8d518547f2fb394ab2ec1111f3e22e103f08d41a2bedc2ac150be53bd35ce770",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -66,13 +66,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-08-08T22:53:35.779Z",
-        "reason": "Added factual pipeline, npm version/download, and license badges; style and Pages build pass."
+        "at": "2026-08-10T10:27:36.981Z",
+        "reason": "Verified v6.1.1 corrective pass: isolated-worker literature config propagation, child-error timer cleanup, 90% native coverage gate, public contract/release synchronization, 137 tests, 2,080 source lines, independent review corrected."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:deac24af85726435c8fa08bf5afa749c7ba97efc4b07d665c49a0cf43f6a49bd",
+      "fingerprint": "sha256:d5fa389268675b67fe80dbf8aa4434bb423ab41b75ae85551f96956589bc55fa",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -86,34 +86,34 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-08-08T22:52:25.387Z",
-        "reason": "Final v6.1.0 implementation verification: 121 unit and 12 integration tests, 2,099 actual runtime lines, 98.28% line coverage, critical boundary tests, UTF-8-safe compaction clipping, single-line promotions, package/site gates."
+        "at": "2026-08-10T10:27:36.981Z",
+        "reason": "Verified v6.1.1 corrective pass: isolated-worker literature config propagation, child-error timer cleanup, 90% native coverage gate, public contract/release synchronization, 137 tests, 2,080 source lines, independent review corrected."
       }
     },
     {
       "path": "docs/configuration.md",
-      "fingerprint": "sha256:3bf9fe2a79b8c7cf039d3781186bbc6140abb3a9efeb086c0cba2cac52b32157",
+      "fingerprint": "sha256:13b4369dd767d844bf10e2637be0f7fb2cfc896fe7fcca2c5f4d2e6ecd06b4aa",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-08-08T22:52:25.387Z",
-        "reason": "Final v6.1.0 implementation verification: 121 unit and 12 integration tests, 2,099 actual runtime lines, 98.28% line coverage, critical boundary tests, UTF-8-safe compaction clipping, single-line promotions, package/site gates."
+        "at": "2026-08-10T10:27:36.981Z",
+        "reason": "Verified v6.1.1 corrective pass: isolated-worker literature config propagation, child-error timer cleanup, 90% native coverage gate, public contract/release synchronization, 137 tests, 2,080 source lines, independent review corrected."
       }
     },
     {
       "path": "docs/development.md",
-      "fingerprint": "sha256:67dd1b008e6e20ed03e86cdbafda5ac092d9c9bf88910937929d0519322f9f85",
+      "fingerprint": "sha256:a7fa28a7592d7931dc64cdc7d2da4458ba2523e9c51127c63eee5e67f2480d35",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "development-checks"
       ],
       "acknowledgement": {
-        "at": "2026-08-08T22:52:25.387Z",
-        "reason": "Final v6.1.0 implementation verification: 121 unit and 12 integration tests, 2,099 actual runtime lines, 98.28% line coverage, critical boundary tests, UTF-8-safe compaction clipping, single-line promotions, package/site gates."
+        "at": "2026-08-10T10:27:36.981Z",
+        "reason": "Verified v6.1.1 corrective pass: isolated-worker literature config propagation, child-error timer cleanup, 90% native coverage gate, public contract/release synchronization, 137 tests, 2,080 source lines, independent review corrected."
       }
     }
   ]

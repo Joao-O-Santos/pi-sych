@@ -89,6 +89,7 @@ test("launcher passes the complete isolated Pi process contract", async (t) => {
 			timeoutMs: 500,
 		},
 		workerAgentDir: join(root, "agent"),
+		piSychConfigDirectory: join(root, "supervisor-config/pi-sych"),
 		resultPath: join(root, "runtime/result.json"),
 		projectRoot: root,
 		model: "provider/model",
@@ -132,6 +133,7 @@ test("launcher passes the complete isolated Pi process contract", async (t) => {
 	assert.equal(call.options.cwd, root);
 	assert.deepEqual(call.options.stdio, ["ignore", "ignore", "pipe"]);
 	assert.equal(call.options.env.PI_CODING_AGENT_DIR, spec.workerAgentDir);
+	assert.equal(call.options.env.PI_SYCH_CONFIG_DIRECTORY, spec.piSychConfigDirectory);
 	assert.equal(call.options.env.PI_SYCH_TASK_ID, spec.id);
 	assert.equal(call.options.env.PI_SYCH_RESULT_PATH, spec.resultPath);
 	assert.equal(call.options.env.MCPORTER_CONFIG, mcporterConfigPath(root));

@@ -84,10 +84,13 @@ order:
 2.  `literatureDatabase` in the resolved `pi-sych/config.json`; or
 3.  `<resolved-config-directory>/literature.sqlite`.
 
-A configured relative `literatureDatabase` is relative to that
-configuration directory; an absolute value is used directly. It must be
-non-empty and may not contain parent traversal. An explicitly configured
-missing database is an error, not a fallback to the default.
+The supervisor forwards the resolved Pi Sych configuration directory to
+the isolated worker process while keeping the worker's own Pi agent
+directory separate. A configured relative `literatureDatabase` is
+relative to that configuration directory; an absolute value is used
+directly. It must be non-empty and may not contain parent traversal. An
+explicitly configured missing database is an error, not a fallback to
+the default.
 
 The supported database is a SQLite index with canonical metadata in
 `papers` and an external-content FTS5 table named `papers_fts`:

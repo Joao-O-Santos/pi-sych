@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -26,8 +26,9 @@ const resolvedProject = (root) => ({
 	),
 });
 
-async function fixture() {
+async function fixture(t) {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-dispatch-protocol-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	const workerAgentDir = join(root, "worker-agent");
 	await mkdir(workerAgentDir);
 	await writeFile(join(workerAgentDir, "settings.json"), "{}\n");
@@ -54,8 +55,8 @@ async function dispatch(setup, launcher) {
 }
 
 for (const status of ["complete", "partial", "failed"]) {
-	test(`dispatch accepts a valid ${status} result`, async () => {
-		const setup = await fixture();
+	test(`dispatch accepts a valid ${status} result`, async (t) => {
+		const setup = await fixture(t);
 		const result = { status, summary: `${status} summary`, files: ["A.md"], limitations: [] };
 		const outcome = await dispatch(setup, jsonLauncher(result));
 		assert.deepEqual(outcome.result, result);
@@ -115,8 +116,8 @@ const invalidResults = [
 ];
 
 for (const [name, contents, expectedError] of invalidResults) {
-	test(`dispatch rejects ${name}`, async () => {
-		const outcome = await dispatch(await fixture(), rawLauncher(contents));
+	test(`dispatch rejects ${name}`, async (t) => {
+		const outcome = await dispatch(await fixture(t), rawLauncher(contents));
 		assert.equal(outcome.result, undefined);
 		assert.match(outcome.error ?? "", expectedError);
 	});
@@ -130,8 +131,8 @@ const processFailures = [
 ];
 
 for (const [name, launch, expectedError] of processFailures) {
-	test(`dispatch gives ${name} precedence over an existing valid result`, async () => {
-		const setup = await fixture();
+	test(`dispatch gives ${name} precedence over an existing valid result`, async (t) => {
+		const setup = await fixture(t);
 		const outcome = await dispatch(
 			setup,
 			jsonLauncher(

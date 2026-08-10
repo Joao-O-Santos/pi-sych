@@ -23,7 +23,6 @@ export interface McporterDiagnostic {
 }
 export const mcporterConfigPath = (projectRoot?: string) =>
 	piSychConfigPath("mcporterConfig", projectRoot ? { projectRoot } : {});
-
 export function inspectMcporter(configPath = mcporterConfigPath()): McporterDiagnostic {
 	let available = true;
 	try {

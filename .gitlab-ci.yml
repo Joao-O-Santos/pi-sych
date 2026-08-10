@@ -14,6 +14,7 @@ verify:
   script:
     - npm ci
     - make verify
+  coverage: '/all files\s+\|\s+([0-9.]+)/'
 
 pages:
   stage: pages

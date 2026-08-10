@@ -54,36 +54,29 @@ independent substantive review, and no automated workflow controller.
 
 ## Current state
 
-{verified} The unreleased `6.1.0` implementation extends v6.0.9 with
-worker-only local literature search over a canonical `papers` plus
-external-content `papers_fts` SQLite schema, custom-compaction seams,
-expanded worker lifecycle/result-protocol coverage, live generated code
-reference and code-tour documentation, simplified Node coverage
-reporting, and the complete deterministic package/site gate. It uses
-Node 26 `node:sqlite`, keeps the supplied index schema as the sole
-literature contract, and maps `filepath`, `title`, `first_author`,
-`year`, and `doi` while searching filepath, title, abstract, tags, and
-DOI. Compaction clipping preserves valid UTF-8 boundaries and promotion
-proposals are constrained to single-line inbox entries. Source budget is
-2,099 actual lines (2,100 rounded). Version is 6.1.0; the release tag
-and package publication have not occurred.
+{verified} Released v6.1.0 adds worker-only local literature search,
+custom-compaction seams, expanded deterministic coverage, and generated
+code documentation. The v6.1.1 patch candidate forwards the resolved
+supervisor Pi Sych configuration directory to isolated workers without
+replacing their Pi agent directory, so configured external literature
+databases work in normal research dispatches. It also clears termination
+timers when a worker errors without closing, declares the literature
+surface in the public contract, makes native Node coverage a 90% gate,
+and cleans deterministic temporary fixtures. Runtime source is 2,080
+actual lines (2,100 rounded); package and lockfile are version 6.1.1.
 
 ## Previous action
 
-{verified} Implemented the v6.1.0 plan: added worker-only literature
-search, expanded deterministic lifecycle/protocol and workbench tests,
-introduced the custom-compaction seam, simplified diagnostic coverage,
-added live code-reference generation and a code tour, aligned package
-load and documentation, and standardized literature search on the
-supplied `papers`/`papers_fts` schema. Meaningful boundary coverage also
-identified and corrected UTF-8 clipping, multiline promotion, and test
-fixture-cleanup defects. The full local gate passed: 121 unit tests, 12
-integration tests, typecheck, style, dependency check, source budget
-(2,099/2,100 actual/rounded), package dry run, Pages build, coverage,
-and whitespace checks.
+{verified} Completed the v6.1.1 corrective pass after independent test
+design and review. The full local gate passed with 125 unit and 12
+integration tests, typecheck, style, dependency validation, 2,080/2,100
+actual/rounded runtime lines, package dry run, Pages build, whitespace
+checks, and thresholded coverage of 98.30% lines, 91.55% branches, and
+94.44% functions.
 
 ## Immediate next step
 
-{accepted} Push the verified v6.1.0 commit to main, confirm the remote
-verification job succeeds, then create and push tag `v6.1.0`. Do not
-publish the package or perform other release actions.
+{accepted} Commit and push v6.1.1 to main, confirm the remote
+verification and coverage extraction succeed, then create and push the
+final `v6.1.1` release tag. Do not approve node-pty scripts or run npm
+audit remediation.

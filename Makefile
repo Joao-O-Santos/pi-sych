@@ -33,7 +33,7 @@ coverage:
 pack:
 	npm pack --dry-run
 
-verify: typecheck style dependencies budget test pack
+verify: typecheck style dependencies budget coverage pack
 	git diff --check
 
 .NOTPARALLEL: verify

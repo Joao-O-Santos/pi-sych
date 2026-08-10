@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -136,8 +136,9 @@ test("compaction prompt retains scientific continuity without expanding memory",
 	assert.match(prompt, /Promotion proposals must each be one line with no CR or LF\./);
 });
 
-test("compaction excludes inbox contents and bounds canonical snapshots", async () => {
+test("compaction excludes inbox contents and bounds canonical snapshots", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-compaction-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await writeFile(join(root, "PROJECT.md"), "project\n".repeat(20_000));
 	await writeFile(join(root, "TODO.md"), "todo\n");
 	await writeFile(join(root, "DECISIONS.md"), "decisions\n");
@@ -159,10 +160,11 @@ test("compaction excludes inbox contents and bounds canonical snapshots", async 
 	);
 	const project = await resolveProject(root);
 	const snapshot = await compactionSnapshot(project, await checkProjectStatus(root, project));
-	const empty = await compactionSnapshot(
-		await resolveProject(await mkdtemp(join(tmpdir(), "pi-sych-empty-"))),
-		{ manifest: { artifacts: [] } },
-	);
+	const emptyRoot = await mkdtemp(join(tmpdir(), "pi-sych-empty-"));
+	t.after(() => rm(emptyRoot, { recursive: true, force: true }));
+	const empty = await compactionSnapshot(await resolveProject(emptyRoot), {
+		manifest: { artifacts: [] },
+	});
 	assert.deepEqual(empty.files, []);
 	assert.deepEqual(empty.paths, ["PROJECT.md", "TODO.md", "DECISIONS.md"]);
 	assert.ok(snapshot.files.some((file) => file.path === "PROJECT.md"));
@@ -183,8 +185,9 @@ test("compaction excludes inbox contents and bounds canonical snapshots", async 
 	);
 });
 
-test("pending promotions count proposal entries, including nested inboxes", async () => {
+test("pending promotions count proposal entries, including nested inboxes", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-inbox-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	const inbox = join(root, "state", "INBOX.md");
 	await mkdir(join(root, "state"));
 	await writeFile(inbox, "heading\n- {todo} One\ncommentary\n- {agents} Two\n");
@@ -192,8 +195,9 @@ test("pending promotions count proposal entries, including nested inboxes", asyn
 	assert.equal(await pendingPromotions({ canonical: { inbox: join(root, "missing.md") } }), 0);
 });
 
-async function orchestrationFixture() {
+async function orchestrationFixture(t) {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-compact-orchestration-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await writeFile(
 		join(root, "SYNC.json"),
 		JSON.stringify({
@@ -259,8 +263,8 @@ const responseWith = (parts, usage = { input: 11, output: 12, totalTokens: 23 })
 	usage,
 });
 
-test("compact runs production orchestration and propagates metadata", async () => {
-	const { root, ctx, event, notifications } = await orchestrationFixture();
+test("compact runs production orchestration and propagates metadata", async (t) => {
+	const { root, ctx, event, notifications } = await orchestrationFixture(t);
 	const usage = { input: 41, output: 9, totalTokens: 50 };
 	let call;
 	const output = memoryOutput({
@@ -303,7 +307,7 @@ test("compact runs production orchestration and propagates metadata", async () =
 	]);
 });
 
-test("compact accepts prose, multiple text parts, scalar arrays, and empty arrays", async () => {
+test("compact accepts prose, multiple text parts, scalar arrays, and empty arrays", async (t) => {
 	const cases = [
 		["valid JSON", [JSON.stringify(memoryOutput())]],
 		["surrounding prose", [`before ${JSON.stringify(memoryOutput())} after`]],
@@ -327,13 +331,13 @@ test("compact accepts prose, multiple text parts, scalar arrays, and empty array
 		],
 	];
 	for (const [name, parts] of cases) {
-		const { ctx, event } = await orchestrationFixture();
+		const { ctx, event } = await orchestrationFixture(t);
 		const result = await compact(event, ctx, async () => responseWith(parts));
 		assert.ok(result?.compaction, name);
 	}
 });
 
-test("compact rejects invalid model output through the manual failure path", async () => {
+test("compact rejects invalid model output through the manual failure path", async (t) => {
 	const base = memoryOutput();
 	const invalid = [
 		["missing output", []],
@@ -352,7 +356,7 @@ test("compact rejects invalid model output through the manual failure path", asy
 		],
 	];
 	for (const [name, parts] of invalid) {
-		const { ctx, event, notifications } = await orchestrationFixture();
+		const { ctx, event, notifications } = await orchestrationFixture(t);
 		assert.equal(await compact(event, ctx, async () => responseWith(parts)), undefined, name);
 		assert.equal(notifications.length, 1, name);
 		assert.match(notifications[0][0], /^Working-memory compaction failed:/, name);
@@ -360,8 +364,8 @@ test("compact rejects invalid model output through the manual failure path", asy
 	}
 });
 
-test("compact handles absent model, auth rejection, and completion failure", async () => {
-	const noModel = await orchestrationFixture();
+test("compact handles absent model, auth rejection, and completion failure", async (t) => {
+	const noModel = await orchestrationFixture(t);
 	noModel.ctx.model = undefined;
 	let completed = false;
 	assert.equal(
@@ -373,7 +377,7 @@ test("compact handles absent model, auth rejection, and completion failure", asy
 	assert.equal(completed, false);
 	assert.deepEqual(noModel.notifications, []);
 
-	const noAuth = await orchestrationFixture();
+	const noAuth = await orchestrationFixture(t);
 	noAuth.ctx.modelRegistry.getApiKeyAndHeaders = async () => ({ ok: false });
 	assert.equal(
 		await compact(noAuth.event, noAuth.ctx, async () => {
@@ -384,7 +388,7 @@ test("compact handles absent model, auth rejection, and completion failure", asy
 	assert.equal(completed, false);
 	assert.deepEqual(noAuth.notifications, []);
 
-	const failed = await orchestrationFixture();
+	const failed = await orchestrationFixture(t);
 	assert.equal(
 		await compact(failed.event, failed.ctx, async () => {
 			throw new Error("provider unavailable");
@@ -394,8 +398,8 @@ test("compact handles absent model, auth rejection, and completion failure", asy
 	assert.match(failed.notifications[0][0], /provider unavailable/);
 });
 
-test("automatic compact failures write stderr instead of notifying", async () => {
-	const { ctx, event, notifications } = await orchestrationFixture();
+test("automatic compact failures write stderr instead of notifying", async (t) => {
+	const { ctx, event, notifications } = await orchestrationFixture(t);
 	event.reason = "auto";
 	const messages = [];
 	const original = console.error;
@@ -410,8 +414,9 @@ test("automatic compact failures write stderr instead of notifying", async () =>
 	assert.match(messages[0][0], /^Working-memory compaction failed:/);
 });
 
-test("compaction retains existing untracked files, discards nonexistent and outside-project", async () => {
+test("compaction retains existing untracked files, discards nonexistent and outside-project", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-compaction-filter-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await writeFile(join(root, "PROJECT.md"), "project");
 	await writeFile(
 		join(root, "SYNC.json"),

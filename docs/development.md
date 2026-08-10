@@ -38,8 +38,9 @@ pipeline runs the verification and Pages-site setup, and retains the
 tag-based publication gate. Development and CI use Node 26 or newer;
 TypeScript follows the current `latest` dev-tool policy. `make coverage`
 runs the single Node built-in coverage command over the compiled unit
-and integration tests. Coverage is diagnostic evidence, not a gate, and
-CI does not repeat it. Contributors do not publish directly.
+and integration tests. Coverage enforces at least 90% lines, branches,
+and functions. `make verify` includes this gate, and GitLab records its
+line percentage. Contributors do not publish directly.
 
 `npm run test:usage` is opt-in. It uses real Pi/model calls against a
 disposable project, requires local credentials, and may incur provider

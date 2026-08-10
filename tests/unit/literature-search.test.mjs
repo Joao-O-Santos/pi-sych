@@ -38,6 +38,27 @@ async function configure(root, literatureDatabase) {
 	);
 }
 
+test("worker-style explicit config resolves an external literature database", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-literature-worker-")),
+		configRoot = await mkdtemp(join(tmpdir(), "pi-sych-literature-config-")),
+		databasePath = join(configRoot, "external.sqlite");
+	t.after(async () =>
+		Promise.all([
+			rm(root, { recursive: true, force: true }),
+			rm(configRoot, { recursive: true, force: true }),
+		]),
+	);
+	await database(databasePath, [["paper.pdf", "External", "A", 2024, null, "worker config"]]);
+	await writeFile(
+		join(configRoot, "config.json"),
+		JSON.stringify({ ...DEFAULT_CONFIG, literatureDatabase: databasePath }),
+	);
+	assert.equal(
+		searchLiterature(root, "worker config", 10, configRoot)[0].metadata.title,
+		"External",
+	);
+});
+
 test("literature database resolution honors project, explicit, and config defaults", async (t) => {
 	const root = await project(t),
 		configDefault = join(root, ".pi/pi-sych/literature.sqlite");

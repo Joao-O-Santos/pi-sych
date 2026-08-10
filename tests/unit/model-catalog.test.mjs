@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -28,9 +28,10 @@ test("model catalog uses exact user-defined roles", () => {
 	);
 });
 
-test("optional model catalog distinguishes absence from invalid content", async () => {
-	const root = await mkdtemp(join(tmpdir(), "pi-sych-model-catalog-")),
-		configDirectory = join(root, "pi-sych"),
+test("optional model catalog distinguishes absence from invalid content", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-model-catalog-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const configDirectory = join(root, "pi-sych"),
 		path = join(configDirectory, "models.json"),
 		env = { PI_CODING_AGENT_DIR: root };
 	await mkdir(configDirectory);

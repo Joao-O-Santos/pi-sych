@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, symlink, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -19,8 +19,9 @@ import {
 	writeAggregate,
 } from "../../scripts/benchmark.mjs";
 
-async function fixture() {
+async function fixture(t) {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-benchmark-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await writeFile(join(root, "input.txt"), "source");
 	await writeFile(
 		join(root, "manifest.json"),
@@ -59,7 +60,7 @@ test("the three synthetic held-in cases validate without private material", asyn
 	}
 });
 
-test("benchmark cases, paths, and fixture hashes reject malformed or unsafe input", async () => {
+test("benchmark cases, paths, and fixture hashes reject malformed or unsafe input", async (t) => {
 	assert.equal(validateCase(validCase), validCase);
 	assert.throws(() => validateCase({ ...validCase, heldIn: "held-out" }), /held-in/);
 	assert.throws(
@@ -67,24 +68,27 @@ test("benchmark cases, paths, and fixture hashes reject malformed or unsafe inpu
 		/lacks an objective check/,
 	);
 	assert.throws(() => projectPath("/project", "../escape"), /leaves project/);
-	const root = await fixture();
+	const root = await fixture(t);
 	await validateFixtureManifest(root);
 	await writeFile(join(root, "input.txt"), "changed");
 	await assert.rejects(validateFixtureManifest(root), /hash mismatch/);
 });
 
-test("fixture copying is disposable and rejects symlinks", async () => {
-	const root = await fixture();
-	const target = join(await mkdtemp(join(tmpdir(), "pi-sych-benchmark-copy-")), "project");
+test("fixture copying is disposable and rejects symlinks", async (t) => {
+	const root = await fixture(t);
+	const targetRoot = await mkdtemp(join(tmpdir(), "pi-sych-benchmark-copy-"));
+	t.after(() => rm(targetRoot, { recursive: true, force: true }));
+	const target = join(targetRoot, "project");
 	await copyFixture(root, target);
 	assert.equal(await readFile(join(target, "input.txt"), "utf8"), "source");
-	const unsafe = await fixture();
+	const unsafe = await fixture(t);
 	await symlink("input.txt", join(unsafe, "link"));
 	await assert.rejects(copyFixture(unsafe, join(target, "unsafe")), /symlink/);
 });
 
-test("objective checks and judge parsing retain structured evidence", async () => {
+test("objective checks and judge parsing retain structured evidence", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-benchmark-objective-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	await writeFile(join(root, "REPORT.md"), "done\n");
 	const checks = await objectiveChecks(root, [
 		{ type: "exists", path: "REPORT.md" },
@@ -115,9 +119,10 @@ test("objective checks and judge parsing retain structured evidence", async () =
 	);
 });
 
-test("faked launchers enforce model separation, budgets, prompts, immutable bundles, and aggregation", async () => {
-	const fixtureRoot = await fixture();
+test("faked launchers enforce model separation, budgets, prompts, immutable bundles, and aggregation", async (t) => {
+	const fixtureRoot = await fixture(t);
 	const outputRoot = await mkdtemp(join(tmpdir(), "pi-sych-benchmark-output-"));
+	t.after(() => rm(outputRoot, { recursive: true, force: true }));
 	let candidateSpec;
 	const outcome = await runCase({
 		caseDefinition: validCase,

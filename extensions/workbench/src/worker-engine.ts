@@ -17,7 +17,6 @@ import {
 	showPath,
 } from "./project-files.js";
 import { nonEmptyString, stringArray } from "./validation.js";
-
 export const WORKER_MODES = ["read-only", "edit", "full-host"] as const;
 export type WorkerMode = (typeof WORKER_MODES)[number];
 const MODE_TOOLS: Record<WorkerMode, readonly string[]> = {
@@ -31,7 +30,6 @@ const LOG_LIMIT = 8_192;
 export const PI_SYCH_PACKAGE_ROOT = resolve(
 	process.env.PI_PACKAGE_DIR ?? resolve(import.meta.dirname, "../../.."),
 );
-
 export interface ContextFile {
 	path: string;
 	purpose: string;
@@ -42,6 +40,7 @@ export interface WorkerLaunchSpec {
 	id: string;
 	request: DispatchRequest;
 	workerAgentDir: string;
+	piSychConfigDirectory?: string;
 	resultPath: string;
 	projectRoot: string;
 	model: string;
@@ -65,7 +64,6 @@ export interface DispatchOutcome {
 	error?: string;
 }
 export type WorkerLauncher = (spec: WorkerLaunchSpec) => Promise<WorkerLaunchOutcome>;
-
 export const dispatchSchema = Type.Object({
 	task: Type.String(),
 	mode: Type.Union(WORKER_MODES.map((mode) => Type.Literal(mode))),
@@ -76,7 +74,6 @@ export const dispatchSchema = Type.Object({
 	remoteResearch: Type.Optional(Type.Boolean()),
 	timeoutMs: Type.Optional(Type.Integer({ minimum: 1, maximum: MAX_TIMEOUT_MS })),
 });
-
 export const toolsForRequest = (
 	request: Pick<DispatchRequest, "mode" | "remoteResearch" | "skills">,
 ) => [
@@ -226,6 +223,9 @@ export async function launchPiWorker(
 			env: {
 				...process.env,
 				PI_CODING_AGENT_DIR: spec.workerAgentDir,
+				...(spec.piSychConfigDirectory
+					? { PI_SYCH_CONFIG_DIRECTORY: spec.piSychConfigDirectory }
+					: {}),
 				PI_SYCH_TASK_ID: spec.id,
 				PI_SYCH_RESULT_PATH: spec.resultPath,
 				...(spec.request.remoteResearch
@@ -239,27 +239,33 @@ export async function launchPiWorker(
 	child.stderr.on("data", (chunk) => (stderr = (stderr + chunk).slice(-LOG_LIMIT)));
 	child.once("error", (err) => (spawnError = err));
 	let forcedKillTimer: ReturnType<typeof setTimeout> | undefined;
-	const stop = (kind: "cancelled" | "timeout") => {
-		if (stopped) return;
-		stopped = kind;
-		child.kill("SIGTERM");
-		forcedKillTimer = setTimeout(() => child.kill("SIGKILL"), 2_000);
-	};
+	let timeout: ReturnType<typeof setTimeout> | undefined;
+	let stop = (_kind: "cancelled" | "timeout") => {};
 	const onAbort = () => stop("cancelled");
-	if (spec.signal?.aborted) stop("cancelled");
-	else spec.signal?.addEventListener("abort", onAbort, { once: true });
-	const timeout = setTimeout(() => stop("timeout"), spec.request.timeoutMs ?? DEFAULT_TIMEOUT_MS);
 	const [exitCode, terminationSignal] = await new Promise<[number | null, NodeJS.Signals | null]>(
 		(resolve) => {
-			child.once("error", () => resolve([null, null]));
-			child.once("close", (code, signal) => {
+			let settled = false;
+			const finish = (code: number | null, signal: NodeJS.Signals | null) => {
+				if (settled) return;
+				settled = true;
+				if (timeout) clearTimeout(timeout);
 				if (forcedKillTimer) clearTimeout(forcedKillTimer);
+				spec.signal?.removeEventListener("abort", onAbort);
 				resolve([code, signal]);
-			});
+			};
+			stop = (kind: "cancelled" | "timeout") => {
+				if (stopped) return;
+				stopped = kind;
+				child.kill("SIGTERM");
+				forcedKillTimer = setTimeout(() => child.kill("SIGKILL"), 2_000);
+			};
+			if (spec.signal?.aborted) stop("cancelled");
+			else spec.signal?.addEventListener("abort", onAbort, { once: true });
+			timeout = setTimeout(() => stop("timeout"), spec.request.timeoutMs ?? DEFAULT_TIMEOUT_MS);
+			child.once("error", () => finish(null, null));
+			child.once("close", (code, signal) => finish(code, signal));
 		},
 	);
-	clearTimeout(timeout);
-	spec.signal?.removeEventListener("abort", onAbort);
 	if (stopped) return { exitCode: exitCode ?? null, stderr, classification: stopped };
 	if (exitCode === null) {
 		const msg = spawnError ? spawnError.message : "spawn error";
@@ -274,6 +280,7 @@ export async function launchPiWorker(
 export async function dispatchWorker(options: {
 	project: ResolvedProject;
 	workerAgentDir: string;
+	piSychConfigDirectory?: string;
 	request: DispatchRequest;
 	catalog: ModelCatalog;
 	packageRoot?: string;
@@ -301,6 +308,9 @@ export async function dispatchWorker(options: {
 		id,
 		request: { ...request, contextFiles, timeoutMs },
 		workerAgentDir: options.workerAgentDir,
+		...(options.piSychConfigDirectory
+			? { piSychConfigDirectory: options.piSychConfigDirectory }
+			: {}),
 		resultPath,
 		projectRoot: options.project.projectRoot,
 		model,

@@ -4,7 +4,12 @@ import { fileURLToPath } from "node:url";
 import type { ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import { compact, pendingPromotions } from "./src/compaction.js";
-import { ensurePiSychConfig, loadPiSychConfig, piSychConfigPath } from "./src/config-directory.js";
+import {
+	ensurePiSychConfig,
+	loadPiSychConfig,
+	piSychConfigDirectory,
+	piSychConfigPath,
+} from "./src/config-directory.js";
 import {
 	formatMcporterDiagnostic,
 	inspectMcporter,
@@ -58,7 +63,6 @@ const notifyError = (ctx: ExtensionCommandContext, error: unknown) =>
 	ctx.ui.notify(error instanceof Error ? error.message : String(error), "error");
 export const shouldCompactAt100k = (enabled: boolean, tokens?: number | null) =>
 	enabled && (tokens ?? 0) >= 100_000;
-
 export async function configuredSupervisorInstructions(cwd: string, existing = "") {
 	const project = await resolveProject(cwd),
 		instructions = await readFile(project.canonical.agents, "utf8").catch(
@@ -128,6 +132,7 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 					workerAgentDir: piSychConfigPath("workerAgentDir", {
 						projectRoot: project.projectRoot,
 					}),
+					piSychConfigDirectory: piSychConfigDirectory({ projectRoot: project.projectRoot }),
 					request: params,
 					catalog: loadModelCatalog(project.projectRoot),
 					packageRoot: PACKAGE_ROOT,

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { mkdtemp, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
@@ -61,9 +61,11 @@ function invokeStatus(cwd, agentDir) {
 	});
 }
 
-test("status command reports mechanical state without semantic drift claims", async () => {
+test("status command reports mechanical state without semantic drift claims", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	const agentDir = await mkdtemp(join(tmpdir(), "pi-sych-agent-"));
+	t.after(() => rm(agentDir, { recursive: true, force: true }));
 	await writeFile(
 		join(root, "PROJECT.md"),
 		"# Project\n\n## Objective\nX\n## Current direction\nY\n## Definition of done\nZ\n## Previous action\nNone yet.\n## Immediate next step\nNone at present.\n",
@@ -89,9 +91,11 @@ test("status command reports mechanical state without semantic drift claims", as
 	assert.match(event.message, /not conceptual drift/);
 });
 
-test("status command reports a malformed manifest without crashing", async () => {
+test("status command reports a malformed manifest without crashing", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-malformed-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	const agentDir = await mkdtemp(join(tmpdir(), "pi-sych-agent-"));
+	t.after(() => rm(agentDir, { recursive: true, force: true }));
 	await writeFile(
 		join(root, "PROJECT.md"),
 		"# Project\n\n## Objective\nX\n## Current direction\nY\n## Definition of done\nZ\n## Previous action\nNone yet.\n## Immediate next step\nNone at present.\n",

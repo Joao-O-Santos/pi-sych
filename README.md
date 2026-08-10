@@ -2,6 +2,7 @@
 
 [![pipeline
 status](https://gitlab.com/Joao-O-Santos/pi-sych/badges/main/pipeline.svg)](https://gitlab.com/Joao-O-Santos/pi-sych/-/commits/main)
+[![coverage](https://gitlab.com/Joao-O-Santos/pi-sych/badges/main/coverage.svg?job=verify)](https://gitlab.com/Joao-O-Santos/pi-sych/-/pipelines)
 [![npm
 version](https://img.shields.io/npm/v/pi-sych.svg)](https://www.npmjs.com/package/pi-sych)
 [![npm

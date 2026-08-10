@@ -1,13 +1,14 @@
 import assert from "node:assert/strict";
-import { lstat, mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { lstat, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
 import { bootstrapWorkerAgentDir } from "../../scripts/bootstrap-worker-agent-dir.mjs";
 
-test("worker bootstrap loads only the worker extension and links credentials", async () => {
+test("worker bootstrap loads only the worker extension and links credentials", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-worker-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
 	const agentDir = join(root, "worker");
 	const supervisorAgentDir = join(root, "supervisor");
 	await mkdir(supervisorAgentDir);
