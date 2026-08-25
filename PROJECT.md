@@ -55,28 +55,28 @@ independent substantive review, and no automated workflow controller.
 
 ## Current state
 
-{verified} The current release forwards the resolved supervisor Pi Sych
-configuration directory to isolated workers without replacing their Pi
-agent directory, so configured external literature databases work in
-normal research dispatches. It clears termination timers when a worker
-errors without closing, declares the literature surface in the public
-contract, makes native Node coverage a 90% gate, and cleans
-deterministic temporary fixtures. Runtime source is 2,074 nonblank lines
-(2,100 rounded); blank readability spacing is excluded. Use the signed
-Git tag and npm registry metadata---not this narrative---for the current
-release identifier.
+{verified} The current implementation forwards the resolved supervisor
+Pi Sych configuration directory to isolated workers without replacing
+their Pi agent directory, so configured external literature databases
+work in normal research dispatches. It clears termination timers when a
+worker errors without closing, declares the literature surface in the
+public contract, makes native Node coverage a 90% gate, cleans
+deterministic temporary fixtures, and shows the complete submitted
+`dispatch_worker` request when its Pi tool call is expanded. Runtime
+source is 2,079 nonblank lines (2,100 rounded); blank readability
+spacing is excluded. Use the signed Git tag and npm registry
+metadata---not this narrative---for the current release identifier.
 
 ## Previous action
 
-{verified} Grouped public documentation and licenses under `docs/`,
-benchmark material and fixtures under `tests/`, site sources under
-`site/`, and visible defaults under `templates/`. Updated package,
-build, test, formatter, link, and synchronization paths while retaining
-the intentionally optional, temporary status of `EVIDENCE.md`.
+{verified} Added native Pi tool-call rendering for `dispatch_worker` so
+users can inspect the submitted request with tool expansion while the
+collapsed transcript remains compact. The worker schema, execution,
+result protocol, stored state, defaults, and material effects are
+unchanged.
 
 ## Immediate next step
 
-{accepted} Verify the reorganized repository and review the replacement
-diagrams against runtime and documentation. Do not approve node-pty
-scripts, run npm audit remediation, or release the public path changes
-without explicit migration/version approval.
+{accepted} Keep main at the reviewed release state until the owner
+selects further work. Do not approve node-pty scripts, run npm audit
+remediation, or perform another release without explicit instruction.

@@ -216,14 +216,31 @@ A changed hash establishes changed content, not conceptual drift or authority.`;
 	assert.match(notifications.at(-1).message, /EISDIR|directory/);
 
 	const dispatchTool = tools.find((tool) => tool.name === "dispatch_worker");
+	const dispatchArgs = {
+		task: "run fixture worker",
+		mode: "read-only",
+		expectedOutput: "fixture result",
+		contextFiles: [],
+	};
+	const theme = { bold: (text) => text, fg: (_color, text) => text };
+	assert.deepEqual(
+		dispatchTool
+			.renderCall(dispatchArgs, theme, { expanded: false })
+			.render(200)
+			.map((line) => line.trimEnd()),
+		["Dispatch worker"],
+	);
+	assert.equal(
+		dispatchTool
+			.renderCall(dispatchArgs, theme, { expanded: true })
+			.render(200)
+			.map((line) => line.trimEnd())
+			.join("\n"),
+		`Dispatch worker\n${JSON.stringify(dispatchArgs, null, 2)}`,
+	);
 	const dispatched = await dispatchTool.execute(
 		"dispatch",
-		{
-			task: "run fixture worker",
-			mode: "read-only",
-			expectedOutput: "fixture result",
-			contextFiles: [],
-		},
+		dispatchArgs,
 		undefined,
 		undefined,
 		handlerContext,

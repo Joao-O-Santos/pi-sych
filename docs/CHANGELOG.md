@@ -7,6 +7,19 @@ state.
 
 ## Unreleased
 
+## v6.2.0
+
+### Added
+
+- Show the complete submitted `dispatch_worker` arguments when a Pi tool
+  call is expanded, while keeping the collapsed call compact.
+
+### Compatibility
+
+- This minor release adds inspection to the public `dispatch_worker` use
+  without changing its schema, stored state, defaults, or material
+  effects; existing users need no migration.
+
 ## v6.1.4
 
 ### Changed

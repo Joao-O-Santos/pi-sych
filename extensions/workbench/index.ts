@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
+import { Text } from "@earendil-works/pi-tui";
 import { Type } from "typebox";
 import { compact, pendingPromotions } from "./src/compaction.js";
 import {
@@ -125,6 +126,10 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 		label: "Dispatch worker",
 		description: "Run one short-lived clean-context worker and return its validated result.",
 		parameters: dispatchSchema,
+		renderCall(args, theme, { expanded }) {
+			const details = expanded ? `\n${JSON.stringify(args, null, 2)}` : "";
+			return new Text(theme.fg("toolTitle", theme.bold("Dispatch worker")) + details, 0, 0);
+		},
 		async execute(_id, params, signal, _update, ctx) {
 			const project = await resolveProject(ctx.cwd),
 				outcome = await dispatchWorker({
