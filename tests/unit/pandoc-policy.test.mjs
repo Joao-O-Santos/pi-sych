@@ -34,6 +34,20 @@ test("latest Pandoc metadata selects only the exact Linux amd64 Debian asset", (
 		name: "pandoc-3.10.1-1-amd64.deb",
 		url: "https://example.test/p.deb",
 	});
+	assert.deepEqual(
+		selectLinuxAmd64Deb({
+			...release,
+			tag_name: "3.11",
+			assets: [
+				{ name: "pandoc-3.11-1-amd64.deb", browser_download_url: "https://example.test/p.deb" },
+			],
+		}),
+		{
+			tag: "3.11",
+			name: "pandoc-3.11-1-amd64.deb",
+			url: "https://example.test/p.deb",
+		},
+	);
 	assert.throws(() => parseLatestStableRelease({ ...release, prerelease: true }), /not a stable/);
 	assert.throws(() => selectLinuxAmd64Deb({ ...release, assets: [] }), /exactly one/);
 	assert.throws(

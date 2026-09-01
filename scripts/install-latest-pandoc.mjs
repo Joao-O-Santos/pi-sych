@@ -11,7 +11,7 @@ export function parseLatestStableRelease(metadata) {
 		throw new Error("Pandoc release metadata is malformed: expected an object.");
 	if (metadata.draft || metadata.prerelease)
 		throw new Error("Pandoc release metadata is not a stable release.");
-	if (typeof metadata.tag_name !== "string" || !/^\d+\.\d+\.\d+$/.test(metadata.tag_name))
+	if (typeof metadata.tag_name !== "string" || !/^\d+\.\d+(?:\.\d+)?$/.test(metadata.tag_name))
 		throw new Error(
 			"Pandoc release metadata is malformed: tag_name must be a numeric stable version.",
 		);

@@ -17,8 +17,8 @@ state.
 
 ### Fixed
 
-- Accept Pandoc's numeric two-part release form, such as `3.11`, when
-  checking the documented minimum version.
+- Accept Pandoc's numeric two-part release form, such as `3.11`, in both
+  the local version check and CI installer.
 - Make detached Plannotator feedback tests wait for persisted feedback
   rather than assuming one event-loop turn completes file I/O.
 
