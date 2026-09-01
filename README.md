@@ -231,7 +231,9 @@ Pi Sych gives the supervisor two mechanical tools:
 
 In Pi's terminal interface, expand a `dispatch_worker` tool call with
 the configured tool-expansion shortcut (`Ctrl+O` by default) to inspect
-its complete submitted request.
+its complete submitted request. While it runs, its tool row shows a
+bounded live list of worker tool starts; it is activity visibility, not
+a worker console or result protocol.
 
 These tools support a workflow; they do not decide what the workflow
 must be.

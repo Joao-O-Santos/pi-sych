@@ -7,6 +7,27 @@ state.
 
 ## Unreleased
 
+## v6.3.0-rc.0
+
+### Added
+
+- Project a bounded live list of selected worker tool starts to an
+  active `dispatch_worker` call without storing it or altering its
+  terminal result protocol.
+
+### Fixed
+
+- Accept Pandoc's numeric two-part release form, such as `3.11`, when
+  checking the documented minimum version.
+- Make detached Plannotator feedback tests wait for persisted feedback
+  rather than assuming one event-loop turn completes file I/O.
+
+### Compatibility
+
+- This minor prerelease adds live activity to the public
+  `dispatch_worker` use without changing its schema, stored state,
+  defaults, or material effects; existing users need no migration.
+
 ## v6.2.0
 
 ### Added

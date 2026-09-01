@@ -13,6 +13,17 @@ import piSychWorkbench, {
 } from "../../.test-build/workbench/index.js";
 import { DEFAULT_CONFIG } from "../../.test-build/workbench/src/config-directory.js";
 
+async function readFeedback(path) {
+	for (let attempt = 0; attempt < 100; attempt++) {
+		try {
+			const feedback = await readFile(path, "utf8");
+			if (feedback) return feedback;
+		} catch {}
+		await new Promise((resolve) => setTimeout(resolve, 5));
+	}
+	throw new Error(`Timed out waiting for feedback at ${path}`);
+}
+
 async function capturedExtension(extension, t) {
 	const tools = [];
 	const commands = [];
@@ -114,11 +125,9 @@ test("Plannotator handlers report results and recover from invalid input", async
 	await new Promise((done) => setImmediate(done));
 	assert.deepEqual(messages, ["feedback"]);
 	await commands.get("plannotator-annotate").handler("note.md", ctx);
-	await new Promise((done) => setImmediate(done));
-	assert.equal(await readFile(join(cwd, "note.md.feedback.md"), "utf8"), "feedback\n");
+	assert.equal(await readFeedback(join(cwd, "note.md.feedback.md")), "feedback\n");
 	await commands.get("plannotator-review").handler("--no-local", ctx);
-	await new Promise((done) => setImmediate(done));
-	assert.equal(await readFile(join(cwd, "PLANNOTATOR_REVIEW.md"), "utf8"), "feedback\n");
+	assert.equal(await readFeedback(join(cwd, "PLANNOTATOR_REVIEW.md")), "feedback\n");
 	await commands.get("plannotator-annotate").handler("/outside.md", ctx);
 	assert.equal(notices.at(-1).type, "error");
 	runtime.last = async () => undefined;

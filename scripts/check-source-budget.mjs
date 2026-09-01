@@ -4,7 +4,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const limit = 2_100;
+const limit = 2_200;
 
 async function files(path) {
 	const entries = await readdir(path, { withFileTypes: true });

@@ -8,15 +8,16 @@ import { fileURLToPath } from "node:url";
 export const PANDOC_MINIMUM_VERSION = "3.10.1";
 
 export function parsePandocVersion(value) {
-	if (typeof value !== "string" || !/^\d+\.\d+\.\d+$/.test(value)) return undefined;
-	return value.split(".").map(Number);
+	if (typeof value !== "string" || !/^\d+\.\d+(?:\.\d+)?$/.test(value)) return undefined;
+	const parts = value.split(".").map(Number);
+	return parts.length === 2 ? [...parts, 0] : parts;
 }
 
 export function comparePandocVersions(left, right) {
 	const leftParts = parsePandocVersion(left);
 	const rightParts = parsePandocVersion(right);
 	if (!leftParts || !rightParts)
-		throw new TypeError("Pandoc versions must be numeric major.minor.patch values.");
+		throw new TypeError("Pandoc versions must be numeric major.minor or major.minor.patch values.");
 	for (let index = 0; index < 3; index += 1) {
 		if (leftParts[index] !== rightParts[index]) return leftParts[index] - rightParts[index];
 	}
@@ -69,7 +70,7 @@ function verifyPandoc() {
 	const actual = result.stdout.match(/^pandoc\s+(\S+)/)?.[1];
 	if (!parsePandocVersion(actual))
 		throw new Error(
-			`Pandoc version is malformed; expected numeric major.minor.patch, found ${actual ?? "unknown"}.`,
+			`Pandoc version is malformed; expected numeric major.minor or major.minor.patch, found ${actual ?? "unknown"}.`,
 		);
 	if (comparePandocVersions(actual, PANDOC_MINIMUM_VERSION) < 0)
 		throw new Error(

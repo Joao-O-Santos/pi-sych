@@ -50,6 +50,7 @@ async function dispatchFixture(t) {
 
 function capturingSpawn() {
 	const child = new EventEmitter();
+	child.stdout = new PassThrough();
 	child.stderr = new PassThrough();
 	child.kills = [];
 	child.kill = (signal) => {
@@ -131,7 +132,7 @@ test("launcher passes the complete isolated Pi process contract", async (t) => {
 		researchSkill,
 	]);
 	assert.equal(call.options.cwd, root);
-	assert.deepEqual(call.options.stdio, ["ignore", "ignore", "pipe"]);
+	assert.deepEqual(call.options.stdio, ["ignore", "pipe", "pipe"]);
 	assert.equal(call.options.env.PI_CODING_AGENT_DIR, spec.workerAgentDir);
 	assert.equal(call.options.env.PI_SYCH_CONFIG_DIRECTORY, spec.piSychConfigDirectory);
 	assert.equal(call.options.env.PI_SYCH_TASK_ID, spec.id);

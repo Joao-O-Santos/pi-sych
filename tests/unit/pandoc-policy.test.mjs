@@ -9,9 +9,11 @@ import {
 
 test("Pandoc versions are numeric and compare at the minimum boundary", () => {
 	assert.deepEqual(parsePandocVersion("3.10.1"), [3, 10, 1]);
-	assert.equal(parsePandocVersion("3.10"), undefined);
+	assert.deepEqual(parsePandocVersion("3.11"), [3, 11, 0]);
+	assert.equal(parsePandocVersion("3"), undefined);
 	assert.equal(parsePandocVersion("v3.10.1"), undefined);
 	assert.equal(comparePandocVersions("3.10.1", "3.10.1"), 0);
+	assert.ok(comparePandocVersions("3.11", "3.10.1") > 0);
 	assert.ok(comparePandocVersions("3.10.2", "3.10.1") > 0);
 	assert.ok(comparePandocVersions("3.9.99", "3.10.1") < 0);
 	assert.throws(() => comparePandocVersions("latest", "3.10.1"), /numeric/);

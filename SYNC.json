@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-08-25T18:15:41.114Z",
+  "confirmedAt": "2026-09-01T23:35:53.563Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -21,20 +21,20 @@
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:841fe1b0b38be590d571f600b0d97b9eb1811e1ec1a6ac260fc1453e318d5e04",
+      "fingerprint": "sha256:3e6f27cc9aaebee39a646261499d0332abdcaa33d272404f03be90758d112a7f",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T23:43:04.157Z",
-        "reason": "Release candidate 6.1.4: grouped layout and optional EVIDENCE cleanup are treated as a patch because supported workflows/configuration/interfaces remain compatible; package scripts are complete and full verification passed."
+        "at": "2026-09-01T23:35:53.563Z",
+        "reason": "Reviewed bounded live worker activity documentation after implementation, independent review, and passing verification."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:c205dc6ff9cffa2efb786842c9a5c32a128375577bb5a8a6dd4b65c530289835",
+      "fingerprint": "sha256:254c2f594306c0f2550044371ae1c4e22e0b485e4f99d75e1f3025555713f3b0",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,8 +46,8 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-08-25T18:15:41.114Z",
-        "reason": "Release candidate 6.2.0: additive expanded dispatch_worker call inspection, no schema/stored-state/default/material-effect migration, independent read-only review clean, 141 tests and full local make verify gate passed."
+        "at": "2026-09-01T23:35:53.563Z",
+        "reason": "Reviewed bounded live worker activity documentation after implementation, independent review, and passing verification."
       }
     },
     {

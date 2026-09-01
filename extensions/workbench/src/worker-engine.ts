@@ -27,6 +27,8 @@ const MODE_TOOLS: Record<WorkerMode, readonly string[]> = {
 export const DEFAULT_TIMEOUT_MS = 90_000;
 export const MAX_TIMEOUT_MS = 30 * 60_000;
 const LOG_LIMIT = 8_192;
+const ACTIVITY_LIMIT = 12;
+const ACTIVITY_TEXT_LIMIT = 120;
 export const PI_SYCH_PACKAGE_ROOT = resolve(
 	process.env.PI_PACKAGE_DIR ?? resolve(import.meta.dirname, "../../.."),
 );
@@ -47,6 +49,7 @@ export interface WorkerLaunchSpec {
 	prompt: string;
 	packageRoot: string;
 	extraExtensionPaths: string[];
+	onActivity?: (activity: readonly string[]) => void;
 	signal?: AbortSignal;
 }
 export interface WorkerLaunchOutcome {
@@ -169,6 +172,45 @@ export const workerResultSchema = Type.Object({
 	files: Type.Array(Type.String()),
 	limitations: Type.Array(Type.String()),
 });
+const conciseActivity = (text: string) =>
+	text.length > ACTIVITY_TEXT_LIMIT ? `${text.slice(0, ACTIVITY_TEXT_LIMIT - 3)}...` : text;
+function workerActivity(value: unknown) {
+	if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+	const event = value as { type?: unknown; toolName?: unknown; args?: unknown };
+	if (event.type !== "tool_execution_start" || typeof event.toolName !== "string") return undefined;
+	const path =
+		event.args && typeof event.args === "object" && !Array.isArray(event.args)
+			? (event.args as { path?: unknown }).path
+			: undefined;
+	return conciseActivity(`${event.toolName}${typeof path === "string" ? ` ${path}` : ""}`);
+}
+function forwardWorkerActivity(
+	stream: NodeJS.ReadableStream,
+	onActivity?: (activity: readonly string[]) => void,
+) {
+	let buffered = "";
+	const activity: string[] = [];
+	const forward = (line: string) => {
+		try {
+			const item = workerActivity(JSON.parse(line));
+			if (!item) return;
+			activity.push(item);
+			if (activity.length > ACTIVITY_LIMIT) activity.shift();
+			onActivity?.([...activity]);
+		} catch {}
+	};
+	stream.setEncoding("utf8");
+	stream.on("data", (chunk: string) => {
+		buffered += chunk;
+		const lines = buffered.split(/\r?\n/);
+		buffered = lines.pop() ?? "";
+		for (const line of lines) forward(line);
+		if (buffered.length > LOG_LIMIT) buffered = "";
+	});
+	stream.once("end", () => {
+		if (buffered) forward(buffered);
+	});
+}
 export function validateWorkerResult(value: unknown): WorkerResult {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error("Worker result must be an object");
@@ -232,9 +274,10 @@ export async function launchPiWorker(
 					? { MCPORTER_CONFIG: mcporterConfigPath(spec.projectRoot) }
 					: {}),
 			},
-			stdio: ["ignore", "ignore", "pipe"],
+			stdio: ["ignore", "pipe", "pipe"],
 		},
 	);
+	forwardWorkerActivity(child.stdout, spec.onActivity);
 	child.stderr.setEncoding("utf8");
 	child.stderr.on("data", (chunk) => (stderr = (stderr + chunk).slice(-LOG_LIMIT)));
 	child.once("error", (err) => (spawnError = err));
@@ -286,6 +329,7 @@ export async function dispatchWorker(options: {
 	packageRoot?: string;
 	extraExtensionPaths?: string[];
 	launcher?: WorkerLauncher;
+	onActivity?: (activity: readonly string[]) => void;
 	signal?: AbortSignal;
 }): Promise<DispatchOutcome> {
 	const request = options.request,
@@ -318,6 +362,7 @@ export async function dispatchWorker(options: {
 		packageRoot: options.packageRoot ?? PI_SYCH_PACKAGE_ROOT,
 		extraExtensionPaths:
 			options.extraExtensionPaths ?? remoteResearchExtensionPaths(request.remoteResearch === true),
+		...(options.onActivity ? { onActivity: options.onActivity } : {}),
 		...(options.signal ? { signal: options.signal } : {}),
 	};
 	spec.prompt = taskPrompt(spec, contextFiles);

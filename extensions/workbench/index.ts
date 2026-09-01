@@ -130,7 +130,7 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 			const details = expanded ? `\n${JSON.stringify(args, null, 2)}` : "";
 			return new Text(theme.fg("toolTitle", theme.bold("Dispatch worker")) + details, 0, 0);
 		},
-		async execute(_id, params, signal, _update, ctx) {
+		async execute(_id, params, signal, onUpdate, ctx) {
 			const project = await resolveProject(ctx.cwd),
 				outcome = await dispatchWorker({
 					project,
@@ -142,6 +142,16 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 					catalog: loadModelCatalog(project.projectRoot),
 					packageRoot: PACKAGE_ROOT,
 					extraExtensionPaths: remoteResearchExtensionPaths(params.remoteResearch === true),
+					onActivity: (activity) =>
+						onUpdate?.({
+							content: [
+								{
+									type: "text",
+									text: `Worker activity:\n${activity.map((item) => `- ${item}`).join("\n")}`,
+								},
+							],
+							details: { activity },
+						}),
 					...(signal ? { signal } : {}),
 				});
 			return {

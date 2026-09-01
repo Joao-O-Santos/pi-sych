@@ -104,6 +104,7 @@ const launchSpec = (root, overrides = {}) => ({
 
 function fakeSpawn() {
 	const child = new EventEmitter();
+	child.stdout = new PassThrough();
 	child.stderr = new PassThrough();
 	child.kills = [];
 	child.kill = (signal) => {
@@ -178,6 +179,65 @@ test("ignored SIGTERM reaches SIGKILL after the grace period", async (t) => {
 	assert.deepEqual(fake.child.kills, ["SIGTERM", "SIGKILL"]);
 	fake.child.emit("close", null, "SIGKILL");
 	assert.equal((await launched).classification, "timeout");
+});
+
+test("worker activity parses chunked JSONL, ignores malformed events, and stays bounded", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-launcher-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const fake = fakeSpawn();
+	const updates = [];
+	const launched = launchPiWorker(
+		launchSpec(root, { onActivity: (activity) => updates.push([...activity]) }),
+		fake.spawn,
+	);
+	fake.child.stdout.write('{"type":"tool_execution_start","toolName":"read","args":{"path":"A');
+	fake.child.stdout.write('.md"}}\r\n{"type":"message_start"}\nnot JSON\n');
+	for (let index = 0; index < 13; index++)
+		fake.child.stdout.write(
+			`${JSON.stringify({
+				type: "tool_execution_start",
+				toolName: "read",
+				args: { path: `file-${index}.md` },
+			})}\n`,
+		);
+	fake.child.stdout.write(
+		`${JSON.stringify({
+			type: "tool_execution_start",
+			toolName: "write",
+			args: { path: "x".repeat(200) },
+		})}\n`,
+	);
+	fake.child.stdout.write("x".repeat(8_193));
+	fake.child.stdout.write('{"type":"tool_execution_start","toolName":"grep","args":{}}');
+	const ended = new Promise((resolve) => fake.child.stdout.once("end", resolve));
+	fake.child.stdout.end();
+	await ended;
+	fake.child.emit("close", 0, null);
+	assert.deepEqual(await launched, { exitCode: 0, stderr: "" });
+	assert.deepEqual(updates[0], ["read A.md"]);
+	assert.equal(updates.at(-1).length, 12);
+	assert.equal(updates.at(-1)[0], "read file-3.md");
+	assert.equal(updates.at(-1).at(-1), "grep");
+	assert.ok(updates.every((activity) => activity.length <= 12));
+	assert.ok(updates.every((activity) => activity.every((item) => item.length <= 120)));
+	assert.ok(updates.some((activity) => activity.includes(`write ${"x".repeat(111)}...`)));
+});
+
+test("worker activity callback failures do not alter process success", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-launcher-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const fake = fakeSpawn();
+	const launched = launchPiWorker(
+		launchSpec(root, {
+			onActivity: () => {
+				throw new Error("unavailable");
+			},
+		}),
+		fake.spawn,
+	);
+	fake.child.stdout.write('{"type":"tool_execution_start","toolName":"read","args":{}}\n');
+	fake.child.emit("close", 0, null);
+	assert.deepEqual(await launched, { exitCode: 0, stderr: "" });
 });
 
 test("normal close before timeout preserves stderr and exit code", async (t) => {

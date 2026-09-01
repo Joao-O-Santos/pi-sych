@@ -83,6 +83,11 @@ async function workbenchFixture() {
 		fakePi,
 		`#!/usr/bin/env node
 const { writeFileSync } = require("node:fs");
+process.stdout.write(JSON.stringify({
+  type: "tool_execution_start",
+  toolName: "read",
+  args: { path: "A.md" }
+}) + "\\n");
 writeFileSync(process.env.PI_SYCH_RESULT_PATH, JSON.stringify({
   status: "partial",
   summary: "fixture worker",
@@ -238,11 +243,12 @@ A changed hash establishes changed content, not conceptual drift or authority.`;
 			.join("\n"),
 		`Dispatch worker\n${JSON.stringify(dispatchArgs, null, 2)}`,
 	);
+	const updates = [];
 	const dispatched = await dispatchTool.execute(
 		"dispatch",
 		dispatchArgs,
 		undefined,
-		undefined,
+		(update) => updates.push(update),
 		handlerContext,
 	);
 	assert.equal(
@@ -251,4 +257,10 @@ A changed hash establishes changed content, not conceptual drift or authority.`;
 	);
 	assert.equal(dispatched.details.result.status, "partial");
 	assert.equal(dispatched.details.launch.exitCode, 0);
+	assert.deepEqual(updates, [
+		{
+			content: [{ type: "text", text: "Worker activity:\n- read A.md" }],
+			details: { activity: ["read A.md"] },
+		},
+	]);
 });
