@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-02T00:55:25.586Z",
+  "confirmedAt": "2026-09-02T01:09:10.529Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -35,7 +35,7 @@
     {
       "path": "README.md",
       "fingerprint": "sha256:d4d5b43aac915e25aa5601b56e7ff4a97591553b9e10296420ce45ae71064928",
-      "status": "current",
+      "status": "needs-review",
       "role": "documentation",
       "authoritativeFor": [
         "package-usage",
@@ -52,7 +52,7 @@
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:c54da205fe432c65d732d01850076f9c7a050f65c7c4573aaec7ee5da3780c07",
+      "fingerprint": "sha256:7b16657fe110cb535bdbbed9b684ba8167b43953b71ea36ba7544e5a160a1735",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -66,8 +66,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-09-02T00:12:06.229Z",
-        "reason": "v6.3.0-rc.1: reviewed compact dispatch-worker call metadata, release notes, package version, independent review, and complete local verification."
+        "at": "2026-09-02T01:09:10.529Z",
+        "reason": "Release metadata reviewed for authorized stable v6.3.0 minor release; README package links and dynamic registry badges remain valid."
       }
     },
     {

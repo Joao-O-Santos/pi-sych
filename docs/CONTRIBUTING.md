@@ -59,7 +59,7 @@ unverified claim.
 Most contributions do not need release work. When a maintainer requests
 one, apply the [public-contract release
 rules](public-contract.md#releases-and-migration), prepare a focused
-changelog entry, verify the next patch version from Git tags and package
+changelog entry, verify the next version from Git tags and package
 metadata rather than trusting a stale document, and run the complete
 documented gate. Inspect `npm pack --dry-run` so the package contains
 only intended public files.

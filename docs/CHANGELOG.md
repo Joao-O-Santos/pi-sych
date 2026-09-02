@@ -7,6 +7,24 @@ state.
 
 ## Unreleased
 
+## v6.3.0
+
+### Added
+
+- Project a bounded live list of selected worker tool starts to an
+  active `dispatch_worker` call without storing it or altering its
+  terminal result protocol.
+
+### Changed
+
+- Show a compact task summary, requested model role (or catalog
+  default), and effective timeout on collapsed `dispatch_worker` calls.
+- Use Node 26 recursive directory reads, module path properties, and
+  explicit SQLite resource management to remove compatibility
+  boilerplate and manual cleanup.
+- Remove duplicate MCPorter extension resolution and simplify collapsed
+  worker-call rendering without changing its output.
+
 ### Fixed
 
 - Keep benchmark timeouts terminal across graceful exits and child
@@ -15,20 +33,12 @@ state.
   while retaining recursive symlink rejection.
 - Reject whitespace-only configured paths before filesystem resolution.
 
-### Changed
-
-- Use Node 26 recursive directory reads, module path properties, and
-  explicit SQLite resource management to remove compatibility
-  boilerplate and manual cleanup.
-- Remove duplicate MCPorter extension resolution and simplify collapsed
-  worker-call rendering without changing their output.
-
 ### Compatibility
 
-- These changes correct invalid configuration and internal benchmark
-  behavior and simplify implementation without changing supported
-  workflows, stored state, defaults, or material effects; users need no
-  migration.
+- This minor release adds an optional bounded live-activity projection
+  to `dispatch_worker` while preserving its schema, terminal result
+  protocol, stored state, defaults, and material effects. The remaining
+  corrections and internal simplifications require no migration.
 
 ## v6.3.0-rc.1
 
