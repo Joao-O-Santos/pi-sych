@@ -25,7 +25,9 @@ import {
 	formatProjectStatusCheck,
 } from "./src/project-status.js";
 import {
+	DEFAULT_TIMEOUT_MS,
 	type DispatchOutcome,
+	type DispatchRequest,
 	dispatchSchema,
 	dispatchWorker,
 	MAX_TIMEOUT_MS,
@@ -46,6 +48,28 @@ const statusSchema = Type.Object({
 	files: Type.Optional(Type.Array(Type.String())),
 	reason: Type.Optional(Type.String()),
 });
+const TASK_SUMMARY_LIMIT = 60;
+const compactTaskSummary = (task: string) => {
+	const summary = task.replace(/\s+/g, " ").trim();
+	return summary.length > TASK_SUMMARY_LIMIT
+		? `${summary.slice(0, TASK_SUMMARY_LIMIT - 3)}...`
+		: summary;
+};
+const formatTimeout = (timeoutMs: number) => {
+	if (timeoutMs % 60_000 === 0) return `${timeoutMs / 60_000}m`;
+	if (timeoutMs % 1_000 === 0) return `${timeoutMs / 1_000}s`;
+	return `${timeoutMs}ms`;
+};
+export function formatDispatchWorkerCallSummary(
+	args: Pick<DispatchRequest, "task" | "modelRole" | "timeoutMs">,
+) {
+	return [
+		"Dispatch worker",
+		`task-summary: ${compactTaskSummary(args.task)}`,
+		`model: ${args.modelRole ?? "catalog default"}`,
+		`timeout: ${formatTimeout(args.timeoutMs ?? DEFAULT_TIMEOUT_MS)}`,
+	].join("\n");
+}
 export function formatDispatchWorkerOutcome(outcome: DispatchOutcome) {
 	const result = outcome.result;
 	const lines = [
@@ -127,8 +151,11 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 		description: "Run one short-lived clean-context worker and return its validated result.",
 		parameters: dispatchSchema,
 		renderCall(args, theme, { expanded }) {
-			const details = expanded ? `\n${JSON.stringify(args, null, 2)}` : "";
-			return new Text(theme.fg("toolTitle", theme.bold("Dispatch worker")) + details, 0, 0);
+			const title = theme.fg("toolTitle", theme.bold("Dispatch worker"));
+			const details = expanded
+				? `\n${JSON.stringify(args, null, 2)}`
+				: formatDispatchWorkerCallSummary(args).slice("Dispatch worker".length);
+			return new Text(title + details, 0, 0);
 		},
 		async execute(_id, params, signal, onUpdate, ctx) {
 			const project = await resolveProject(ctx.cwd),

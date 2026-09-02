@@ -7,6 +7,19 @@ state.
 
 ## Unreleased
 
+## v6.3.0-rc.1
+
+### Changed
+
+- Show a compact task summary, requested model role (or catalog
+  default), and effective timeout on collapsed `dispatch_worker` calls.
+
+### Compatibility
+
+- This prerelease refines `dispatch_worker` presentation only; its
+  schema, stored state, defaults, and material effects are unchanged, so
+  users need no migration.
+
 ## v6.3.0-rc.0
 
 ### Added

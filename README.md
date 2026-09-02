@@ -229,11 +229,12 @@ Pi Sych gives the supervisor two mechanical tools:
 - `project_status` checks or acknowledges project state; and
 - `dispatch_worker` starts one bounded, short-lived worker.
 
-In Pi's terminal interface, expand a `dispatch_worker` tool call with
-the configured tool-expansion shortcut (`Ctrl+O` by default) to inspect
-its complete submitted request. While it runs, its tool row shows a
-bounded live list of worker tool starts; it is activity visibility, not
-a worker console or result protocol.
+In Pi's terminal interface, a collapsed `dispatch_worker` call shows a
+compact task summary, requested model role (or catalog default), and
+effective timeout. Expand it with the configured tool-expansion shortcut
+(`Ctrl+O` by default) to inspect its complete submitted request. While
+it runs, its tool row shows a bounded live list of worker tool starts;
+it is activity visibility, not a worker console or result protocol.
 
 These tools support a workflow; they do not decide what the workflow
 must be.

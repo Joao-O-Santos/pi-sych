@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-01T23:35:53.563Z",
+  "confirmedAt": "2026-09-02T00:12:06.229Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:a7244d566b984e9667eb499cffb0ebb496c028149d7d22fb44041244bc44246c",
+      "fingerprint": "sha256:7f5c0cd5be87944c0830775a62c33eb256d71d1bcd999f5fd1c2f5c8ce3fa795",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,26 +15,26 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-08-25T18:15:41.114Z",
-        "reason": "Release candidate 6.2.0: additive expanded dispatch_worker call inspection, no schema/stored-state/default/material-effect migration, independent read-only review clean, 141 tests and full local make verify gate passed."
+        "at": "2026-09-02T00:12:06.229Z",
+        "reason": "v6.3.0-rc.1: reviewed compact dispatch-worker call metadata, release notes, package version, independent review, and complete local verification."
       }
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:3e6f27cc9aaebee39a646261499d0332abdcaa33d272404f03be90758d112a7f",
+      "fingerprint": "sha256:2265c02cefc6a82cb181b5476c80fe1f84942fe9e9f3840c61c6e69345f45554",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-09-01T23:35:53.563Z",
-        "reason": "Reviewed bounded live worker activity documentation after implementation, independent review, and passing verification."
+        "at": "2026-09-02T00:12:06.229Z",
+        "reason": "v6.3.0-rc.1: reviewed compact dispatch-worker call metadata, release notes, package version, independent review, and complete local verification."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:254c2f594306c0f2550044371ae1c4e22e0b485e4f99d75e1f3025555713f3b0",
+      "fingerprint": "sha256:d4d5b43aac915e25aa5601b56e7ff4a97591553b9e10296420ce45ae71064928",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,13 +46,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-09-01T23:35:53.563Z",
-        "reason": "Reviewed bounded live worker activity documentation after implementation, independent review, and passing verification."
+        "at": "2026-09-02T00:12:06.229Z",
+        "reason": "v6.3.0-rc.1: reviewed compact dispatch-worker call metadata, release notes, package version, independent review, and complete local verification."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:5581a34c006c74830c0dc0a381ed27014c40bc73f77d23216b8d1f332392d468",
+      "fingerprint": "sha256:c54da205fe432c65d732d01850076f9c7a050f65c7c4573aaec7ee5da3780c07",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -66,8 +66,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-08-25T18:15:41.114Z",
-        "reason": "Release candidate 6.2.0: additive expanded dispatch_worker call inspection, no schema/stored-state/default/material-effect migration, independent read-only review clean, 141 tests and full local make verify gate passed."
+        "at": "2026-09-02T00:12:06.229Z",
+        "reason": "v6.3.0-rc.1: reviewed compact dispatch-worker call metadata, release notes, package version, independent review, and complete local verification."
       }
     },
     {

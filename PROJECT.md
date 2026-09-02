@@ -61,19 +61,19 @@ their Pi agent directory, so configured external literature databases
 work in normal research dispatches. It clears termination timers when a
 worker errors without closing, declares the literature surface in the
 public contract, makes native Node coverage a 90% gate, cleans
-deterministic temporary fixtures, and shows the complete submitted
-`dispatch_worker` request when its Pi tool call is expanded. Runtime
-source is 2,079 nonblank lines (2,100 rounded); blank readability
+deterministic temporary fixtures, shows a compact task summary, model
+role, and effective timeout for collapsed `dispatch_worker` calls, and
+shows the complete submitted request when one is expanded. Runtime
+source is 2,161 nonblank lines (2,200 rounded); blank readability
 spacing is excluded. Use the signed Git tag and npm registry
 metadata---not this narrative---for the current release identifier.
 
 ## Previous action
 
-{verified} Added native Pi tool-call rendering for `dispatch_worker` so
-users can inspect the submitted request with tool expansion while the
-collapsed transcript remains compact. The worker schema, execution,
-result protocol, stored state, defaults, and material effects are
-unchanged.
+{verified} Added compact collapsed-call metadata for `dispatch_worker`:
+task summary, requested model role (or catalog default), and effective
+timeout. The worker schema, execution, result protocol, stored state,
+defaults, and material effects are unchanged.
 
 ## Immediate next step
 

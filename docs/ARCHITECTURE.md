@@ -42,9 +42,11 @@ A worker is a clean Pi process with one terminal result. The launcher:
 2.  checks that the worker agent directory was explicitly bootstrapped;
 3.  creates a temporary result directory;
 4.  starts Pi with the selected tools, skills, model, and optional
-    MCPorter extension, projecting a bounded list of worker tool starts
-    to the supervisor's live tool progress without changing the result
-    protocol; and
+    MCPorter extension; its collapsed supervisor call presents a compact
+    task summary, requested model role (or catalog default), and
+    effective timeout, while its expanded call retains the submitted
+    request and its live progress projects a bounded list of worker tool
+    starts without changing the result protocol; and
 5.  stops it on cancellation or timeout, escalating from `SIGTERM` to
     `SIGKILL`; and
 6.  accepts a result only when it is valid, immutable, and the process

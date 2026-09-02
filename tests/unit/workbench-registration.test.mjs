@@ -233,7 +233,33 @@ A changed hash establishes changed content, not conceptual drift or authority.`;
 			.renderCall(dispatchArgs, theme, { expanded: false })
 			.render(200)
 			.map((line) => line.trimEnd()),
-		["Dispatch worker"],
+		[
+			"Dispatch worker",
+			"task-summary: run fixture worker",
+			"model: catalog default",
+			"timeout: 90s",
+		],
+	);
+	assert.deepEqual(
+		dispatchTool
+			.renderCall(
+				{
+					...dispatchArgs,
+					task: "first line with enough content to exceed the compact task summary limit on the tool row",
+					modelRole: "workhorse",
+					timeoutMs: 120_500,
+				},
+				theme,
+				{ expanded: false },
+			)
+			.render(200)
+			.map((line) => line.trimEnd()),
+		[
+			"Dispatch worker",
+			"task-summary: first line with enough content to exceed the compact task...",
+			"model: workhorse",
+			"timeout: 120500ms",
+		],
 	);
 	assert.equal(
 		dispatchTool
