@@ -7,6 +7,29 @@ state.
 
 ## Unreleased
 
+### Fixed
+
+- Keep benchmark timeouts terminal across graceful exits and child
+  errors, and clear their termination timers deterministically.
+- Require benchmark fixture manifests to cover every copied regular file
+  while retaining recursive symlink rejection.
+- Reject whitespace-only configured paths before filesystem resolution.
+
+### Changed
+
+- Use Node 26 recursive directory reads, module path properties, and
+  explicit SQLite resource management to remove compatibility
+  boilerplate and manual cleanup.
+- Remove duplicate MCPorter extension resolution and simplify collapsed
+  worker-call rendering without changing their output.
+
+### Compatibility
+
+- These changes correct invalid configuration and internal benchmark
+  behavior and simplify implementation without changing supported
+  workflows, stored state, defaults, or material effects; users need no
+  migration.
+
 ## v6.3.0-rc.1
 
 ### Changed

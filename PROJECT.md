@@ -63,20 +63,25 @@ worker errors without closing, declares the literature surface in the
 public contract, makes native Node coverage a 90% gate, cleans
 deterministic temporary fixtures, shows a compact task summary, model
 role, and effective timeout for collapsed `dispatch_worker` calls, and
-shows the complete submitted request when one is expanded. Runtime
-source is 2,161 nonblank lines (2,200 rounded); blank readability
-spacing is excluded. Use the signed Git tag and npm registry
-metadata---not this narrative---for the current release identifier.
+shows the complete submitted request when one is expanded. Benchmark
+timeouts remain terminal, fixture manifests cover copied files, and
+configured paths reject whitespace-only values. Runtime source is 2,149
+nonblank lines (2,150 rounded); blank readability spacing is excluded.
+Use the signed Git tag and npm registry metadata---not this
+narrative---for the current release identifier.
 
 ## Previous action
 
-{verified} Added compact collapsed-call metadata for `dispatch_worker`:
-task summary, requested model role (or catalog default), and effective
-timeout. The worker schema, execution, result protocol, stored state,
-defaults, and material effects are unchanged.
+{verified} Simplified the reviewed runtime and scripts with Node 26
+recursive directory reads, module path properties, explicit SQLite
+resource management, default MCPorter resolution, and direct collapsed
+worker-call rendering. Corrected benchmark timeout precedence and
+fixture completeness and rejected whitespace-only configured paths.
+Independent test design and review were completed; the full local gate
+passed with 146 tests.
 
 ## Immediate next step
 
-{accepted} Keep main at the reviewed release state until the owner
-selects further work. Do not approve node-pty scripts, run npm audit
-remediation, or perform another release without explicit instruction.
+{accepted} Await owner direction on committing or releasing the reviewed
+changes. Do not approve node-pty scripts, run npm audit remediation, or
+perform another release without explicit instruction.

@@ -2,11 +2,10 @@
 
 import { mkdir, readdir, writeFile } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import * as ts from "typescript/unstable/ast";
 import { API } from "typescript/unstable/sync";
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const root = resolve(import.meta.dirname, "..");
 const sourceRoot = resolve(root, "extensions");
 const gitlabBase = "https://gitlab.com/Joao-O-Santos/pi-sych/-/blob/main";
 
@@ -76,15 +75,10 @@ const requiredReferences = [
 ];
 
 async function runtimeFiles(directory = sourceRoot) {
-	const entries = await readdir(directory, { withFileTypes: true });
-	const children = await Promise.all(
-		entries.map(async (entry) => {
-			const path = resolve(directory, entry.name);
-			if (entry.isDirectory()) return runtimeFiles(path);
-			return entry.isFile() && entry.name.endsWith(".ts") ? [path] : [];
-		}),
-	);
-	return children.flat().sort();
+	return (await readdir(directory, { recursive: true, withFileTypes: true }))
+		.filter((entry) => entry.isFile() && entry.name.endsWith(".ts"))
+		.map((entry) => resolve(entry.parentPath, entry.name))
+		.sort();
 }
 
 function isExported(node) {
@@ -251,4 +245,4 @@ async function main() {
 	await generateCodeReference(resolve(outputPath));
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) await main();
+if (process.argv[1] === import.meta.filename) await main();

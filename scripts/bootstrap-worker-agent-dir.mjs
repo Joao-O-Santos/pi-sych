@@ -2,10 +2,9 @@
 
 import { lstat, mkdir, rm, symlink, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 
-const scriptRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const scriptRoot = resolve(import.meta.dirname, "..");
 
 export function expandHome(path) {
 	return path === "~"
@@ -102,7 +101,7 @@ function parseArguments(argv) {
 	return options;
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && resolve(process.argv[1]) === import.meta.filename) {
 	const result = await bootstrapWorkerAgentDir(parseArguments(process.argv.slice(2)));
 	process.stdout.write(`${JSON.stringify(result)}\n`);
 }

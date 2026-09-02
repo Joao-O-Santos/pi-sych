@@ -3,7 +3,6 @@
 import { spawnSync } from "node:child_process";
 import { readFile, rename, writeFile } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 
 export const PANDOC_MINIMUM_VERSION = "3.10.1";
 
@@ -118,4 +117,4 @@ async function main() {
 	} else console.log("Markdown matches Pandoc 72-column formatting.");
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) await main();
+if (process.argv[1] === import.meta.filename) await main();

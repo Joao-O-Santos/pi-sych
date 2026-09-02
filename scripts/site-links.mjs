@@ -2,7 +2,6 @@
 
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, normalize, relative, resolve, sep } from "node:path";
-import { fileURLToPath } from "node:url";
 
 const pagePaths = new Map([
 	["README.md", "index.html"],
@@ -116,4 +115,4 @@ async function main() {
 	throw new Error("Usage: site-links.mjs rewrite <input> <output> | validate <site-directory>");
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) await main();
+if (process.argv[1] === import.meta.filename) await main();

@@ -56,7 +56,7 @@ const configString = (item: Record<string, unknown>, key: string, path: string) 
 	const value = item[key];
 	if (
 		typeof value !== "string" ||
-		!value ||
+		!value.trim() ||
 		posix.isAbsolute(value) ||
 		win32.isAbsolute(value) ||
 		value.split(/[\\/]/).includes("..")
@@ -98,7 +98,7 @@ export function loadPiSychConfig(options: ConfigDirectoryOptions = {}): PiSychCo
 	if (
 		literatureDatabase !== undefined &&
 		(typeof literatureDatabase !== "string" ||
-			!literatureDatabase ||
+			!literatureDatabase.trim() ||
 			literatureDatabase.split(/[\\/]/).includes(".."))
 	)
 		throw new Error(

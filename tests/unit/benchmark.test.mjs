@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { EventEmitter } from "node:events";
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { PassThrough } from "node:stream";
 import test from "node:test";
 
 import {
@@ -9,6 +11,7 @@ import {
 	candidatePrompt,
 	candidateSkillPaths,
 	copyFixture,
+	launchPi,
 	objectiveChecks,
 	parseJudgeJson,
 	projectPath,
@@ -74,17 +77,67 @@ test("benchmark cases, paths, and fixture hashes reject malformed or unsafe inpu
 	await assert.rejects(validateFixtureManifest(root), /hash mismatch/);
 });
 
-test("fixture copying is disposable and rejects symlinks", async (t) => {
+test("fixture copying is disposable and rejects unlisted files and symlinks", async (t) => {
 	const root = await fixture(t);
 	const targetRoot = await mkdtemp(join(tmpdir(), "pi-sych-benchmark-copy-"));
 	t.after(() => rm(targetRoot, { recursive: true, force: true }));
 	const target = join(targetRoot, "project");
 	await copyFixture(root, target);
 	assert.equal(await readFile(join(target, "input.txt"), "utf8"), "source");
+	const unlisted = await fixture(t);
+	await mkdir(join(unlisted, "nested"));
+	await writeFile(join(unlisted, "nested/extra.txt"), "extra");
+	await assert.rejects(copyFixture(unlisted, join(target, "unlisted")), /manifest files differ/);
 	const unsafe = await fixture(t);
 	await symlink("input.txt", join(unsafe, "link"));
 	await assert.rejects(copyFixture(unsafe, join(target, "unsafe")), /symlink/);
 });
+
+function fakePiSpawn() {
+	const child = new EventEmitter();
+	child.stdout = new PassThrough();
+	child.stderr = new PassThrough();
+	child.kills = [];
+	child.kill = (signal) => {
+		child.kills.push(signal);
+		return true;
+	};
+	return { child, spawn: () => child };
+}
+
+test("benchmark timeout remains terminal after a graceful zero exit", async (t) => {
+	t.mock.timers.enable({ apis: ["setTimeout"] });
+	const fake = fakePiSpawn();
+	const launched = launchPi(
+		{ cwd: process.cwd(), model: "provider/model", prompt: "test", timeoutMs: 100 },
+		fake.spawn,
+	);
+	t.mock.timers.tick(100);
+	assert.deepEqual(fake.child.kills, ["SIGTERM"]);
+	fake.child.emit("close", 0);
+	await assert.rejects(launched, /timed out after 100ms/);
+	t.mock.timers.tick(5_000);
+	assert.deepEqual(fake.child.kills, ["SIGTERM"]);
+});
+
+for (const [label, afterTimeout, expected] of [
+	["spawn error", false, /spawn failed/],
+	["error after timeout", true, /timed out after 100ms/],
+]) {
+	test(`benchmark ${label} clears timers with the right precedence`, async (t) => {
+		t.mock.timers.enable({ apis: ["setTimeout"] });
+		const fake = fakePiSpawn();
+		const launched = launchPi(
+			{ cwd: process.cwd(), model: "provider/model", prompt: "test", timeoutMs: 100 },
+			fake.spawn,
+		);
+		if (afterTimeout) t.mock.timers.tick(100);
+		fake.child.emit("error", new Error("spawn failed"));
+		await assert.rejects(launched, expected);
+		t.mock.timers.tick(5_100);
+		assert.deepEqual(fake.child.kills, afterTimeout ? ["SIGTERM"] : []);
+	});
+}
 
 test("objective checks and judge parsing retain structured evidence", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-benchmark-objective-"));

@@ -66,6 +66,18 @@ export function validateCase(caseDefinition) {
 	return caseDefinition;
 }
 
+async function fixtureFiles(root, directory = root) {
+	const files = [];
+	for (const entry of await readdir(directory, { withFileTypes: true })) {
+		const path = join(directory, entry.name);
+		if (entry.isSymbolicLink()) fail(`fixture symlink is forbidden: ${path}`);
+		if (entry.isDirectory()) files.push(...(await fixtureFiles(root, path)));
+		else if (entry.isFile()) files.push(relative(root, path).split(sep).join("/"));
+		else fail(`fixture entry is unsupported: ${path}`);
+	}
+	return files;
+}
+
 export async function validateFixtureManifest(fixtureRoot) {
 	const manifestPath = join(fixtureRoot, "manifest.json");
 	let manifest;
@@ -78,9 +90,16 @@ export async function validateFixtureManifest(fixtureRoot) {
 		manifest.schemaVersion !== 1 ||
 		!manifest.files ||
 		typeof manifest.files !== "object" ||
+		Array.isArray(manifest.files) ||
 		!Object.keys(manifest.files).length
 	)
 		fail("fixture manifest must use schemaVersion 1 and non-empty files");
+	const declared = Object.keys(manifest.files).sort(),
+		actual = (await fixtureFiles(fixtureRoot)).filter((path) => path !== "manifest.json").sort();
+	if (JSON.stringify(actual) !== JSON.stringify(declared))
+		fail(
+			`fixture manifest files differ: declared ${declared.join(", ")}; found ${actual.join(", ")}`,
+		);
 	for (const [path, hash] of Object.entries(manifest.files)) {
 		const file = projectPath(fixtureRoot, path);
 		if (!/^[a-f0-9]{64}$/.test(hash)) fail(`fixture hash is invalid for ${path}`);
@@ -89,17 +108,8 @@ export async function validateFixtureManifest(fixtureRoot) {
 	return manifest;
 }
 
-async function rejectFixtureSymlinks(root) {
-	for (const entry of await readdir(root, { withFileTypes: true })) {
-		const path = join(root, entry.name);
-		if (entry.isSymbolicLink()) fail(`fixture symlink is forbidden: ${path}`);
-		if (entry.isDirectory()) await rejectFixtureSymlinks(path);
-	}
-}
-
 export async function copyFixture(fixtureRoot, projectRoot) {
 	await validateFixtureManifest(fixtureRoot);
-	await rejectFixtureSymlinks(fixtureRoot);
 	await mkdir(projectRoot, { recursive: true, mode: 0o700 });
 	for (const entry of await readdir(fixtureRoot, { withFileTypes: true })) {
 		if (entry.name === "manifest.json") continue;
@@ -242,9 +252,9 @@ export function candidateSkillPaths(skills) {
 	return skills.map((skill) => resolve("skills", skill));
 }
 
-function launchPi({ cwd, model, prompt, timeoutMs, skills = [] }) {
+export function launchPi({ cwd, model, prompt, timeoutMs, skills = [] }, spawnPi = spawn) {
 	return new Promise((resolvePromise, reject) => {
-		const child = spawn(
+		const child = spawnPi(
 			"pi",
 			[
 				"--model",
@@ -261,18 +271,31 @@ function launchPi({ cwd, model, prompt, timeoutMs, skills = [] }) {
 		);
 		let stdout = "";
 		let stderr = "";
+		let timedOut = false;
+		let forcedKillTimer;
+		const timeoutError = () => new Error(`Pi timed out after ${timeoutMs}ms`);
+		const clearTimers = () => {
+			clearTimeout(timer);
+			if (forcedKillTimer) clearTimeout(forcedKillTimer);
+		};
 		const timer = setTimeout(() => {
+			timedOut = true;
 			child.kill("SIGTERM");
-			setTimeout(() => child.kill("SIGKILL"), 5_000).unref();
+			forcedKillTimer = setTimeout(() => child.kill("SIGKILL"), 5_000);
+			forcedKillTimer.unref();
 		}, timeoutMs);
 		child.stdout.setEncoding("utf8");
 		child.stderr.setEncoding("utf8");
 		child.stdout.on("data", (chunk) => (stdout += chunk));
 		child.stderr.on("data", (chunk) => (stderr += chunk));
-		child.once("error", reject);
+		child.once("error", (error) => {
+			clearTimers();
+			reject(timedOut ? timeoutError() : error);
+		});
 		child.once("close", (exitCode) => {
-			clearTimeout(timer);
-			if (exitCode !== 0) reject(new Error(stderr || `Pi exited ${exitCode}`));
+			clearTimers();
+			if (timedOut) reject(timeoutError());
+			else if (exitCode !== 0) reject(new Error(stderr || `Pi exited ${exitCode}`));
 			else resolvePromise({ exitCode, stdout, stderr });
 		});
 	});
@@ -382,7 +405,6 @@ async function main() {
 			);
 			const fixtureRoot = resolve(definition.fixture);
 			await validateFixtureManifest(fixtureRoot);
-			await rejectFixtureSymlinks(fixtureRoot);
 			return { definition, fixtureRoot };
 		}),
 	);
@@ -417,4 +439,4 @@ async function main() {
 	process.stdout.write(`${JSON.stringify(report)}\n`);
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === new URL(import.meta.url).pathname) main();
+if (process.argv[1] && resolve(process.argv[1]) === import.meta.filename) main();

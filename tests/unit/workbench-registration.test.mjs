@@ -88,9 +88,11 @@ process.stdout.write(JSON.stringify({
   toolName: "read",
   args: { path: "A.md" }
 }) + "\\n");
+const remote = process.argv.some((arg) => /pi-mcporter[\\/]dist[\\/]index\\.js$/.test(arg))
+  && process.env.MCPORTER_CONFIG?.endsWith("mcp/mcporter.json");
 writeFileSync(process.env.PI_SYCH_RESULT_PATH, JSON.stringify({
   status: "partial",
-  summary: "fixture worker",
+  summary: remote ? "remote fixture worker" : "fixture worker",
   files: ["A.md"],
   limitations: ["fake launcher"]
 }) + "\\n");
@@ -289,4 +291,12 @@ A changed hash establishes changed content, not conceptual drift or authority.`;
 			details: { activity: ["read A.md"] },
 		},
 	]);
+	const remote = await dispatchTool.execute(
+		"remote-dispatch",
+		{ ...dispatchArgs, remoteResearch: true },
+		undefined,
+		undefined,
+		handlerContext,
+	);
+	assert.equal(remote.details.result.summary, "remote fixture worker");
 });

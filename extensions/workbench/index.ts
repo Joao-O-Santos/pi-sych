@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import type { ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
 import { Text } from "@earendil-works/pi-tui";
 import { Type } from "typebox";
@@ -11,12 +10,7 @@ import {
 	piSychConfigDirectory,
 	piSychConfigPath,
 } from "./src/config-directory.js";
-import {
-	formatMcporterDiagnostic,
-	inspectMcporter,
-	mcporterConfigPath,
-	remoteResearchExtensionPaths,
-} from "./src/mcporter.js";
+import { formatMcporterDiagnostic, inspectMcporter, mcporterConfigPath } from "./src/mcporter.js";
 import { loadModelCatalog, loadOptionalModelCatalog } from "./src/model-catalog.js";
 import { resolveProject, showPath } from "./src/project-files.js";
 import {
@@ -33,7 +27,7 @@ import {
 	MAX_TIMEOUT_MS,
 } from "./src/worker-engine.js";
 export const PACKAGE_ROOT = resolve(
-	process.env.PI_PACKAGE_DIR ?? fileURLToPath(new URL("../..", import.meta.url)),
+	process.env.PI_PACKAGE_DIR ?? resolve(import.meta.dirname, "../.."),
 );
 export const SUPERVISOR_GUIDANCE = [
 	"Pi Sych is a small mechanical substrate; skills and humans own semantic judgment.",
@@ -64,7 +58,6 @@ export function formatDispatchWorkerCallSummary(
 	args: Pick<DispatchRequest, "task" | "modelRole" | "timeoutMs">,
 ) {
 	return [
-		"Dispatch worker",
 		`task-summary: ${compactTaskSummary(args.task)}`,
 		`model: ${args.modelRole ?? "catalog default"}`,
 		`timeout: ${formatTimeout(args.timeoutMs ?? DEFAULT_TIMEOUT_MS)}`,
@@ -154,7 +147,7 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 			const title = theme.fg("toolTitle", theme.bold("Dispatch worker"));
 			const details = expanded
 				? `\n${JSON.stringify(args, null, 2)}`
-				: formatDispatchWorkerCallSummary(args).slice("Dispatch worker".length);
+				: `\n${formatDispatchWorkerCallSummary(args)}`;
 			return new Text(title + details, 0, 0);
 		},
 		async execute(_id, params, signal, onUpdate, ctx) {
@@ -168,7 +161,6 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 					request: params,
 					catalog: loadModelCatalog(project.projectRoot),
 					packageRoot: PACKAGE_ROOT,
-					extraExtensionPaths: remoteResearchExtensionPaths(params.remoteResearch === true),
 					onActivity: (activity) =>
 						onUpdate?.({
 							content: [

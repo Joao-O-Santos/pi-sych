@@ -37,9 +37,8 @@ export function searchLiterature(
 		throw new Error("Literature search limit must be an integer from 1 to 50");
 	const path = literatureDatabasePath(projectRoot, configDirectory);
 	if (!existsSync(path)) throw new Error(`Literature database is unavailable at ${path}`);
-	let database: DatabaseSync | undefined;
 	try {
-		database = new DatabaseSync(path, { readOnly: true });
+		using database = new DatabaseSync(path, { readOnly: true });
 		const rows = database.prepare(query).all(queryText, limit) as unknown as Record<
 			string,
 			unknown
@@ -56,8 +55,6 @@ export function searchLiterature(
 		});
 	} catch (error) {
 		throw new Error(`Literature search failed for ${path}: ${String(error)}`);
-	} finally {
-		database?.close();
 	}
 }
 export function registerLiteratureSearch(pi: ExtensionAPI, configDirectory?: string): void {

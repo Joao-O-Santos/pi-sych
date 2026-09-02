@@ -2,7 +2,6 @@
 
 import { execFileSync } from "node:child_process";
 import { writeFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
 
 const latestReleaseUrl = "https://api.github.com/repos/jgm/pandoc/releases/latest";
 
@@ -90,4 +89,4 @@ export async function installLatestPandoc({
 	return asset;
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) await installLatestPandoc();
+if (process.argv[1] === import.meta.filename) await installLatestPandoc();
