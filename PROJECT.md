@@ -75,14 +75,14 @@ metadata---not this narrative---for the current release identifier.
 
 ## Previous action
 
-{verified} Audited public documentation against the implementation,
-strengthened the README opening and onboarding order, clarified worker
-bootstrap, repaired source and Pages links, and documented Plannotator's
-`.md`/`.mdx` annotation restriction. The complete local `make verify`
-gate passed with 146 tests.
+{verified} Prepared 6.3.1 patch metadata for the reviewed documentation
+corrections: strengthened the README opening and onboarding order,
+clarified worker bootstrap, repaired source and Pages links, and
+documented Plannotator's `.md`/`.mdx` annotation restriction. The
+complete local `make verify` gate passed with 146 tests.
 
 ## Immediate next step
 
-{accepted} None at present. Do not approve node-pty scripts, run npm
-audit remediation, or perform another release without explicit
-instruction.
+{accepted} Await owner direction on committing or releasing the prepared
+patch. Do not tag, push, publish, approve node-pty scripts, or run npm
+audit remediation without explicit instruction.

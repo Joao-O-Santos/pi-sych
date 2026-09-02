@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-02T10:25:46.781Z",
+  "confirmedAt": "2026-09-02T10:40:02.467Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:0a787497aec3ca973081b0bb0c4833a5858372e3b27ece77bd9184679297a0eb",
+      "fingerprint": "sha256:987ca4131b74a9c693f0f8c598738f26d898801ef32176f92e8ac1cd38300b10",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,8 +15,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-09-02T10:25:46.781Z",
-        "reason": "Owner authorized project-file update after strongest-supervisor documentation review; implementation/documentation audit completed, README positioning and onboarding revised, factual Plannotator/link/bootstrap corrections applied, and full make verify passed with 146 tests."
+        "at": "2026-09-02T10:40:02.467Z",
+        "reason": "Owner authorized 6.3.1 patch-version preparation for the reviewed documentation corrections; package and lock metadata are synchronized, README uses dynamic registry metadata and needs no content change, compatibility remains documentation-only with no migration, and make verify passed with 146 tests."
       }
     },
     {
@@ -46,13 +46,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-09-02T10:25:46.781Z",
-        "reason": "Owner authorized project-file update after strongest-supervisor documentation review; implementation/documentation audit completed, README positioning and onboarding revised, factual Plannotator/link/bootstrap corrections applied, and full make verify passed with 146 tests."
+        "at": "2026-09-02T10:40:02.467Z",
+        "reason": "Owner authorized 6.3.1 patch-version preparation for the reviewed documentation corrections; package and lock metadata are synchronized, README uses dynamic registry metadata and needs no content change, compatibility remains documentation-only with no migration, and make verify passed with 146 tests."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:7b16657fe110cb535bdbbed9b684ba8167b43953b71ea36ba7544e5a160a1735",
+      "fingerprint": "sha256:cf86f47bf4db0644d028ce47b091b7b30ea508db4cc7b8d9352d85e9a350030b",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -66,8 +66,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-09-02T01:09:10.529Z",
-        "reason": "Release metadata reviewed for authorized stable v6.3.0 minor release; README package links and dynamic registry badges remain valid."
+        "at": "2026-09-02T10:40:02.467Z",
+        "reason": "Owner authorized 6.3.1 patch-version preparation for the reviewed documentation corrections; package and lock metadata are synchronized, README uses dynamic registry metadata and needs no content change, compatibility remains documentation-only with no migration, and make verify passed with 146 tests."
       }
     },
     {
