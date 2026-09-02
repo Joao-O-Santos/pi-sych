@@ -25,6 +25,19 @@ It is deliberately not an autonomous project manager or a hierarchy of
 persistent agents. It does not silently decide what a project means or
 promote model output into project truth.
 
+At a glance, you describe the work in ordinary language; Pi Sych makes
+project files and task-specific guidance available and, when useful,
+helps the supervisor give one bounded task to a fresh worker. You review
+the result and retain consequential decisions.
+
+![Pi Sych overview: a request can use task-specific skills and project
+files, optionally involve a focused worker, and return for human review
+and decision](docs/img/workflow.png)
+
+This is an orientation, not a required sequence or a complete runtime
+contract. Direct work need not use a worker, skills guide rather than
+decide, and important decisions remain yours.
+
 Pi Sych requires Node 26 or newer and is installed as a package for
 [Pi](https://pi.dev/). In this README, the **supervisor** is the model
 in your main Pi session. A **worker** is a separate, short-lived model
@@ -82,8 +95,8 @@ contexts.
 6.  After you approve the result, Pi Sych can acknowledge the reviewed
     files and identify any dependent files that now require attention.
 
-[![Pi Sych review and edit workflow: independent review, human decision,
-clean-context editing, fresh verification, and
+[![Detailed review and edit workflow: independent review, human
+decision, clean-context editing, fresh verification, and
 acknowledgement](docs/img/review_workflow.png)](docs/review-workflow.md)
 
 The separation between review and editing is deliberate. Rejected

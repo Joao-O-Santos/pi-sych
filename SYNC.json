@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-02T10:40:02.467Z",
+  "confirmedAt": "2026-09-02T11:55:17.820Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:987ca4131b74a9c693f0f8c598738f26d898801ef32176f92e8ac1cd38300b10",
+      "fingerprint": "sha256:e1ab1f5087e1a22edcfdae6916ad3c38c35d25050781daeaf6f03c0b69c31ee5",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,8 +15,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-09-02T10:40:02.467Z",
-        "reason": "Owner authorized 6.3.1 patch-version preparation for the reviewed documentation corrections; package and lock metadata are synchronized, README uses dynamic registry metadata and needs no content change, compatibility remains documentation-only with no migration, and make verify passed with 146 tests."
+        "at": "2026-09-02T11:55:17.820Z",
+        "reason": "Owner reviewed and accepted the final generic workflow image unchanged, including the orchestrator selecting relevant skills. Documentation integration, retained detailed workflow, image packaging/site staging, and the complete 146-test verification gate are complete."
       }
     },
     {
@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:209e451f4c8b6c9e1233d0c8f2b0c38eb67e4f2ee620ddfe2e1a8bdc16dd5544",
+      "fingerprint": "sha256:a922b85ee371cf855a3cdb4dee2a23f4b01b9041f955ba7b90686841f3122a29",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,8 +46,8 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-09-02T10:40:02.467Z",
-        "reason": "Owner authorized 6.3.1 patch-version preparation for the reviewed documentation corrections; package and lock metadata are synchronized, README uses dynamic registry metadata and needs no content change, compatibility remains documentation-only with no migration, and make verify passed with 146 tests."
+        "at": "2026-09-02T11:55:17.820Z",
+        "reason": "Owner reviewed and accepted the final generic workflow image unchanged, including the orchestrator selecting relevant skills. Documentation integration, retained detailed workflow, image packaging/site staging, and the complete 146-test verification gate are complete."
       }
     },
     {

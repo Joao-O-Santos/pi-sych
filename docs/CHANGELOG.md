@@ -11,15 +11,17 @@ state.
 
 ### Changed
 
-- Strengthen README positioning and move Quick start earlier; clarify
-  worker bootstrap; fix source and Pages links; and document the actual
-  `.md`/`.mdx` Plannotator annotation boundary.
+- Strengthen README positioning and move Quick start earlier; add a
+  simpler primary workflow overview for general audiences while
+  retaining the detailed review diagram; clarify worker bootstrap; fix
+  source and Pages links; and document the actual `.md`/`.mdx`
+  Plannotator annotation boundary.
 
 ### Compatibility
 
-This documentation and release-metadata correction remains within the
-public contract. It changes no runtime behavior or supported interface
-and requires no migration.
+This patch updates the **Packaged public documentation** row of the
+public contract. It changes no runtime behavior or supported interface,
+stored state, or default side effect and requires no migration.
 
 ## v6.3.0
 

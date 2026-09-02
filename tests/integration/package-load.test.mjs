@@ -237,6 +237,8 @@ test("packed install omitting optional dependencies retains the core package", a
 		"docs/CONTRIBUTING.md",
 		"docs/LICENSE.md",
 		"docs/LICENSES/BSD-3-Clause",
+		"docs/img/workflow.png",
+		"docs/img/review_workflow.png",
 		"templates/config.json",
 		"site/page.html",
 		"site/static/styles.css",

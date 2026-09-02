@@ -66,23 +66,25 @@ role, and effective timeout for collapsed `dispatch_worker` calls, and
 shows the complete submitted request when one is expanded. Benchmark
 timeouts remain terminal, fixture manifests cover copied files, and
 configured paths reject whitespace-only values. Public documentation now
-leads with the file-first project-continuity problem, presents Quick
-start earlier, and accurately describes worker bootstrap, generated
-references, and the `.md`/`.mdx` Plannotator annotation boundary.
-Runtime source is 2,149 nonblank lines (2,150 rounded); blank
+leads with the file-first project-continuity problem, presents a
+general-audience workflow overview before Quick start while retaining
+the detailed review diagram, and accurately describes worker bootstrap,
+generated references, and the `.md`/`.mdx` Plannotator annotation
+boundary. Runtime source is 2,149 nonblank lines (2,150 rounded); blank
 readability spacing is excluded. Use the signed Git tag and npm registry
 metadata---not this narrative---for the current release identifier.
 
 ## Previous action
 
-{verified} Prepared 6.3.1 patch metadata for the reviewed documentation
-corrections: strengthened the README opening and onboarding order,
-clarified worker bootstrap, repaired source and Pages links, and
-documented Plannotator's `.md`/`.mdx` annotation restriction. The
-complete local `make verify` gate passed with 146 tests.
+{accepted} Integrated the owner-reviewed general-audience workflow
+overview as the first README visual, retained the detailed review and
+revision diagram, and ensured both images are packaged. The owner
+confirmed that the orchestrator may choose relevant skills; this
+decision overrides the independent review's contrary concern about user
+selection. The complete local `make verify` gate passed with 146 tests
+and the site build resolved both images.
 
 ## Immediate next step
 
-{accepted} Await owner direction on committing or releasing the prepared
-patch. Do not tag, push, publish, approve node-pty scripts, or run npm
+{accepted} None at present. Do not approve node-pty scripts or run npm
 audit remediation without explicit instruction.

@@ -2,11 +2,17 @@
 
 Pi Sych can separate independent review, accepted revisions, and final
 verification into fresh worker processes. This is a recommended workflow
-pattern rather than a runtime-enforced pipeline.
+pattern rather than a runtime-enforced pipeline. The README's
+[introductory overview](../README.md) is a simpler orientation; this
+diagram shows the fuller review pattern.
 
 ![Review and revision workflow: independent review, human decision,
 clean-context editing, fresh verification, and
 acknowledgement](img/review_workflow.png)
+
+In the diagram, "fresh context" means no prior supervisor transcript or
+review debate. The worker still receives the selected artifact, context
+files, and task brief needed for its assigned job.
 
 ## What problem this addresses
 
