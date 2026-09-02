@@ -9,23 +9,21 @@ version](https://img.shields.io/npm/v/pi-sych.svg)](https://www.npmjs.com/packag
 downloads](https://img.shields.io/npm/dt/pi-sych.svg)](https://www.npmjs.com/package/pi-sych)
 [![license](https://img.shields.io/npm/l/pi-sych.svg)](https://gitlab.com/Joao-O-Santos/pi-sych/-/blob/main/docs/LICENSE.md)
 
-Pi Sych is a small Pi package for research, writing, analysis, and code
-projects that need to remain understandable beyond a single LLM
-conversation.
+Pi Sych helps serious LLM-assisted projects remain understandable beyond
+one conversation. It is a small Pi package that keeps durable state in
+ordinary files, gives bounded tasks to fresh model contexts, and keeps
+consequential decisions with the user.
 
-Long conversations accumulate abandoned ideas, reviewer arguments, stale
-assumptions, and decisions that may never leave the chat. Memory systems
-can help, but they can also become large, opaque, or another source of
-irrelevant context. Pi Sych explores a file-first alternative: keep
-durable project knowledge in ordinary documents, give short-lived
-workers only the context needed for one task, and leave consequential
-decisions with the user.
+Long chats mix accepted decisions with stale assumptions, rejected
+ideas, and review debate. That makes it easy for a later task to inherit
+context that was discussed but not adopted. Pi Sych takes a file-first
+approach: ordinary project files form the durable record, mechanical
+status reports changed content and dependency impact, and short-lived
+workers make clean-context delegation and independent review possible.
 
-It is not an autonomous project manager or a hierarchy of persistent
-agents. It provides a small set of mechanisms for keeping project state
-visible, separating tasks when fresh context helps, reviewing changes
-independently, and handing work between people or models without relying
-on hidden conversational memory.
+It is deliberately not an autonomous project manager or a hierarchy of
+persistent agents. It does not silently decide what a project means or
+promote model output into project truth.
 
 Pi Sych requires Node 26 or newer and is installed as a package for
 [Pi](https://pi.dev/). In this README, the **supervisor** is the model
@@ -34,10 +32,41 @@ process created for one bounded task. A **skill** is reusable model
 guidance, not a persistent agent. `project_status` is the mechanical
 tool that checks or acknowledges project state.
 
+## Quick start
+
+Install Pi Sych:
+
+``` sh
+pi install npm:pi-sych
+```
+
+A project can begin with the starter
+[`PROJECT.md`](https://gitlab.com/Joao-O-Santos/pi-sych/-/blob/main/templates/PROJECT.md).
+Add the starter
+[`SYNC.json`](https://gitlab.com/Joao-O-Santos/pi-sych/-/blob/main/templates/SYNC.json)
+when you want mechanical fingerprint and dependency tracking for project
+files.
+
+Open the project in Pi and inspect its state:
+
+``` text
+/pi-sych-status
+```
+
+The status command reports tracked files, missing files, declared
+dependency impact, project-file problems, and pending review proposals.
+It does not decide whether a change is scientifically, conceptually, or
+editorially correct.
+
+Worker setup is optional. Direct work with project files and skills does
+not require it. To dispatch bounded fresh workers, configure a private
+model catalogue and initialize a worker directory. See
+[configuration](docs/configuration.md) for worker setup.
+
 ## A typical research workflow
 
-Pi Sych does not impose a fixed workflow. One useful pattern is to
-separate independent review, revision, and verification into fresh
+Pi Sych does not impose a fixed workflow. One useful worked pattern is
+to separate independent review, revision, and verification into fresh
 contexts.
 
 1.  You write or update a manuscript.
@@ -68,30 +97,7 @@ A fresh edit worker given the accepted correction can instead produce
 the clean statement "Y."
 
 See the [review and revision workflow](docs/review-workflow.md) for the
-complete example and its limits.
-
-## Quick start
-
-Install Pi Sych:
-
-``` sh
-pi install npm:pi-sych
-```
-
-Open a project in Pi and inspect its state:
-
-``` text
-/pi-sych-status
-```
-
-The status command reports tracked files, missing files, declared
-dependency impact, project-file problems, and pending review proposals.
-It does not decide whether a change is scientifically, conceptually, or
-editorially correct.
-
-You can use Pi Sych's project files and skills directly. Separate worker
-configuration is required only when you want the supervisor to launch
-fresh model processes for bounded tasks.
+worked pattern and its limits.
 
 ## Project files as shared memory
 
@@ -198,8 +204,8 @@ Human-facing commands:
 - `/pi-sych-status` --- show mechanical project state;
 - `/pi-sych-mcp` --- inspect optional MCPorter configuration without
   printing credentials;
-- `/plannotator-annotate <project-local-file>` --- annotate a file and
-  save feedback beside it;
+- `/plannotator-annotate <project-local-markdown-file>` --- annotate a
+  project-local `.md` or `.mdx` file and save feedback beside it;
 - `/plannotator-last` --- annotate the last assistant response and
   return the feedback to the conversation; and
 - `/plannotator-review` --- open Plannotator code review for current
@@ -255,18 +261,17 @@ database resolution and `literatureDatabase`.
 ## Optional: enable workers
 
 Direct work does not require a worker model catalogue. To let the
-supervisor launch separate workers, create a private catalogue and
-initialize the worker runtime once:
+supervisor launch separate workers, first create a private catalogue. A
+common user-level setup begins with:
 
 ``` sh
 mkdir -p ~/.config/pi/pi-sych
 $EDITOR ~/.config/pi/pi-sych/models.json
-node /path/to/pi-sych/scripts/bootstrap-worker-agent-dir.mjs \
-  --agent-dir ~/.config/pi/pi-sych/worker-agent
 ```
 
-Replace `/path/to/pi-sych` with the package location used by your Pi
-installation.
+Then request a worker dispatch. If the worker directory is not yet
+initialized, Pi Sych reports the exact bootstrap command with the
+resolved package and configuration paths. Run that command once.
 
 The catalogue contains provider model identifiers and remains outside
 the package. Pi Sych does not ship credentials, rank providers, or
@@ -413,9 +418,10 @@ release changes.
 - [Development](docs/development.md) --- checks, deterministic test
   posture, style, and design constraints for contributors;
 - [Code tour](docs/code-tour.md) --- a guided map of the current runtime
-  and its [live generated code reference](code-reference.html); and
+  and its [live generated code
+  reference](https://joao-o-santos.gitlab.io/pi-sych/code-reference.html);
 - [Contributing](docs/CONTRIBUTING.md) --- issues, pull requests, and
-  release ownership; and
+  release ownership;
 - [Attribution](docs/attribution.md) --- cited influences behind the
   skills and package design, plus platform and integration
   acknowledgements.

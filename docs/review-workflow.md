@@ -103,8 +103,8 @@ modes do not remove the worker process's underlying host permissions.
 
 - `/plannotator-last` annotates the last assistant response and returns
   feedback to the conversation.
-- `/plannotator-annotate <file>` writes feedback to
-  `<file>.feedback.md`.
+- `/plannotator-annotate <file>` accepts only a project-local `.md` or
+  `.mdx` file and writes feedback to `<file>.feedback.md`.
 - `/plannotator-review` records code-review feedback in
   `<projectRoot>/PLANNOTATOR_REVIEW.md`.
 

@@ -59,16 +59,20 @@ loudly.
 ## Initialize the worker runtime
 
 Run the packaged bootstrap script once for that directory's
-`worker-agent` subdirectory:
+`worker-agent` subdirectory. If the first dispatch finds an
+uninitialized worker directory, `dispatch_worker` reports the exact
+bootstrap command with the resolved package and configuration paths. Its
+general shape is:
 
 ``` sh
-node /path/to/pi-sych/scripts/bootstrap-worker-agent-dir.mjs --agent-dir /path/to/pi-sych-config/worker-agent
+node <resolved-package-location>/scripts/bootstrap-worker-agent-dir.mjs \
+  --agent-dir <resolved-config-directory>/worker-agent
 ```
 
-The script writes a small `settings.json`, loads only the Pi Sych worker
-extension, and symlinks available authentication/model files from the
-supervisor directory. It does not copy credentials. If the directory is
-missing, `dispatch_worker` reports the exact bootstrap command it needs.
+The placeholders show the command's shape, not a command to run
+unchanged. The script writes a small `settings.json`, loads only the Pi
+Sych worker extension, and symlinks available authentication/model files
+from the supervisor directory. It does not copy credentials.
 
 Remote research has a separate opt-in configuration. The worker
 bootstrap does not create or guess that configuration.
@@ -209,10 +213,11 @@ the supported paths and behavior.
 ## Optional integrations
 
 Plannotator is a separate extension loaded lazily through its documented
-browser helpers. File annotation writes `<input>.feedback.md`;
-code-review feedback is written at the resolved project root as
-`PLANNOTATOR_REVIEW.md`. Plannotator remains a human review adapter; Pi
-Sych does not enable its plan mode.
+browser helpers. File annotation accepts only project-local `.md` and
+`.mdx` files and writes `<input>.feedback.md`; code-review feedback is
+written at the resolved project root as `PLANNOTATOR_REVIEW.md`.
+Plannotator remains a human review adapter; Pi Sych does not enable its
+plan mode.
 
 Set `remoteResearch: true` only for an assigned worker call. That worker
 receives MCPorter and the configuration directory's `mcp/mcporter.json`;

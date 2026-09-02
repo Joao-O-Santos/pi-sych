@@ -65,23 +65,24 @@ deterministic temporary fixtures, shows a compact task summary, model
 role, and effective timeout for collapsed `dispatch_worker` calls, and
 shows the complete submitted request when one is expanded. Benchmark
 timeouts remain terminal, fixture manifests cover copied files, and
-configured paths reject whitespace-only values. Runtime source is 2,149
-nonblank lines (2,150 rounded); blank readability spacing is excluded.
-Use the signed Git tag and npm registry metadata---not this
-narrative---for the current release identifier.
+configured paths reject whitespace-only values. Public documentation now
+leads with the file-first project-continuity problem, presents Quick
+start earlier, and accurately describes worker bootstrap, generated
+references, and the `.md`/`.mdx` Plannotator annotation boundary.
+Runtime source is 2,149 nonblank lines (2,150 rounded); blank
+readability spacing is excluded. Use the signed Git tag and npm registry
+metadata---not this narrative---for the current release identifier.
 
 ## Previous action
 
-{verified} Simplified the reviewed runtime and scripts with Node 26
-recursive directory reads, module path properties, explicit SQLite
-resource management, default MCPorter resolution, and direct collapsed
-worker-call rendering. Corrected benchmark timeout precedence and
-fixture completeness and rejected whitespace-only configured paths.
-Independent test design and review were completed; the full local gate
-passed with 146 tests.
+{verified} Audited public documentation against the implementation,
+strengthened the README opening and onboarding order, clarified worker
+bootstrap, repaired source and Pages links, and documented Plannotator's
+`.md`/`.mdx` annotation restriction. The complete local `make verify`
+gate passed with 146 tests.
 
 ## Immediate next step
 
-{accepted} Await owner direction on committing or releasing the reviewed
-changes. Do not approve node-pty scripts, run npm audit remediation, or
-perform another release without explicit instruction.
+{accepted} None at present. Do not approve node-pty scripts, run npm
+audit remediation, or perform another release without explicit
+instruction.

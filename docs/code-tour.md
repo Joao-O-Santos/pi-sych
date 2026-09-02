@@ -55,10 +55,10 @@ SQLite FTS5 database and comes back as metadata, snippets, scores, and
 source paths. The supported `papers` plus external-content `papers_fts`
 schema stores canonical metadata separately and indexes filepath, title,
 abstract, tags, and DOI; its full FTS5 contract and database-resolution
-order are in
-[configuration](configuration.html#local-literature-search). This keeps
-local research lookup available to a selected research worker without
-making it a supervisor-wide service.
+order are in [configuration](configuration.md#local-literature-search).
+This keeps local research lookup available to a selected research worker
+without making it a supervisor-wide service.
 
 For declarations and source links generated from the current runtime
-source, see the [live code reference](code-reference.html).
+source, see the [live generated code
+reference](https://joao-o-santos.gitlab.io/pi-sych/code-reference.html).
