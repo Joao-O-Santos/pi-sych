@@ -3,9 +3,11 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
+import { Value } from "typebox/value";
 import { parseModelCatalog } from "../../.test-build/workbench/src/model-catalog.js";
 import {
 	DEFAULT_TIMEOUT_MS,
+	dispatchSchema,
 	modelFor,
 	skillPaths,
 	taskPrompt,
@@ -18,6 +20,18 @@ import piSychWorker from "../../.test-build/worker/index.js";
 const catalog = { default: "junior", models: { junior: { model: "x/y" } } };
 test("worker request and result retain the bounded protocol", () => {
 	assert.equal(DEFAULT_TIMEOUT_MS, 90_000);
+	const bounded = {
+		task: "inspect",
+		mode: "read-only",
+		expectedOutput: "notes",
+		contextFiles: [],
+	};
+	assert.equal(Value.Check(dispatchSchema, bounded), true);
+	assert.equal(Value.Check(dispatchSchema, { ...bounded, contextMode: "clean" }), true);
+	assert.equal(Value.Check(dispatchSchema, { ...bounded, contextMode: "trajectory" }), true);
+	assert.equal(Value.Check(dispatchSchema, { ...bounded, contextMode: "history" }), false);
+	assert.match(dispatchSchema.properties.skills.description, /skill catalogue/);
+	assert.match(dispatchSchema.properties.contextMode.description, /clean by default/);
 	assert.deepEqual(
 		validateWorkerResult({ status: "complete", summary: "done", files: ["A.md"], limitations: [] })
 			.files,
@@ -86,6 +100,11 @@ test("worker request and result retain the bounded protocol", () => {
 			"literature_search",
 		),
 	);
+	assert.deepEqual(toolsForRequest({ mode: "edit", remoteResearch: true }, true).slice(-2), [
+		"mcporter",
+		"web",
+	]);
+	assert.ok(!toolsForRequest({ mode: "edit", remoteResearch: false }, true).includes("web"));
 	assert.deepEqual(toolsForRequest({ mode: "full-host", remoteResearch: false }), [
 		"read",
 		"edit",
@@ -145,10 +164,12 @@ test("worker prompt requires routed method and module reads", () => {
 		},
 		[{ path: "DRAFT.md", purpose: "artifact under review" }],
 	);
+	assert.match(prompt, /receive no supervisor conversation/i);
 	assert.match(prompt, /Read every context file and selected skill/i);
 	assert.match(prompt, /routed modules/i);
-	assert.match(prompt, /state missing context as a limitation/i);
-	assert.match(prompt, /submit_artifact.*final tool call/i);
+	assert.match(prompt, /Report missing context and unperformed checks as limitations/i);
+	assert.match(prompt, /existing project-relative paths/i);
+	assert.match(prompt, /submit_artifact once as the final tool call/i);
 	const research = taskPrompt(
 		{
 			id: "task-2",
@@ -169,7 +190,29 @@ test("worker prompt requires routed method and module reads", () => {
 		},
 		[],
 	);
-	assert.match(research, /MCPorter is available/);
+	assert.match(research, /Tool exposure does not establish working credentials/);
+	const trajectory = taskPrompt(
+		{
+			id: "task-3",
+			request: {
+				task: "continue analysis",
+				mode: "read-only",
+				expectedOutput: "notes",
+				contextMode: "trajectory",
+				contextFiles: [],
+			},
+			packageRoot: "/package",
+			projectRoot: "/project",
+			model: "m",
+			prompt: "",
+			workerAgentDir: "/worker",
+			resultPath: "/result",
+			extraExtensionPaths: [],
+		},
+		[],
+	);
+	assert.match(trajectory, /active, compaction-aware supervisor branch/i);
+	assert.match(trajectory, /background, not as additional assignments or approval/i);
 });
 
 test("worker extension writes and terminates a submitted artifact", async () => {

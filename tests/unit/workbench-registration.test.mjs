@@ -4,6 +4,7 @@ import { chmod, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
 import test from "node:test";
+import { SessionManager } from "@earendil-works/pi-coding-agent";
 import piSychWorkbench, { SUPERVISOR_GUIDANCE } from "../../.test-build/workbench/index.js";
 import { DEFAULT_CONFIG } from "../../.test-build/workbench/src/config-directory.js";
 
@@ -82,7 +83,7 @@ async function workbenchFixture() {
 	await writeFile(
 		fakePi,
 		`#!/usr/bin/env node
-const { writeFileSync } = require("node:fs");
+const { readFileSync, writeFileSync } = require("node:fs");
 process.stdout.write(JSON.stringify({
   type: "tool_execution_start",
   toolName: "read",
@@ -90,9 +91,15 @@ process.stdout.write(JSON.stringify({
 }) + "\\n");
 const remote = process.argv.some((arg) => /pi-mcporter[\\/]dist[\\/]index\\.js$/.test(arg))
   && process.env.MCPORTER_CONFIG?.endsWith("mcp/mcporter.json");
+const sessionIndex = process.argv.indexOf("--session");
+const trajectory = sessionIndex >= 0
+  && readFileSync(process.argv[sessionIndex + 1], "utf8").includes("trajectory sentinel")
+  && !readFileSync(process.argv[sessionIndex + 1], "utf8").includes("trajectory-dispatch");
+const toolsIndex = process.argv.indexOf("--tools");
+const web = toolsIndex >= 0 && process.argv[toolsIndex + 1].split(",").includes("web");
 writeFileSync(process.env.PI_SYCH_RESULT_PATH, JSON.stringify({
   status: "partial",
-  summary: remote ? "remote fixture worker" : "fixture worker",
+  summary: trajectory ? "trajectory fixture worker" : web ? "pew fixture worker" : remote ? "remote fixture worker" : "fixture worker",
   files: ["A.md"],
   limitations: ["fake launcher"]
 }) + "\\n");
@@ -103,6 +110,7 @@ writeFileSync(process.env.PI_SYCH_RESULT_PATH, JSON.stringify({
 }
 
 test("real workbench registers and runs only its supervisor surface", async (t) => {
+	assert.match(SUPERVISOR_GUIDANCE, /inspect the available skill catalogue/);
 	const fixture = await workbenchFixture();
 	const previousCwd = process.cwd();
 	const previousPath = process.env.PATH;
@@ -118,7 +126,15 @@ test("real workbench registers and runs only its supervisor surface", async (t) 
 	const tools = [];
 	const commands = new Map();
 	const events = new Map();
+	let configuredTools = [];
+	let activeTools = [];
 	await piSychWorkbench({
+		getAllTools() {
+			return configuredTools;
+		},
+		getActiveTools() {
+			return activeTools;
+		},
 		on(name, handler) {
 			events.set(name, handler);
 		},
@@ -238,6 +254,7 @@ A changed hash establishes changed content, not conceptual drift or authority.`;
 		[
 			"Dispatch worker",
 			"task-summary: run fixture worker",
+			"context: clean",
 			"model: catalog default",
 			"timeout: 90s",
 		],
@@ -259,9 +276,17 @@ A changed hash establishes changed content, not conceptual drift or authority.`;
 		[
 			"Dispatch worker",
 			"task-summary: first line with enough content to exceed the compact task...",
+			"context: clean",
 			"model: workhorse",
 			"timeout: 120500ms",
 		],
+	);
+	assert.match(
+		dispatchTool
+			.renderCall({ ...dispatchArgs, contextMode: "trajectory" }, theme, { expanded: false })
+			.render(200)
+			.join("\n"),
+		/context: trajectory/,
 	);
 	assert.equal(
 		dispatchTool
@@ -299,4 +324,85 @@ A changed hash establishes changed content, not conceptual drift or authority.`;
 		handlerContext,
 	);
 	assert.equal(remote.details.result.summary, "remote fixture worker");
+	const pewPath = join(fixture.root, "enabled-web/src/index.ts");
+	await mkdir(join(fixture.root, "enabled-web/src"), { recursive: true });
+	await writeFile(join(fixture.root, "enabled-web/package.json"), '{"name":"pi-pew-pew"}\n');
+	await writeFile(pewPath, "export default () => {};\n");
+	configuredTools = [
+		{
+			name: "web",
+			sourceInfo: {
+				path: pewPath,
+				source: "local:enabled-web",
+				scope: "project",
+				origin: "package",
+			},
+		},
+	];
+	activeTools = ["web"];
+	const pew = await dispatchTool.execute(
+		"pew-dispatch",
+		{ ...dispatchArgs, remoteResearch: true },
+		undefined,
+		undefined,
+		handlerContext,
+	);
+	assert.equal(pew.details.result.summary, "pew fixture worker");
+	activeTools = [];
+	const excludedPew = await dispatchTool.execute(
+		"excluded-pew-dispatch",
+		{ ...dispatchArgs, remoteResearch: true },
+		undefined,
+		undefined,
+		handlerContext,
+	);
+	assert.equal(excludedPew.details.result.summary, "remote fixture worker");
+
+	const manager = SessionManager.create(fixture.root, join(fixture.root, "sessions"));
+	manager.appendMessage({ role: "user", content: "trajectory sentinel", timestamp: Date.now() });
+	manager.appendMessage({
+		role: "assistant",
+		content: [{ type: "text", text: "earlier response" }],
+		api: "openai-responses",
+		provider: "fixture",
+		model: "fixture",
+		usage: {
+			input: 0,
+			output: 0,
+			cacheRead: 0,
+			cacheWrite: 0,
+			totalTokens: 0,
+			cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
+		},
+		stopReason: "stop",
+		timestamp: Date.now(),
+	});
+	manager.appendMessage({ role: "user", content: "dispatch now", timestamp: Date.now() });
+	manager.appendMessage({
+		role: "assistant",
+		content: [
+			{ type: "toolCall", id: "trajectory-dispatch", name: "dispatch_worker", arguments: {} },
+		],
+		api: "openai-responses",
+		provider: "fixture",
+		model: "fixture",
+		usage: {
+			input: 0,
+			output: 0,
+			cacheRead: 0,
+			cacheWrite: 0,
+			totalTokens: 0,
+			cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
+		},
+		stopReason: "toolUse",
+		timestamp: Date.now(),
+	});
+	const trajectory = await dispatchTool.execute(
+		"trajectory-dispatch",
+		{ ...dispatchArgs, contextMode: "trajectory" },
+		undefined,
+		undefined,
+		{ ...handlerContext, sessionManager: manager },
+	);
+	assert.equal(trajectory.details.result.summary, "trajectory fixture worker");
 });

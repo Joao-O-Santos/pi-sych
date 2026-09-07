@@ -9,15 +9,18 @@ the focused runtime modules.
 
 `dispatch_worker` is a request/result protocol rather than a task queue.
 A supervisor supplies a bounded task packet: the requested capability
-mode, expected result, relevant files, selected skills, model role, and
-timeout. The workbench passes that packet to the worker engine, which
-resolves the files, requires a bootstrapped worker directory, creates a
-temporary result location, and starts a clean Pi worker process. The
-worker can submit exactly one immutable validated result: `status`,
-`summary`, `files`, and `limitations`. Dispatch accepts it only after a
-normal exit and verifies that reported project files still exist.
-Cancellation, timeout, spawn failure, a signal exit, and a non-zero exit
-take precedence over a result file; none is a successful result.
+mode, expected result, relevant files, selected skills, model role,
+context mode, and timeout. The workbench passes that packet to the
+worker engine, which resolves the files, requires a bootstrapped worker
+directory, creates a temporary runtime location, and starts a separate
+Pi worker process. Clean context is the default. Trajectory context uses
+Pi's session manager on a private snapshot to create a temporary branch
+immediately before the exact dispatching assistant entry. The worker can
+submit exactly one immutable validated result: `status`, `summary`,
+`files`, and `limitations`. Dispatch accepts it only after a normal exit
+and verifies that reported project files still exist. Cancellation,
+timeout, spawn failure, a signal exit, and a non-zero exit take
+precedence over a result file; none is a successful result.
 
 ## Project state and SYNC
 
@@ -43,10 +46,12 @@ private settings live.
 
 MCPorter is an explicit remote-research adapter. It is only added to a
 worker that requested remote research, and its diagnostics describe
-configuration without exposing credentials. Plannotator is separate from
-the workbench: it is a narrow human-review adapter that brings feedback
-from a message or file back into the review flow rather than controlling
-plans or project state.
+configuration without exposing credentials. Such a worker also receives
+PEW-PEW when the supervisor's active `web` tool has validated
+`pi-pew-pew` package provenance; disabled or excluded PEW-PEW remains
+absent. Plannotator is separate from the workbench: it is a narrow
+human-review adapter that brings feedback from a message or file back
+into the review flow rather than controlling plans or project state.
 
 Literature search is a worker tool. The worker extension always
 registers it, but the worker engine exposes it only when the selected

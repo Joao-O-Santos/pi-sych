@@ -74,8 +74,12 @@ unchanged. The script writes a small `settings.json`, loads only the Pi
 Sych worker extension, and symlinks available authentication/model files
 from the supervisor directory. It does not copy credentials.
 
-Remote research has a separate opt-in configuration. The worker
-bootstrap does not create or guess that configuration.
+Remote research has a separate per-dispatch opt-in. The worker bootstrap
+does not create or guess its integrations. MCPorter uses the configured
+path described below. If PEW-PEW is already enabled and its `web` tool
+is active in the supervisor, Pi Sych validates its loaded package
+provenance and may expose that same extension to the remote-research
+worker. It does not discover or override disabled packages.
 
 ## Local literature search
 
@@ -219,7 +223,21 @@ written at the resolved project root as `PLANNOTATOR_REVIEW.md`.
 Plannotator remains a human review adapter; Pi Sych does not enable its
 plan mode.
 
-Set `remoteResearch: true` only for an assigned worker call. That worker
-receives MCPorter and the configuration directory's `mcp/mcporter.json`;
-ordinary workers do not. `/pi-sych-mcp` reports whether the extension
-and configuration are available without printing credentials.
+Set `remoteResearch: true` when the worker's assignment requires remote
+retrieval. This adds MCPorter using the configured `mcporterConfig` path
+(default: `mcp/mcporter.json` relative to the resolved configuration
+directory); ordinary workers do not receive that integration. If the
+supervisor's active `web` tool comes from a loaded, valid `pi-pew-pew`
+package, the remote-research worker also receives that extension and
+`web`. An absent, disabled, or excluded PEW-PEW tool remains absent.
+`/pi-sych-mcp` reports whether MCPorter and its configuration are
+available without printing credentials.
+
+`dispatch_worker.contextMode` is independent of this integration. It
+defaults to `clean`, which starts without a conversation session. Set it
+to `trajectory` only when the prior supervisor conversation materially
+helps the assignment. Trajectory mode requires a persisted exact
+tool-call boundary, creates a private native branch immediately before
+the assistant entry containing that dispatch, and fails clearly rather
+than falling back to clean. Temporary session material is removed after
+every outcome and the live supervisor session is not moved or rewritten.

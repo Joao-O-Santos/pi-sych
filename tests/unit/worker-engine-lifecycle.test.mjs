@@ -146,7 +146,7 @@ for (const [label, signal] of [
 	["timeout", undefined],
 	["abort", "abort"],
 ]) {
-	test(`${label} followed by child error clears forced termination`, async (t) => {
+	test(`${label} keeps termination ownership after a running child error`, async (t) => {
 		t.mock.timers.enable({ apis: ["setTimeout"] });
 		const root = await mkdtemp(join(tmpdir(), "pi-sych-launcher-error-"));
 		t.after(() => rm(root, { recursive: true, force: true }));
@@ -156,12 +156,19 @@ for (const [label, signal] of [
 				launchSpec(root, { ...(signal ? { signal: controller.signal } : {}) }),
 				fake.spawn,
 			);
+		fake.child.emit("spawn");
 		if (signal) controller.abort();
 		else t.mock.timers.tick(100);
-		fake.child.emit("error", new Error("closed unexpectedly"));
-		assert.deepEqual((await launched).classification, signal ? "cancelled" : "timeout");
+		fake.child.emit("error", new Error("SIGTERM failed while process is running"));
 		t.mock.timers.tick(2_000);
-		assert.deepEqual(fake.child.kills, ["SIGTERM"]);
+		assert.deepEqual(fake.child.kills, ["SIGTERM", "SIGKILL"]);
+		fake.child.emit("error", new Error("SIGKILL also reported an error"));
+		let settled = false;
+		void launched.then(() => (settled = true));
+		await Promise.resolve();
+		assert.equal(settled, false);
+		fake.child.emit("close", null, "SIGKILL");
+		assert.deepEqual((await launched).classification, signal ? "cancelled" : "timeout");
 	});
 }
 

@@ -9,10 +9,11 @@ inspectable.
 ## Before changing code
 
 Read `AGENTS.md`, `PROJECT.md`, `docs/ARCHITECTURE.md`, and the relevant
-tests. Treat `PLAN.md` as the accepted task boundary when one is
-present. Keep semantic interpretation in skills and normal supervisor
-conversation; keep path, process, schema, hash, and persistence
-invariants mechanical in TypeScript.
+tests. Treat an explicitly approved `PLAN.md` as the accepted task
+boundary; file existence alone does not establish approval. Keep
+semantic interpretation in skills and normal supervisor conversation;
+keep path, process, schema, hash, and persistence invariants mechanical
+in TypeScript.
 
 For a substantive behavior change, first write or obtain an independent
 test design. Implement the smallest focused correction, then obtain an
@@ -108,8 +109,9 @@ private context.
 - No command/path pseudo-security or sandbox claims.
 - No credentials, provider choices, model ranking, or personal examples
   in the public package.
-- Workers receive a smallest-complete explicit packet and no supervisor
-  transcript.
+- Workers receive a smallest-complete explicit assignment; clean mode
+  receives no supervisor transcript, while trajectory mode receives only
+  the persisted branch before its exact dispatch entry.
 - Durable consequential changes remain approval-gated.
 - Use current public Pi and Plannotator interfaces rather than importing
   undocumented internals.

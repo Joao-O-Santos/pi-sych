@@ -10,8 +10,14 @@ import {
 	piSychConfigDirectory,
 	piSychConfigPath,
 } from "./src/config-directory.js";
-import { formatMcporterDiagnostic, inspectMcporter, mcporterConfigPath } from "./src/mcporter.js";
+import {
+	formatMcporterDiagnostic,
+	inspectMcporter,
+	mcporterConfigPath,
+	remoteResearchExtensionPaths,
+} from "./src/mcporter.js";
 import { loadModelCatalog, loadOptionalModelCatalog } from "./src/model-catalog.js";
+import { enabledPewPewExtension } from "./src/pew-pew.js";
 import { resolveProject, showPath } from "./src/project-files.js";
 import {
 	acknowledgeProjectStatus,
@@ -34,7 +40,7 @@ export const SUPERVISOR_GUIDANCE = [
 	"Keep replies concise. Work directly unless independent context would materially improve the result.",
 	"Use project_status for mechanical state; changed content is not conceptual drift.",
 	`For Pi Sych questions, read ${PACKAGE_ROOT}/README.md and its linked documentation.`,
-	"dispatch_worker defaults to 90 seconds; choose context, skills, model role, and timeout deliberately. Worker modes are not sandboxes.",
+	"Before dispatch, inspect the available skill catalogue and select only skills valuable for the assignment. dispatch_worker defaults to clean context and 90 seconds. Use trajectory context only when prior conversation materially helps; choose context, model role, and timeout deliberately. Worker modes are not sandboxes.",
 	"Treat the configured proposal inbox as human-review proposal state: report its pending count through project_status and read it only when the user requests inbox review.",
 ].join("\n");
 const statusSchema = Type.Object({
@@ -55,10 +61,11 @@ const formatTimeout = (timeoutMs: number) => {
 	return `${timeoutMs}ms`;
 };
 export function formatDispatchWorkerCallSummary(
-	args: Pick<DispatchRequest, "task" | "modelRole" | "timeoutMs">,
+	args: Pick<DispatchRequest, "task" | "contextMode" | "modelRole" | "timeoutMs">,
 ) {
 	return [
 		`task-summary: ${compactTaskSummary(args.task)}`,
+		`context: ${args.contextMode ?? "clean"}`,
 		`model: ${args.modelRole ?? "catalog default"}`,
 		`timeout: ${formatTimeout(args.timeoutMs ?? DEFAULT_TIMEOUT_MS)}`,
 	].join("\n");
@@ -141,7 +148,14 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 	pi.registerTool({
 		name: "dispatch_worker",
 		label: "Dispatch worker",
-		description: "Run one short-lived clean-context worker and return its validated result.",
+		description: "Run one short-lived bounded worker and return its validated result.",
+		promptSnippet: "Delegate one bounded task with explicit clean or inherited trajectory context",
+		promptGuidelines: [
+			"Use clean context by default for independent work and review.",
+			"Use trajectory context only when the prior supervisor conversation materially improves the assigned task.",
+			"Context mode does not change worker tools, permissions, model, skills, files, or research access.",
+			"Set remoteResearch: true only when remote retrieval is part of the assigned task. It adds MCPorter and may reuse an already active, validated PEW-PEW web tool; selecting research alone adds only local literature_search.",
+		],
 		parameters: dispatchSchema,
 		renderCall(args, theme, { expanded }) {
 			const title = theme.fg("toolTitle", theme.bold("Dispatch worker"));
@@ -150,29 +164,40 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 				: `\n${formatDispatchWorkerCallSummary(args)}`;
 			return new Text(title + details, 0, 0);
 		},
-		async execute(_id, params, signal, onUpdate, ctx) {
-			const project = await resolveProject(ctx.cwd),
-				outcome = await dispatchWorker({
-					project,
-					workerAgentDir: piSychConfigPath("workerAgentDir", {
-						projectRoot: project.projectRoot,
+		async execute(id, params, signal, onUpdate, ctx) {
+			const project = await resolveProject(ctx.cwd);
+			const pewPewPath = params.remoteResearch
+				? await enabledPewPewExtension(pi.getAllTools(), pi.getActiveTools())
+				: undefined;
+			const outcome = await dispatchWorker({
+				project,
+				workerAgentDir: piSychConfigPath("workerAgentDir", {
+					projectRoot: project.projectRoot,
+				}),
+				piSychConfigDirectory: piSychConfigDirectory({ projectRoot: project.projectRoot }),
+				request: params,
+				catalog: loadModelCatalog(project.projectRoot),
+				packageRoot: PACKAGE_ROOT,
+				extraExtensionPaths: [
+					...remoteResearchExtensionPaths(params.remoteResearch === true),
+					...(pewPewPath ? [pewPewPath] : []),
+				],
+				...(pewPewPath ? { webExtensionPath: pewPewPath } : {}),
+				...(params.contextMode === "trajectory"
+					? { trajectory: { manager: ctx.sessionManager, toolCallId: id } }
+					: {}),
+				onActivity: (activity) =>
+					onUpdate?.({
+						content: [
+							{
+								type: "text",
+								text: `Worker activity:\n${activity.map((item) => `- ${item}`).join("\n")}`,
+							},
+						],
+						details: { activity },
 					}),
-					piSychConfigDirectory: piSychConfigDirectory({ projectRoot: project.projectRoot }),
-					request: params,
-					catalog: loadModelCatalog(project.projectRoot),
-					packageRoot: PACKAGE_ROOT,
-					onActivity: (activity) =>
-						onUpdate?.({
-							content: [
-								{
-									type: "text",
-									text: `Worker activity:\n${activity.map((item) => `- ${item}`).join("\n")}`,
-								},
-							],
-							details: { activity },
-						}),
-					...(signal ? { signal } : {}),
-				});
+				...(signal ? { signal } : {}),
+			});
 			return {
 				content: [{ type: "text", text: formatDispatchWorkerOutcome(outcome) }],
 				details: outcome,

@@ -7,9 +7,10 @@ description: Use and maintain Pi Sych projects, state, artifacts, dependencies, 
 
 Keep state explicit and proportionate. User and accepted project decisions
 override package guidance; mechanical facts never settle semantic judgment.
-Read configured canonical roles before acting. An explicit owner decision is
-accepted input unless marked tentative; inferences and agent-proposed durable
-state require review. Label observations, assumptions, uncertainty, accepted
+Read the configured canonical files needed for the task. The configured inbox
+contains unreviewed proposals; read it only when the user requests inbox review.
+An explicit owner decision is accepted input unless marked tentative; inferences
+and agent-proposed durable state require review. Label observations, assumptions, uncertainty, accepted
 decisions, and unresolved questions. Do not create workflow or durable state
 without real use and required approval.
 

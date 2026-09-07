@@ -14,8 +14,8 @@ downloads](https://img.shields.io/npm/dt/pi-sych.svg)](https://www.npmjs.com/pac
 
 Pi Sych helps serious LLM-assisted projects remain understandable beyond
 one conversation. It is a small Pi package that keeps durable state in
-ordinary files, gives bounded tasks to fresh model contexts, and keeps
-consequential decisions with the user.
+ordinary files, gives bounded tasks to short-lived model contexts, and
+keeps consequential decisions with the user.
 
 Long chats mix accepted decisions with stale assumptions, rejected
 ideas, and review debate. That makes it easy for a later task to inherit
@@ -30,8 +30,8 @@ promote model output into project truth.
 
 At a glance, you describe the work in ordinary language; Pi Sych makes
 project files and task-specific guidance available and, when useful,
-helps the supervisor give one bounded task to a fresh worker. You review
-the result and retain consequential decisions.
+helps the supervisor give one bounded task to a short-lived worker. You
+review the result and retain consequential decisions.
 
 ![Pi Sych overview: a request can use task-specific skills and project
 files, optionally involve a focused worker, and return for human review
@@ -75,8 +75,8 @@ It does not decide whether a change is scientifically, conceptually, or
 editorially correct.
 
 Worker setup is optional. Direct work with project files and skills does
-not require it. To dispatch bounded fresh workers, configure a private
-model catalogue and initialize a worker directory. See
+not require it. To dispatch bounded workers, configure a private model
+catalogue and initialize a worker directory. See
 [configuration](docs/configuration.md) for worker setup.
 
 ## A typical research workflow
@@ -162,8 +162,8 @@ the final prose to retain traces of the debate. Rejected alternatives
 may reappear as unnecessary qualifications, contrasts, defensive
 language, or explanations that the reader never needed.
 
-Pi Sych can instead launch a fresh worker with a deliberately selected
-packet:
+Pi Sych can instead launch a short-lived worker in the default `clean`
+context mode with a deliberately selected packet:
 
 - the task;
 - the expected result;
@@ -173,13 +173,19 @@ packet:
 - optional integrations; and
 - a bounded timeout.
 
-The worker does not receive the supervisor transcript. Its result
-returns to the supervisor, where the user decides what should happen
-next.
+A `trajectory` worker receives Pi's active, compaction-aware supervisor
+branch ending before the assistant message containing that dispatch; it
+does not receive that message or any of its tool calls. This is useful
+when prior exploration materially helps the bounded assignment. It fails
+rather than silently becoming clean when the persisted branch boundary
+is unavailable. Context mode is independent of files, skills, model,
+tool mode, and research access.
 
-This is context isolation, not an operating-system sandbox. The
-supervisor still chooses what the worker receives. Depending on the
-task, that may include editing tools, Bash, or remote-research tools.
+In either mode the result returns to the supervisor, where the user
+decides what should happen next. Context selection is not an
+operating-system sandbox. The supervisor still chooses what the worker
+receives. Depending on the task, that may include editing tools, Bash,
+or remote-research tools.
 
 ## What Pi Sych can help with
 
@@ -192,7 +198,8 @@ when it is relevant.
 - `write` --- scholarly, professional, instructional, slide, and web
   content;
 - `analyze` --- quantitative, qualitative, R/Quarto, and reporting work;
-- `code` --- architecture, testing, Git, npm, and web implementation;
+- `code` --- software design, implementation, testing, automation, CLI
+  and developer tooling, integration, Git, npm, and web work;
 - `review` --- structure, evidence, detail, copyediting, code, analysis,
   response, and verification; and
 - `research` --- search, source assessment, synthesis, and citations.
@@ -253,10 +260,11 @@ Pi Sych gives the supervisor two mechanical tools:
 
 In Pi's terminal interface, a collapsed `dispatch_worker` call shows a
 compact task summary, requested model role (or catalog default), and
-effective timeout. Expand it with the configured tool-expansion shortcut
-(`Ctrl+O` by default) to inspect its complete submitted request. While
-it runs, its tool row shows a bounded live list of worker tool starts;
-it is activity visibility, not a worker console or result protocol.
+effective context mode and timeout. Omitted context is presented as the
+`clean` default. Expand it with the configured tool-expansion shortcut
+(`Ctrl+O` by default) to inspect the raw submitted request. While it
+runs, its tool row shows a bounded live list of worker tool starts; it
+is activity visibility, not a worker console or result protocol.
 
 These tools support a workflow; they do not decide what the workflow
 must be.
@@ -308,11 +316,12 @@ orchestration system:
   dependencies.
 - **Mechanical status:** `project_status` reports changed or missing
   files and affected dependants. Human review supplies the meaning.
-- **Bounded delegation:** `dispatch_worker` starts one fresh worker with
-  an explicit task, context packet, skills, model role, mode, and
-  timeout. A worker submits one immutable `status`, `summary`, `files`,
-  and `limitations` result; Pi Sych accepts it only after normal process
-  exit and validates reported project files.
+- **Bounded delegation:** `dispatch_worker` starts one short-lived
+  worker with an explicit task, clean-by-default or inherited-trajectory
+  context, files, skills, model role, tool mode, and timeout. A worker
+  submits one immutable `status`, `summary`, `files`, and `limitations`
+  result; Pi Sych accepts it only after normal process exit and
+  validates reported project files.
 - **Small working memory:** configured custom compaction uses the active
   supervisor model to produce bounded structured continuation memory,
   with Pi's standard compactor remaining available when it is disabled
@@ -385,8 +394,11 @@ When working in a Pi Sych project:
   as the durable project record;
 - work directly unless an independent context would materially improve
   the result;
-- give workers the smallest complete packet and no supervisor
-  transcript;
+- inspect the available skill catalogue before dispatch and select only
+  skills valuable for the assignment;
+- give workers the smallest complete packet; use no supervisor
+  transcript by default and inherit trajectory only when it materially
+  helps the assignment;
 - treat changed hashes as evidence of changed content, not semantic
   drift;
 - do not treat proposals, generated text, successful checks, or reviewer

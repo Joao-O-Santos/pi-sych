@@ -12,7 +12,9 @@ acknowledgement](img/review_workflow.png)
 
 In the diagram, "fresh context" means no prior supervisor transcript or
 review debate. The worker still receives the selected artifact, context
-files, and task brief needed for its assigned job.
+files, and task brief needed for its assigned job. Existing configured
+agents and style conventions are also included. Keep those files free of
+task-specific review debate when independent context matters.
 
 ## What problem this addresses
 
@@ -72,6 +74,12 @@ brief. The edit worker receives:
 It normally does not need rejected suggestions or the full review
 debate.
 
+For example: "Prepare a clean edit brief from only the corrections I
+explicitly accepted. Include the source files, evidence, constraints,
+and acceptance checks needed to implement them. Identify unresolved
+decisions. Show me the brief before dispatching; do not edit or
+acknowledge files yet."
+
 ### 5. Verify in another fresh context
 
 A verification worker receives the revised files and the original
@@ -99,8 +107,9 @@ task:
 - `edit` adds focused file editing and writing tools;
 - `full-host` exposes Bash for tasks that must run project commands or
   inspect the wider host environment; and
-- `remoteResearch: true` adds MCPorter only for an explicitly assigned
-  remote-research task.
+- `remoteResearch: true` adds MCPorter for an explicitly assigned
+  remote-research task and also reuses an active, provenance-validated
+  PEW-PEW `web` tool when one is enabled in the supervisor.
 
 These names describe visible Pi tools, not security boundaries. Tool
 modes do not remove the worker process's underlying host permissions.
@@ -122,9 +131,10 @@ supported boundary.
 
 ## What isolation does and does not guarantee
 
-Each dispatched worker is a new process with an explicit context packet
-and no supervisor transcript. Fresh processes make it possible to keep
-the accepted edit brief separate from the preceding review debate.
+Each worker in this recommended pattern is a new process using the
+default clean mode, with an explicit context packet and no supervisor
+transcript. Fresh processes make it possible to keep the accepted edit
+brief separate from the preceding review debate.
 
 The supervisor still chooses the files, skills, tools, integrations, and
 instructions included in each packet. `--tools` and `--exclude-tools`

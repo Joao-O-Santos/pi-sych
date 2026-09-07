@@ -1,6 +1,6 @@
 ---
 name: code
-description: Design, implement, test, maintain, and release software.
+description: Design, implement, test, automate, integrate, maintain, and release software, including CLI and developer tooling.
 ---
 
 # Code

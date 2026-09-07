@@ -7,6 +7,37 @@ state.
 
 ## Unreleased
 
+### Added
+
+- Add optional `dispatch_worker.contextMode`: `clean` remains the
+  default, while `trajectory` gives a worker a temporary native branch
+  of the persisted supervisor context ending immediately before the
+  exact dispatching assistant entry.
+- Reuse an already active, provenance-validated PEW-PEW `web` tool for
+  explicitly requested remote-research workers without discovering or
+  overriding disabled packages.
+
+### Changed
+
+- Show effective context mode in collapsed worker calls and broaden the
+  `code` skill description to cover automation, CLI and developer
+  tooling, and integration work.
+- Retain worker-process termination ownership across repeated child
+  errors until process close is observed.
+- Raise the nonblank runtime source cap to 2,500 for the approved native
+  trajectory and active PEW-PEW integration boundaries.
+
+### Compatibility
+
+This minor release adds optional trajectory context while preserving the
+clean default, result protocol, stored project state, model selection,
+and worker tool-mode definitions. Trajectory mode fails rather than
+falling back when its exact persisted boundary is unavailable. Existing
+requests require no schema migration. Existing `remoteResearch: true`
+calls may now also expose an active, provenance-validated PEW-PEW `web`
+tool; invalid or ambiguous active-tool provenance can fail dispatch.
+Context mode itself does not change research access or host permissions.
+
 ## v6.3.2
 
 ### Changed
