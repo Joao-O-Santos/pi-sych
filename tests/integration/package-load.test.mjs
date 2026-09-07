@@ -204,6 +204,10 @@ test("package metadata keeps attribution and release version consistent", async 
 		"./extensions/workbench/index.ts",
 		"./extensions/plannotator/index.ts",
 	]);
+	assert.equal(
+		manifest.pi.image,
+		"https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/main/docs/img/logo.png",
+	);
 	assert.deepEqual(Object.keys(manifest.optionalDependencies).sort(), [
 		"@plannotator/pi-extension",
 		"jiti",
@@ -237,6 +241,7 @@ test("packed install omitting optional dependencies retains the core package", a
 		"docs/CONTRIBUTING.md",
 		"docs/LICENSE.md",
 		"docs/LICENSES/BSD-3-Clause",
+		"docs/img/logo.png",
 		"docs/img/workflow.png",
 		"docs/img/review_workflow.png",
 		"templates/config.json",

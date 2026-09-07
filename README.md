@@ -1,5 +1,8 @@
 # Pi Sych
 
+![Pi Sych logo: inspectable files, bounded tasks, durable state, and
+human decisions](docs/img/logo.png)
+
 [![pipeline
 status](https://gitlab.com/Joao-O-Santos/pi-sych/badges/main/pipeline.svg)](https://gitlab.com/Joao-O-Santos/pi-sych/-/commits/main)
 [![coverage](https://gitlab.com/Joao-O-Santos/pi-sych/badges/main/coverage.svg?job=verify)](https://gitlab.com/Joao-O-Santos/pi-sych/-/pipelines)

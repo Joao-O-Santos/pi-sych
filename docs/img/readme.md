@@ -1,5 +1,7 @@
 # Architecture diagrams
 
+- `logo.png` is the project logo used at the top of `README.md` and as
+  the Pi package gallery preview.
 - `workflow.png` is the primary introductory overview: a request can use
   task-specific skills and project files, optionally involve a focused
   worker, and return for human review and decision. It is intended for a

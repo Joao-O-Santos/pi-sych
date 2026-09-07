@@ -66,23 +66,23 @@ role, and effective timeout for collapsed `dispatch_worker` calls, and
 shows the complete submitted request when one is expanded. Benchmark
 timeouts remain terminal, fixture manifests cover copied files, and
 configured paths reject whitespace-only values. Public documentation now
-leads with the file-first project-continuity problem, presents a
-general-audience workflow overview before Quick start while retaining
-the detailed review diagram, and accurately describes worker bootstrap,
-generated references, and the `.md`/`.mdx` Plannotator annotation
-boundary. Runtime source is 2,149 nonblank lines (2,150 rounded); blank
-readability spacing is excluded. Use the signed Git tag and npm registry
-metadata---not this narrative---for the current release identifier.
+leads with the project logo and file-first project-continuity problem,
+presents a general-audience workflow overview before Quick start while
+retaining the detailed review diagram, and accurately describes worker
+bootstrap, generated references, and the `.md`/`.mdx` Plannotator
+annotation boundary. The packaged logo is also declared as the Pi
+package gallery preview. Runtime source is 2,149 nonblank lines (2,150
+rounded); blank readability spacing is excluded. Use the signed Git tag
+and npm registry metadata---not this narrative---for the current release
+identifier.
 
 ## Previous action
 
-{accepted} Integrated the owner-reviewed general-audience workflow
-overview as the first README visual, retained the detailed review and
-revision diagram, and ensured both images are packaged. The owner
-confirmed that the orchestrator may choose relevant skills; this
-decision overrides the independent review's contrary concern about user
-selection. The complete local `make verify` gate passed with 146 tests
-and the site build resolved both images.
+{accepted} Added the project logo to the packaged documentation,
+featured it at the top of the README, and declared its repository-hosted
+PNG as the Pi package gallery preview. Manifest and packed-install
+coverage was added, and the complete local `make verify` gate passed
+with 146 tests.
 
 ## Immediate next step
 

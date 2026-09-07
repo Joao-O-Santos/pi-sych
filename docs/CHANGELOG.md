@@ -7,6 +7,21 @@ state.
 
 ## Unreleased
 
+## v6.3.2
+
+### Changed
+
+- Add the Pi Sych logo to the packaged documentation and declare it as
+  the Pi package gallery image through the `pi.image` manifest field.
+  Include the image in packed-install coverage and the generated Pages
+  site.
+
+### Compatibility
+
+This patch updates packaged documentation and package gallery metadata.
+It changes no runtime behavior, supported interface, stored state, or
+default side effect and requires no migration.
+
 ## v6.3.1
 
 ### Changed

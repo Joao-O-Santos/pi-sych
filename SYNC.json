@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-02T11:55:17.820Z",
+  "confirmedAt": "2026-09-07T17:13:25.629Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:e1ab1f5087e1a22edcfdae6916ad3c38c35d25050781daeaf6f03c0b69c31ee5",
+      "fingerprint": "sha256:46f81989a6f0f224135796e1a9fd30a9e7d599981f7bd45c0051120a26137ffe",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,8 +15,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-09-02T11:55:17.820Z",
-        "reason": "Owner reviewed and accepted the final generic workflow image unchanged, including the orchestrator selecting relevant skills. Documentation integration, retained detailed workflow, image packaging/site staging, and the complete 146-test verification gate are complete."
+        "at": "2026-09-07T17:13:25.629Z",
+        "reason": "Prepared v6.3.2 with the logo gallery metadata and changelog; local make verify passed with 146 tests and the package dry-run includes the logo."
       }
     },
     {
@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:a922b85ee371cf855a3cdb4dee2a23f4b01b9041f955ba7b90686841f3122a29",
+      "fingerprint": "sha256:0a07f3b50bd2f494fbaf0a4f93650bd1d9c18a744d478bc6977a01fd72721c5f",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,13 +46,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-09-02T11:55:17.820Z",
-        "reason": "Owner reviewed and accepted the final generic workflow image unchanged, including the orchestrator selecting relevant skills. Documentation integration, retained detailed workflow, image packaging/site staging, and the complete 146-test verification gate are complete."
+        "at": "2026-09-07T17:13:25.629Z",
+        "reason": "Prepared v6.3.2 with the logo gallery metadata and changelog; local make verify passed with 146 tests and the package dry-run includes the logo."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:cf86f47bf4db0644d028ce47b091b7b30ea508db4cc7b8d9352d85e9a350030b",
+      "fingerprint": "sha256:850ccdbd6cf67a691c9e5a85232c06b1cfe6f211afc1ee9157c5a4c1a0e96c30",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -66,8 +66,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-09-02T10:40:02.467Z",
-        "reason": "Owner authorized 6.3.1 patch-version preparation for the reviewed documentation corrections; package and lock metadata are synchronized, README uses dynamic registry metadata and needs no content change, compatibility remains documentation-only with no migration, and make verify passed with 146 tests."
+        "at": "2026-09-07T17:13:25.629Z",
+        "reason": "Prepared v6.3.2 with the logo gallery metadata and changelog; local make verify passed with 146 tests and the package dry-run includes the logo."
       }
     },
     {
