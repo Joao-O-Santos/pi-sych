@@ -55,34 +55,30 @@ independent substantive review, and no automated workflow controller.
 
 ## Current state
 
-{verified} The current implementation forwards the resolved supervisor
-Pi Sych configuration directory to isolated workers without replacing
-their Pi agent directory, so configured external literature databases
-work in normal research dispatches. It clears termination timers when a
-worker errors without closing, declares the literature surface in the
-public contract, makes native Node coverage a 90% gate, cleans
-deterministic temporary fixtures, shows a compact task summary, model
-role, and effective timeout for collapsed `dispatch_worker` calls, and
-shows the complete submitted request when one is expanded. Benchmark
-timeouts remain terminal, fixture manifests cover copied files, and
-configured paths reject whitespace-only values. Public documentation now
-leads with the project logo and file-first project-continuity problem,
-presents a general-audience workflow overview before Quick start while
-retaining the detailed review diagram, and accurately describes worker
-bootstrap, generated references, and the `.md`/`.mdx` Plannotator
-annotation boundary. The packaged logo is also declared as the Pi
-package gallery preview. Runtime source is 2,149 nonblank lines (2,150
-rounded); blank readability spacing is excluded. Use the signed Git tag
-and npm registry metadata---not this narrative---for the current release
-identifier.
+{verified} `dispatch_worker` now defaults to clean context and can
+optionally launch a private, native trajectory branch ending immediately
+before its exact dispatching assistant entry. The live supervisor
+session is not moved or rewritten; unavailable or unsafe branch
+boundaries fail clearly and temporary session material is removed on
+every outcome. Explicit remote-research workers receive MCPorter and may
+reuse an active, provenance-validated PEW-PEW `web` tool without
+enabling absent, disabled, or excluded packages. Worker prompts
+distinguish task assignment from inherited background, model-facing
+supervisor guidance requires deliberate skill-catalogue inspection, and
+public documentation covers the resulting boundaries and limits. The
+approved runtime-source cap is 2,500 nonblank lines; measured source is
+2,342 lines (about 2,350). The final local gate passed 157 tests with
+98.19% line, 91.95% branch, and 95.00% function coverage; package dry
+run, Pages and talk builds, production audit, and strongest independent
+static review also passed. Use the signed Git tag and npm registry
+metadata---not this narrative---for the current release identifier.
 
 ## Previous action
 
-{accepted} Added the project logo to the packaged documentation,
-featured it at the top of the README, and declared its repository-hosted
-PNG as the Pi package gallery preview. Manifest and packed-install
-coverage was added, and the complete local `make verify` gate passed
-with 146 tests.
+{verified} Completed clean/trajectory worker context and active PEW-PEW
+research integration, documentation, deterministic regression coverage,
+source-budget approval, final verification, and strongest independent
+review. The temporary implementation plan is complete and removed.
 
 ## Immediate next step
 

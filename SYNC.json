@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-07T17:13:25.629Z",
+  "confirmedAt": "2026-09-15T00:00:00.000Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:46f81989a6f0f224135796e1a9fd30a9e7d599981f7bd45c0051120a26137ffe",
+      "fingerprint": "sha256:e049af1a4f1e2620a7d01d5b87611d5fe18692b27dae695cd0cc6b639f5452fb",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,26 +15,26 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-09-07T17:13:25.629Z",
-        "reason": "Prepared v6.3.2 with the logo gallery metadata and changelog; local make verify passed with 146 tests and the package dry-run includes the logo."
+        "at": "2026-09-15T00:00:00.000Z",
+        "reason": "Completed clean/trajectory worker context and active PEW-PEW research integration, documentation, deterministic regression coverage, source-budget approval, final verification (157 tests, 98.19/91.95/95.00 coverage), package dry run, Pages/talk builds, production audit, and strongest independent review."
       }
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:2265c02cefc6a82cb181b5476c80fe1f84942fe9e9f3840c61c6e69345f45554",
+      "fingerprint": "sha256:e551d5d275bd8da06054c993530b10a22a7ecd7bff3c2920c7bdd782c81447ec",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-09-02T00:12:06.229Z",
-        "reason": "v6.3.0-rc.1: reviewed compact dispatch-worker call metadata, release notes, package version, independent review, and complete local verification."
+        "at": "2026-09-15T00:00:00.000Z",
+        "reason": "Documented clean/trajectory boundary, skill-catalogue inspection, exact packet requirements, and automatic canonical file inclusion for both modes."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:0a07f3b50bd2f494fbaf0a4f93650bd1d9c18a744d478bc6977a01fd72721c5f",
+      "fingerprint": "sha256:594d9c1587c703e5a11917aa94c4d3b41469010de894719c70a8c0bb8cf892e5",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,8 +46,8 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-09-07T17:13:25.629Z",
-        "reason": "Prepared v6.3.2 with the logo gallery metadata and changelog; local make verify passed with 146 tests and the package dry-run includes the logo."
+        "at": "2026-09-15T00:00:00.000Z",
+        "reason": "Updated workflow overview, trajectory branch description, skill-catalogue inspection requirement, and clean/trajectory context distinctions."
       }
     },
     {
@@ -66,34 +66,99 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-09-07T17:13:25.629Z",
-        "reason": "Prepared v6.3.2 with the logo gallery metadata and changelog; local make verify passed with 146 tests and the package dry-run includes the logo."
+        "at": "2026-09-15T00:00:00.000Z",
+        "reason": "Runtime source budget raised to 2,500; new PEW-PEW provenance module and tests included in package."
       }
     },
     {
       "path": "docs/configuration.md",
-      "fingerprint": "sha256:9ef9f6f6419e438fd66515cb130a458bd1f701a75e66295460b432bd20b3ee38",
+      "fingerprint": "sha256:b643e7650305863013987aa7547dbd15d326a44607d1bb1851ba58e7c06d5df3",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-09-02T10:25:46.781Z",
-        "reason": "Owner authorized project-file update after strongest-supervisor documentation review; implementation/documentation audit completed, README positioning and onboarding revised, factual Plannotator/link/bootstrap corrections applied, and full make verify passed with 146 tests."
+        "at": "2026-09-15T00:00:00.000Z",
+        "reason": "Added explicit mcporterConfig, clarified PEW-PEW reuse conditions, and separated integration exposure from access guarantees."
       }
     },
     {
       "path": "docs/development.md",
-      "fingerprint": "sha256:3cab987b640972e7fe5e068d44c948dc1cda8f6e3976dd2f4ca13a1dbf02571e",
+      "fingerprint": "sha256:9e89205522482fc9a23996e15b308a381918b7d5353f325e4819684fb868da3a",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "development-checks"
       ],
       "acknowledgement": {
-        "at": "2026-08-10T23:43:04.157Z",
-        "reason": "Release candidate 6.1.4: grouped layout and optional EVIDENCE cleanup are treated as a patch because supported workflows/configuration/interfaces remain compatible; package scripts are complete and full verification passed."
+        "at": "2026-09-15T00:00:00.000Z",
+        "reason": "Clarified that PLAN.md existence does not establish approval; reinforced explicit approval requirement."
+      }
+    },
+    {
+      "path": "docs/public-contract.md",
+      "fingerprint": "sha256:57a82b59a4f6a6f86b1972503ea8328484f64a33da1ed0796b20a2e942c295d7",
+      "status": "current",
+      "role": "documentation",
+      "authoritativeFor": [
+        "compatibility"
+      ],
+      "acknowledgement": {
+        "at": "2026-09-15T00:00:00.000Z",
+        "reason": "Updated remote-research integration promise: MCPorter required, PEW-PEW reuse conditional on active valid provenance, exposure does not guarantee retrieval."
+      }
+    },
+    {
+      "path": "docs/review-workflow.md",
+      "fingerprint": "sha256:d9c5b100776a5446281a8d7b9d44b318f175d534d8ff3e34222dfcf7486c0627",
+      "status": "current",
+      "role": "documentation",
+      "authoritativeFor": [
+        "review-workflow"
+      ],
+      "acknowledgement": {
+        "at": "2026-09-15T00:00:00.000Z",
+        "reason": "Added explicit handoff brief example and canonical file inclusion note for fresh review workers."
+      }
+    },
+    {
+      "path": "docs/CHANGELOG.md",
+      "fingerprint": "sha256:55a5680b3f3a27ab7292fd38ed8d04d68ec4f9027f86529da42b1a897646d24d",
+      "status": "current",
+      "role": "documentation",
+      "authoritativeFor": [
+        "changelog"
+      ],
+      "acknowledgement": {
+        "at": "2026-09-15T00:00:00.000Z",
+        "reason": "Recorded trajectory context addition, PEW-PEW reuse, 2,500 source budget, and preserved compatibility boundaries."
+      }
+    },
+    {
+      "path": "skills/code/SKILL.md",
+      "fingerprint": "sha256:6724e4c78e8d81c1804fb0556f63b6a9e81081f5b80cba561658b1900af796bf",
+      "status": "current",
+      "role": "skill",
+      "authoritativeFor": [
+        "code-skill"
+      ],
+      "acknowledgement": {
+        "at": "2026-09-15T00:00:00.000Z",
+        "reason": "Expanded scope to explicitly include automation, CLI tooling, developer tools, and integration work."
+      }
+    },
+    {
+      "path": "skills/project/SKILL.md",
+      "fingerprint": "sha256:54776f830307d4b3a2e6e0ed3e5849ac56960073761731af39e65efe7b838a43",
+      "status": "current",
+      "role": "skill",
+      "authoritativeFor": [
+        "project-skill"
+      ],
+      "acknowledgement": {
+        "at": "2026-09-15T00:00:00.000Z",
+        "reason": "Added canonical inbox guidance (read only on user request) and clarified needed-file reading over automatic role reading."
       }
     }
   ]
