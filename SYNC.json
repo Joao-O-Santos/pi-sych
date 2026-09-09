@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-15T00:00:00.000Z",
+  "confirmedAt": "2026-09-09T16:34:30.961Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -72,15 +72,15 @@
     },
     {
       "path": "docs/configuration.md",
-      "fingerprint": "sha256:b643e7650305863013987aa7547dbd15d326a44607d1bb1851ba58e7c06d5df3",
+      "fingerprint": "sha256:b3018d12535f7d2eb8656c2ba98ffa8e88a3e52ca7e27152a7740dd330b51b99",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-09-15T00:00:00.000Z",
-        "reason": "Added explicit mcporterConfig, clarified PEW-PEW reuse conditions, and separated integration exposure from access guarantees."
+        "at": "2026-09-09T16:34:30.961Z",
+        "reason": "Documented and independently reviewed explicit external absolute context-file inputs; project artifact and worker-reported file paths remain relative-only."
       }
     },
     {

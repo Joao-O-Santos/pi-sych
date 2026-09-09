@@ -48,7 +48,9 @@ export interface ProjectValidation {
 }
 export const showPath = (root: string, path: string) => {
 	const display = relative(root, path);
-	return display && !display.startsWith("..") ? display : path;
+	return display && display !== ".." && !display.startsWith(`..${sep}`) && !isAbsolute(display)
+		? display
+		: path;
 };
 export function parseSyncManifest(value: string): SyncManifest {
 	let parsed: unknown;
@@ -175,6 +177,11 @@ export async function resolveConfiguredPath(path: string) {
 }
 export async function resolveExistingProjectPath(root: string, path: string) {
 	const absolute = resolveProjectPath(root, path);
+	await access(absolute, constants.R_OK);
+	return absolute;
+}
+export async function resolveExistingProjectContextPath(root: string, path: string) {
+	const absolute = isAbsolute(path) ? resolve(path) : resolveProjectPath(root, path);
 	await access(absolute, constants.R_OK);
 	return absolute;
 }

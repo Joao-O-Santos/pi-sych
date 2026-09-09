@@ -232,12 +232,16 @@ test("an already-aborted launch is classified and terminated immediately", async
 	});
 });
 
-test("dispatch normalizes explicit and configured context and de-duplicates canonical files", async (t) => {
+test("dispatch normalizes project context, retains external context, and de-duplicates canonical files", async (t) => {
 	const setup = await dispatchFixture(t);
 	const configuredAgents = join(setup.root, "config/AGENTS-CUSTOM.md");
 	const configuredStyle = join(setup.root, "config/STYLE-CUSTOM.md");
 	await mkdir(dirname(configuredAgents), { recursive: true });
+	const externalRoot = await mkdtemp(join(tmpdir(), "pi-sych-external-context-"));
+	t.after(() => rm(externalRoot, { recursive: true, force: true }));
+	const externalNotes = join(externalRoot, "notes.md");
 	await writeFile(join(setup.root, "notes.md"), "notes\n");
+	await writeFile(externalNotes, "external notes\n");
 	await writeFile(configuredAgents, "agents\n");
 	await writeFile(configuredStyle, "style\n");
 	setup.project.canonical.agents = configuredAgents;
@@ -249,8 +253,10 @@ test("dispatch normalizes explicit and configured context and de-duplicates cano
 		request: {
 			...baseRequest,
 			contextFiles: [
-				{ path: "./notes.md", purpose: "task notes" },
-				{ path: "config/AGENTS-CUSTOM.md", purpose: "explicit duplicate" },
+				{ path: "./notes.md", purpose: "relative duplicate" },
+				{ path: `${setup.root}/config/../notes.md`, purpose: "task notes" },
+				{ path: externalNotes, purpose: "external task notes" },
+				{ path: configuredAgents, purpose: "explicit duplicate" },
 			],
 		},
 		catalog,
@@ -270,13 +276,15 @@ test("dispatch normalizes explicit and configured context and de-duplicates cano
 	assert.equal(captured.sessionPath, undefined);
 	assert.deepEqual(captured.request.contextFiles, [
 		{ path: "notes.md", purpose: "task notes" },
+		{ path: externalNotes, purpose: "external task notes" },
 		{ path: "config/AGENTS-CUSTOM.md", purpose: "configured agents conventions" },
 		{ path: "config/STYLE-CUSTOM.md", purpose: "configured style conventions" },
 	]);
 	assert.match(
 		captured.prompt,
-		/Context files: notes\.md \(task notes\); config\/AGENTS-CUSTOM\.md \(configured agents conventions\); config\/STYLE-CUSTOM\.md \(configured style conventions\)/,
+		/Context files: notes\.md \(task notes\); .* \(external task notes\); config\/AGENTS-CUSTOM\.md \(configured agents conventions\); config\/STYLE-CUSTOM\.md \(configured style conventions\)/,
 	);
+	assert.ok(captured.prompt.includes(externalNotes));
 });
 
 test("trajectory dispatch branches exactly before its assistant entry without mutating the supervisor", async (t) => {
@@ -642,6 +650,32 @@ test("trajectory runtime removes snapshot and child for every terminal failure c
 });
 
 test("dispatch rejects missing and escaping context before launching", async (t) => {
+	for (const [name, input] of [
+		["absolute missing project file", (root) => join(root, "missing.md")],
+		["absolute missing external file", (root) => join(root, "..", "outside.md")],
+	]) {
+		await t.test(name, async () => {
+			const setup = await dispatchFixture(t);
+			let launched = false;
+			await assert.rejects(
+				dispatchWorker({
+					project: setup.project,
+					workerAgentDir: setup.workerAgentDir,
+					request: {
+						...baseRequest,
+						contextFiles: [{ path: input(setup.root), purpose: "required" }],
+					},
+					catalog,
+					launcher: async () => {
+						launched = true;
+						return { exitCode: 0, stderr: "" };
+					},
+				}),
+				{ code: "ENOENT" },
+			);
+			assert.equal(launched, false);
+		});
+	}
 	await t.test("missing file", async () => {
 		const setup = await dispatchFixture(t);
 		let launched = false;

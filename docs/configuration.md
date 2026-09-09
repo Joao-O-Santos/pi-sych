@@ -154,9 +154,15 @@ canonical paths:
 ```
 
 `projectRoot` is relative to the manifest directory. Artifact paths must
-be relative and remain lexically inside the project root. Symlinks are
-ordinary project files and are not treated as a security boundary. This
-protects path interpretation without claiming to sandbox processes.
+be relative and remain lexically inside the project root. Worker context
+files may instead use either a project-relative path or any readable
+absolute path. Dispatch normalizes an absolute path inside the project
+root to a relative path; an external absolute path remains absolute.
+External inputs are explicit supervisor-selected task context, not
+project artifacts or a security boundary. Worker-reported files remain
+relative-only. Symlinks are ordinary project files and are not treated
+as a security boundary. This protects path interpretation without
+claiming to sandbox processes.
 
 Configured canonical paths are different: they are explicit project
 configuration and may be absolute, outside the project root, or reached

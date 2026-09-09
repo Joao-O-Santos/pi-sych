@@ -109,6 +109,16 @@ const invalidResults = [
 		/Worker result protocol failed: Project artifact path leaves the project root: \.\.\/escape/,
 	],
 	[
+		"absolute result path",
+		JSON.stringify({
+			status: "complete",
+			summary: "x",
+			files: [join(process.cwd(), "A.md")],
+			limitations: [],
+		}),
+		/Worker result protocol failed: Project artifact path must be relative/,
+	],
+	[
 		"nonexistent path",
 		JSON.stringify({ status: "complete", summary: "x", files: ["missing.md"], limitations: [] }),
 		/Worker result protocol failed: .*ENOENT/,

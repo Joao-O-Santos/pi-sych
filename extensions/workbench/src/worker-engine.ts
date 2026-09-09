@@ -13,6 +13,7 @@ import type { ModelCatalog } from "./model-catalog.js";
 import {
 	type ResolvedProject,
 	resolveConfiguredPath,
+	resolveExistingProjectContextPath,
 	resolveExistingProjectPath,
 	resolveProjectPath,
 	showPath,
@@ -84,7 +85,7 @@ export const dispatchSchema = Type.Object({
 	),
 	contextFiles: Type.Array(
 		Type.Object({
-			path: Type.String({ description: "Existing project-local file" }),
+			path: Type.String({ description: "Existing context file; relative paths are project-local" }),
 			purpose: Type.String({ description: "Why the worker needs this file" }),
 		}),
 		{ description: "Smallest complete explicit file packet" },
@@ -161,7 +162,7 @@ async function contexts(
 ): Promise<ContextFile[]> {
 	const unique = new Map<string, ContextFile>();
 	for (const file of request.contextFiles) {
-		const path = await resolveExistingProjectPath(project.projectRoot, file.path);
+		const path = await resolveExistingProjectContextPath(project.projectRoot, file.path);
 		unique.set(path, { ...file, path: showPath(project.projectRoot, path) });
 	}
 	for (const role of ["agents", "style"] as const) {

@@ -9,6 +9,7 @@ import {
 	resolveExistingProjectPath,
 	resolveProject,
 	resolveProjectPath,
+	showPath,
 	validateProjectMarkdown,
 } from "../../.test-build/workbench/src/project-files.js";
 
@@ -19,6 +20,8 @@ test("manifest validates required project mechanics but permits metadata", () =>
 	assert.throws(() => parseSyncManifest(manifest({ version: 1 })), /version/);
 	assert.throws(() => parseSyncManifest(manifest({ artifacts: {} })), /artifacts/);
 	assert.throws(() => resolveProjectPath("/project", "../outside"), /leaves/);
+	const root = join(process.cwd(), "project");
+	assert.equal(showPath(root, join(root, "..notes.md")), "..notes.md");
 });
 test("resolver uses nearest manifest and configured root", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-files-"));
