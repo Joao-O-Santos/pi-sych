@@ -5,6 +5,22 @@ npm registry metadata establish publication status and dates; headings
 below record versioned changes without duplicating that live release
 state.
 
+## v6.5.0
+
+### Added
+
+- Permit explicit `dispatch_worker.contextFiles` entries to name any
+  readable absolute path. Relative context paths remain
+  project-relative; paths inside the project normalize to relative form,
+  while external paths remain absolute.
+
+### Compatibility
+
+This minor release adds external absolute files as optional explicit
+worker context without changing existing project-relative context paths,
+worker result-file validation, stored state, defaults, or tool modes.
+Worker-reported files remain project-relative.
+
 ## v6.4.0 (2026-09-15)
 
 ### Added

@@ -173,6 +173,11 @@ context mode with a deliberately selected packet:
 - optional integrations; and
 - a bounded timeout.
 
+Context files normally use project-relative paths. For a deliberately
+selected external input, the supervisor may instead supply a readable
+absolute path; it remains external in the worker packet. Worker-reported
+files remain project-relative.
+
 A `trajectory` worker receives Pi's active, compaction-aware supervisor
 branch ending before the assistant message containing that dispatch; it
 does not receive that message or any of its tool calls. This is useful

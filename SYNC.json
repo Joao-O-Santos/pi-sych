@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-09T16:34:30.961Z",
+  "confirmedAt": "2026-09-09T16:40:28.881Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:594d9c1587c703e5a11917aa94c4d3b41469010de894719c70a8c0bb8cf892e5",
+      "fingerprint": "sha256:43b13b2cbf62aeefcbf4f043d6058a03f3e7d550a37627ce6d122531b7ba100b",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,13 +46,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-09-15T00:00:00.000Z",
-        "reason": "Updated workflow overview, trajectory branch description, skill-catalogue inspection requirement, and clean/trajectory context distinctions."
+        "at": "2026-09-09T16:40:28.881Z",
+        "reason": "Prepared the independently reviewed 6.5.0 minor release: external absolute worker context inputs are documented, package metadata is bumped, and the public contract, README, and changelog reflect the compatible addition."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:850ccdbd6cf67a691c9e5a85232c06b1cfe6f211afc1ee9157c5a4c1a0e96c30",
+      "fingerprint": "sha256:4a5cca323e5dfb20abd77b815082b6a59be24c0320d192e2db569fe1fd16ab58",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -66,8 +66,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-09-15T00:00:00.000Z",
-        "reason": "Runtime source budget raised to 2,500; new PEW-PEW provenance module and tests included in package."
+        "at": "2026-09-09T16:40:28.881Z",
+        "reason": "Prepared the independently reviewed 6.5.0 minor release: external absolute worker context inputs are documented, package metadata is bumped, and the public contract, README, and changelog reflect the compatible addition."
       }
     },
     {
@@ -98,15 +98,15 @@
     },
     {
       "path": "docs/public-contract.md",
-      "fingerprint": "sha256:57a82b59a4f6a6f86b1972503ea8328484f64a33da1ed0796b20a2e942c295d7",
+      "fingerprint": "sha256:29d7bd37988b29198d80ae7d0ce3ceb2511c5be8715ccc62955b9ecd4fbc8206",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "compatibility"
       ],
       "acknowledgement": {
-        "at": "2026-09-15T00:00:00.000Z",
-        "reason": "Updated remote-research integration promise: MCPorter required, PEW-PEW reuse conditional on active valid provenance, exposure does not guarantee retrieval."
+        "at": "2026-09-09T16:40:28.881Z",
+        "reason": "Prepared the independently reviewed 6.5.0 minor release: external absolute worker context inputs are documented, package metadata is bumped, and the public contract, README, and changelog reflect the compatible addition."
       }
     },
     {
@@ -124,15 +124,15 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:55a5680b3f3a27ab7292fd38ed8d04d68ec4f9027f86529da42b1a897646d24d",
+      "fingerprint": "sha256:b802330e3f39148666706d0e363be52bcd6da604018bd4bb9c363d0a559bc601",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-09-15T00:00:00.000Z",
-        "reason": "Recorded trajectory context addition, PEW-PEW reuse, 2,500 source budget, and preserved compatibility boundaries."
+        "at": "2026-09-09T16:40:28.881Z",
+        "reason": "Prepared the independently reviewed 6.5.0 minor release: external absolute worker context inputs are documented, package metadata is bumped, and the public contract, README, and changelog reflect the compatible addition."
       }
     },
     {
