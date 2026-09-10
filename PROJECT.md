@@ -55,32 +55,33 @@ independent substantive review, and no automated workflow controller.
 
 ## Current state
 
-{verified} `dispatch_worker` now defaults to clean context and can
-optionally launch a private, native trajectory branch ending immediately
-before its exact dispatching assistant entry. The live supervisor
-session is not moved or rewritten; unavailable or unsafe branch
-boundaries fail clearly and temporary session material is removed on
-every outcome. Explicit remote-research workers receive MCPorter and may
-reuse an active, provenance-validated PEW-PEW `web` tool without
-enabling absent, disabled, or excluded packages. Worker prompts
-distinguish task assignment from inherited background, model-facing
-supervisor guidance requires deliberate skill-catalogue inspection, and
-public documentation covers the resulting boundaries and limits. The
-approved runtime-source cap is 2,500 nonblank lines; measured source is
-2,342 lines (about 2,350). The final local gate passed 157 tests with
-98.19% line, 91.95% branch, and 95.00% function coverage; package dry
-run, Pages and talk builds, production audit, and strongest independent
-static review also passed. Use the signed Git tag and npm registry
-metadata---not this narrative---for the current release identifier.
+{verified} Local version metadata is prepared for 7.0.0. The supported
+literature schema replaces scalar `first_author` with nullable
+`item_type` and nullable ordered, role-aware `creators_json` metadata.
+The read-only search adapter performs shallow structural checks and
+returns parsed `itemType` and `creators` without schema adaptation, CSL
+semantic validation, citation formatting, or creator inference. Users of
+local literature search must rebuild or migrate v6 databases externally
+and update result consumers; other users have no literature-data
+migration. The approved runtime cap remains 2,500 nonblank lines;
+measured source is 2,380 lines, an intentional 30-line increase for
+validation and mapping. The final local gate passed 167 tests with
+98.22% line, 92.31% branch, and 95.07% function coverage. Package dry
+run, Pages build, production audit with no reported vulnerabilities, and
+independent read-only implementation review also passed. No v7 tag,
+push, or publication has been performed. Use signed Git tags and npm
+registry metadata---not this narrative---for release state.
 
 ## Previous action
 
-{verified} Completed clean/trajectory worker context and active PEW-PEW
-research integration, documentation, deterministic regression coverage,
-source-budget approval, final verification, and strongest independent
-review. The temporary implementation plan is complete and removed.
+{verified} Implemented and documented the approved v7 structured-creator
+contract, deterministic boundary tests, external migration guidance, and
+7.0.0 package metadata. Completed full local verification, exact source
+counting, site build, production audit, package inspection, and an
+independent final review with no findings. The temporary plan and task
+ledger are complete and removed.
 
 ## Immediate next step
 
-{accepted} None at present. Do not approve node-pty scripts or run npm
-audit remediation without explicit instruction.
+{accepted} None at present. Do not push, tag, publish, or release
+without separate owner instruction.
