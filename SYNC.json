@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-10T10:46:37.520Z",
+  "confirmedAt": "2026-09-10T11:34:12.071Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:fdc6551b62911348532dd660cc4f80f22ac59d3e3ff37cc15fc798ba74f56589",
+      "fingerprint": "sha256:40b58ee1746872c9abe411f8f5230d52c7c8bfed359cb3829b1ce410d08d7b32",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,8 +15,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-09-10T10:46:37.520Z",
-        "reason": "Completed the owner-approved v7 structured-creator implementation and documentation with explicit external migration: 167 tests and full local gate passed; exact runtime is 2,380 lines; site build, package dry run, zero-advisory production audit, and independent read-only review passed. Version metadata is 7.0.0; no push, tag, or publication performed."
+        "at": "2026-09-10T11:34:12.071Z",
+        "reason": "Verified malformed-SYNC startup repair: malformed or unreadable manifests leave extensions available, status reports unavailable state, and acknowledgement remains blocked. Full make verify passed 171 tests at 98.29/92.67/95.07 coverage; source is about 2450/2500 lines; independent final review passed. No push, tag, publication, or release performed."
       }
     },
     {
@@ -98,15 +98,15 @@
     },
     {
       "path": "docs/public-contract.md",
-      "fingerprint": "sha256:cb5a492386e438105db95a11c46ccbf4c70335ede5fca68034669150c4f7a684",
+      "fingerprint": "sha256:4d80bda7a9a1de46cf5df4149b316d50a4f38d890c56d06b087f8b62ba1d4f38",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "compatibility"
       ],
       "acknowledgement": {
-        "at": "2026-09-10T10:46:37.520Z",
-        "reason": "Completed the owner-approved v7 structured-creator implementation and documentation with explicit external migration: 167 tests and full local gate passed; exact runtime is 2,380 lines; site build, package dry run, zero-advisory production audit, and independent read-only review passed. Version metadata is 7.0.0; no push, tag, or publication performed."
+        "at": "2026-09-10T11:34:12.071Z",
+        "reason": "Verified malformed-SYNC startup repair: malformed or unreadable manifests leave extensions available, status reports unavailable state, and acknowledgement remains blocked. Full make verify passed 171 tests at 98.29/92.67/95.07 coverage; source is about 2450/2500 lines; independent final review passed. No push, tag, publication, or release performed."
       }
     },
     {

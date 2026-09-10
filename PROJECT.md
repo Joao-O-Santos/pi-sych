@@ -68,20 +68,24 @@ measured source is 2,380 lines, an intentional 30-line increase for
 validation and mapping. The final local gate passed 167 tests with
 98.22% line, 92.31% branch, and 95.07% function coverage. Package dry
 run, Pages build, production audit with no reported vulnerabilities, and
-independent read-only implementation review also passed. No v7 tag,
-push, or publication has been performed. Use signed Git tags and npm
-registry metadata---not this narrative---for release state.
+independent read-only implementation review also passed. A subsequent
+main-only repair keeps both extensions available when `SYNC.json` is
+malformed or unreadable: `project_status` reports the exact unavailable
+state and acknowledgement remains blocked rather than overwriting it.
+The repair's final gate passed 171 tests with 98.29% line, 92.67%
+branch, and 95.07% function coverage; source is about 2,450/2,500 lines.
+No v7 tag, push, or publication has been performed. Use signed Git tags
+and npm registry metadata---not this narrative---for release state.
 
 ## Previous action
 
-{verified} Implemented and documented the approved v7 structured-creator
-contract, deterministic boundary tests, external migration guidance, and
-7.0.0 package metadata. Completed full local verification, exact source
-counting, site build, production audit, package inspection, and an
-independent final review with no findings. The temporary plan and task
-ledger are complete and removed.
+{verified} Implemented and documented a backward-compatible malformed
+`SYNC.json` startup repair with focused Pi RPC coverage, full local
+verification, and an independent final review with no findings. The
+temporary task ledger is complete and removed.
 
 ## Immediate next step
 
-{accepted} None at present. Do not push, tag, publish, or release
-without separate owner instruction.
+{accepted} Keep the local repair unpushed until the owner separately
+instructs a push. Do not tag, publish, or release v7.0.0 without
+separate owner instruction.
