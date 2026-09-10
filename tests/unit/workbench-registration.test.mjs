@@ -3,8 +3,8 @@ import { hash } from "node:crypto";
 import { chmod, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
-import test from "node:test";
 import { DatabaseSync } from "node:sqlite";
+import test from "node:test";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import piSychWorkbench, { SUPERVISOR_GUIDANCE } from "../../.test-build/workbench/index.js";
 import { DEFAULT_CONFIG } from "../../.test-build/workbench/src/config-directory.js";
@@ -130,7 +130,10 @@ writeFileSync(process.env.PI_SYCH_RESULT_PATH, JSON.stringify({
 
 test("real workbench registers and runs its supervisor surface", async (t) => {
 	assert.match(SUPERVISOR_GUIDANCE, /read-only retrieval/);
-	assert.match(SUPERVISOR_GUIDANCE, /independent context, breadth, specialization, or substantial execution/);
+	assert.match(
+		SUPERVISOR_GUIDANCE,
+		/independent context, breadth, specialization, or substantial execution/,
+	);
 	const fixture = await workbenchFixture();
 	const previousCwd = process.cwd();
 	const previousPath = process.env.PATH;
@@ -376,7 +379,6 @@ A changed hash establishes changed content, not conceptual drift or authority.`;
 				scope: "project",
 				origin: "package",
 			},
-		},
 	];
 	activeTools = ["web"];
 	const pew = await dispatchTool.execute(
