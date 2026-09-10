@@ -10,6 +10,7 @@ import {
 	piSychConfigDirectory,
 	piSychConfigPath,
 } from "./src/config-directory.js";
+import { registerLiteratureSearch } from "./src/literature-search.js";
 import {
 	formatMcporterDiagnostic,
 	inspectMcporter,
@@ -37,7 +38,7 @@ export const PACKAGE_ROOT = resolve(
 );
 export const SUPERVISOR_GUIDANCE = [
 	"Pi Sych is a small mechanical substrate; skills and humans own semantic judgment.",
-	"Keep replies concise. Work directly unless independent context would materially improve the result.",
+	"Keep replies concise. Use direct work and read-only retrieval (literature_search; web when active) for small or tightly connected exploration; dispatch for independent context, breadth, specialization, or substantial execution.",
 	"Use project_status for mechanical state; changed content is not conceptual drift.",
 	`For Pi Sych questions, read ${PACKAGE_ROOT}/README.md and its linked documentation.`,
 	"Before dispatch, inspect the available skill catalogue and select only skills valuable for the assignment. dispatch_worker defaults to clean context and 90 seconds. Use trajectory context only when prior conversation materially helps; choose context, model role, and timeout deliberately. Worker modes are not sandboxes.",
@@ -254,6 +255,7 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 			};
 		},
 	});
+	registerLiteratureSearch(pi, undefined, async (cwd) => (await resolveProject(cwd)).projectRoot);
 	pi.registerCommand("pi-sych-status", {
 		description: "Show mechanical project status",
 		handler: async (_args, ctx) => {

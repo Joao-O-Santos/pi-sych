@@ -4,6 +4,7 @@ import { chmod, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
 import test from "node:test";
+import { DatabaseSync } from "node:sqlite";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import piSychWorkbench, { SUPERVISOR_GUIDANCE } from "../../.test-build/workbench/index.js";
 import { DEFAULT_CONFIG } from "../../.test-build/workbench/src/config-directory.js";
@@ -77,6 +78,24 @@ async function workbenchFixture() {
 		join(configDir, "mcp", "mcporter.json"),
 		`${JSON.stringify({ servers: { fixture: { command: "unused" } } })}\n`,
 	);
+	const literature = new DatabaseSync(join(root, "LITERATURE.sqlite"));
+	literature.exec(`
+CREATE TABLE papers (
+  id INTEGER PRIMARY KEY,
+  filepath TEXT,
+  title TEXT,
+  item_type TEXT,
+  creators_json TEXT,
+  year INTEGER,
+  abstract TEXT,
+  topic_tags TEXT,
+  doi TEXT
+);
+CREATE VIRTUAL TABLE papers_fts USING fts5(filepath, title, abstract, topic_tags, doi);
+INSERT INTO papers VALUES (1, 'papers/supervisor.pdf', 'Supervisor source', 'article-journal', '{"author":[{"family":"Test"}]}', 2026, 'direct supervisor retrieval', '', '10.example/supervisor');
+INSERT INTO papers_fts(rowid, filepath, title, abstract, topic_tags, doi) VALUES (1, 'papers/supervisor.pdf', 'Supervisor source', 'direct supervisor retrieval', '', '10.example/supervisor');
+`);
+	literature.close();
 	const bin = join(root, "bin");
 	await mkdir(bin);
 	const fakePi = join(bin, "pi");
@@ -109,8 +128,9 @@ writeFileSync(process.env.PI_SYCH_RESULT_PATH, JSON.stringify({
 	return { root, configDir, bin };
 }
 
-test("real workbench registers and runs only its supervisor surface", async (t) => {
-	assert.match(SUPERVISOR_GUIDANCE, /inspect the available skill catalogue/);
+test("real workbench registers and runs its supervisor surface", async (t) => {
+	assert.match(SUPERVISOR_GUIDANCE, /read-only retrieval/);
+	assert.match(SUPERVISOR_GUIDANCE, /independent context, breadth, specialization, or substantial execution/);
 	const fixture = await workbenchFixture();
 	const previousCwd = process.cwd();
 	const previousPath = process.env.PATH;
@@ -147,7 +167,7 @@ test("real workbench registers and runs only its supervisor surface", async (t) 
 	});
 	assert.deepEqual(
 		tools.map((tool) => tool.name),
-		["dispatch_worker", "project_status"],
+		["dispatch_worker", "project_status", "literature_search"],
 	);
 	assert.deepEqual([...commands.keys()], ["pi-sych-status", "pi-sych-mcp"]);
 	assert.deepEqual([...events.keys()], ["before_agent_start", "session_before_compact"]);
@@ -221,6 +241,19 @@ A changed hash establishes changed content, not conceptual drift or authority.`;
 	assert.equal(acknowledged.content[0].text, "Acknowledged:\n- A.md");
 	assert.equal(acknowledged.details.acknowledged[0].acknowledgement.reason, "reviewed fixture");
 	assert.deepEqual(acknowledged.details.needsReview, []);
+
+	const nested = join(fixture.root, "nested");
+	await mkdir(nested);
+	const literatureTool = tools.find((tool) => tool.name === "literature_search");
+	const literatureResult = await literatureTool.execute(
+		"literature",
+		{ query: "supervisor", limit: 1 },
+		undefined,
+		undefined,
+		{ ...handlerContext, cwd: nested },
+	);
+	assert.equal(literatureResult.details.results[0].metadata.title, "Supervisor source");
+	assert.match(literatureResult.content[0].text, /Supervisor source/);
 
 	await commands.get("pi-sych-status").handler("", handlerContext);
 	assert.deepEqual(notifications.at(-1), { message: expectedStatus, type: "info" });

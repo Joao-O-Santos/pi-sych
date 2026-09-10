@@ -60,7 +60,7 @@ test("core and Plannotator extensions register separate public surfaces", async 
 	const core = await capturedExtension(piSychWorkbench, t);
 	assert.deepEqual(
 		core.tools.map((tool) => tool.name),
-		["dispatch_worker", "project_status"],
+		["dispatch_worker", "project_status", "literature_search"],
 	);
 	assert.deepEqual(core.commands, ["pi-sych-status", "pi-sych-mcp"]);
 

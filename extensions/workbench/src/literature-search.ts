@@ -87,7 +87,11 @@ export function searchLiterature(
 		throw new Error(`Literature search failed for ${path}: ${String(error)}`);
 	}
 }
-export function registerLiteratureSearch(pi: ExtensionAPI, configDirectory?: string): void {
+export function registerLiteratureSearch(
+	pi: ExtensionAPI,
+	configDirectory?: string,
+	resolveProjectRoot: (cwd: string) => string | Promise<string> = (cwd) => cwd,
+): void {
 	pi.registerTool({
 		name: "literature_search",
 		label: "Search local literature",
@@ -97,7 +101,8 @@ export function registerLiteratureSearch(pi: ExtensionAPI, configDirectory?: str
 			limit: Type.Optional(Type.Integer({ minimum: 1, maximum: 50 })),
 		}),
 		async execute(_id, params, _signal, _update, ctx) {
-			const results = searchLiterature(ctx.cwd, params.query, params.limit, configDirectory);
+			const projectRoot = await resolveProjectRoot(ctx.cwd);
+			const results = searchLiterature(projectRoot, params.query, params.limit, configDirectory);
 			return {
 				content: [{ type: "text", text: JSON.stringify(results, null, 2) }],
 				details: { results },
