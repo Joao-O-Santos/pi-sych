@@ -245,15 +245,13 @@ A changed hash establishes changed content, not conceptual drift or authority.`;
 	assert.equal(acknowledged.details.acknowledged[0].acknowledgement.reason, "reviewed fixture");
 	assert.deepEqual(acknowledged.details.needsReview, []);
 
-	const nested = join(fixture.root, "nested");
-	await mkdir(nested);
 	const literatureTool = tools.find((tool) => tool.name === "literature_search");
 	const literatureResult = await literatureTool.execute(
 		"literature",
 		{ query: "supervisor", limit: 1 },
 		undefined,
 		undefined,
-		{ ...handlerContext, cwd: nested },
+		handlerContext,
 	);
 	assert.equal(literatureResult.details.results[0].metadata.title, "Supervisor source");
 	assert.match(literatureResult.content[0].text, /Supervisor source/);
