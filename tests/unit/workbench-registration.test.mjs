@@ -379,6 +379,7 @@ A changed hash establishes changed content, not conceptual drift or authority.`;
 				scope: "project",
 				origin: "package",
 			},
+		},
 	];
 	activeTools = ["web"];
 	const pew = await dispatchTool.execute(
