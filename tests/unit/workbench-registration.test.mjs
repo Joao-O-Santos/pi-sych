@@ -256,6 +256,9 @@ A changed hash establishes changed content, not conceptual drift or authority.`;
 			"task-summary: run fixture worker",
 			"context: clean",
 			"model: catalog default",
+			"thinking: default",
+			"mode: read-only",
+			"research: none",
 			"timeout: 90s",
 		],
 	);
@@ -278,6 +281,9 @@ A changed hash establishes changed content, not conceptual drift or authority.`;
 			"task-summary: first line with enough content to exceed the compact task...",
 			"context: clean",
 			"model: workhorse",
+			"thinking: default",
+			"mode: read-only",
+			"research: none",
 			"timeout: 120500ms",
 		],
 	);

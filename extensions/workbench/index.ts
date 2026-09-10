@@ -60,13 +60,33 @@ const formatTimeout = (timeoutMs: number) => {
 	if (timeoutMs % 1_000 === 0) return `${timeoutMs / 1_000}s`;
 	return `${timeoutMs}ms`;
 };
+const formatRequestedResearch = (args: Pick<DispatchRequest, "skills" | "remoteResearch">) => {
+	const capabilities = [
+		...(args.skills?.includes("research") ? ["literature_search"] : []),
+		...(args.remoteResearch ? ["MCPorter; web if active"] : []),
+	];
+	return capabilities.join("; ") || "none";
+};
 export function formatDispatchWorkerCallSummary(
-	args: Pick<DispatchRequest, "task" | "contextMode" | "modelRole" | "timeoutMs">,
+	args: Pick<
+		DispatchRequest,
+		| "task"
+		| "contextMode"
+		| "modelRole"
+		| "thinkingLevel"
+		| "mode"
+		| "skills"
+		| "remoteResearch"
+		| "timeoutMs"
+	>,
 ) {
 	return [
 		`task-summary: ${compactTaskSummary(args.task)}`,
 		`context: ${args.contextMode ?? "clean"}`,
 		`model: ${args.modelRole ?? "catalog default"}`,
+		`thinking: ${args.thinkingLevel ?? "default"}`,
+		`mode: ${args.mode}`,
+		`research: ${formatRequestedResearch(args)}`,
 		`timeout: ${formatTimeout(args.timeoutMs ?? DEFAULT_TIMEOUT_MS)}`,
 	].join("\n");
 }

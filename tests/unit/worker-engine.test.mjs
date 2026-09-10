@@ -10,6 +10,7 @@ import {
 	dispatchSchema,
 	modelFor,
 	skillPaths,
+	THINKING_LEVELS,
 	taskPrompt,
 	toolsForRequest,
 	validateWorkerResult,
@@ -30,8 +31,14 @@ test("worker request and result retain the bounded protocol", () => {
 	assert.equal(Value.Check(dispatchSchema, { ...bounded, contextMode: "clean" }), true);
 	assert.equal(Value.Check(dispatchSchema, { ...bounded, contextMode: "trajectory" }), true);
 	assert.equal(Value.Check(dispatchSchema, { ...bounded, contextMode: "history" }), false);
+	for (const thinkingLevel of THINKING_LEVELS)
+		assert.equal(Value.Check(dispatchSchema, { ...bounded, thinkingLevel }), true);
+	assert.equal(Value.Check(dispatchSchema, { ...bounded, thinkingLevel: "maximum" }), false);
+	assert.equal(Value.Check(dispatchSchema, { ...bounded, thinkingLevel: "HIGH" }), false);
+	assert.equal(Value.Check(dispatchSchema, { ...bounded, thinkingLevel: 1 }), false);
 	assert.match(dispatchSchema.properties.skills.description, /skill catalogue/);
 	assert.match(dispatchSchema.properties.contextMode.description, /clean by default/);
+	assert.match(dispatchSchema.properties.thinkingLevel.description, /model's default/);
 	assert.deepEqual(
 		validateWorkerResult({ status: "complete", summary: "done", files: ["A.md"], limitations: [] })
 			.files,

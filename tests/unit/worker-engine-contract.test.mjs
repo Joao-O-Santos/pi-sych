@@ -117,6 +117,7 @@ test("launcher passes the complete isolated Pi process contract", async (t) => {
 			mode: "full-host",
 			skills: ["local", "research"],
 			remoteResearch: true,
+			thinkingLevel: "high",
 			timeoutMs: 500,
 		},
 		workerAgentDir: join(root, "agent"),
@@ -157,6 +158,8 @@ test("launcher passes the complete isolated Pi process contract", async (t) => {
 		"read,edit,write,bash,submit_artifact,literature_search,mcporter,web",
 		"--model",
 		"provider/model",
+		"--thinking",
+		"high",
 		"--skill",
 		localSkill,
 		"--skill",
@@ -170,6 +173,29 @@ test("launcher passes the complete isolated Pi process contract", async (t) => {
 	assert.equal(call.options.env.PI_SYCH_RESULT_PATH, spec.resultPath);
 	assert.equal(call.options.env.MCPORTER_CONFIG, mcporterConfigPath(root));
 	assert.equal(call.options.env.PATH, process.env.PATH);
+});
+
+test("launcher omits thinking level when unspecified", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-launch-thinking-omitted-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const fake = capturingSpawn();
+	const spec = {
+		id: "task-123",
+		request: { ...baseRequest, mode: "read-only", timeoutMs: 500 },
+		workerAgentDir: join(root, "agent"),
+		resultPath: join(root, "result.json"),
+		projectRoot: root,
+		model: "provider/model",
+		prompt: "prompt",
+		packageRoot: root,
+		extraExtensionPaths: [],
+	};
+	const launched = launchPiWorker(spec, fake.spawn);
+	fake.child.emit("close", 0, null);
+	await launched;
+	const argv = fake.call().argv;
+	const thinkingIndex = argv.indexOf("--thinking");
+	assert.equal(thinkingIndex, -1, "omitted thinking must not add --thinking to argv");
 });
 
 test("launcher selects a private session only for trajectory context", async (t) => {
@@ -200,6 +226,7 @@ test("launcher selects a private session only for trajectory context", async (t)
 		"--session",
 		sessionPath,
 	]);
+	assert.equal(argv.includes("--thinking"), false);
 });
 
 test("an already-aborted launch is classified and terminated immediately", async (t) => {

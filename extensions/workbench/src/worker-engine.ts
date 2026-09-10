@@ -23,6 +23,7 @@ export const WORKER_MODES = ["read-only", "edit", "full-host"] as const;
 export type WorkerMode = (typeof WORKER_MODES)[number];
 export const CONTEXT_MODES = ["clean", "trajectory"] as const;
 export type ContextMode = (typeof CONTEXT_MODES)[number];
+export const THINKING_LEVELS = ["off", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
 type SupervisorSession = Pick<SessionManager, "getSessionFile" | "getEntries" | "getLeafId">;
 const MODE_TOOLS: Record<WorkerMode, readonly string[]> = {
 	"read-only": ["read", "grep", "find", "ls", "submit_artifact"],
@@ -96,6 +97,11 @@ export const dispatchSchema = Type.Object({
 		}),
 	),
 	modelRole: Type.Optional(Type.String({ description: "Exact configured worker model role" })),
+	thinkingLevel: Type.Optional(
+		StringEnum(THINKING_LEVELS, {
+			description: "Pi thinking level; omission leaves the selected model's default intact",
+		}),
+	),
 	remoteResearch: Type.Optional(
 		Type.Boolean({ description: "Expose configured remote-research integrations for this task" }),
 	),
@@ -357,6 +363,7 @@ export async function launchPiWorker(
 			toolsForRequest(spec.request, spec.webExtensionPath !== undefined).join(","),
 			"--model",
 			spec.model,
+			...(spec.request.thinkingLevel ? ["--thinking", spec.request.thinkingLevel] : []),
 			...skillPaths(spec.request.skills, spec.projectRoot, spec.packageRoot).flatMap((path) => [
 				"--skill",
 				path,
