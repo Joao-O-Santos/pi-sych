@@ -38,7 +38,7 @@ test("SYNC parser rejects malformed roots, required fields, and canonical entrie
 	);
 });
 
-test("project resolution starts from a file, refuses a nearer malformed manifest, and falls back without one", async (t) => {
+test("project resolution starts from a file, retains a nearer manifest error, and falls back without one", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-files-additional-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
 	const nested = join(root, "nested");
@@ -47,8 +47,13 @@ test("project resolution starts from a file, refuses a nearer malformed manifest
 	await writeFile(join(root, "from-file.md"), "file");
 	assert.equal((await resolveProject(join(root, "from-file.md"))).projectRoot, root);
 
-	await writeFile(join(nested, "SYNC.json"), "{");
-	await assert.rejects(resolveProject(nested), /SYNC.json JSON is invalid/);
+	for (const sync of ["{", JSON.stringify({ version: 2, confirmedAt: 1, artifacts: [] })]) {
+		await writeFile(join(nested, "SYNC.json"), sync);
+		const malformed = await resolveProject(nested);
+		assert.equal(malformed.projectRoot, nested);
+		assert.equal(malformed.manifest, undefined);
+		assert.match(malformed.syncError, /SYNC.json (?:JSON is invalid|confirmedAt)/);
+	}
 
 	const noManifest = await mkdtemp(join(tmpdir(), "pi-sych-no-manifest-"));
 	t.after(() => rm(noManifest, { recursive: true, force: true }));

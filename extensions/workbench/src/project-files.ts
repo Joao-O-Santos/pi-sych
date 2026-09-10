@@ -39,6 +39,7 @@ export interface ResolvedProject {
 	projectRoot: string;
 	syncPath: string;
 	manifest?: SyncManifest;
+	syncError?: string;
 	canonical: Record<CanonicalFile, string>;
 }
 export interface ProjectValidation {
@@ -114,9 +115,29 @@ export async function resolveProject(startPath: string): Promise<ResolvedProject
 	let current = cwd;
 	while (true) {
 		const syncPath = resolve(current, "SYNC.json");
+		let content: string;
 		try {
-			const manifest = parseSyncManifest(await readFile(syncPath, "utf8"));
-			const projectRoot = resolve(current, manifest.projectRoot ?? ".");
+			content = await readFile(syncPath, "utf8");
+		} catch (error) {
+			const code = (error as NodeJS.ErrnoException).code;
+			if (code !== "ENOENT" && code !== "ENOTDIR")
+				return {
+					cwd,
+					workspaceRoot,
+					projectRoot: current,
+					syncPath,
+					syncError: String(error),
+					canonical: canonicalPaths(current),
+				};
+			if (current === workspaceRoot) break;
+			const parent = dirname(current);
+			if (parent === current || relative(workspaceRoot, parent).startsWith("..")) break;
+			current = parent;
+			continue;
+		}
+		try {
+			const manifest = parseSyncManifest(content),
+				projectRoot = resolve(current, manifest.projectRoot ?? ".");
 			return {
 				cwd,
 				workspaceRoot,
@@ -126,13 +147,15 @@ export async function resolveProject(startPath: string): Promise<ResolvedProject
 				canonical: canonicalPaths(projectRoot, manifest),
 			};
 		} catch (error) {
-			const code = (error as NodeJS.ErrnoException).code;
-			if (code !== "ENOENT" && code !== "ENOTDIR") throw error;
+			return {
+				cwd,
+				workspaceRoot,
+				projectRoot: current,
+				syncPath,
+				syncError: String(error),
+				canonical: canonicalPaths(current),
+			};
 		}
-		if (current === workspaceRoot) break;
-		const parent = dirname(current);
-		if (parent === current || relative(workspaceRoot, parent).startsWith("..")) break;
-		current = parent;
 	}
 	return {
 		cwd,

@@ -41,6 +41,10 @@ test("status degrades explicitly for malformed or absent project state", async (
 		assert.match(state.syncError, /SYNC\.json JSON is invalid/);
 		assert.deepEqual(state.artifacts, []);
 		assert.match(formatProjectStatusCheck(state), /State unavailable:/);
+		await assert.rejects(
+			acknowledgeProjectStatus(root, ["PROJECT.md"], "reviewed"),
+			/SYNC\.json JSON is invalid/,
+		);
 	});
 	await t.test("absent SYNC and PROJECT", async () => {
 		const root = await mkdtemp(join(tmpdir(), "pi-sych-status-absent-"));

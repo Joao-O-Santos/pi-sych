@@ -91,18 +91,29 @@ test("status command reports mechanical state without semantic drift claims", as
 	assert.match(event.message, /not conceptual drift/);
 });
 
-test("status command reports a malformed manifest without crashing", async (t) => {
-	const root = await mkdtemp(join(tmpdir(), "pi-sych-status-malformed-"));
-	t.after(() => rm(root, { recursive: true, force: true }));
-	const agentDir = await mkdtemp(join(tmpdir(), "pi-sych-agent-"));
-	t.after(() => rm(agentDir, { recursive: true, force: true }));
-	await writeFile(
-		join(root, "PROJECT.md"),
-		"# Project\n\n## Objective\nX\n## Current direction\nY\n## Definition of done\nZ\n## Previous action\nNone yet.\n## Immediate next step\nNone at present.\n",
-	);
-	await writeFile(join(root, "SYNC.json"), "{ not valid json");
-	await assert.rejects(invokeStatus(root, agentDir), (error) => {
-		assert.match(error.message, /SYNC.json/);
-		return true;
-	});
+test("status command reports invalid manifests without crashing Pi", async (t) => {
+	for (const [name, sync, expected] of [
+		["malformed JSON", "{ not valid json", /SYNC\.json JSON is invalid/],
+		["missing confirmedAt", JSON.stringify({ version: 2, artifacts: [] }), /confirmedAt/],
+		[
+			"non-string confirmedAt",
+			JSON.stringify({ version: 2, confirmedAt: 1, artifacts: [] }),
+			/confirmedAt/,
+		],
+	])
+		await t.test(name, async (t) => {
+			const root = await mkdtemp(join(tmpdir(), "pi-sych-status-malformed-"));
+			t.after(() => rm(root, { recursive: true, force: true }));
+			const agentDir = await mkdtemp(join(tmpdir(), "pi-sych-agent-"));
+			t.after(() => rm(agentDir, { recursive: true, force: true }));
+			await writeFile(
+				join(root, "PROJECT.md"),
+				"# Project\n\n## Objective\nX\n## Current direction\nY\n## Definition of done\nZ\n## Previous action\nNone yet.\n## Immediate next step\nNone at present.\n",
+			);
+			await writeFile(join(root, "SYNC.json"), sync);
+			const { event, stderr } = await invokeStatus(root, agentDir);
+			assert.equal(stderr, "");
+			assert.match(event.message, /State unavailable:/);
+			assert.match(event.message, expected);
+		});
 });

@@ -17,10 +17,10 @@ async function tempRoot(t, prefix) {
 	return root;
 }
 
-function getCommands(args, env) {
+function getCommands(args, env, cwd = process.cwd()) {
 	return new Promise((resolvePromise, reject) => {
 		const child = spawn("pi", args, {
-			cwd: process.cwd(),
+			cwd,
 			env: { ...process.env, PI_OFFLINE: "1", ...env },
 			stdio: ["pipe", "pipe", "pipe"],
 		});
@@ -93,6 +93,34 @@ test("core workbench extension loads without optional integrations", async (t) =
 		names.some((name) => name.startsWith("plannotator-")),
 		false,
 	);
+});
+
+test("both extensions load when the project manifest is invalid", async (t) => {
+	const root = await tempRoot(t, "pi-sych-invalid-project-"),
+		agentDir = await tempRoot(t, "pi-sych-invalid-agent-");
+	await writeFile(join(root, "SYNC.json"), JSON.stringify({ version: 2, artifacts: [] }));
+	const { commands, stderr } = await getCommands(
+		[
+			"--mode",
+			"rpc",
+			"--no-session",
+			"--no-extensions",
+			"--extension",
+			resolve("extensions/workbench/index.ts"),
+			"--extension",
+			resolve("extensions/plannotator/index.ts"),
+			"--no-skills",
+			"--no-prompt-templates",
+			"--no-themes",
+			"--no-context-files",
+		],
+		{ PI_CODING_AGENT_DIR: agentDir },
+		root,
+	);
+	assert.equal(stderr, "");
+	const names = commands.map((command) => command.name);
+	assert.ok(names.includes("pi-sych-status"));
+	assert.ok(names.includes("plannotator-review"));
 });
 
 test("Plannotator extension registers only its three commands", async (t) => {

@@ -166,9 +166,13 @@ function cycles(artifacts: ProjectArtifact[]) {
 	for (const item of artifacts) visit(item.path, []);
 	return result;
 }
-const unavailable = (startPath: string, error: unknown): ProjectStatusCheck => ({
-	projectRoot: resolve(startPath),
-	syncPath: resolve(startPath, "SYNC.json"),
+const unavailable = (
+	startPath: string,
+	error: unknown,
+	project?: ResolvedProject,
+): ProjectStatusCheck => ({
+	projectRoot: project?.projectRoot ?? resolve(startPath),
+	syncPath: project?.syncPath ?? resolve(startPath, "SYNC.json"),
 	syncError: String(error),
 	artifacts: [],
 	changed: [],
@@ -189,6 +193,7 @@ export async function checkProjectStatus(
 	} catch (error) {
 		return unavailable(startPath, error);
 	}
+	if (resolved.syncError) return unavailable(startPath, resolved.syncError, resolved);
 	const missingCore = resolved.manifest ? [] : ["SYNC.json"];
 	let projectErrors: string[] = [];
 	try {
