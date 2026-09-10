@@ -5,6 +5,27 @@ npm registry metadata establish publication status and dates; headings
 below record versioned changes without duplicating that live release
 state.
 
+## v7.0.0
+
+### Breaking
+
+- Replace scalar `first_author` metadata with producer-supplied
+  `item_type` and ordered, role-aware `creators_json` metadata in the
+  supported local literature schema.
+- Return nullable `itemType` and nullable or structured `creators` from
+  `literature_search`; remove `metadata.authors`.
+
+### Compatibility
+
+This major release changes both the supported literature database schema
+and the public search result. Users of local literature search must
+externally rebuild or migrate v6 databases and update result consumers.
+There is no automatic conversion from `first_author`, which may contain
+lossy citation stems. Pi Sych performs shallow JSON shape checks only;
+it does not infer creators, validate the CSL vocabulary, format
+citations, or choose roles for a citation style. Users who do not use
+local literature search have no literature-data migration.
+
 ## v6.5.0
 
 ### Added

@@ -279,13 +279,18 @@ must be.
 A worker selected with the `research` skill also receives
 `literature_search`; it is not a supervisor tool and is not added for
 other skills. The tool searches a local, read-only SQLite FTS5 database.
-Its supported schema stores canonical metadata in `papers` and uses an
+Its v7 schema stores canonical metadata in `papers` and uses an
 external-content FTS5 table named `papers_fts`. It searches filepath,
 title, abstract, tags, and DOI; returns ranked metadata (`title`,
-`first_author`, `year`, and `doi`), a marked snippet from `abstract`, a
-score, and each source path resolved relative to the database. See
-[configuration](docs/configuration.md#local-literature-search) for
-database resolution and `literatureDatabase`.
+nullable `itemType`, nullable or structured `creators`, `year`, and
+`doi`), a marked snippet from `abstract`, a score, and each source path
+resolved relative to the database. Pi Sych performs shallow creator
+shape checks but does not validate CSL semantics, format citations, or
+choose roles for a citation style. v6 databases require an external
+migration or rebuild before upgrading; `first_author` is not converted
+because it may be a lossy citation stem. See
+[configuration](docs/configuration.md#local-literature-search) for the
+schema, database resolution, and `literatureDatabase`.
 
 ## Optional: enable workers
 

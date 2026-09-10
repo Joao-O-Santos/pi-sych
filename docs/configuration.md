@@ -100,14 +100,21 @@ directly. It must be non-empty and may not contain parent traversal. An
 explicitly configured missing database is an error, not a fallback to
 the default.
 
-The supported database is a SQLite index with canonical metadata in
+The supported v7 database is a SQLite index with canonical metadata in
 `papers` and an external-content FTS5 table named `papers_fts`:
 
 ``` sql
 CREATE TABLE papers (
   id INTEGER PRIMARY KEY, filepath TEXT, directory TEXT, filename TEXT,
-  year INTEGER, first_author TEXT, title TEXT, abstract TEXT,
-  topic_tags TEXT, doi TEXT
+  year INTEGER, item_type TEXT,
+  creators_json TEXT CHECK (
+    creators_json IS NULL OR (
+      typeof(creators_json) = 'text'
+      AND json_valid(creators_json)
+      AND json_type(creators_json) = 'object'
+    )
+  ),
+  title TEXT, abstract TEXT, topic_tags TEXT, doi TEXT
 );
 CREATE VIRTUAL TABLE papers_fts USING fts5(
   filepath, title, abstract, topic_tags, doi,
@@ -115,12 +122,68 @@ CREATE VIRTUAL TABLE papers_fts USING fts5(
 );
 ```
 
+`item_type` is a producer-supplied CSL item type, stored as text or SQL
+`NULL`. SQL `NULL` means the item type is unestablished and returns
+`itemType: null`. Other SQLite value types fail; Pi Sych does not
+validate the CSL vocabulary or infer a type.
+
+`creators_json` contains an object keyed by CSL name variables, with an
+ordered array of name objects for each role. SQL `NULL` means creator
+metadata is unestablished and returns `creators: null`. Within an
+object, an omitted role is unrepresented; an empty array means the
+producer checked that role and recorded no named creator. `{}` records
+no roles, not a conclusion that the item has no creators.
+
+For non-null values Pi Sych requires JSON text containing a non-null,
+non-array object, role values that are arrays, and name entries that are
+non-null, non-array objects. JSON text `null` is invalid, not a
+substitute for SQL `NULL`. These shallow checks apply independently of
+the SQL `CHECK`, which only guards the top-level value. Pi Sych does not
+inspect DDL for that exact constraint or validate CSL semantics:
+producers own valid roles, names, and field values. Role keys, creator
+array order, and name-object members pass through without filtering or
+normalization.
+
 Search joins `papers_fts` to `papers`, searches the indexed filepath,
 title, abstract, tags, and DOI fields, ranks with `bm25`, and snippets
-the abstract column. Results map `filepath`, `title`, `first_author`,
-`year`, and `doi` to the returned source path and metadata. Paths may be
-absolute or relative to the database. Pi Sych opens the database
-read-only and does not create, migrate, infer, or adapt schemas.
+the abstract column. Each result contains `metadata`, `snippet`,
+`score`, and `sourcePath`. The database's `filepath` resolves to
+`sourcePath`, relative to the database unless already absolute. For
+example, the metadata portion is:
+
+``` json
+{
+  "metadata": {
+    "title": "Example article",
+    "itemType": "article-journal",
+    "creators": {
+      "author": [
+        {"family": "Smith", "given": "Alex"},
+        {"literal": "Open Science Collaboration"}
+      ],
+      "editor": [{"family": "Jones", "given": "Morgan"}]
+    },
+    "year": 2024,
+    "doi": null
+  }
+}
+```
+
+There is no `metadata.authors` alias. Pi Sych does not format citations
+or decide which creator roles a citation style displays. Missing
+required columns, malformed JSON, and invalid structural values fail
+through the wrapped search-error boundary with the database path. One
+invalid matched row fails the whole search; unmatched rows are not
+validated. Extra legacy columns may remain but are never consulted. Pi
+Sych opens the database read-only and does not create, migrate, infer,
+or adapt schemas.
+
+This is a breaking v7 change. Users of local literature search must
+rebuild or migrate v6 databases externally and update result consumers
+before upgrading. There is no automatic conversion from `first_author`:
+existing values may be lossy citation stems rather than structured
+names. Users who do not use local literature search have no
+literature-data migration.
 
 ## Project canonical paths
 
