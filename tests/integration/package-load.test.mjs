@@ -10,6 +10,24 @@ import piSychWorker from "../../.test-build/worker/index.js";
 import { bootstrapWorkerAgentDir } from "../../scripts/bootstrap-worker-agent-dir.mjs";
 
 const run = promisify(execFile);
+const PUBLIC_SKILL_COMMANDS = [
+	"skill:analyze",
+	"skill:code",
+	"skill:project",
+	"skill:research",
+	"skill:review",
+	"skill:write",
+];
+
+function packagedSkillCommands(commands) {
+	return commands
+		.filter(
+			(command) =>
+				command.source === "skill" && command.sourceInfo.path.startsWith(resolve("skills")),
+		)
+		.map((command) => command.name)
+		.sort();
+}
 
 async function tempRoot(t, prefix) {
 	const root = await mkdtemp(join(tmpdir(), prefix));
@@ -193,20 +211,30 @@ test("Pi discovers exactly the six public skills without exposing modules", asyn
 		"--no-context-files",
 	]);
 	assert.equal(stderr, "");
-	assert.deepEqual(
-		commands
-			.filter((command) => command.sourceInfo.path.startsWith(resolve("skills")))
-			.map((command) => command.name)
-			.sort(),
-		[
-			"skill:analyze",
-			"skill:code",
-			"skill:project",
-			"skill:research",
-			"skill:review",
-			"skill:write",
-		],
+	assert.deepEqual(packagedSkillCommands(commands), PUBLIC_SKILL_COMMANDS);
+});
+
+test("package defaults expose all six public skills", async (t) => {
+	const agentDir = await tempRoot(t, "pi-sych-package-skills-");
+	await writeFile(
+		join(agentDir, "settings.json"),
+		`${JSON.stringify({
+			packages: [
+				{
+					source: process.cwd(),
+					extensions: [],
+					prompts: [],
+					themes: [],
+				},
+			],
+		})}\n`,
 	);
+	const { commands, stderr } = await getCommands(
+		["--mode", "rpc", "--no-session", "--no-context-files"],
+		{ PI_CODING_AGENT_DIR: agentDir },
+	);
+	assert.equal(stderr, "");
+	assert.deepEqual(packagedSkillCommands(commands), PUBLIC_SKILL_COMMANDS);
 });
 
 test("package metadata keeps attribution and release version consistent", async () => {
@@ -232,6 +260,7 @@ test("package metadata keeps attribution and release version consistent", async 
 		"./extensions/workbench/index.ts",
 		"./extensions/plannotator/index.ts",
 	]);
+	assert.deepEqual(manifest.pi.skills, ["./skills"]);
 	assert.equal(
 		manifest.pi.image,
 		"https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/main/docs/img/logo.png",

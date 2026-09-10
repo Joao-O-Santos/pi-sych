@@ -3,11 +3,11 @@ import { hash } from "node:crypto";
 import { chmod, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
-import { DatabaseSync } from "node:sqlite";
 import test from "node:test";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import piSychWorkbench, { SUPERVISOR_GUIDANCE } from "../../.test-build/workbench/index.js";
 import { DEFAULT_CONFIG } from "../../.test-build/workbench/src/config-directory.js";
+import { createLiteratureSchema, rebuildLiteratureIndex } from "../helpers/literature-database.mjs";
 
 const projectMarkdown = `# Test project
 
@@ -35,24 +35,18 @@ async function workbenchFixture() {
 	await writeFile(join(root, "PROJECT.md"), projectMarkdown);
 	await writeFile(join(root, "AGENTS.md"), "Prefer fixture-local evidence.\n");
 	await writeFile(join(root, "A.md"), "tracked\n");
-	await writeFile(
-		join(root, "SYNC.json"),
-		`${JSON.stringify(
+	const manifest = {
+		version: 2,
+		confirmedAt: "2025-01-01T00:00:00.000Z",
+		artifacts: [
 			{
-				version: 2,
-				confirmedAt: "2025-01-01T00:00:00.000Z",
-				artifacts: [
-					{
-						path: "A.md",
-						fingerprint: `sha256:${hash("sha256", "tracked\n", "hex")}`,
-						status: "current",
-					},
-				],
+				path: "A.md",
+				fingerprint: `sha256:${hash("sha256", "tracked\n", "hex")}`,
+				status: "current",
 			},
-			null,
-			2,
-		)}\n`,
-	);
+		],
+	};
+	await writeFile(join(root, "SYNC.json"), `${JSON.stringify(manifest, null, 2)}\n`);
 	await writeFile(
 		join(configDir, "config.json"),
 		`${JSON.stringify(
@@ -78,24 +72,29 @@ async function workbenchFixture() {
 		join(configDir, "mcp", "mcporter.json"),
 		`${JSON.stringify({ servers: { fixture: { command: "unused" } } })}\n`,
 	);
-	const literature = new DatabaseSync(join(root, "LITERATURE.sqlite"));
-	literature.exec(`
-CREATE TABLE papers (
-  id INTEGER PRIMARY KEY,
-  filepath TEXT,
-  title TEXT,
-  item_type TEXT,
-  creators_json TEXT,
-  year INTEGER,
-  abstract TEXT,
-  topic_tags TEXT,
-  doi TEXT
-);
-CREATE VIRTUAL TABLE papers_fts USING fts5(filepath, title, abstract, topic_tags, doi);
-INSERT INTO papers VALUES (1, 'papers/supervisor.pdf', 'Supervisor source', 'article-journal', '{"author":[{"family":"Test"}]}', 2026, 'direct supervisor retrieval', '', '10.example/supervisor');
-INSERT INTO papers_fts(rowid, filepath, title, abstract, topic_tags, doi) VALUES (1, 'papers/supervisor.pdf', 'Supervisor source', 'direct supervisor retrieval', '', '10.example/supervisor');
-`);
+	const literature = await createLiteratureSchema(join(root, "LITERATURE.sqlite"));
+	literature
+		.prepare(
+			"INSERT INTO papers (filepath, title, item_type, creators_json, year, abstract, topic_tags, doi) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+		)
+		.run(
+			"papers/supervisor.pdf",
+			"Supervisor source",
+			"article-journal",
+			'{"author":[{"family":"Test"}]}',
+			2026,
+			"direct supervisor retrieval",
+			"",
+			"10.example/supervisor",
+		);
+	rebuildLiteratureIndex(literature);
 	literature.close();
+	const nested = join(root, "nested");
+	await mkdir(nested);
+	await writeFile(
+		join(nested, "SYNC.json"),
+		`${JSON.stringify({ ...manifest, projectRoot: ".." }, null, 2)}\n`,
+	);
 	const bin = join(root, "bin");
 	await mkdir(bin);
 	const fakePi = join(bin, "pi");
@@ -125,7 +124,7 @@ writeFileSync(process.env.PI_SYCH_RESULT_PATH, JSON.stringify({
 `,
 	);
 	await chmod(fakePi, 0o755);
-	return { root, configDir, bin };
+	return { root, nested, configDir, bin };
 }
 
 test("real workbench registers and runs its supervisor surface", async (t) => {
@@ -212,7 +211,7 @@ test("real workbench registers and runs its supervisor surface", async (t) => {
 
 	const notifications = [];
 	const handlerContext = {
-		cwd: fixture.root,
+		cwd: fixture.nested,
 		ui: { notify: (message, type) => notifications.push({ message, type }) },
 	};
 	const statusTool = tools.find((tool) => tool.name === "project_status");

@@ -9,16 +9,10 @@ import {
 	literatureDatabasePath,
 	searchLiterature,
 } from "../../.test-build/workbench/src/literature-search.js";
+import { createLiteratureSchema, rebuildLiteratureIndex } from "../helpers/literature-database.mjs";
 
 async function database(path, rows = [], { constrained = true } = {}) {
-	await mkdir(dirname(path), { recursive: true });
-	const db = new DatabaseSync(path);
-	db.exec(
-		`CREATE TABLE papers (id INTEGER PRIMARY KEY, filepath TEXT, directory TEXT, filename TEXT, year INTEGER, item_type TEXT, creators_json TEXT${constrained ? " CHECK (creators_json IS NULL OR (typeof(creators_json) = 'text' AND json_valid(creators_json) AND json_type(creators_json) = 'object'))" : ""}, title TEXT, abstract TEXT, topic_tags TEXT, doi TEXT)`,
-	);
-	db.exec(
-		"CREATE VIRTUAL TABLE papers_fts USING fts5(filepath, title, abstract, topic_tags, doi, content='papers', content_rowid='id')",
-	);
+	const db = await createLiteratureSchema(path, { constrained });
 	const insert = db.prepare(
 		"INSERT INTO papers (filepath, title, creators_json, year, doi, abstract, item_type) VALUES (?, ?, ?, ?, ?, ?, ?)",
 	);
@@ -32,7 +26,7 @@ async function database(path, rows = [], { constrained = true } = {}) {
 			text,
 			itemType,
 		);
-	db.exec("INSERT INTO papers_fts(papers_fts) VALUES ('rebuild')");
+	rebuildLiteratureIndex(db);
 	db.close();
 }
 async function project(t) {

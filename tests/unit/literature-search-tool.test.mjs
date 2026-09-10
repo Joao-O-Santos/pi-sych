@@ -1,13 +1,14 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { dirname, join, resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import test from "node:test";
 import {
 	registerLiteratureSearch,
 	searchLiterature,
 } from "../../.test-build/workbench/src/literature-search.js";
+import { createLiteratureSchema, rebuildLiteratureIndex } from "../helpers/literature-database.mjs";
 
 async function project(t) {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-literature-tool-"));
@@ -16,14 +17,7 @@ async function project(t) {
 }
 
 async function literatureDatabase(path, rows, { constrained = true } = {}) {
-	await mkdir(dirname(path), { recursive: true });
-	const database = new DatabaseSync(path);
-	database.exec(
-		`CREATE TABLE papers (id INTEGER PRIMARY KEY, filepath TEXT, directory TEXT, filename TEXT, year INTEGER, item_type TEXT, creators_json TEXT${constrained ? " CHECK (creators_json IS NULL OR (typeof(creators_json) = 'text' AND json_valid(creators_json) AND json_type(creators_json) = 'object'))" : ""}, title TEXT, abstract TEXT, topic_tags TEXT, doi TEXT)`,
-	);
-	database.exec(
-		"CREATE VIRTUAL TABLE papers_fts USING fts5(filepath, title, abstract, topic_tags, doi, content='papers', content_rowid='id')",
-	);
+	const database = await createLiteratureSchema(path, { constrained });
 	const insert = database.prepare(
 		"INSERT INTO papers (filepath, year, title, abstract, doi, item_type, creators_json) VALUES (?, ?, ?, ?, ?, ?, ?)",
 	);
@@ -41,7 +35,7 @@ async function literatureDatabase(path, rows, { constrained = true } = {}) {
 					? null
 					: JSON.stringify(row.creators),
 		);
-	database.exec("INSERT INTO papers_fts(papers_fts) VALUES ('rebuild')");
+	rebuildLiteratureIndex(database);
 	database.close();
 }
 
