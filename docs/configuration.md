@@ -85,8 +85,8 @@ worker. It does not discover or override disabled packages.
 
 `literature_search` is available directly to the supervisor. A
 dispatched worker also receives it when its selected skills include the
-exact `research` selector; other workers do not. The database is selected
-in this order:
+exact `research` selector; other workers do not. The database is
+selected in this order:
 
 1.  `<projectRoot>/LITERATURE.sqlite`, when it exists;
 2.  `literatureDatabase` in the resolved `pi-sych/config.json`; or
@@ -299,9 +299,9 @@ retrieval. This adds MCPorter using the configured `mcporterConfig` path
 directory); ordinary workers do not receive that integration. If the
 supervisor's active `web` tool comes from a loaded, valid `pi-pew-pew`
 package, the remote-research worker also receives that extension and
-`web`. An absent, disabled, or excluded PEW-PEW tool remains absent.
-The supervisor may use an already active read-only `web` tool directly;
-Pi Sych does not register or activate one. `/pi-sych-mcp` reports whether
+`web`. An absent, disabled, or excluded PEW-PEW tool remains absent. The
+supervisor may use an already active read-only `web` tool directly; Pi
+Sych does not register or activate one. `/pi-sych-mcp` reports whether
 MCPorter and its configuration are available without printing
 credentials.
 

@@ -61,9 +61,9 @@ worker extension also registers it, while the worker engine exposes it
 only when the selected skills include exact `research`. A query flows to
 the resolved local SQLite FTS5 database and comes back as metadata,
 snippets, scores, and source paths. The supported `papers` plus
-external-content `papers_fts` schema stores canonical metadata separately
-and indexes filepath, title, abstract, tags, and DOI; its full FTS5
-contract and database-resolution order are in
+external-content `papers_fts` schema stores canonical metadata
+separately and indexes filepath, title, abstract, tags, and DOI; its
+full FTS5 contract and database-resolution order are in
 [configuration](configuration.md#local-literature-search).
 
 For declarations and source links generated from the current runtime
