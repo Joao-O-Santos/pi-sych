@@ -83,17 +83,18 @@ worker. It does not discover or override disabled packages.
 
 ## Local literature search
 
-`literature_search` is available only to a dispatched worker whose
-selected skills include the exact `research` selector. It is a local
-lookup tool, not a supervisor service. The database is selected in this
-order:
+`literature_search` is available directly to the supervisor. A
+dispatched worker also receives it when its selected skills include the
+exact `research` selector; other workers do not. The database is selected
+in this order:
 
 1.  `<projectRoot>/LITERATURE.sqlite`, when it exists;
 2.  `literatureDatabase` in the resolved `pi-sych/config.json`; or
 3.  `<resolved-config-directory>/literature.sqlite`.
 
-The supervisor forwards the resolved Pi Sych configuration directory to
-the isolated worker process while keeping the worker's own Pi agent
+Supervisor lookup resolves the current project root before selecting the
+database. For isolated workers, the supervisor forwards the resolved Pi
+Sych configuration directory while keeping the worker's own Pi agent
 directory separate. A configured relative `literatureDatabase` is
 relative to that configuration directory; an absolute value is used
 directly. It must be non-empty and may not contain parent traversal. An
@@ -299,8 +300,10 @@ directory); ordinary workers do not receive that integration. If the
 supervisor's active `web` tool comes from a loaded, valid `pi-pew-pew`
 package, the remote-research worker also receives that extension and
 `web`. An absent, disabled, or excluded PEW-PEW tool remains absent.
-`/pi-sych-mcp` reports whether MCPorter and its configuration are
-available without printing credentials.
+The supervisor may use an already active read-only `web` tool directly;
+Pi Sych does not register or activate one. `/pi-sych-mcp` reports whether
+MCPorter and its configuration are available without printing
+credentials.
 
 `dispatch_worker.contextMode` is independent of this integration. It
 defaults to `clean`, which starts without a conversation session. Set it

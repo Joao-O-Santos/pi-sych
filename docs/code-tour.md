@@ -49,20 +49,22 @@ worker that requested remote research, and its diagnostics describe
 configuration without exposing credentials. Such a worker also receives
 PEW-PEW when the supervisor's active `web` tool has validated
 `pi-pew-pew` package provenance; disabled or excluded PEW-PEW remains
-absent. Plannotator is separate from the workbench: it is a narrow
-human-review adapter that brings feedback from a message or file back
-into the review flow rather than controlling plans or project state.
+absent. A separately installed active `web` tool remains directly usable
+by the supervisor. Plannotator is separate from the workbench: it is a
+narrow human-review adapter that brings feedback from a message or file
+back into the review flow rather than controlling plans or project
+state.
 
-Literature search is a worker tool. The worker extension always
-registers it, but the worker engine exposes it only when the selected
-skills include exact `research`. A query flows to the resolved local
-SQLite FTS5 database and comes back as metadata, snippets, scores, and
-source paths. The supported `papers` plus external-content `papers_fts`
-schema stores canonical metadata separately and indexes filepath, title,
-abstract, tags, and DOI; its full FTS5 contract and database-resolution
-order are in [configuration](configuration.md#local-literature-search).
-This keeps local research lookup available to a selected research worker
-without making it a supervisor-wide service.
+Literature search is a direct supervisor tool and a gated worker tool.
+The workbench registers `literature_search` for supervisor lookup. The
+worker extension also registers it, while the worker engine exposes it
+only when the selected skills include exact `research`. A query flows to
+the resolved local SQLite FTS5 database and comes back as metadata,
+snippets, scores, and source paths. The supported `papers` plus
+external-content `papers_fts` schema stores canonical metadata separately
+and indexes filepath, title, abstract, tags, and DOI; its full FTS5
+contract and database-resolution order are in
+[configuration](configuration.md#local-literature-search).
 
 For declarations and source links generated from the current runtime
 source, see the [live generated code

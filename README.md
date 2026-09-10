@@ -74,10 +74,10 @@ dependency impact, project-file problems, and pending review proposals.
 It does not decide whether a change is scientifically, conceptually, or
 editorially correct.
 
-Worker setup is optional. Direct work with project files and skills does
-not require it. To dispatch bounded workers, configure a private model
-catalogue and initialize a worker directory. See
-[configuration](docs/configuration.md) for worker setup.
+Worker setup is optional. Direct work with project files, local
+literature lookup, and skills does not require it. To dispatch bounded
+workers, configure a private model catalogue and initialize a worker
+directory. See [configuration](docs/configuration.md) for worker setup.
 
 ## A typical research workflow
 
@@ -258,10 +258,18 @@ the [public contract](docs/public-contract.md).
 
 ### Tools available to the supervising model
 
-Pi Sych gives the supervisor two mechanical tools:
+Pi Sych gives the supervisor three tools:
 
-- `project_status` checks or acknowledges project state; and
-- `dispatch_worker` starts one bounded, short-lived worker.
+- `project_status` checks or acknowledges project state;
+- `dispatch_worker` starts one bounded, short-lived worker; and
+- `literature_search` performs direct read-only lookup in the configured
+  local literature index.
+
+A separately installed and active read-only `web` tool can also remain
+available to the supervisor. Pi Sych does not register one. Direct
+read-only retrieval is appropriate for small or tightly connected
+exploration; dispatch is reserved for cases where independent context,
+breadth, specialization, or substantial execution materially helps.
 
 In Pi's terminal interface, a collapsed `dispatch_worker` call shows a
 compact task summary, requested model role (or catalog default), and
@@ -276,11 +284,11 @@ must be.
 
 ### Research workers and local literature
 
-A worker selected with the `research` skill also receives
-`literature_search`; it is not a supervisor tool and is not added for
-other skills. The tool searches a local, read-only SQLite FTS5 database.
-Its v7 schema stores canonical metadata in `papers` and uses an
-external-content FTS5 table named `papers_fts`. It searches filepath,
+The supervisor can call `literature_search` directly. A worker selected
+with the exact `research` skill also receives the same read-only tool;
+it is not added to other workers. The tool searches a local SQLite FTS5
+database. Its v7 schema stores canonical metadata in `papers` and uses
+an external-content FTS5 table named `papers_fts`. It searches filepath,
 title, abstract, tags, and DOI; returns ranked metadata (`title`,
 nullable `itemType`, nullable or structured `creators`, `year`, and
 `doi`), a marked snippet from `abstract`, a score, and each source path
@@ -326,6 +334,9 @@ orchestration system:
   dependencies.
 - **Mechanical status:** `project_status` reports changed or missing
   files and affected dependants. Human review supplies the meaning.
+- **Direct retrieval:** `literature_search`, and an independently active
+  read-only `web` tool when present, let the supervisor inspect small or
+  tightly connected sources without creating a second model context.
 - **Bounded delegation:** `dispatch_worker` starts one short-lived
   worker with an explicit task, clean-by-default or inherited-trajectory
   context, files, skills, model role, tool mode, and timeout. A worker
@@ -402,8 +413,10 @@ When working in a Pi Sych project:
 - read `PROJECT.md` and only the additional files needed for the task;
 - treat accepted project files, rather than conversational recollection,
   as the durable project record;
-- work directly unless an independent context would materially improve
-  the result;
+- use direct work and read-only retrieval for small or tightly connected
+  exploration;
+- dispatch when independent context, breadth, specialization, or
+  substantial execution materially improves the result;
 - inspect the available skill catalogue before dispatch and select only
   skills valuable for the assignment;
 - give workers the smallest complete packet; use no supervisor

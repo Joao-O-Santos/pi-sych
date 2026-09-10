@@ -28,7 +28,7 @@ const explanations = new Map([
 	],
 	[
 		"literature_search",
-		"The worker-only literature tool queries the configured local SQLite FTS database and returns matching metadata, snippets, scores, and resolved source paths.",
+		"The read-only literature tool is available to the supervisor and selected research workers; it queries the configured local SQLite FTS database and returns matching metadata, snippets, scores, and resolved source paths.",
 	],
 ]);
 

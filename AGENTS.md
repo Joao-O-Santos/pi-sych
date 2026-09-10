@@ -28,7 +28,10 @@ bounded delegation, and human-owned judgment.
 
 ## Public runtime target
 
-- Agent tools: `dispatch_worker` and `project_status`.
+- Pi Sych agent tools: `dispatch_worker`, `project_status`, and
+  `literature_search`.
+- A separately installed active read-only `web` tool remains directly
+  usable by the supervisor; Pi Sych does not register a web tool.
 - Commands: `/pi-sych-status`, `/pi-sych-mcp`,
   `/plannotator-annotate <file>`, `/plannotator-last`,
   `/plannotator-review`. No `/plannotator` plan-mode toggle.

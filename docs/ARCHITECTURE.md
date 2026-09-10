@@ -8,11 +8,17 @@ judgment.
 
 ## Supervisor contract
 
-The supervisor sees two agent tools:
+The supervisor sees three Pi Sych agent tools:
 
 - `project_status` checks or acknowledges mechanical project state;
 - `dispatch_worker` runs one short-lived worker with clean-by-default or
-  explicitly inherited trajectory context.
+  explicitly inherited trajectory context; and
+- `literature_search` performs direct read-only lookup in the configured
+  local literature index.
+
+A separately installed and active read-only `web` tool can remain
+available directly to the supervisor. Pi Sych does not register a web
+tool or expose generic MCPorter to the supervisor.
 
 Human commands are separate: `/pi-sych-status`, `/pi-sych-mcp`,
 `/plannotator-last`, `/plannotator-annotate`, and `/plannotator-review`.
@@ -25,10 +31,13 @@ the configured project `agents` file. The private model catalog is
 loaded lazily: direct project work does not require worker setup, while
 a worker dispatch requires a valid exact-role catalog.
 
-Before dispatch, the supervisor inspects the available skill catalogue
-and selects only skills valuable for the assignment. It should pass the
-smallest complete worker packet: task, expected output, context mode,
-capability mode, context files, selected skills, model role, and a
+Direct work and read-only retrieval are preferred for small or tightly
+connected exploration. Dispatch is useful when independent context,
+breadth, specialization, or substantial execution materially improves
+the result. Before dispatch, the supervisor inspects the available skill
+catalogue and selects only skills valuable for the assignment. It should
+pass the smallest complete worker packet: task, expected output, context
+mode, capability mode, context files, selected skills, model role, and a
 bounded timeout. In both modes, existing configured `agents` and `style`
 files are automatically added to the context-file list. Other required
 project files must be supplied explicitly. Clean workers receive no
@@ -116,16 +125,18 @@ lines, not by newline accidents.
 
 ## Local literature
 
-`literature_search` is registered only by the worker extension. It opens
-the selected database read-only and queries the supported SQLite FTS5
-`papers` plus external-content `papers_fts` schema. The supervisor
-forwards only the resolved Pi Sych configuration-directory path to the
-worker while retaining its isolated Pi agent directory. Search joins the
-index to canonical metadata, searches filepath, title, abstract, tags,
-and DOI, and ranks with FTS5, snippets `abstract`, and returns source
-paths resolved relative to the database. Database selection and the
-`literatureDatabase` setting are documented in
-[configuration](configuration.md#local-literature-search).
+`literature_search` is registered by the workbench for direct supervisor
+lookup and by the worker extension for selected research workers. It
+opens the selected database read-only and queries the supported SQLite
+FTS5 `papers` plus external-content `papers_fts` schema. Supervisor
+lookup resolves the current project root before selecting the database;
+the supervisor forwards the resolved Pi Sych configuration-directory
+path to isolated workers while retaining their separate Pi agent
+directory. Search joins the index to canonical metadata, searches
+filepath, title, abstract, tags, and DOI, ranks with FTS5, snippets
+`abstract`, and returns source paths resolved relative to the database.
+Database selection and the `literatureDatabase` setting are documented
+in [configuration](configuration.md#local-literature-search).
 
 ## Skills, MCPorter, and Plannotator
 
