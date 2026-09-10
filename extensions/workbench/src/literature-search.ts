@@ -6,9 +6,15 @@ import { Type } from "typebox";
 import { loadPiSychConfig, piSychConfigDirectory } from "./config-directory.js";
 
 const query =
-	"SELECT p.filepath AS source_path, p.title, p.first_author AS authors, p.year, p.doi, snippet(papers_fts, 2, '[', ']', ' … ', 32) AS snippet, bm25(papers_fts) AS score FROM papers_fts JOIN papers AS p ON p.id = papers_fts.rowid WHERE papers_fts MATCH ? ORDER BY score LIMIT ?";
+	"SELECT p.filepath AS source_path, p.title, p.item_type, p.creators_json, p.year, p.doi, snippet(papers_fts, 2, '[', ']', ' … ', 32) AS snippet, bm25(papers_fts) AS score FROM papers_fts JOIN papers AS p ON p.id = papers_fts.rowid WHERE papers_fts MATCH ? ORDER BY score LIMIT ?";
 export interface LiteratureResult {
-	metadata: { title: unknown; authors: unknown; year: unknown; doi: unknown };
+	metadata: {
+		title: unknown;
+		itemType: string | null;
+		creators: unknown;
+		year: unknown;
+		doi: unknown;
+	};
 	snippet: unknown;
 	score: unknown;
 	sourcePath: string;
@@ -39,15 +45,39 @@ export function searchLiterature(
 	if (!existsSync(path)) throw new Error(`Literature database is unavailable at ${path}`);
 	try {
 		using database = new DatabaseSync(path, { readOnly: true });
-		const rows = database.prepare(query).all(queryText, limit) as unknown as Record<
-			string,
-			unknown
-		>[];
+		const rows = database.prepare(query).all(queryText, limit);
 		return rows.map((row) => {
 			if (typeof row.source_path !== "string")
 				throw new Error("literature source path must be text");
+			if (row.item_type !== null && typeof row.item_type !== "string")
+				throw new Error("literature item type must be text or null");
+			let creators: unknown = null;
+			if (row.creators_json !== null) {
+				if (typeof row.creators_json !== "string")
+					throw new Error("literature creators must be JSON text or null");
+				creators = JSON.parse(row.creators_json);
+				if (
+					creators === null ||
+					typeof creators !== "object" ||
+					Array.isArray(creators) ||
+					!Object.values(creators).every(
+						(names) =>
+							Array.isArray(names) &&
+							names.every(
+								(name) => name !== null && typeof name === "object" && !Array.isArray(name),
+							),
+					)
+				)
+					throw new Error("literature creators must be an object of arrays of name objects");
+			}
 			return {
-				metadata: { title: row.title, authors: row.authors, year: row.year, doi: row.doi },
+				metadata: {
+					title: row.title,
+					itemType: row.item_type,
+					creators,
+					year: row.year,
+					doi: row.doi,
+				},
 				snippet: row.snippet,
 				score: row.score,
 				sourcePath: resolve(dirname(path), row.source_path),

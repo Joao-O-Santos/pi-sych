@@ -10,18 +10,28 @@ import {
 	searchLiterature,
 } from "../../.test-build/workbench/src/literature-search.js";
 
-async function database(path, rows = []) {
+async function database(path, rows = [], { constrained = true } = {}) {
 	await mkdir(dirname(path), { recursive: true });
 	const db = new DatabaseSync(path);
 	db.exec(
-		"CREATE TABLE papers (id INTEGER PRIMARY KEY, filepath TEXT, directory TEXT, filename TEXT, year INTEGER, first_author TEXT, title TEXT, abstract TEXT, topic_tags TEXT, doi TEXT)",
+		`CREATE TABLE papers (id INTEGER PRIMARY KEY, filepath TEXT, directory TEXT, filename TEXT, year INTEGER, item_type TEXT, creators_json TEXT${constrained ? " CHECK (creators_json IS NULL OR (typeof(creators_json) = 'text' AND json_valid(creators_json) AND json_type(creators_json) = 'object'))" : ""}, title TEXT, abstract TEXT, topic_tags TEXT, doi TEXT)`,
 	);
 	db.exec(
 		"CREATE VIRTUAL TABLE papers_fts USING fts5(filepath, title, abstract, topic_tags, doi, content='papers', content_rowid='id')",
 	);
-	const insert = db.prepare("INSERT INTO papers VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-	for (const [filepath, title, authors, year, doi, text] of rows)
-		insert.run(null, filepath, "", "", year, authors, title, text, "", doi);
+	const insert = db.prepare(
+		"INSERT INTO papers (filepath, title, creators_json, year, doi, abstract, item_type) VALUES (?, ?, ?, ?, ?, ?, ?)",
+	);
+	for (const [filepath, title, creators, year, doi, text, itemType = "article-journal"] of rows)
+		insert.run(
+			filepath,
+			title,
+			creators === null ? null : JSON.stringify(creators),
+			year,
+			doi,
+			text,
+			itemType,
+		);
 	db.exec("INSERT INTO papers_fts(papers_fts) VALUES ('rebuild')");
 	db.close();
 }
@@ -48,7 +58,7 @@ test("worker-style explicit config resolves an external literature database", as
 			rm(configRoot, { recursive: true, force: true }),
 		]),
 	);
-	await database(databasePath, [["paper.pdf", "External", "A", 2024, null, "worker config"]]);
+	await database(databasePath, [["paper.pdf", "External", null, 2024, null, "worker config"]]);
 	await writeFile(
 		join(configRoot, "config.json"),
 		JSON.stringify({ ...DEFAULT_CONFIG, literatureDatabase: databasePath }),
@@ -78,11 +88,18 @@ test("literature database resolution honors project, explicit, and config defaul
 test("literature search returns ranked metadata, snippets, and resolved artifact paths", async (t) => {
 	const root = await project(t),
 		path = join(root, ".pi/pi-sych/indexes/papers.sqlite"),
-		absoluteArtifact = join(root, "absolute.pdf");
+		absoluteArtifact = join(root, "absolute.pdf"),
+		creators = {
+			author: [
+				{ family: "Smith", given: "Alex", "non-dropping-particle": "de", suffix: "Jr." },
+				{ literal: "Open Science Collaboration" },
+			],
+			editor: [{ family: "Jones", given: "Morgan" }],
+		};
 	await database(path, [
-		["../papers/relative.pdf", "Relative", "Ada", 2024, "10.1/a", "alpha exact phrase omega"],
-		[absoluteArtifact, "Absolute", "Bob", 2023, "10.1/b", "alpha exact phrase"],
-		["other.pdf", "Other", "Cid", 2022, null, "exactly phrase"],
+		["../papers/relative.pdf", "Relative", creators, 2024, "10.1/a", "alpha exact phrase omega"],
+		[absoluteArtifact, "Absolute", null, 2023, "10.1/b", "alpha exact phrase"],
+		["other.pdf", "Other", {}, 2022, null, "exactly phrase"],
 	]);
 	await configure(root, "indexes/papers.sqlite");
 	const results = searchLiterature(root, '"exact phrase"', 2),
@@ -91,7 +108,8 @@ test("literature search returns ranked metadata, snippets, and resolved artifact
 	assert.equal(results.length, 2);
 	assert.deepEqual(relative.metadata, {
 		title: "Relative",
-		authors: "Ada",
+		itemType: "article-journal",
+		creators,
 		year: 2024,
 		doi: "10.1/a",
 	});
@@ -128,7 +146,86 @@ test("literature search reports missing databases, invalid limits, FTS queries, 
 test("literature search opens a real read-only SQLite database", async (t) => {
 	const root = await project(t),
 		path = join(root, "LITERATURE.sqlite");
-	await database(path, [["paper.pdf", "Title", "A", 2020, null, "readable"]]);
+	await database(path, [["paper.pdf", "Title", null, 2020, null, "readable"]]);
 	await chmod(path, 0o444);
 	assert.equal(searchLiterature(root, "readable").length, 1);
+});
+
+test("literature metadata preserves SQL null, empty roles, and omitted roles", async (t) => {
+	const root = await project(t),
+		path = join(root, "LITERATURE.sqlite");
+	const values = [null, {}, { author: [] }, { editor: [{ literal: "Editorial Board" }] }];
+	await database(
+		path,
+		values.map((creators, index) => [
+			`paper-${index}.pdf`,
+			`Paper ${index}`,
+			creators,
+			2024,
+			null,
+			`case${index}`,
+			null,
+		]),
+	);
+	for (const [index, creators] of values.entries()) {
+		assert.deepEqual(searchLiterature(root, `case${index}`)[0].metadata, {
+			title: `Paper ${index}`,
+			itemType: null,
+			creators,
+			year: 2024,
+			doi: null,
+		});
+	}
+});
+
+test("literature search rejects invalid creator structures at the wrapped row boundary", async (t) => {
+	const root = await project(t),
+		path = join(root, "LITERATURE.sqlite");
+	await database(path, [["paper.pdf", "Paper", null, 2024, null, "needle"]], {
+		constrained: false,
+	});
+	// This external-style fixture deliberately has no CHECK constraint.
+	for (const value of [
+		"{",
+		"null",
+		"[]",
+		'"name"',
+		"1",
+		"true",
+		'{"author":null}',
+		'{"author":{}}',
+		'{"author":"name"}',
+		'{"author":[null]}',
+		'{"author":[[]]}',
+		'{"author":["name"]}',
+		'{"author":[1]}',
+		Buffer.from("{}"),
+	]) {
+		const db = new DatabaseSync(path);
+		db.prepare("UPDATE papers SET creators_json = ?").run(value);
+		db.close();
+		assert.throws(
+			() => searchLiterature(root, "needle"),
+			(error) => {
+				assert.match(error.message, /^Literature search failed for /);
+				assert.ok(error.message.includes(path));
+				const expected =
+					value === "{"
+						? /JSON|Unexpected|unexpected|unterminated/i
+						: value instanceof Buffer
+							? /creators must be JSON text or null/
+							: /creators must be an object of arrays of name objects/;
+				assert.match(error.message, expected);
+				return true;
+			},
+			`Expected failure for ${String(value)}`,
+		);
+	}
+});
+
+test("literature search rejects a non-text item type", async (t) => {
+	const root = await project(t),
+		path = join(root, "LITERATURE.sqlite");
+	await database(path, [["paper.pdf", "Paper", null, 2024, null, "needle", Buffer.from("book")]]);
+	assert.throws(() => searchLiterature(root, "needle"), /Literature search failed.*item type/);
 });
