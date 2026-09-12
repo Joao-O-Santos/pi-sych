@@ -16,36 +16,20 @@ Check voice coherence as well as logical coherence: unexplained shifts in
 register, confidence, terminology, or intellectual posture can signal a deeper
 structural problem.
 
-When `PROJECT.md`, `DECISIONS.md`, or equivalent accepted state is available,
-compare the artifact's apparent objective, contribution, scope, and major claims
-with that state. If they differ materially, report the discrepancy. Do not
-silently force the artifact back to the file or assume the file is stale. State
-what each currently says, why the difference matters, and whether the owner
-needs to confirm the new direction or update durable state.
+Use the requested lens. A collaborative lens reconstructs the strongest intended
+argument and identifies the smallest changes that let it work. An adversarial
+lens tests whether contribution, inference, alternatives, and limitations survive
+skeptical reading. Neither lens licenses manufactured objections or automatic
+rewriting.
 
-## Review lenses
+A request to review the whole artifact authorizes completing this diagnosis
+across the artifact. Return prioritized findings rather than stopping to ask
+whether to inspect the next section. If the review also requests revision, apply
+the authorized revision after the structural diagnosis; otherwise keep the
+review advisory.
 
-Use the lens requested by the user or task. If none is specified, use the
-collaborative lens.
-
-**Collaborative / co-author:** Read charitably enough to recover the intended
-argument, but critically enough to identify genuine weaknesses. Prioritize the
-few structural changes that would most improve clarity, coherence, contribution,
-and economy. Preserve the author's intellectual direction unless there is a
-substantive reason to challenge it.
-
-**Adversarial / referee:** Require the text to earn its contribution and
-conclusions. Actively test whether claims are overstated, alternatives are
-ignored, transitions conceal missing reasoning, limitations undermine the main
-story, or the manuscript is less novel or coherent than it presents itself as
-being. Do not manufacture objections merely to be adversarial.
-
-Independent clean-context reviews may use different lenses on the same artifact.
-Keep their findings independent until synthesis; disagreement is evidence to
-inspect, not something to average away.
-
-For each material finding state location, consequence, and the smallest credible
-structural response. Distinguish valid transitional, serial, dialogic, or
-fragmentary exceptions from incoherence. Do not substitute a preferred redesign
-for the artifact's job, and do not line-edit prose whose structural location is
-still in doubt.
+When accepted project state exists, compare it with the artifact. Report a
+material difference as possible intentional change, stale project state, or
+unresolved conflict. Do not silently force either side to match the other. If a
+later rewrite would resolve a consequential ambiguity not already decided by the
+user, surface that decision before crossing it.

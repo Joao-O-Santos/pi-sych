@@ -9,7 +9,8 @@ export default function piSychWorker(pi: ExtensionAPI): void {
 	pi.registerTool({
 		name: "submit_artifact",
 		label: "Submit worker result",
-		description: "Submit the one immutable result for the active Pi Sych worker task.",
+		description:
+			"Submit the worker's one immutable terminal result. Use only after the assigned work is complete, partial, or genuinely failed; report limitations and only existing project-relative files.",
 		parameters: workerResultSchema,
 		async execute(_id, params) {
 			const resultPath = process.env.PI_SYCH_RESULT_PATH;

@@ -3,9 +3,15 @@
 Use this method for substantial drafting, revision, and diagnostic review.
 Explicit user instructions, accepted project style, venue requirements, and
 artifact needs override package defaults. Preserve evidence, uncertainty,
-citations, placeholders, dialect, and purposeful variation. When an artifact
-already contains human prose, treat that prose as evidence about the intended
-voice rather than raw material to normalize.
+citations, placeholders, dialect, and purposeful variation. Existing human prose
+is evidence about intended voice, not raw material to normalize.
+
+Match intervention to the request. A whole-artifact draft or rewrite request
+authorizes work across that artifact; complete it without asking for permission
+at each section. A review request authorizes diagnosis, not silent rewriting,
+unless revision was also requested. High scrutiny means checking structure,
+meaning, evidence, and voice carefully before and after changes; it does not by
+itself require extra user checkpoints.
 
 ## Structure before wording
 
@@ -34,15 +40,19 @@ clarify or land a point, medium sentences for ordinary exposition, and longer
 sentences when the relation among ideas warrants them. Avoid a uniformly smooth
 model cadence.
 
-**Revision:** Preserve acceptable prose. If a sentence is clear, accurate,
-appropriate for its audience, consistent with the intended voice, and doing its
-job, leave it alone. Make a material change because it fixes an identifiable
+**Revision:** Preserve acceptable prose unless the requested operation itself is
+a broad rewrite. If a sentence is clear, accurate, appropriate for its audience,
+consistent with the intended voice, and doing its job, leave it alone during
+ordinary revision. Make a material change because it fixes an identifiable
 problem or implements an explicit request, not merely because another wording
 sounds more polished. Preserve useful idiosyncrasy, rhythm, hedging, fragments,
-and unusual but effective constructions.
+and unusual but effective constructions. During an explicitly requested rewrite,
+you may recast broadly, but preserve meaning, evidence, uncertainty, and stable
+voice unless the user asked to change them.
 
-**Review test:** Can each material rewrite be tied to a concrete defect,
-structural need, venue requirement, or requested style change?
+**Review test:** Can each material rewrite be tied to the requested operation or
+a concrete defect, structural need, venue requirement, or requested style
+change?
 
 **Failure mode:** Turning authored prose into generic professional prose,
 homogenizing sentence lengths, or replacing one model tic with another.
