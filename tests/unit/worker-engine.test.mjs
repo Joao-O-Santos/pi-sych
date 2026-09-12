@@ -176,7 +176,7 @@ test("worker prompt requires routed method and module reads", () => {
 	assert.match(prompt, /routed modules/i);
 	assert.match(prompt, /checks you could not perform as limitations/i);
 	assert.match(prompt, /existing project-relative paths/i);
-	assert.match(prompt, /submit_artifact once as the final tool call/i);
+	assert.match(prompt, /submit_artifact exactly once as the final tool call/i);
 	const research = taskPrompt(
 		{
 			id: "task-2",

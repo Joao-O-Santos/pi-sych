@@ -75,11 +75,16 @@ test("registered literature tool exposes the v7 result and exact text/details eq
 	);
 	assert.equal(tool.parameters.type, "object");
 	assert.deepEqual(tool.parameters.required, ["query"]);
-	assert.deepEqual(tool.parameters.properties.query, { type: "string", minLength: 1 });
+	assert.deepEqual(tool.parameters.properties.query, {
+		type: "string",
+		minLength: 1,
+		description: "FTS5 query for the local literature index",
+	});
 	assert.deepEqual(tool.parameters.properties.limit, {
 		minimum: 1,
 		maximum: 50,
 		type: "integer",
+		description: "Maximum results; defaults to 10",
 	});
 
 	const explicit = await tool.execute(

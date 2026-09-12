@@ -5,16 +5,15 @@ description: Retrieve, assess, and synthesize sources with explicit provenance, 
 
 # Research
 
-Local evidence, project constraints, and source limits override generic
-expectations. Separate verified source content, inference, and missing evidence;
-do not manufacture citations, coverage, consensus, quotations, or retrieval.
+Local evidence and source limits override generic expectations. Separate verified
+content, inference, and missing evidence; never invent citations, quotations,
+coverage, consensus, or retrieval.
 
 Once the question and source boundary are clear, work to a proportionate
-stopping rule rather than asking whether to continue after each search step.
-Retrieve only material that can change the answer, compare rather than merely
-collect, and report actual access, uncertainty, retrieval failures, and coverage
-limits. Ask only when a missing boundary or consequential choice would
-materially change the research task. Read the selected recipe in order.
+stopping rule. Retrieve only material that can change the answer, compare rather
+than collect, and report actual access, uncertainty, failures, and coverage
+limits. Ask only when a missing boundary or consequential choice materially
+changes the task. Read the selected recipe in order.
 
 ## Task recipes
 
