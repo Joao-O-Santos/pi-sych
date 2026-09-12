@@ -113,10 +113,10 @@ message, or annotate a project-local review file.
 The supervisor converts your decisions into a clean implementation
 brief. The edit worker receives:
 
--   the accepted corrections;
--   the manuscript or sections that must change;
--   applicable evidence and style requirements;
--   any tools needed to perform the revision.
+- the accepted corrections;
+- the manuscript or sections that must change;
+- applicable evidence and style requirements;
+- any tools needed to perform the revision.
 
 It normally does not need rejected suggestions or the full review
 debate.
@@ -156,26 +156,26 @@ that interval.
 Workers receive the mode and optional integrations appropriate to their
 task:
 
--   `read-only` exposes reading and discovery tools for review,
-    inspection, and analysis;
--   `edit` adds focused file editing and writing tools;
--   `full-host` exposes Bash for tasks that must run project commands or
-    inspect the wider host environment; and
--   `remoteResearch: true` adds MCPorter for an explicitly assigned
-    remote-research task and also reuses an active, provenance-validated
-    PEW-PEW `web` tool when one is enabled in the supervisor.
+- `read-only` exposes reading and discovery tools for review, inspection,
+  and analysis;
+- `edit` adds focused file editing and writing tools;
+- `full-host` exposes Bash for tasks that must run project commands or
+  inspect the wider host environment; and
+- `remoteResearch: true` adds MCPorter for an explicitly assigned
+  remote-research task and also reuses an active, provenance-validated
+  PEW-PEW `web` tool when one is enabled in the supervisor.
 
 These names describe visible Pi tools, not security boundaries. Tool
 modes do not remove the worker process's underlying host permissions.
 
 ## Human review tools
 
--   `/plannotator-last` annotates the last assistant response and
-    returns feedback to the conversation.
--   `/plannotator-annotate <file>` accepts only a project-local `.md` or
-    `.mdx` file and writes feedback to `<file>.feedback.md`.
--   `/plannotator-review` records code-review feedback in
-    `<projectRoot>/PLANNOTATOR_REVIEW.md`.
+- `/plannotator-last` annotates the last assistant response and returns
+  feedback to the conversation.
+- `/plannotator-annotate <file>` accepts only a project-local `.md` or
+  `.mdx` file and writes feedback to `<file>.feedback.md`.
+- `/plannotator-review` records code-review feedback in
+  `<projectRoot>/PLANNOTATOR_REVIEW.md`.
 
 These are review interfaces, not a plan controller or automatic approval
 system. Plannotator is a separate optional extension: disable it with

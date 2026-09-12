@@ -9,22 +9,22 @@ judgment.
 
 The supervisor sees three Pi Sych tools:
 
--   `project_status` checks or acknowledges mechanical project state;
--   `dispatch_worker` runs one short-lived worker with clean or
-    trajectory context; and
--   `literature_search` performs read-only lookup in the configured
-    local literature index.
+- `project_status` checks or acknowledges mechanical project state;
+- `dispatch_worker` runs one short-lived worker with clean or trajectory
+  context; and
+- `literature_search` performs read-only lookup in the configured local
+  literature index.
 
 At turn start Pi Sych adds concise supervisor guidance plus configured
 project `agents` instructions when present. The supervisor guidance uses
 two independent task-posture dimensions:
 
--   **persistence** --- once the requested outcome and authorization
-    boundary are clear, continue until completion or a genuine blocker
-    rather than stopping merely to ask whether to continue; and
--   **scrutiny** --- increase checking for authored prose, consequential
-    project-state decisions, release/publication work, external side
-    effects, and ambiguous intent.
+- **persistence** --- once the requested outcome and authorization
+  boundary are clear, continue until completion or a genuine blocker
+  rather than stopping merely to ask whether to continue; and
+- **scrutiny** --- increase checking for authored prose, consequential
+  project-state decisions, release/publication work, external side
+  effects, and ambiguous intent.
 
 High scrutiny does not itself require another user checkpoint. A clear
 request to review, rewrite, implement, or complete a defined scope is
@@ -43,14 +43,14 @@ is useful for independent context, breadth, specialization, cheaper
 execution, independent review, or substantial bounded work. Context need
 is separate from delegation choice:
 
--   a clean worker receives no supervisor transcript and should be used
-    when the explicit packet is sufficient;
--   a trajectory worker receives Pi's persisted supervisor branch ending
-    immediately before the dispatching assistant entry and should be
-    used when prior conversation materially helps; and
--   supervisor pre-work can convert conversational context into explicit
-    state such as a plan, TODO, brief, or context file, allowing later
-    clean delegation.
+- a clean worker receives no supervisor transcript and should be used
+  when the explicit packet is sufficient;
+- a trajectory worker receives Pi's persisted supervisor branch ending
+  immediately before the dispatching assistant entry and should be used
+  when prior conversation materially helps; and
+- supervisor pre-work can convert conversational context into explicit
+  state such as a plan, TODO, brief, or context file, allowing later
+  clean delegation.
 
 Needing prior context therefore does not imply that the supervisor must
 execute the task itself.
@@ -81,9 +81,9 @@ removed after every outcome.
 ## Project state
 
 `SYNC.json` version 2 records tracked file hashes and dependency paths.
-`project_status` reports missing files, changed hashes, persisted
-status, project-brief problems, and dependency impact. A changed hash
-proves only changed content. Acknowledgement records reviewed state, not
+`project_status` reports missing files, changed hashes, persisted status,
+project-brief problems, and dependency impact. A changed hash proves
+only changed content. Acknowledgement records reviewed state, not
 correctness or semantic authority.
 
 ## Compaction
