@@ -156,8 +156,8 @@ that interval.
 Workers receive the mode and optional integrations appropriate to their
 task:
 
-- `read-only` exposes reading and discovery tools for review, inspection,
-  and analysis;
+- `read-only` exposes reading and discovery tools for review,
+  inspection, and analysis;
 - `edit` adds focused file editing and writing tools;
 - `full-host` exposes Bash for tasks that must run project commands or
   inspect the wider host environment; and
