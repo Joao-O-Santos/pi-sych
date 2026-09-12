@@ -3,7 +3,7 @@
 ## Objective
 
 {accepted} Maintain Pi Sych as a small, reviewable Pi package for
-serious writing, research, analysis, and code projects.
+serious writing, research, analysis, automation, and code projects.
 
 ## Audience and use
 
@@ -49,9 +49,16 @@ agent memory.
 ## Current direction
 
 {accepted} Keep the package small, explicit, and reviewable for human
-users: six public umbrella skills with bounded ordered task recipes,
-four reusable shared methods, focused local modules, bounded workers,
-independent substantive review, and no automated workflow controller.
+users: seven public umbrella skills (`project`, `write`, `analyze`,
+`code`, `review`, `research`, and `automation`), bounded ordered task
+recipes, four reusable shared methods, focused local modules, bounded
+workers, independent substantive review, and no automated workflow
+controller. Writing defaults should preserve acceptable human prose and
+follow established author/project style when drafting. Review should
+prioritize structure, clarity, repetition, argument and voice coherence,
+and divergence from accepted project state. Automation should compose
+actual available capabilities; a richer runtime capability summary and
+user-level `STACK.md` remain planned rather than implemented.
 
 ## Current state
 
@@ -64,28 +71,30 @@ semantic validation, citation formatting, or creator inference. Users of
 local literature search must rebuild or migrate v6 databases externally
 and update result consumers; other users have no literature-data
 migration. The approved runtime cap remains 2,500 nonblank lines;
-measured source is 2,380 lines, an intentional 30-line increase for
-validation and mapping. The final local gate passed 167 tests with
-98.22% line, 92.31% branch, and 95.07% function coverage. Package dry
-run, Pages build, production audit with no reported vulnerabilities, and
-independent read-only implementation review also passed. A subsequent
-main-only repair keeps both extensions available when `SYNC.json` is
-malformed or unreadable: `project_status` reports the exact unavailable
-state and acknowledgement remains blocked rather than overwriting it.
-The repair's final gate passed 171 tests with 98.29% line, 92.67%
-branch, and 95.07% function coverage; source is about 2,450/2,500 lines.
-No v7 tag, push, or publication has been performed. Use signed Git tags
-and npm registry metadata---not this narrative---for release state.
+measured source is about 2,450/2,500 lines after the malformed
+`SYNC.json` startup repair. The supervisor now discovers seven public
+skills because package discovery already targets the whole `skills/`
+directory; adding `automation` required only Markdown plus catalogue-test
+updates, not runtime changes. The writing and review guidance has also
+been strengthened around conservative revision, author-style drafting,
+structure-first editing, collaborative/adversarial review lenses, and
+project-state divergence. Runtime capability summaries, `STACK.md`,
+prompt-template packaging, and compaction changes remain unimplemented.
+No v7 tag or publication has been performed. Use signed Git tags and npm
+registry metadata, not this narrative, for release state.
 
 ## Previous action
 
-{verified} Implemented and documented a backward-compatible malformed
-`SYNC.json` startup repair with focused Pi RPC coverage, full local
-verification, and an independent final review with no findings. The
-temporary task ledger is complete and removed.
+{verified} Added the public `automation` umbrella skill and updated the
+skill-catalogue tests and current public-contract/maintainer
+documentation. Strengthened writing and review skill guidance and added a
+v7 implementation plan for remaining runtime work.
 
 ## Immediate next step
 
-{accepted} Keep the local repair unpushed until the owner separately
-instructs a push. Do not tag, publish, or release v7.0.0 without
-separate owner instruction.
+{accepted} Finish the planned runtime and documentation work before a
+v7 release: capability/`STACK.md` support if retained, prompt-template
+packaging if retained, compaction redesign, remaining present-tense
+seven-skill documentation/diagram updates, full verification, and an
+independent read-only review. Do not tag, publish, or release v7.0.0
+without separate owner instruction.
