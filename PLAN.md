@@ -1,108 +1,238 @@
 # Pi Sych v7 pre-launch plan
 
-This plan tracks the remaining failure-mode-driven v7 work. The package
-should stay small: solve repeated observed failures with the least prompt
-and runtime surface that works, then watch for regressions.
+This plan captures the current failure-mode-driven v7 work. The immediate
+approach is pragmatic rather than benchmark-led: fix repeatedly observed
+failures, use the package, and watch for regressions. More systematic model and
+skill evaluation can follow after the release shape is stable.
 
-## Completed: model-facing text audit
+## Implemented in this pass
 
-The current pass reviewed every model-facing text class: supervisor
-injection, tool descriptions/snippets/guidelines, worker request/result
-schemas, worker assignment prompt, compaction prompt, seven umbrella
-skills, routed shared methods/modules, examples/templates, and current
-model-facing documentation.
+### Writing and style
 
-Implemented changes:
+- Strengthened the shared prose method around structure before wording.
+- New drafting follows the strongest available author/project style evidence.
+- Revision now defaults to preserving clear, accurate, audience-appropriate
+  human prose unless a concrete defect, structural need, venue requirement, or
+  explicit request justifies changing it.
+- Added deliberate sentence-length variation, familiar-to-new flow, end-weight,
+  restrained em dashes, and non-dogmatic passive-voice guidance.
+- Kept language-specific defaults out of the public package. Dialect rules belong
+  in explicit user/project/private style guidance.
 
-- separate **persistence** from **scrutiny**: clear authorized work should
-  continue until complete or genuinely blocked; higher scrutiny means
-  more checking, not more permission prompts;
-- treat a clear request to review, rewrite, implement, or complete a
-  named scope as authorization for that scope;
-- request another checkpoint only for a new consequential choice, side
-  effect, or material ambiguity outside the accepted boundary;
-- choose supervisor execution versus worker delegation by task and
-  context rather than a fixed default;
-- make explicit that context need does not force supervisor execution;
-  use trajectory when prior conversation matters, or convert pre-work to
-  an explicit plan/TODO/brief and delegate cleanly afterward;
-- allow whole-artifact prose drafting/rewrite/review to complete when
-  explicitly requested while retaining high internal scrutiny around
-  meaning, evidence, structure, and voice;
-- make local literature search clearly a discovery/provenance surface,
-  not source verification or completeness evidence;
-- tighten worker schema/result descriptions and the terminal assignment
-  contract; and
-- establish the prompt hierarchy: always-visible text for cross-domain
-  invariants, umbrella skills for domain posture/routing, routed files
-  for detailed procedure.
+### Structure and review
 
-The current compaction prompt was audited and intentionally not rewritten:
-it already has one narrow structured-output job, and the planned richer
-compaction redesign will supersede it.
+- Strengthened section and structural review around macro-organization,
+  contribution visibility, clarity, repetition, proportion, sequencing, and
+  voice coherence.
+- Added collaborative/co-author and adversarial/referee review lenses without
+  restoring a reviewer-agent roster.
+- Material disagreement between an artifact and accepted project state is now a
+  review finding. Reviewers must not silently choose the artifact or
+  `PROJECT.md`.
+
+### Automation skill
+
+- Added `automation` as the seventh public umbrella skill.
+- Supervisor discovery required no runtime change because the package already
+  exposes the whole `skills/` directory.
+- Worker selection also required no runtime change because named skills are
+  resolved dynamically from `skills/<selector>/SKILL.md`.
+- Added modules for capability/stack selection, minimal workflow composition,
+  deterministic data/file transforms, and browser/UI automation.
+- Updated the catalogue tests that intentionally asserted exactly six skills.
+
+The current automation skill can already guide direct supervisor work and clean
+or trajectory workers. The richer capability and stack context below remains
+planned.
 
 ## Remaining automation context
 
 ### Runtime capability summary
 
-Expose a compact mechanically derived summary of relevant active
-capabilities without creating a manually maintained registry or
-duplicating tool schemas. Runtime state remains authoritative.
+Expose a compact mechanically derived summary of relevant active capabilities
+from Pi Sych and installed extensions, including h-pi-bakery components when
+present. Do not create a second manually maintained registry and do not duplicate
+full tool schemas.
+
+Useful capability classes include:
+
+- bounded workers and clean/trajectory context;
+- local literature search;
+- MCPorter/remote research;
+- PEW-PEW retrieval;
+- Plannotator;
+- interactive browser work;
+- document/spreadsheet/presentation transforms; and
+- deterministic local data/file transforms.
+
+Runtime state is authoritative about availability.
 
 ### User-level `STACK.md`
 
-If retained, add an optional user-level `STACK.md` for durable working
-preferences and tool relationships. It describes preference, not
-availability, and should load only when automation decisions need it.
+Add an optional user-level `STACK.md`, analogous to `STYLE.md` but for working
+preferences and tool relationships. It should record durable preferences such as
+retrieval versus interactive-browser choices, shell/CLI utilities, document and
+analysis workflows, Git hosting/CLI preferences, deterministic-processing
+preferences, and approval/privacy boundaries.
+
+`STACK.md` describes preferences, not availability. Runtime capabilities win if
+the two disagree. Load it only when automation is relevant rather than into
+every session.
+
+Before implementation, decide the smallest Pi-native resolution mechanism and
+whether capability context can be derived from already available runtime/tool
+metadata without adding much TypeScript.
 
 ## Review prompt templates
 
-Thin templates may provide user-facing entry points for collaborative,
-adversarial, structural, and multi-lens review. They must reuse the
-`review` skill rather than duplicate model-facing policy. Verify Pi's
-current prompt-template discovery/substitution/packaging before adding
-any runtime or package surface.
+Prompt templates are a useful user-facing entry layer because they can request a
+review lens or a set of independent reviews without duplicating the model-facing
+review policy.
+
+Proposed templates:
+
+- `/review-collaborative <artifact>`: demanding co-author review focused on
+  structure, clarity, repetition, argument/voice coherence, project-state
+  alignment, and the smallest high-value changes.
+- `/review-adversarial <artifact>`: skeptical referee review focused on
+  contribution, overclaiming, alternatives, limitations, structural weakness,
+  and project-state divergence without manufactured objections.
+- `/review-structure <artifact>`: reverse-outline and structural diagnosis only;
+  avoid copyediting while paragraph or section location remains unsettled.
+- `/review-multilens <artifact>`: request independent clean-context collaborative
+  and adversarial reviews, then synthesize agreements, disagreements, and blind
+  spots. Different model roles may help, but lens diversity is the invariant.
+
+Templates should remain thin entry points. The `review` skill and modules stay
+the source of truth.
+
+Before adding them, verify Pi's current package prompt-template discovery,
+argument substitution, and npm packaging behavior. Then add only the minimal
+metadata/tests/docs required to ship them.
 
 ## Compaction
 
-Keep one continuity-preserving compaction behavior. Replace the current
-pre-turn threshold handling with a verified settled-turn lifecycle and a
-richer bounded continuation representation. Preserve observable
-trajectory rather than claiming hidden chain-of-thought recovery.
+Keep one automatic continuity-preserving compaction behavior. Do not add a
+separate deliberate clean-compaction mode; a new session already provides the
+user-visible reset boundary.
 
-Candidate memory content:
+### Trigger at a settled turn boundary
 
-- objective/task and consequential user intent;
+Current automatic threshold handling occurs before the next agent start. Replace
+that eager behavior with a settled-turn design:
+
+1. finish the current assistant run;
+2. wait for the Pi lifecycle boundary that guarantees the agent is settled;
+3. inspect context usage;
+4. compact only when the soft threshold is exceeded; and
+5. let the next user message enter the compacted context.
+
+Verify the exact Pi lifecycle API before implementation. Prefer a true
+settled/idle boundary over `turn_end` if queued follow-ups or steering can race
+with compaction. Keep Pi/native overflow handling as an emergency fallback for
+an unusually large single run.
+
+### Preserve trajectory, not hidden chain-of-thought
+
+Replace the current six-field memory with a richer but bounded continuation
+representation. Candidate content:
+
+- objective/task;
+- consequential user intent or wording;
 - constraints;
 - recent progress and material tool outcomes;
 - decisions and visible rationale;
 - rejected/failed approaches that constrain future work;
 - unresolved alternatives/questions;
-- current work and next action;
+- current work;
+- next action;
 - relevant files/artifacts; and
 - project-state gaps.
 
-Reconcile conversation with bounded canonical project state, classify
-missing/stale/conflicting durable state, and append only bounded marked
-proposals to `INBOX.md`. Never silently mutate canonical semantic files
-from compaction.
+Do not claim to recover provider-hidden reasoning. Any rationale reconstructed
+from observable conversation should be labelled as such.
 
-Required tests include settled-boundary/reentrancy behavior, queued
-follow-ups, explicit-decision versus inferred-rationale labeling,
-project-state gap classification, canonical non-mutation, and fallback
-behavior.
+### Reconcile conversation with durable project state
+
+Compaction should ask what the project files already remember before deciding
+what continuation memory still needs to carry.
+
+Suggested order:
+
+1. inspect bounded canonical project snapshots and mechanical project status;
+2. inspect the trajectory being compacted;
+3. identify durable state already represented in files;
+4. avoid duplicating that state unnecessarily in working memory;
+5. identify important accepted conversation state missing from or conflicting
+   with canonical files;
+6. append bounded, clearly marked proposals to `INBOX.md`; and
+7. preserve the remaining trajectory needed for intelligent continuation.
+
+State-gap proposals should distinguish, where possible:
+
+- aligned;
+- missing from files;
+- possibly obsolete in file; and
+- conflict/ambiguous direction.
+
+They should also distinguish an explicit user decision, an observed work result,
+and a model inference.
+
+### Mutation boundary
+
+Compaction must not silently edit canonical semantic files such as
+`PROJECT.md`, `DECISIONS.md`, `STYLE.md`, `EVIDENCE.md`, `AGENTS.md`, or
+`TODO.md`.
+
+Normal supervised work writes accepted durable state. Compaction detects state
+that normal work failed to record and may append proposals to `INBOX.md`. If the
+user explicitly instructed a normal-turn update and the supervisor failed to do
+it, compaction should expose that omission rather than silently repairing project
+truth.
+
+### Required code/tests
+
+- move automatic threshold handling from `before_agent_start` to the verified
+  settled-turn lifecycle;
+- prevent duplicate/re-entrant compaction around the same settled boundary;
+- redesign compaction schema, validation, rendering, and prompt;
+- preserve bounded canonical snapshots and current project-status evidence;
+- test project-state gap classification and `INBOX.md` proposals;
+- test explicit-decision versus inferred-rationale labeling;
+- test that canonical files are never mutated by compaction; and
+- test large-turn/emergency fallback behavior and queued follow-up interaction.
 
 ## Skill quality across model strengths
 
-Do not create weak/strong copies of every skill. Keep invariants concise
-and add scaffolding only where repeated use shows it is needed. Evaluate
-prompt changes by known failure prevention, regression risk, marginal
-behavioral value, and whether less text can achieve the same result.
+Do not create large weak-model/strong-model copies of every skill. Keep common
+invariants concise and put extra procedural scaffolding in examples/templates
+only where repeated use shows it is needed.
 
-## Documentation and release boundary
+For now, judge changes by observed failures:
 
-Keep all present-tense documentation synchronized with implemented
-behavior. Historical changelog entries remain historical. Before tagging
-v7, run the full repository verification/packaging/site/audit gates,
-review the final diff independently, confirm main CI is green, and do not
-tag, publish, or release without separate owner instruction.
+- does the instruction prevent the known problem?
+- did it introduce a new recurring failure?
+- is the guidance doing work above what the model already does reliably?
+- can the same behavior be obtained with less prompt surface?
+
+## Documentation still to reconcile
+
+Before release, update all present-tense documentation and diagrams that still
+show the older six-skill catalogue or old compaction shape. Historical changelog
+entries should remain historical rather than being rewritten.
+
+In particular, reconcile README, architecture/configuration documentation, the
+skills architecture image, and any generated site text after the remaining
+runtime decisions are implemented.
+
+## Release boundary
+
+Before tagging v7:
+
+- implement and verify the retained runtime work above;
+- ensure current documentation describes actual behavior;
+- run formatter, typecheck, unit/integration tests, package dry run,
+  source-budget check, site build, production audit, and independent read-only
+  review;
+- confirm the main pipeline is green; and
+- do not tag, publish, or release v7.0.0 without separate owner instruction.
