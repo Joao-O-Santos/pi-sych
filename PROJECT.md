@@ -37,64 +37,80 @@ verification, or final review.
 explicit in `PROJECT.md` and `SYNC.json`; use optional `EVIDENCE.md` as
 bounded task evidence rather than an accumulating release log. Give
 workers exact resources, retain immutable results, report unexpected
-changes, and require human approval for consequential durable changes.
+changes, and keep new consequential choices human-owned.
+
+{accepted} Treat persistence and scrutiny as independent task-posture
+dimensions. Once a requested outcome and authorization boundary are
+clear, continue until completion or a genuine blocker. Increase internal
+checking for authored prose, consequential state, release/publication,
+external effects, and ambiguous intent without manufacturing user
+checkpoints. A clear request to review, rewrite, implement, or complete a
+defined scope authorizes that scope.
+
+{accepted} Choose direct work or delegation by task and context rather
+than a universal default. Clean workers are appropriate when an explicit
+packet is sufficient; trajectory workers are appropriate when prior
+conversation materially helps. Supervisor pre-work recorded in a plan,
+TODO, brief, or context file can enable later clean delegation.
 
 ## Definition of done
 
 {accepted} The package is understandable, tested, and documented; its
-active behavior matches its documentation; and human users can inspect
-state, evidence, limits, and verification without relying on hidden
-agent memory.
+active behavior matches its documentation; model-facing text has a clear
+instruction hierarchy; and human users can inspect state, evidence,
+limits, and verification without relying on hidden agent memory.
 
 ## Current direction
 
-{accepted} Keep the package small, explicit, and reviewable for human
-users: seven public umbrella skills (`project`, `write`, `analyze`,
-`code`, `review`, `research`, and `automation`), bounded ordered task
-recipes, four reusable shared methods, focused local modules, bounded
-workers, independent substantive review, and no automated workflow
-controller. Writing defaults should preserve acceptable human prose and
-follow established author/project style when drafting. Review should
-prioritize structure, clarity, repetition, argument and voice coherence,
-and divergence from accepted project state. Automation should compose
-actual available capabilities; a richer runtime capability summary and
-user-level `STACK.md` remain planned rather than implemented.
+{accepted} Keep seven public umbrella skills (`project`, `write`,
+`analyze`, `code`, `review`, `research`, and `automation`) with bounded
+ordered task recipes, four shared methods, focused local modules,
+bounded workers, independent substantive review, and no workflow
+controller. Keep always-visible supervisor/tool text short and
+high-salience; put domain posture/routing in umbrella skills and detailed
+procedure in routed methods/modules. Preserve acceptable human prose,
+while allowing explicitly requested whole-artifact drafting/rewrite or
+review to run to completion without repeated permission prompts.
+
+{accepted} Runtime capability summaries, optional user-level `STACK.md`,
+prompt-template packaging, and the richer settled-turn compaction
+redesign remain planned rather than implemented.
 
 ## Current state
 
-{verified} Local version metadata is prepared for 7.0.0. The supported
-literature schema replaces scalar `first_author` with nullable
-`item_type` and nullable ordered, role-aware `creators_json` metadata.
-The read-only search adapter performs shallow structural checks and
-returns parsed `itemType` and `creators` without schema adaptation, CSL
-semantic validation, citation formatting, or creator inference. Users of
-local literature search must rebuild or migrate v6 databases externally
-and update result consumers; other users have no literature-data
-migration. The approved runtime cap remains 2,500 nonblank lines;
-measured source is about 2,450/2,500 lines after the malformed
-`SYNC.json` startup repair. The supervisor now discovers seven public
-skills because package discovery already targets the whole `skills/`
-directory; adding `automation` required only Markdown plus catalogue-test
-updates, not runtime changes. The writing and review guidance has also
-been strengthened around conservative revision, author-style drafting,
-structure-first editing, collaborative/adversarial review lenses, and
-project-state divergence. Runtime capability summaries, `STACK.md`,
-prompt-template packaging, and compaction changes remain unimplemented.
-No v7 tag or publication has been performed. Use signed Git tags and npm
-registry metadata, not this narrative, for release state.
+{verified} The supervisor prompt, dispatch tool guidance, worker schema
+and assignment prompt, local literature tool guidance, seven umbrella
+skills, selected project/review/prose modules, and current public and
+maintainer documentation have been audited from a prompt/context
+engineering perspective. The implemented task posture distinguishes
+persistence from scrutiny, narrows approval checkpoints to genuinely new
+consequential choices or side effects outside an authorized scope, and
+makes clean-versus-trajectory delegation depend on actual context need.
+
+{verified} `literature_search` now states that index results are discovery
+metadata/snippets rather than source verification or completeness
+evidence. Worker terminal-result fields now expose their semantic limits
+in schema descriptions. Current compaction prompt wording was audited but
+left unchanged because it already has a narrow constrained role and the
+planned compaction redesign will replace its present shape.
+
+{verified} Present-tense README/configuration/architecture/development
+text now describes seven skills and the persistence/scrutiny plus
+clean/trajectory delegation semantics. No release/tag/publication action
+has been performed.
 
 ## Previous action
 
-{verified} Added the public `automation` umbrella skill and updated the
-skill-catalogue tests and current public-contract/maintainer
-documentation. Strengthened writing and review skill guidance and added a
-v7 implementation plan for remaining runtime work.
+{verified} Completed a model-facing text audit and prompt-engineering pass
+across the supervisor, tools, worker packet, umbrella skills, routed
+methods/modules, and documentation; changed only surfaces where wording
+or instruction hierarchy materially affected behavior.
 
 ## Immediate next step
 
-{accepted} Finish the planned runtime and documentation work before a
-v7 release: capability/`STACK.md` support if retained, prompt-template
-packaging if retained, compaction redesign, remaining present-tense
-seven-skill documentation/diagram updates, full verification, and an
-independent read-only review. Do not tag, publish, or release v7.0.0
-without separate owner instruction.
+{accepted} Complete deterministic verification and live prompt-quality
+regression coverage for the new persistence/scrutiny behavior, reconcile
+`SYNC.json`, then continue the remaining v7 runtime work (capability/
+`STACK.md` if retained, prompt templates if retained, and compaction
+redesign). Do not tag, publish, or release v7.0.0 without separate owner
+instruction.
