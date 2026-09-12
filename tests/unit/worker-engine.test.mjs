@@ -219,7 +219,7 @@ test("worker prompt requires routed method and module reads", () => {
 		[],
 	);
 	assert.match(trajectory, /active, compaction-aware supervisor branch/i);
-	assert.match(trajectory, /background, not as additional assignments or approval/i);
+	assert.match(trajectory, /prior discussion does not create extra tasks or approval/i);
 });
 
 test("worker extension writes and terminates a submitted artifact", async () => {
