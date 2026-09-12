@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-10T11:34:12.071Z",
+  "confirmedAt": "2026-09-12T13:06:00.000Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:40b58ee1746872c9abe411f8f5230d52c7c8bfed359cb3829b1ce410d08d7b32",
+      "fingerprint": "sha256:41ad9e50a85da62d27b0d16e56c5bcd7c3288da32b0afe43f7ee4b5f635d835d",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,26 +15,26 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-09-10T11:34:12.071Z",
-        "reason": "Verified malformed-SYNC startup repair: malformed or unreadable manifests leave extensions available, status reports unavailable state, and acknowledgement remains blocked. Full make verify passed 171 tests at 98.29/92.67/95.07 coverage; source is about 2450/2500 lines; independent final review passed. No push, tag, publication, or release performed."
+        "at": "2026-09-12T13:06:00.000Z",
+        "reason": "Reviewed and recorded the model-facing prompt/context-engineering pass: persistence and scrutiny are independent, clear instructions authorize their named scope, and clean/trajectory delegation is chosen by actual context need."
       }
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:e551d5d275bd8da06054c993530b10a22a7ecd7bff3c2920c7bdd782c81447ec",
+      "fingerprint": "sha256:64a9ddb8802da76cbdfa45123a845a39de81855e6b7293743d5a055b6c162aa0",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-09-15T00:00:00.000Z",
-        "reason": "Documented clean/trajectory boundary, skill-catalogue inspection, exact packet requirements, and automatic canonical file inclusion for both modes."
+        "at": "2026-09-12T13:06:00.000Z",
+        "reason": "Documented the implemented persistence/scrutiny task posture, contextual direct-versus-worker choice, clean/trajectory boundary, worker contract, prompt hierarchy, and literature-search epistemic limits."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:c946e49700ae6d4c67a183d58cf834119ac9be010d03eb9753ada6d31687f4d3",
+      "fingerprint": "sha256:11a2cfab2c8a7505b65a372750957d6138256a0532e1ebb0bfbf342de8cb1e57",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,8 +46,8 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-09-10T10:46:37.520Z",
-        "reason": "Completed the owner-approved v7 structured-creator implementation and documentation with explicit external migration: 167 tests and full local gate passed; exact runtime is 2,380 lines; site build, package dry run, zero-advisory production audit, and independent read-only review passed. Version metadata is 7.0.0; no push, tag, or publication performed."
+        "at": "2026-09-12T13:06:00.000Z",
+        "reason": "Reconciled user-facing documentation with seven public skills, persistence versus scrutiny, whole-scope authorization, and clean/trajectory delegation semantics."
       }
     },
     {
@@ -72,28 +72,28 @@
     },
     {
       "path": "docs/configuration.md",
-      "fingerprint": "sha256:2414dcd834e8c6675006b760a6781f345087dc944449e8d40773286f65558a66",
+      "fingerprint": "sha256:64ba6c6b8104bac885d2067ebd40d31c8868c63126e554eee4ca3d79b877e290",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-09-10T10:46:37.520Z",
-        "reason": "Completed the owner-approved v7 structured-creator implementation and documentation with explicit external migration: 167 tests and full local gate passed; exact runtime is 2,380 lines; site build, package dry run, zero-advisory production audit, and independent read-only review passed. Version metadata is 7.0.0; no push, tag, or publication performed."
+        "at": "2026-09-12T13:06:00.000Z",
+        "reason": "Reconciled worker context selection, local-literature limits, canonical paths, seven-skill customization, and optional integration guidance with current runtime behavior."
       }
     },
     {
       "path": "docs/development.md",
-      "fingerprint": "sha256:9e89205522482fc9a23996e15b308a381918b7d5353f325e4819684fb868da3a",
+      "fingerprint": "sha256:e1230de8af37c39ecc2ca70455f9c10d08360308b273590c533a3a03f3f241ff",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "development-checks"
       ],
       "acknowledgement": {
-        "at": "2026-09-15T00:00:00.000Z",
-        "reason": "Clarified that PLAN.md existence does not establish approval; reinforced explicit approval requirement."
+        "at": "2026-09-12T13:06:00.000Z",
+        "reason": "Documented model-facing text as behavior-bearing interface surface and clarified authorization, persistence, scrutiny, prompt layering, and verification expectations."
       }
     },
     {
@@ -137,28 +137,28 @@
     },
     {
       "path": "skills/code/SKILL.md",
-      "fingerprint": "sha256:6724e4c78e8d81c1804fb0556f63b6a9e81081f5b80cba561658b1900af796bf",
+      "fingerprint": "sha256:7c07ba4e7c629257eb9e194153ce5bf47297d348526c3d0340a49224f2450bb8",
       "status": "current",
       "role": "skill",
       "authoritativeFor": [
         "code-skill"
       ],
       "acknowledgement": {
-        "at": "2026-09-15T00:00:00.000Z",
-        "reason": "Expanded scope to explicitly include automation, CLI tooling, developer tools, and integration work."
+        "at": "2026-09-12T13:06:00.000Z",
+        "reason": "Clarified that authorized implementation should continue through relevant implementation, tests, documentation, and project state, while genuinely new consequential choices remain owner decisions."
       }
     },
     {
       "path": "skills/project/SKILL.md",
-      "fingerprint": "sha256:54776f830307d4b3a2e6e0ed3e5849ac56960073761731af39e65efe7b838a43",
+      "fingerprint": "sha256:70d4e9b61ba0f410cf30c0fa3568f5f9815979d35d8aa3cfdd5400289a1b2397",
       "status": "current",
       "role": "skill",
       "authoritativeFor": [
         "project-skill"
       ],
       "acknowledgement": {
-        "at": "2026-09-15T00:00:00.000Z",
-        "reason": "Added canonical inbox guidance (read only on user request) and clarified needed-file reading over automatic role reading."
+        "at": "2026-09-12T13:06:00.000Z",
+        "reason": "Clarified authorization scope, persistence versus scrutiny, and the distinction between explicit owner decisions and agent-proposed durable state."
       }
     }
   ]
