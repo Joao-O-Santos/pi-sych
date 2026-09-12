@@ -81,9 +81,9 @@ removed after every outcome.
 ## Project state
 
 `SYNC.json` version 2 records tracked file hashes and dependency paths.
-`project_status` reports missing files, changed hashes, persisted status,
-project-brief problems, and dependency impact. A changed hash proves
-only changed content. Acknowledgement records reviewed state, not
+`project_status` reports missing files, changed hashes, persisted
+status, project-brief problems, and dependency impact. A changed hash
+proves only changed content. Acknowledgement records reviewed state, not
 correctness or semantic authority.
 
 ## Compaction
