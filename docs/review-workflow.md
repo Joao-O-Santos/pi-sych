@@ -40,12 +40,11 @@ Pi Sych's `review` skill supports different critical postures without
 requiring different persistent reviewer agents.
 
 A **collaborative** review behaves like a demanding co-author. It tries
-to recover the intended contribution charitably, then identifies the
-few changes that would most improve structure, clarity, coherence,
-economy, and evidential fit. It does not preserve an author's preferred
-argument when the argument is substantively weak, but it does not
-redesign a sound manuscript merely because another structure is
-possible.
+to recover the intended contribution charitably, then identifies the few
+changes that would most improve structure, clarity, coherence, economy,
+and evidential fit. It does not preserve an author's preferred argument
+when the argument is substantively weak, but it does not redesign a
+sound manuscript merely because another structure is possible.
 
 An **adversarial** review behaves like a skeptical referee. It requires
 the manuscript to earn its contribution and conclusions, actively tests
@@ -53,11 +52,11 @@ alternative explanations and limitations, and looks for overclaiming,
 missing reasoning, and structural weaknesses. Adversarial does not mean
 contrarian: a strong manuscript may legitimately receive few findings.
 
-For substantial prose, both lenses treat structure, clarity,
-repetition, argument coherence, and voice coherence as first-class
-review targets. Structural review starts with a reverse outline rather
-than sentence polishing. Repetition includes duplicated rhetorical jobs
-and repeated implications even when the wording differs.
+For substantial prose, both lenses treat structure, clarity, repetition,
+argument coherence, and voice coherence as first-class review targets.
+Structural review starts with a reverse outline rather than sentence
+polishing. Repetition includes duplicated rhetorical jobs and repeated
+implications even when the wording differs.
 
 When accepted project state is available, review also compares the
 artifact's apparent objective, contribution, scope, and major claims
@@ -81,8 +80,8 @@ The manuscript and supporting project files remain ordinary files in the
 project. `PROJECT.md` records the project direction, while `SYNC.json`
 can track relevant artifacts and declared dependencies.
 
-For substantial drafting or revision, structure comes before wording.
-A topic-sentence outline can expose an unclear new argument; a reverse
+For substantial drafting or revision, structure comes before wording. A
+topic-sentence outline can expose an unclear new argument; a reverse
 outline can expose duplication, missing moves, and badly sequenced
 paragraphs in an existing draft. Copyediting should wait until the
 location and job of the prose are reasonably stable.
@@ -114,10 +113,10 @@ message, or annotate a project-local review file.
 The supervisor converts your decisions into a clean implementation
 brief. The edit worker receives:
 
-- the accepted corrections;
-- the manuscript or sections that must change;
-- applicable evidence and style requirements;
-- any tools needed to perform the revision.
+-   the accepted corrections;
+-   the manuscript or sections that must change;
+-   applicable evidence and style requirements;
+-   any tools needed to perform the revision.
 
 It normally does not need rejected suggestions or the full review
 debate.
@@ -130,8 +129,8 @@ acknowledge files yet."
 
 When revising human-authored prose, the edit worker should default to
 minimum intervention. Clear, accurate, audience-appropriate prose that
-fits the intended voice does not need rewriting merely because the
-model can phrase it differently. New drafting should instead follow the
+fits the intended voice does not need rewriting merely because the model
+can phrase it differently. New drafting should instead follow the
 strongest available project or author style evidence without copying
 phrases from examples.
 
@@ -157,26 +156,26 @@ that interval.
 Workers receive the mode and optional integrations appropriate to their
 task:
 
-- `read-only` exposes reading and discovery tools for review,
-  inspection, and analysis;
-- `edit` adds focused file editing and writing tools;
-- `full-host` exposes Bash for tasks that must run project commands or
-  inspect the wider host environment; and
-- `remoteResearch: true` adds MCPorter for an explicitly assigned
-  remote-research task and also reuses an active, provenance-validated
-  PEW-PEW `web` tool when one is enabled in the supervisor.
+-   `read-only` exposes reading and discovery tools for review,
+    inspection, and analysis;
+-   `edit` adds focused file editing and writing tools;
+-   `full-host` exposes Bash for tasks that must run project commands or
+    inspect the wider host environment; and
+-   `remoteResearch: true` adds MCPorter for an explicitly assigned
+    remote-research task and also reuses an active, provenance-validated
+    PEW-PEW `web` tool when one is enabled in the supervisor.
 
 These names describe visible Pi tools, not security boundaries. Tool
 modes do not remove the worker process's underlying host permissions.
 
 ## Human review tools
 
-- `/plannotator-last` annotates the last assistant response and returns
-  feedback to the conversation.
-- `/plannotator-annotate <file>` accepts only a project-local `.md` or
-  `.mdx` file and writes feedback to `<file>.feedback.md`.
-- `/plannotator-review` records code-review feedback in
-  `<projectRoot>/PLANNOTATOR_REVIEW.md`.
+-   `/plannotator-last` annotates the last assistant response and
+    returns feedback to the conversation.
+-   `/plannotator-annotate <file>` accepts only a project-local `.md` or
+    `.mdx` file and writes feedback to `<file>.feedback.md`.
+-   `/plannotator-review` records code-review feedback in
+    `<projectRoot>/PLANNOTATOR_REVIEW.md`.
 
 These are review interfaces, not a plan controller or automatic approval
 system. Plannotator is a separate optional extension: disable it with
