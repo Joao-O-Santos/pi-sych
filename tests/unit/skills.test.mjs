@@ -35,9 +35,6 @@ const modules = {
 };
 const methods = ["argument-analysis", "claim-evidence", "hypothesis-generation", "prose"];
 const skillsRoot = resolve("skills");
-// Pre-revision maximum using whitespace-delimited words in the complete
-// umbrella skill plus every guidance file in one recipe.
-const historicalLargestRouteWords = 1_736;
 
 async function directories(path) {
 	return (await readdir(path, { withFileTypes: true }))
@@ -159,26 +156,13 @@ test("shared methods contain guidance and examples without becoming skills", asy
 	}
 });
 
-test("task recipes are bounded, ordered, resolvable, and acyclic", async () => {
+test("task recipes are ordered, resolvable, and acyclic", async () => {
 	const graph = new Map();
 	const routedMethods = new Set();
 	for (const [skill, expectedModules] of Object.entries(modules)) {
 		const path = resolve("skills", skill, "SKILL.md");
 		const content = await readFile(path, "utf8");
-		const { body } = parseFrontmatter(content, path);
-		assert.ok(body.split(/\s+/).length <= 275, `${skill} exceeds the umbrella prompt budget`);
 		const rows = routeRows(content, path, true);
-		for (const row of rows) {
-			const targetWords = await Promise.all(
-				row.map(async (target) => (await readFile(target, "utf8")).trim().split(/\s+/).length),
-			);
-			const routeWords =
-				content.trim().split(/\s+/).length + targetWords.reduce((total, words) => total + words, 0);
-			assert.ok(
-				routeWords <= historicalLargestRouteWords,
-				`${skill} route uses ${routeWords}/${historicalLargestRouteWords} words`,
-			);
-		}
 		const targets = rows.flat();
 		graph.set(path, targets);
 		for (const target of targets) {

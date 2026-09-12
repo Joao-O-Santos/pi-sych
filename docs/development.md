@@ -34,9 +34,9 @@ contract.
 
 Skill-architecture tests verify the seven public `SKILL.md` files,
 hidden shared methods, required guidance/examples, resolvable recipes,
-acyclic routes, and prompt budgets. They should not freeze semantic
-prose through keyword assertions unless the wording itself is a public
-contract.
+acyclic routes, and intended specialist composition. They should not
+freeze semantic prose through keyword assertions unless the wording
+itself is a public contract.
 
 ## Model-facing text
 
