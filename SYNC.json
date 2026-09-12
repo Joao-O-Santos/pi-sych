@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-12T13:06:00.000Z",
+  "confirmedAt": "2026-09-12T14:29:00.000Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:41ad9e50a85da62d27b0d16e56c5bcd7c3288da32b0afe43f7ee4b5f635d835d",
+      "fingerprint": "sha256:bebea04c507b7742d0b943dffd4b2206b6789cae2492b2d0b96603f4b913e838",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,26 +15,26 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-09-12T13:06:00.000Z",
-        "reason": "Reviewed and recorded the model-facing prompt/context-engineering pass: persistence and scrutiny are independent, clear instructions authorize their named scope, and clean/trajectory delegation is chosen by actual context need."
+        "at": "2026-09-12T14:29:00.000Z",
+        "reason": "Recorded the verified prompt/context-engineering pass, removal of prompt word-count accounting, green deterministic gate, opt-in live fixtures, and remaining v7 work."
       }
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:64a9ddb8802da76cbdfa45123a845a39de81855e6b7293743d5a055b6c162aa0",
+      "fingerprint": "sha256:6780a3f9734b192f4c296620a11b21c656966acc342192f8aa0bc1e2db514af4",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-09-12T13:06:00.000Z",
-        "reason": "Documented the implemented persistence/scrutiny task posture, contextual direct-versus-worker choice, clean/trajectory boundary, worker contract, prompt hierarchy, and literature-search epistemic limits."
+        "at": "2026-09-12T14:29:00.000Z",
+        "reason": "Verified the implemented persistence/scrutiny posture, contextual delegation, clean/trajectory boundary, worker contract, prompt hierarchy, and literature-search limits."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:11a2cfab2c8a7505b65a372750957d6138256a0532e1ebb0bfbf342de8cb1e57",
+      "fingerprint": "sha256:77c5aafad7bc5f1b85368d3c2fcc4727e537ef161eba37ccb6ed1d0bc96e8b86",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,8 +46,8 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-09-12T13:06:00.000Z",
-        "reason": "Reconciled user-facing documentation with seven public skills, persistence versus scrutiny, whole-scope authorization, and clean/trajectory delegation semantics."
+        "at": "2026-09-12T14:29:00.000Z",
+        "reason": "Verified user-facing guidance against the seven-skill architecture, task posture, authorization scope, and clean/trajectory delegation semantics."
       }
     },
     {
@@ -66,60 +66,60 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-09-10T10:46:37.520Z",
-        "reason": "Completed the owner-approved v7 structured-creator implementation and documentation with explicit external migration: 167 tests and full local gate passed; exact runtime is 2,380 lines; site build, package dry run, zero-advisory production audit, and independent read-only review passed. Version metadata is 7.0.0; no push, tag, or publication performed."
+        "at": "2026-09-12T14:29:00.000Z",
+        "reason": "Fingerprint checked against current repository state. Package metadata remains at 7.0.0 and the runtime source-code budget remains the active repository size budget."
       }
     },
     {
       "path": "docs/configuration.md",
-      "fingerprint": "sha256:64ba6c6b8104bac885d2067ebd40d31c8868c63126e554eee4ca3d79b877e290",
+      "fingerprint": "sha256:e9fa2cf8758ac3a2d34a6a67cb631e957cf75c80f5bc343a68610384e0387fd1",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-09-12T13:06:00.000Z",
-        "reason": "Reconciled worker context selection, local-literature limits, canonical paths, seven-skill customization, and optional integration guidance with current runtime behavior."
+        "at": "2026-09-12T14:29:00.000Z",
+        "reason": "Verified worker context selection, local-literature limits, canonical paths, seven-skill customization, and optional integration guidance against current runtime behavior."
       }
     },
     {
       "path": "docs/development.md",
-      "fingerprint": "sha256:e1230de8af37c39ecc2ca70455f9c10d08360308b273590c533a3a03f3f241ff",
+      "fingerprint": "sha256:9541bb9f082c00dbf30cbada108dddb2f77b6cb828033cc9558d49713dc8574d",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "development-checks"
       ],
       "acknowledgement": {
-        "at": "2026-09-12T13:06:00.000Z",
-        "reason": "Documented model-facing text as behavior-bearing interface surface and clarified authorization, persistence, scrutiny, prompt layering, and verification expectations."
+        "at": "2026-09-12T14:29:00.000Z",
+        "reason": "Verified maintainer guidance after removing prompt word-count budgeting while retaining structural skill checks and the deterministic repository gate."
       }
     },
     {
       "path": "docs/public-contract.md",
-      "fingerprint": "sha256:4d80bda7a9a1de46cf5df4149b316d50a4f38d890c56d06b087f8b62ba1d4f38",
+      "fingerprint": "sha256:c224cf3fdf7f0065c3abdb1e653d331a70bd79f7f6c47e5f5d646810d34524d4",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "compatibility"
       ],
       "acknowledgement": {
-        "at": "2026-09-10T11:34:12.071Z",
-        "reason": "Verified malformed-SYNC startup repair: malformed or unreadable manifests leave extensions available, status reports unavailable state, and acknowledgement remains blocked. Full make verify passed 171 tests at 98.29/92.67/95.07 coverage; source is about 2450/2500 lines; independent final review passed. No push, tag, publication, or release performed."
+        "at": "2026-09-12T14:29:00.000Z",
+        "reason": "Fingerprint checked against the current v7 public contract; no release, tag, or publication action was performed in this pass."
       }
     },
     {
       "path": "docs/review-workflow.md",
-      "fingerprint": "sha256:d9c5b100776a5446281a8d7b9d44b318f175d534d8ff3e34222dfcf7486c0627",
+      "fingerprint": "sha256:e1d013e177d8576a5b6b4f6f621f56337077b8385a608ab300e92978a16fe8a0",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "review-workflow"
       ],
       "acknowledgement": {
-        "at": "2026-09-15T00:00:00.000Z",
-        "reason": "Added explicit handoff brief example and canonical file inclusion note for fresh review workers."
+        "at": "2026-09-12T14:29:00.000Z",
+        "reason": "Verified the review/revision workflow, fresh-context handoffs, review lenses, and human-decision boundary; corrected the acknowledgement date to the actual review date."
       }
     },
     {
@@ -131,8 +131,8 @@
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-09-10T10:46:37.520Z",
-        "reason": "Completed the owner-approved v7 structured-creator implementation and documentation with explicit external migration: 167 tests and full local gate passed; exact runtime is 2,380 lines; site build, package dry run, zero-advisory production audit, and independent read-only review passed. Version metadata is 7.0.0; no push, tag, or publication performed."
+        "at": "2026-09-12T14:29:00.000Z",
+        "reason": "Fingerprint checked against current release history; historical descriptions remain historical and no new release entry was created."
       }
     },
     {
@@ -144,8 +144,8 @@
         "code-skill"
       ],
       "acknowledgement": {
-        "at": "2026-09-12T13:06:00.000Z",
-        "reason": "Clarified that authorized implementation should continue through relevant implementation, tests, documentation, and project state, while genuinely new consequential choices remain owner decisions."
+        "at": "2026-09-12T14:29:00.000Z",
+        "reason": "Verified authorized implementation persistence, proportionate scrutiny, and owner control over genuinely new consequential choices."
       }
     },
     {
@@ -157,8 +157,8 @@
         "project-skill"
       ],
       "acknowledgement": {
-        "at": "2026-09-12T13:06:00.000Z",
-        "reason": "Clarified authorization scope, persistence versus scrutiny, and the distinction between explicit owner decisions and agent-proposed durable state."
+        "at": "2026-09-12T14:29:00.000Z",
+        "reason": "Verified authorization scope, persistence versus scrutiny, and the distinction between explicit owner decisions and agent-proposed durable state."
       }
     }
   ]
