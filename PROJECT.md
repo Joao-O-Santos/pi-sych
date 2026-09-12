@@ -44,8 +44,8 @@ dimensions. Once a requested outcome and authorization boundary are
 clear, continue until completion or a genuine blocker. Increase internal
 checking for authored prose, consequential state, release/publication,
 external effects, and ambiguous intent without manufacturing user
-checkpoints. A clear request to review, rewrite, implement, or complete a
-defined scope authorizes that scope.
+checkpoints. A clear request to review, rewrite, implement, or complete
+a defined scope authorizes that scope.
 
 {accepted} Choose direct work or delegation by task and context rather
 than a universal default. Clean workers are appropriate when an explicit
@@ -67,10 +67,11 @@ limits, and verification without relying on hidden agent memory.
 ordered task recipes, four shared methods, focused local modules,
 bounded workers, independent substantive review, and no workflow
 controller. Keep always-visible supervisor/tool text short and
-high-salience; put domain posture/routing in umbrella skills and detailed
-procedure in routed methods/modules. Preserve acceptable human prose,
-while allowing explicitly requested whole-artifact drafting/rewrite or
-review to run to completion without repeated permission prompts.
+high-salience; put domain posture/routing in umbrella skills and
+detailed procedure in routed methods/modules. Preserve acceptable human
+prose, while allowing explicitly requested whole-artifact
+drafting/rewrite or review to run to completion without repeated
+permission prompts.
 
 {accepted} Runtime capability summaries, optional user-level `STACK.md`,
 prompt-template packaging, and the richer settled-turn compaction
@@ -87,12 +88,13 @@ persistence from scrutiny, narrows approval checkpoints to genuinely new
 consequential choices or side effects outside an authorized scope, and
 makes clean-versus-trajectory delegation depend on actual context need.
 
-{verified} `literature_search` now states that index results are discovery
-metadata/snippets rather than source verification or completeness
-evidence. Worker terminal-result fields now expose their semantic limits
-in schema descriptions. Current compaction prompt wording was audited but
-left unchanged because it already has a narrow constrained role and the
-planned compaction redesign will replace its present shape.
+{verified} `literature_search` now states that index results are
+discovery metadata/snippets rather than source verification or
+completeness evidence. Worker terminal-result fields now expose their
+semantic limits in schema descriptions. Current compaction prompt
+wording was audited but left unchanged because it already has a narrow
+constrained role and the planned compaction redesign will replace its
+present shape.
 
 {verified} Present-tense README/configuration/architecture/development
 text now describes seven skills and the persistence/scrutiny plus
@@ -101,10 +103,10 @@ has been performed.
 
 ## Previous action
 
-{verified} Completed a model-facing text audit and prompt-engineering pass
-across the supervisor, tools, worker packet, umbrella skills, routed
-methods/modules, and documentation; changed only surfaces where wording
-or instruction hierarchy materially affected behavior.
+{verified} Completed a model-facing text audit and prompt-engineering
+pass across the supervisor, tools, worker packet, umbrella skills,
+routed methods/modules, and documentation; changed only surfaces where
+wording or instruction hierarchy materially affected behavior.
 
 ## Immediate next step
 

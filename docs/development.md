@@ -48,19 +48,20 @@ copies can drift or compete for attention.
 
 Prefer concrete verbs, explicit authority and scope, short decision
 rules, and stated failure modes. Distinguish authorization from task
-size, persistence from scrutiny, and context need from delegation choice.
+size, persistence from scrutiny, and context need from delegation
+choice.
 
 ## Design constraints
 
-- No generic workflow DAG, fixed agent pipeline, or duplicate MCP/review
-  implementation.
-- No command/path pseudo-security or sandbox claims.
-- No credentials, provider choices, model ranking, or personal examples
-  in the public package.
-- Workers receive one smallest-complete assignment; clean mode receives
-  no supervisor transcript, while trajectory mode receives only the
-  persisted branch before its exact dispatch entry.
-- Clear user authorization covers the named scope; new consequential
-  choices outside that scope remain human-owned.
-- Never claim execution, retrieval, rendering, review, or verification
-  that did not occur.
+-   No generic workflow DAG, fixed agent pipeline, or duplicate
+    MCP/review implementation.
+-   No command/path pseudo-security or sandbox claims.
+-   No credentials, provider choices, model ranking, or personal
+    examples in the public package.
+-   Workers receive one smallest-complete assignment; clean mode
+    receives no supervisor transcript, while trajectory mode receives
+    only the persisted branch before its exact dispatch entry.
+-   Clear user authorization covers the named scope; new consequential
+    choices outside that scope remain human-owned.
+-   Never claim execution, retrieval, rendering, review, or verification
+    that did not occur.
