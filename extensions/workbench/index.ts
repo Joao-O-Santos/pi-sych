@@ -38,10 +38,11 @@ export const PACKAGE_ROOT = resolve(
 );
 export const SUPERVISOR_GUIDANCE = [
 	"Pi Sych is a small mechanical substrate; skills and humans own semantic judgment.",
-	"Keep replies concise. Use direct work and read-only retrieval (literature_search; web when active) for small or tightly connected exploration; dispatch for independent context, breadth, specialization, or substantial execution.",
-	"Use project_status for mechanical state; changed content is not conceptual drift.",
-	`For Pi Sych questions, read ${PACKAGE_ROOT}/README.md and its linked documentation.`,
-	"Before dispatch, inspect the available skill catalogue and select only skills valuable for the assignment. dispatch_worker defaults to clean context and 90 seconds. Use trajectory context only when prior conversation materially helps; choose context, model role, and timeout deliberately. Worker modes are not sandboxes.",
+	"Infer task posture from the user's request and accepted project state. Persistence and scrutiny are independent: when outcome and authorization are clear, continue until complete or genuinely blocked; increase checking for consequential or authored work without inventing user checkpoints.",
+	"A clear request to review, rewrite, implement, or complete a defined scope authorizes that scope. Ask again only when a new consequential choice, side effect, or material ambiguity falls outside it.",
+	"Choose direct work or delegation by task and context, not a fixed default. Use direct work and read-only retrieval for small or tightly connected exploration; dispatch for independent context, breadth, specialization, or substantial execution. Use clean workers when an explicit packet is enough and trajectory workers when prior conversation materially helps; a prepared plan, TODO, or brief can make later clean delegation sufficient. Needing context does not force supervisor execution.",
+	"Use project_status for mechanical state; changed content is not conceptual drift. For Pi Sych questions, read the installed README and linked documentation.",
+	"Before dispatch, inspect the available skill catalogue and select only skills valuable for the assignment. dispatch_worker defaults to clean context and 90 seconds; choose context, model role, thinking level, and timeout deliberately. Worker modes are not sandboxes.",
 	"Treat the configured proposal inbox as human-review proposal state: report its pending count through project_status and read it only when the user requests inbox review.",
 ].join("\n");
 const statusSchema = Type.Object({
@@ -169,12 +170,12 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 	pi.registerTool({
 		name: "dispatch_worker",
 		label: "Dispatch worker",
-		description: "Run one short-lived bounded worker and return its validated result.",
-		promptSnippet: "Delegate one bounded task with explicit clean or inherited trajectory context",
+		description: "Delegate one bounded task to a short-lived worker and return its validated result.",
+		promptSnippet: "Delegate one bounded task; choose clean or trajectory context by actual context need",
 		promptGuidelines: [
-			"Use clean context by default for independent work and review.",
-			"Use trajectory context only when the prior supervisor conversation materially improves the assigned task.",
-			"Context mode does not change worker tools, permissions, model, skills, files, or research access.",
+			"Choose direct work versus delegation by task and context, not a fixed default. Use clean context when the explicit packet is sufficient; use trajectory only when prior supervisor conversation materially improves the assignment.",
+			"A prepared plan, TODO, or brief can make clean delegation sufficient after supervisor pre-work; needing conversation context does not force the supervisor to execute the task itself.",
+			"Give the worker one explicit outcome and authorization boundary and expect completion within it. Context mode does not change worker tools, permissions, model, skills, files, or research access.",
 			"Set remoteResearch: true only when remote retrieval is part of the assigned task. It adds MCPorter and may reuse an already active, validated PEW-PEW web tool; selecting research alone adds only local literature_search.",
 		],
 		parameters: dispatchSchema,
@@ -229,7 +230,7 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 		name: "project_status",
 		label: "Project status",
 		description:
-			"Check mechanical project state or acknowledge named reviewed files. It never determines conceptual drift or authority.",
+			"Check mechanical project state or acknowledge named reviewed files; hashes and acknowledgement never decide semantic drift, correctness, or authority.",
 		parameters: statusSchema,
 		async execute(_id, params, _signal, _update, ctx) {
 			if (params.action === "check") {
