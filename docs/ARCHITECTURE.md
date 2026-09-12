@@ -9,22 +9,22 @@ judgment.
 
 The supervisor sees three Pi Sych tools:
 
-- `project_status` checks or acknowledges mechanical project state;
-- `dispatch_worker` runs one short-lived worker with clean or trajectory
-  context; and
-- `literature_search` performs read-only lookup in the configured local
-  literature index.
+-   `project_status` checks or acknowledges mechanical project state;
+-   `dispatch_worker` runs one short-lived worker with clean or
+    trajectory context; and
+-   `literature_search` performs read-only lookup in the configured
+    local literature index.
 
 At turn start Pi Sych adds concise supervisor guidance plus configured
 project `agents` instructions when present. The supervisor guidance uses
 two independent task-posture dimensions:
 
-- **persistence** — once the requested outcome and authorization boundary
-  are clear, continue until completion or a genuine blocker rather than
-  stopping merely to ask whether to continue; and
-- **scrutiny** — increase checking for authored prose, consequential
-  project-state decisions, release/publication work, external side
-  effects, and ambiguous intent.
+-   **persistence** --- once the requested outcome and authorization
+    boundary are clear, continue until completion or a genuine blocker
+    rather than stopping merely to ask whether to continue; and
+-   **scrutiny** --- increase checking for authored prose, consequential
+    project-state decisions, release/publication work, external side
+    effects, and ambiguous intent.
 
 High scrutiny does not itself require another user checkpoint. A clear
 request to review, rewrite, implement, or complete a defined scope is
@@ -43,14 +43,14 @@ is useful for independent context, breadth, specialization, cheaper
 execution, independent review, or substantial bounded work. Context need
 is separate from delegation choice:
 
-- a clean worker receives no supervisor transcript and should be used
-  when the explicit packet is sufficient;
-- a trajectory worker receives Pi's persisted supervisor branch ending
-  immediately before the dispatching assistant entry and should be used
-  when prior conversation materially helps; and
-- supervisor pre-work can convert conversational context into explicit
-  state such as a plan, TODO, brief, or context file, allowing later
-  clean delegation.
+-   a clean worker receives no supervisor transcript and should be used
+    when the explicit packet is sufficient;
+-   a trajectory worker receives Pi's persisted supervisor branch ending
+    immediately before the dispatching assistant entry and should be
+    used when prior conversation materially helps; and
+-   supervisor pre-work can convert conversational context into explicit
+    state such as a plan, TODO, brief, or context file, allowing later
+    clean delegation.
 
 Needing prior context therefore does not imply that the supervisor must
 execute the task itself.
@@ -64,10 +64,10 @@ Worker modes control visible Pi tools; they are not sandboxes.
 
 ## Worker lifecycle
 
-A worker is a separate short-lived Pi process with one immutable terminal
-result. It reads its explicit assignment, every context file and selected
-skill, then the routed methods/modules. Trajectory history is background,
-not a source of additional assignments or approval.
+A worker is a separate short-lived Pi process with one immutable
+terminal result. It reads its explicit assignment, every context file
+and selected skill, then the routed methods/modules. Trajectory history
+is background, not a source of additional assignments or approval.
 
 The worker should complete the assigned scope without inventing
 checkpoints. It reports `complete`, `partial`, or `failed`, a non-empty
@@ -81,9 +81,9 @@ removed after every outcome.
 ## Project state
 
 `SYNC.json` version 2 records tracked file hashes and dependency paths.
-`project_status` reports missing files, changed hashes, persisted status,
-project-brief problems, and dependency impact. A changed hash proves
-only changed content. Acknowledgement records reviewed state, not
+`project_status` reports missing files, changed hashes, persisted
+status, project-brief problems, and dependency impact. A changed hash
+proves only changed content. Acknowledgement records reviewed state, not
 correctness or semantic authority.
 
 ## Compaction
@@ -112,10 +112,10 @@ procedures; local modules adapt them to a genre, artifact, or task.
 
 The prompt hierarchy is intentionally layered:
 
-1. always-visible supervisor/tool text carries only high-salience task
-   posture, authority, and capability boundaries;
-2. umbrella skills establish domain posture and route the task; and
-3. routed methods/modules carry detailed procedure.
+1.  always-visible supervisor/tool text carries only high-salience task
+    posture, authority, and capability boundaries;
+2.  umbrella skills establish domain posture and route the task; and
+3.  routed methods/modules carry detailed procedure.
 
 This avoids duplicating detailed doctrine into the system prompt while
 keeping consequential invariants salient. Routes are ordinary Markdown
@@ -129,5 +129,6 @@ remain unimplemented.
 
 MCPorter remains an explicit remote-research integration. A separately
 active validated PEW-PEW `web` tool may be reused for remote-research
-workers. Plannotator remains a narrow human-review adapter. None of these
-mechanisms silently promotes model output into accepted project state.
+workers. Plannotator remains a narrow human-review adapter. None of
+these mechanisms silently promotes model output into accepted project
+state.

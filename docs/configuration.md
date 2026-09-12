@@ -68,9 +68,9 @@ files, or research access.
 dispatched worker also receives it when its selected skills include the
 exact `research` selector. The database is selected in this order:
 
-1. `<projectRoot>/LITERATURE.sqlite`, when it exists;
-2. `literatureDatabase` in resolved `pi-sych/config.json`; or
-3. `<resolved-config-directory>/literature.sqlite`.
+1.  `<projectRoot>/LITERATURE.sqlite`, when it exists;
+2.  `literatureDatabase` in resolved `pi-sych/config.json`; or
+3.  `<resolved-config-directory>/literature.sqlite`.
 
 The tool opens the database read-only. Search results contain discovery
 metadata, snippets, scores, and source paths. They do not establish that
