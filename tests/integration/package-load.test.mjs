@@ -12,6 +12,7 @@ import { bootstrapWorkerAgentDir } from "../../scripts/bootstrap-worker-agent-di
 const run = promisify(execFile);
 const PUBLIC_SKILL_COMMANDS = [
 	"skill:analyze",
+	"skill:automation",
 	"skill:code",
 	"skill:project",
 	"skill:research",
@@ -197,7 +198,7 @@ test("manual review mode omits Plannotator commands", async (t) => {
 	);
 });
 
-test("Pi discovers exactly the six public skills without exposing modules", async () => {
+test("Pi discovers exactly the seven public skills without exposing modules", async () => {
 	const { commands, stderr } = await getCommands([
 		"--mode",
 		"rpc",
@@ -214,7 +215,7 @@ test("Pi discovers exactly the six public skills without exposing modules", asyn
 	assert.deepEqual(packagedSkillCommands(commands), PUBLIC_SKILL_COMMANDS);
 });
 
-test("package defaults expose all six public skills", async (t) => {
+test("package defaults expose all seven public skills", async (t) => {
 	const agentDir = await tempRoot(t, "pi-sych-package-skills-");
 	await writeFile(
 		join(agentDir, "settings.json"),

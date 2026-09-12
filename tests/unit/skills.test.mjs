@@ -3,7 +3,7 @@ import { readdir, readFile, stat } from "node:fs/promises";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import test from "node:test";
 
-const publicSkills = ["analyze", "code", "project", "research", "review", "write"];
+const publicSkills = ["analyze", "automation", "code", "project", "research", "review", "write"];
 const modules = {
 	project: ["bootstrap", "artifacts", "status", "reconcile", "plans", "pi-sych", "retrospective"],
 	write: [
@@ -19,6 +19,7 @@ const modules = {
 		"web",
 	],
 	analyze: ["quantitative", "qualitative", "r-quarto", "reporting"],
+	automation: ["capabilities", "workflow", "data", "browser"],
 	code: ["architecture", "testing", "git", "npm", "web"],
 	review: [
 		"structure",
@@ -130,7 +131,7 @@ function assertAcyclic(graph) {
 	for (const node of graph.keys()) visit(node);
 }
 
-test("Pi exposes exactly six public umbrella skill files", async () => {
+test("Pi exposes exactly seven public umbrella skill files", async () => {
 	assert.deepEqual(
 		await findNamedFiles("skills", "SKILL.md"),
 		publicSkills.map((name) => resolve("skills", name, "SKILL.md")),
@@ -216,6 +217,10 @@ test("task recipes load only the intended specialist composition", async () => {
 	const qualitative = resolve("skills/analyze/modules/qualitative/guidance.md");
 	const rQuarto = resolve("skills/analyze/modules/r-quarto/guidance.md");
 	const reporting = resolve("skills/analyze/modules/reporting/guidance.md");
+	const automationCapabilities = resolve("skills/automation/modules/capabilities/guidance.md");
+	const automationWorkflow = resolve("skills/automation/modules/workflow/guidance.md");
+	const automationData = resolve("skills/automation/modules/data/guidance.md");
+	const automationBrowser = resolve("skills/automation/modules/browser/guidance.md");
 	const search = resolve("skills/research/modules/search/guidance.md");
 	const sources = resolve("skills/research/modules/sources/guidance.md");
 	const synthesis = resolve("skills/research/modules/synthesis/guidance.md");
@@ -240,6 +245,16 @@ test("task recipes load only the intended specialist composition", async () => {
 		[[claim, prose, reporting], "results prose"],
 	])
 		assertHasRoute(analyzeRows, targets, label);
+
+	const automationPath = resolve("skills/automation/SKILL.md");
+	const automationRows = routeRows(await readFile(automationPath, "utf8"), automationPath, true);
+	for (const [targets, label] of [
+		[[automationCapabilities], "automation capability selection"],
+		[[automationCapabilities, automationWorkflow], "automation workflow"],
+		[[automationCapabilities, automationData], "automation data transform"],
+		[[automationCapabilities, automationBrowser], "browser automation"],
+	])
+		assertHasRoute(automationRows, targets, label);
 
 	const researchPath = resolve("skills/research/SKILL.md");
 	const researchRows = routeRows(await readFile(researchPath, "utf8"), researchPath, true);
