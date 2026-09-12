@@ -1,3 +1,19 @@
 # Reconcile
 
-Use drift findings or direct inspection to state the disagreement precisely: files, passages, uncertainty, and consequences. For non-obvious options, prepare a short decision memo with options, evidence, trade-offs, unresolved questions, and an owner-decision field; it is a proposal, not approval, and must not create durable state before approval. Present viable options and ask the owner when central claims, scope, architecture, publication, deployment, or irreversible state is affected. For consequential multi-file changes, write a concise project-local Markdown plan and obtain explicit owner approval before implementation. Apply only approved or explicitly authorized changes, run relevant checks, then acknowledge only files actually reviewed with a truthful reason. Never let a clean status, passing command, or approved plan stand in for substantive correctness.
+State the disagreement precisely: files, passages, uncertainty, and
+consequences. Distinguish an actual conflict from a changed hash or different
+wording. For non-obvious options, prepare a short decision memo with evidence,
+trade-offs, unresolved questions, and the decision that would resolve them.
+
+Use the authorization already present. If the owner has clearly directed how to
+resolve the conflict, apply that direction across the authorized scope, run the
+relevant checks, and update the state that the task requires. If resolving the
+conflict would introduce a new consequential choice about central claims, scope,
+architecture, publication, deployment, irreversible state, or another boundary
+not already delegated, present the viable options and ask for that choice.
+
+For multi-file work, a concise project-local plan can make the handoff and order
+explicit, but size alone does not create another approval gate. Apply only
+accepted or explicitly authorized semantic changes. Acknowledge only files
+actually reviewed, with a truthful reason. A clean status, passing command, or
+plan never substitutes for substantive correctness.
