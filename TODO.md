@@ -19,8 +19,9 @@ file tracks implementation status and handoff work.
   classes, with local literature, OpenAlex-like metadata, Scholar Gateway-like
   scholarly retrieval, PDF readers, search, and targeted fetch tools as
   examples rather than mandatory providers.
-- [ ] Confirm Markdown formatting, links, deterministic CI, and Pages are green
-  for the guidance/design changes.
+- [x] Confirm Markdown formatting, links, deterministic CI, and Pages are green
+  for the guidance/design changes. Commit `2fd793ee` passed verify with 97.86%
+  coverage and deployed Pages in pipeline `2843301780`.
 
 ## Runtime capability summary
 
