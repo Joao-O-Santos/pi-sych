@@ -123,6 +123,11 @@ to the model. At most five validated proposals may be appended to the
 configured inbox, which is created as needed and counted by proposal
 lines, not by newline accidents.
 
+The current implementation remains the pre-v7-revision compaction shape.
+`PLAN.md` records the proposed settled-turn trigger, richer trajectory
+memory, and conversation-to-project-state reconciliation. Those planned
+changes are not runtime behavior until implemented and verified.
+
 ## Local literature
 
 `literature_search` is registered by the workbench for direct supervisor
@@ -140,15 +145,22 @@ in [configuration](configuration.md#local-literature-search).
 
 ## Skills, MCPorter, and Plannotator
 
-Only six umbrella skills are public: `project`, `write`, `analyze`,
-`code`, `review`, and `research`. Each contains bounded ordered task
-recipes. Recipes compose two kinds of plain supporting file:
+Seven umbrella skills are public: `project`, `write`, `analyze`, `code`,
+`review`, `research`, and `automation`. Each contains bounded ordered
+task recipes. Recipes compose two kinds of plain supporting file:
 
 - shared methods under `skills/_methods` define reusable procedures for
   prose, hypothesis generation, argument analysis, and claim-to-evidence
   mapping; and
-- local modules adapt those procedures to a genre, artifact, or review
-  mode.
+- local modules adapt those procedures to a genre, artifact, review
+  mode, or automation concern.
+
+`automation` is semantic guidance, not a new orchestration runtime. It
+helps the supervisor or a selected worker choose among actual available
+capabilities, user stack preferences when explicitly supplied, local
+deterministic processing, and browser/UI work. The planned derived
+capability summary and user-level `STACK.md` resolution are not yet
+implemented runtime features.
 
 `_methods` contains no `SKILL.md`, so neither methods nor modules
 enlarge the public catalog. Routes are ordinary Markdown links resolved
