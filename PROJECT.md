@@ -98,21 +98,27 @@ present shape.
 
 {verified} Present-tense README/configuration/architecture/development
 text now describes seven skills and the persistence/scrutiny plus
-clean/trajectory delegation semantics. No release/tag/publication action
-has been performed.
+clean/trajectory delegation semantics. Deterministic `make verify` is
+green for this prompt/model-facing audit. Prompt word-count accounting
+has been removed; the nonblank runtime source-code budget remains the
+only repository size budget.
+
+{verified} Three opt-in live prompt-quality fixtures cover authorized
+persistence, whole-artifact high-scrutiny review, and context-aware
+delegation. `npm run test:usage` has not been run as part of this pass.
+No release/tag/publication action has been performed.
 
 ## Previous action
 
-{verified} Completed a model-facing text audit and prompt-engineering
-pass across the supervisor, tools, worker packet, umbrella skills,
-routed methods/modules, and documentation; changed only surfaces where
-wording or instruction hierarchy materially affected behavior.
+{verified} Completed the model-facing prompt/context-engineering audit,
+removed prompt word-count budgets, aligned deterministic tests and
+maintainer documentation, and passed the full deterministic repository
+gate.
 
 ## Immediate next step
 
-{accepted} Complete deterministic verification and live prompt-quality
-regression coverage for the new persistence/scrutiny behavior, reconcile
-`SYNC.json`, then continue the remaining v7 runtime work (capability/
-`STACK.md` if retained, prompt templates if retained, and compaction
-redesign). Do not tag, publish, or release v7.0.0 without separate owner
-instruction.
+{accepted} Continue the remaining v7 runtime work: derived runtime
+capability summary, optional `STACK.md`, thin review prompt templates if
+retained, settled-turn compaction redesign, and documentation/image
+reconciliation. Do not tag, publish, or release v7.0.0 without separate
+owner instruction.
