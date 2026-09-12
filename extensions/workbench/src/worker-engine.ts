@@ -76,40 +76,40 @@ export interface DispatchOutcome {
 }
 export type WorkerLauncher = (spec: WorkerLaunchSpec) => Promise<WorkerLaunchOutcome>;
 export const dispatchSchema = Type.Object({
-	task: Type.String({ description: "One explicit bounded assignment for the worker" }),
-	mode: StringEnum(WORKER_MODES, { description: "Visible worker tool capability" }),
-	expectedOutput: Type.String({ description: "Required terminal result or file deliverable" }),
+	task: Type.String({ description: "One explicit bounded assignment; include the outcome and material authorization boundary" }),
+	mode: StringEnum(WORKER_MODES, { description: "Visible worker tool capability; not a sandbox or host-permission boundary" }),
+	expectedOutput: Type.String({ description: "Concrete terminal result or file deliverable that marks the assignment complete" }),
 	contextMode: Type.Optional(
 		StringEnum(CONTEXT_MODES, {
-			description: "Conversation context: clean by default, or persisted pre-dispatch trajectory",
+			description: "Context source: clean by default, or persisted pre-dispatch supervisor trajectory when history materially helps",
 		}),
 	),
 	contextFiles: Type.Array(
 		Type.Object({
 			path: Type.String({ description: "Existing context file; relative paths are project-local" }),
-			purpose: Type.String({ description: "Why the worker needs this file" }),
+			purpose: Type.String({ description: "Why this file is needed for the assignment" }),
 		}),
-		{ description: "Smallest complete explicit file packet" },
+		{ description: "Smallest complete explicit file packet for the assignment" },
 	),
 	skills: Type.Optional(
 		Type.Array(Type.String(), {
-			description: "Exact selectors chosen after inspecting the available skill catalogue",
+			description: "Exact skill selectors chosen after inspecting the available catalogue",
 		}),
 	),
 	modelRole: Type.Optional(Type.String({ description: "Exact configured worker model role" })),
 	thinkingLevel: Type.Optional(
 		StringEnum(THINKING_LEVELS, {
-			description: "Pi thinking level; omission leaves the selected model's default intact",
+			description: "Pi thinking level; omission preserves the selected model's default",
 		}),
 	),
 	remoteResearch: Type.Optional(
-		Type.Boolean({ description: "Expose configured remote-research integrations for this task" }),
+		Type.Boolean({ description: "Expose configured remote-research integrations because remote retrieval is part of this assignment" }),
 	),
 	timeoutMs: Type.Optional(
 		Type.Integer({
 			minimum: 1,
 			maximum: MAX_TIMEOUT_MS,
-			description: "Bounded runtime in milliseconds; defaults to 90000",
+			description: "Maximum worker runtime in milliseconds; defaults to 90000",
 		}),
 	),
 });
@@ -184,18 +184,22 @@ async function contexts(
 export function taskPrompt(spec: WorkerLaunchSpec, files: ContextFile[]) {
 	const contextMode = spec.request.contextMode ?? "clean";
 	return [
-		"You are one short-lived Pi Sych worker. Read every context file and selected skill, then read the routed modules.",
+		"You are one short-lived Pi Sych worker with one bounded assignment. Read every context file and selected skill, then read the routed modules/methods required by that skill recipe.",
 		contextMode === "trajectory"
-			? "You inherit Pi's active, compaction-aware supervisor branch ending before the assistant message containing this dispatch. Treat that history as background, not as additional assignments or approval; perform only the explicit task below."
-			: "You receive no supervisor conversation. Use this assignment and its listed resources as your task context; do not assume unprovided history.",
-		`Task ID: ${spec.id} | Task: ${spec.request.task}`,
-		`Expected output: ${spec.request.expectedOutput} | Mode: ${spec.request.mode}`,
+			? "You inherit Pi's active, compaction-aware supervisor branch ending before the assistant entry that dispatched you. Use it only as background for the explicit assignment below; prior discussion does not create extra tasks or approval."
+			: "You receive no supervisor conversation. Treat the explicit assignment, listed files, and selected guidance as the complete task context; do not assume missing history.",
+		`Task ID: ${spec.id}`,
+		`Assignment: ${spec.request.task}`,
+		`Completion target: ${spec.request.expectedOutput}`,
+		`Mode: ${spec.request.mode}`,
 		`Context files: ${files.map((f) => `${f.path} (${f.purpose})`).join("; ") || "none"}`,
 		`Selected skills: ${(spec.request.skills ?? []).join(", ") || "none"}`,
-		"Report missing context and unperformed checks as limitations. Put the substantive answer in submit_artifact.summary or in an existing project-local file listed in files; use files: [] when no file deliverable is needed. Report only existing project-relative paths. Call submit_artifact once as the final tool call, then stop.",
+		"Work through the authorized assignment until the completion target is satisfied or you are genuinely blocked. Do not invent user checkpoints inside the assigned scope. Increase internal checking when the task is consequential or involves authored prose, but do not broaden the assignment.",
+		"Report missing context, unresolved ambiguity, and checks you could not perform as limitations. Put the substantive answer in submit_artifact.summary or in an existing project-local file listed in files; use files: [] when no file deliverable is needed. Report only existing project-relative paths.",
+		"Call submit_artifact exactly once as the final tool call, with status complete, partial, or failed according to the work actually performed; then stop.",
 		...(spec.request.remoteResearch
 			? [
-					"Use exposed remote-research tools only for this assignment. Tool exposure does not establish working credentials, successful retrieval, or source validity; report actual access and failures.",
+					"Use exposed remote-research tools only for this assignment. Tool exposure does not establish working credentials, successful retrieval, source validity, or completeness; report actual access and failures.",
 				]
 			: []),
 	].join("\n");
@@ -274,10 +278,12 @@ export async function writeImmutableResult(path: string, result: WorkerResult) {
 	await handle.sync();
 }
 export const workerResultSchema = Type.Object({
-	status: StringEnum(["complete", "partial", "failed"] as const),
-	summary: Type.String(),
-	files: Type.Array(Type.String()),
-	limitations: Type.Array(Type.String()),
+	status: StringEnum(["complete", "partial", "failed"] as const, {
+		description: "Actual terminal state of the assigned work, not approval or quality certification",
+	}),
+	summary: Type.String({ description: "Substantive terminal result or concise explanation of what was completed" }),
+	files: Type.Array(Type.String(), { description: "Existing project-relative files produced or materially updated by this assignment" }),
+	limitations: Type.Array(Type.String(), { description: "Missing context, unresolved ambiguity, unavailable checks, or other material limits" }),
 });
 const conciseActivity = (text: string) =>
 	text.length > ACTIVITY_TEXT_LIMIT ? `${text.slice(0, ACTIVITY_TEXT_LIMIT - 3)}...` : text;
