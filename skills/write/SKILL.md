@@ -1,21 +1,26 @@
 ---
 name: write
-description: Draft and revise scholarly, professional, instructional, presentation, and web content.
+description: Draft, rewrite, revise, and structure scholarly, professional, instructional, presentation, and web content.
 ---
 
 # Write
 
 User, project, venue, and genre requirements override package defaults.
-Presentation overrides never weaken evidential standards; evidence limits
-override pressure for a stronger conclusion. State claims with their support and
-label inference or uncertainty. Do not invent facts, citations, quotations,
+Presentation rules never weaken evidential standards; evidence limits override
+pressure for a stronger conclusion. Do not invent facts, citations, quotations,
 requirements, or results.
 
+First identify the requested operation. A request to draft or rewrite a whole
+artifact authorizes work across that stated scope; do not require
+paragraph-by-paragraph permission. For revision, preserve clear,
+audience-appropriate authored prose unless a concrete defect, structural need,
+venue requirement, or the requested rewrite justifies changing it. Broad editing
+still does not authorize unsupported factual, evidential, or project decisions.
+Use scrutiny through checking, not repeated user interruptions.
+
 For new prose, follow the strongest available author or project style evidence
-and the package prose defaults when local evidence is sparse. For revision,
-preserve clear and appropriate authored prose unless a concrete defect,
-structural need, venue requirement, or explicit request justifies changing it.
-Select the smallest recipe that covers the task and read its guidance in order.
+and use package defaults only when local evidence is sparse. Select the smallest
+recipe that covers the task and read its guidance in order.
 
 ## Task recipes
 

@@ -5,11 +5,18 @@ description: Conduct reproducible quantitative, qualitative, statistical, and da
 
 # Analyze
 
-Project decisions and evidence limits override generic methods. Maintain
-traceability from inputs to conclusions; distinguish confirmatory, exploratory,
-observation, inference, and unresolved limitation. Do not treat software output,
-statistical thresholds, or reproducibility as authority. Run and report only
-actual work. Read the selected recipe in order.
+Project decisions, the requested estimand or question, and evidence limits
+override generic methods. Maintain traceability from inputs to conclusions;
+distinguish observation, statistical result, inference, confirmatory work,
+exploration, and unresolved limitation. Software output, thresholds, and
+reproducibility are evidence about execution, not authority for a claim.
+
+Once the analysis scope is clear, carry routine execution, diagnostics,
+cross-checks, and reporting through to completion. Do not pause merely to ask
+whether to continue. Stop for a real blocker or when a new choice would
+materially change the estimand, data, exclusions, model, or claim beyond the
+authorized scope. Report only work actually run or inspected. Read the selected
+recipe in order.
 
 ## Task recipes
 

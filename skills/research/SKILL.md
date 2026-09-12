@@ -1,6 +1,6 @@
 ---
 name: research
-description: Retrieve, assess, and synthesize sources with explicit limitations.
+description: Retrieve, assess, and synthesize sources with explicit provenance, stopping rules, and limitations.
 ---
 
 # Research
@@ -8,9 +8,13 @@ description: Retrieve, assess, and synthesize sources with explicit limitations.
 Local evidence, project constraints, and source limits override generic
 expectations. Separate verified source content, inference, and missing evidence;
 do not manufacture citations, coverage, consensus, quotations, or retrieval.
-Retrieve only what can materially alter the answer, and report actual access,
-uncertainty, stopping reasons, and limitations. Read the selected recipe in
-order.
+
+Once the question and source boundary are clear, work to a proportionate
+stopping rule rather than asking whether to continue after each search step.
+Retrieve only material that can change the answer, compare rather than merely
+collect, and report actual access, uncertainty, retrieval failures, and coverage
+limits. Ask only when a missing boundary or consequential choice would
+materially change the research task. Read the selected recipe in order.
 
 ## Task recipes
 
