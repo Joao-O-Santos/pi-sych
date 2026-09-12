@@ -5,180 +5,140 @@ approach is pragmatic rather than benchmark-led: fix repeatedly observed
 failures, use the package, and watch for regressions. More systematic model and
 skill evaluation can follow after the release shape is stable.
 
-## Goals
+## Implemented in this pass
 
-- Preserve human intent and voice instead of normalizing text toward model prose.
-- Make new drafting follow the strongest available author/project style evidence.
-- Strengthen manuscript structure, clarity, repetition, and contribution review.
-- Support distinct collaborative and adversarial review lenses without restoring
-  a large reviewer-agent roster.
-- Restore automation as a public skill with explicit runtime capability context
-  and a user-owned working-stack profile.
-- Make automatic compaction occur at a settled turn boundary and preserve
-  trajectory while reconciling conversation state with durable project files.
+### Writing and style
 
-## Text-only changes in this pass
-
-The following changes are safe to make without changing runtime code:
-
-- Strengthen the shared prose method:
-  - structure before wording;
-  - topic-sentence outlines for unclear new structure;
-  - reverse outlining before major revision;
-  - minimum-intervention editing of existing human prose;
-  - drafting toward established author/project voice;
-  - deliberate sentence-length variation;
-  - familiar-to-new flow and end-weight;
-  - accurate, non-dogmatic passive-voice guidance;
-  - restrained em dashes and resistance to recurring model rhetorical templates.
-- Strengthen style calibration so examples guide register, rhythm, terminology,
-  and sentence distribution without authorizing phrase imitation.
-- Keep language-specific defaults out of the package core. Dialect rules belong
+- Strengthened the shared prose method around structure before wording.
+- New drafting follows the strongest available author/project style evidence.
+- Revision now defaults to preserving clear, accurate, audience-appropriate
+  human prose unless a concrete defect, structural need, venue requirement, or
+  explicit request justifies changing it.
+- Added deliberate sentence-length variation, familiar-to-new flow, end-weight,
+  restrained em dashes, and non-dogmatic passive-voice guidance.
+- Kept language-specific defaults out of the public package. Dialect rules belong
   in explicit user/project/private style guidance.
-- Strengthen section and structural review around macro-organization,
-  contribution visibility, clarity, repetition, proportion, and sequencing.
-- Add collaborative/co-author and adversarial/referee review lenses to the
-  existing review guidance rather than adding persistent reviewer agents.
-- Make material disagreement between a manuscript and accepted project state a
-  review finding. Reviewers must not silently choose the draft or `PROJECT.md`.
 
-## Review UX and prompt templates
+### Structure and review
 
-Pi supports reusable package prompt templates. Add a small `prompts/` surface
-after the package metadata/tests are updated to ship it.
+- Strengthened section and structural review around macro-organization,
+  contribution visibility, clarity, repetition, proportion, sequencing, and
+  voice coherence.
+- Added collaborative/co-author and adversarial/referee review lenses without
+  restoring a reviewer-agent roster.
+- Material disagreement between an artifact and accepted project state is now a
+  review finding. Reviewers must not silently choose the artifact or
+  `PROJECT.md`.
 
-Proposed templates:
+### Automation skill
 
-- `/review-collaborative <artifact>`: demanding co-author review. Prioritize
-  structure, clarity, repetition, argument and voice coherence, project-state
-  alignment, and the smallest high-value changes.
-- `/review-adversarial <artifact>`: skeptical referee review. Stress-test
-  contribution, overclaiming, alternative explanations, limitations, structural
-  weaknesses, and project-state divergence without manufacturing objections.
-- `/review-structure <artifact>`: reverse-outline and structural diagnosis only;
-  avoid copyediting while paragraph or section location remains unsettled.
-- `/review-multilens <artifact>`: request independent clean-context
-  collaborative and adversarial reviews, then synthesize agreements,
-  disagreements, and blind spots. Different model roles may be used when useful,
-  but model diversity is optional; lens diversity is the invariant.
+- Added `automation` as the seventh public umbrella skill.
+- Supervisor discovery required no runtime change because the package already
+  exposes the whole `skills/` directory.
+- Worker selection also required no runtime change because named skills are
+  resolved dynamically from `skills/<selector>/SKILL.md`.
+- Added modules for capability/stack selection, minimal workflow composition,
+  deterministic data/file transforms, and browser/UI automation.
+- Updated the catalogue tests that intentionally asserted exactly six skills.
 
-Templates are entry points, not duplicated policy. They should tell the
-supervisor which existing `review` guidance/lens to use and whether independent
-clean workers are valuable. The review skill remains the source of truth.
+The current automation skill can already guide direct supervisor work and clean
+or trajectory workers. The richer capability and stack context below remains
+planned.
 
-### Package/config work required
+## Remaining automation context
 
-Do not implement in this text-only pass:
+### Runtime capability summary
 
-- add the package `prompts/` directory to npm/package discovery as needed;
-- add prompt-template tests and documentation of invocation/arguments;
-- verify template discovery against the targeted Pi version.
+Expose a compact mechanically derived summary of relevant active capabilities
+from Pi Sych and installed extensions, including h-pi-bakery components when
+present. Do not create a second manually maintained registry and do not duplicate
+full tool schemas.
 
-## Automation skill
-
-Restore `automation` as the seventh public umbrella skill once tests and package
-documentation are changed with it.
-
-The skill should reason about automation as composition of available
-capabilities around the user's actual working environment, not merely shell
-scripting.
-
-### Layer 1: runtime capabilities
-
-Expose a compact mechanically derived capability summary from Pi Sych and
-installed h-pi-bakery components. It should answer what is available without
-duplicating full tool schemas.
-
-Examples of capability classes:
+Useful capability classes include:
 
 - bounded workers and clean/trajectory context;
 - local literature search;
 - MCPorter/remote research;
 - PEW-PEW retrieval;
 - Plannotator;
-- browser interaction;
-- document/spreadsheet/presentation transforms;
+- interactive browser work;
+- document/spreadsheet/presentation transforms; and
 - deterministic local data/file transforms.
 
-The runtime is authoritative about availability. Do not require users to keep a
-second manual capability registry synchronized.
+Runtime state is authoritative about availability.
 
-### Layer 2: `STACK.md`
+### User-level `STACK.md`
 
 Add an optional user-level `STACK.md`, analogous to `STYLE.md` but for working
-preferences and tool relationships. Default location should follow the Pi Sych
-user configuration directory unless implementation constraints suggest a better
-Pi-native location.
-
-It should record things such as:
-
-- preferred tools for retrieval versus interactive browser work;
-- preferred shell/CLI utilities;
-- document and conversion workflows;
-- Git hosting and CLI preferences;
-- R/Quarto or other analysis stack;
-- deterministic-processing preferences;
-- privacy, approval, and destructive-action boundaries.
+preferences and tool relationships. It should record durable preferences such as
+retrieval versus interactive-browser choices, shell/CLI utilities, document and
+analysis workflows, Git hosting/CLI preferences, deterministic-processing
+preferences, and approval/privacy boundaries.
 
 `STACK.md` describes preferences, not availability. Runtime capabilities win if
-the two disagree. Load it when automation is relevant rather than into every
-session.
+the two disagree. Load it only when automation is relevant rather than into
+every session.
 
-### Skill shape
+Before implementation, decide the smallest Pi-native resolution mechanism and
+whether capability context can be derived from already available runtime/tool
+metadata without adding much TypeScript.
 
-Keep the public automation skill small. Suggested recipes can cover:
+## Review prompt templates
 
-- inspect available capability + stack context;
-- design a minimal automation;
-- deterministic file/data transformation;
-- browser/UI automation;
-- recurring or batch workflows;
-- verification and human-approval boundaries.
+Prompt templates are a useful user-facing entry layer because they can request a
+review lens or a set of independent reviews without duplicating the model-facing
+review policy.
 
-Do not restore the old OpenCode automation-agent architecture.
+Proposed templates:
 
-### Required code/test/documentation changes
+- `/review-collaborative <artifact>`: demanding co-author review focused on
+  structure, clarity, repetition, argument/voice coherence, project-state
+  alignment, and the smallest high-value changes.
+- `/review-adversarial <artifact>`: skeptical referee review focused on
+  contribution, overclaiming, alternatives, limitations, structural weakness,
+  and project-state divergence without manufactured objections.
+- `/review-structure <artifact>`: reverse-outline and structural diagnosis only;
+  avoid copyediting while paragraph or section location remains unsettled.
+- `/review-multilens <artifact>`: request independent clean-context collaborative
+  and adversarial reviews, then synthesize agreements, disagreements, and blind
+  spots. Different model roles may help, but lens diversity is the invariant.
 
-- update skill-discovery tests from six to seven public skills;
-- add automation modules/examples and route-budget checks;
-- update README, architecture/configuration docs, diagrams where they state six
-  skills or four methods;
-- decide how the runtime exposes capability summaries and how the automation
-  skill obtains them;
-- decide and document user-level `STACK.md` resolution/override rules.
+Templates should remain thin entry points. The `review` skill and modules stay
+the source of truth.
+
+Before adding them, verify Pi's current package prompt-template discovery,
+argument substitution, and npm packaging behavior. Then add only the minimal
+metadata/tests/docs required to ship them.
 
 ## Compaction
 
 Keep one automatic continuity-preserving compaction behavior. Do not add a
-separate deliberate "clean compaction" mode; a new session already provides the
+separate deliberate clean-compaction mode; a new session already provides the
 user-visible reset boundary.
 
-### Trigger boundary
+### Trigger at a settled turn boundary
 
-Current automatic compaction is checked before the next agent start. Replace
+Current automatic threshold handling occurs before the next agent start. Replace
 that eager behavior with a settled-turn design:
 
 1. finish the current assistant run;
 2. wait for the Pi lifecycle boundary that guarantees the agent is settled;
-3. inspect context use;
-4. compact only when the soft threshold is exceeded;
+3. inspect context usage;
+4. compact only when the soft threshold is exceeded; and
 5. let the next user message enter the compacted context.
 
-Verify the exact targeted Pi lifecycle API before implementation. Prefer the
-settled/idle boundary over `turn_end` if the latter can race with queued
-follow-ups or steering. Retain Pi/native overflow handling as an emergency
-fallback for unusually large single runs.
+Verify the exact Pi lifecycle API before implementation. Prefer a true
+settled/idle boundary over `turn_end` if queued follow-ups or steering can race
+with compaction. Keep Pi/native overflow handling as an emergency fallback for
+an unusually large single run.
 
-### Trajectory-preserving continuation memory
+### Preserve trajectory, not hidden chain-of-thought
 
-The current six-field memory is too lossy. Replace it with a richer but bounded
-continuation representation that preserves observable trajectory rather than
-inventing hidden chain-of-thought.
-
-Candidate fields:
+Replace the current six-field memory with a richer but bounded continuation
+representation. Candidate content:
 
 - objective/task;
-- user intent or consequential wording;
+- consequential user intent or wording;
 - constraints;
 - recent progress and material tool outcomes;
 - decisions and visible rationale;
@@ -186,16 +146,16 @@ Candidate fields:
 - unresolved alternatives/questions;
 - current work;
 - next action;
-- relevant files/artifacts;
+- relevant files/artifacts; and
 - project-state gaps.
 
-Do not claim to recover provider-hidden reasoning. Any inferred rationale must be
-labelled as reconstructed from the visible conversation.
+Do not claim to recover provider-hidden reasoning. Any rationale reconstructed
+from observable conversation should be labelled as such.
 
 ### Reconcile conversation with durable project state
 
-Compaction should first ask what the project files already remember, then retain
-only the conversation state still needed for intelligent continuation.
+Compaction should ask what the project files already remember before deciding
+what continuation memory still needs to carry.
 
 Suggested order:
 
@@ -205,17 +165,17 @@ Suggested order:
 4. avoid duplicating that state unnecessarily in working memory;
 5. identify important accepted conversation state missing from or conflicting
    with canonical files;
-6. append bounded proposal lines to `INBOX.md` for human review;
-7. preserve remaining trajectory in continuation memory.
+6. append bounded, clearly marked proposals to `INBOX.md`; and
+7. preserve the remaining trajectory needed for intelligent continuation.
 
-A state-gap proposal should distinguish, where possible:
+State-gap proposals should distinguish, where possible:
 
 - aligned;
 - missing from files;
-- possibly obsolete in file;
+- possibly obsolete in file; and
 - conflict/ambiguous direction.
 
-It should also distinguish an explicit user decision, an observed work result,
+They should also distinguish an explicit user decision, an observed work result,
 and a model inference.
 
 ### Mutation boundary
@@ -225,46 +185,54 @@ Compaction must not silently edit canonical semantic files such as
 `TODO.md`.
 
 Normal supervised work writes accepted durable state. Compaction detects state
-that normal work failed to record and may append clearly marked proposals to
-`INBOX.md`. If the user explicitly instructed a normal-turn update and the
-supervisor failed to make it, compaction should expose that omission rather than
-quietly repairing project truth.
+that normal work failed to record and may append proposals to `INBOX.md`. If the
+user explicitly instructed a normal-turn update and the supervisor failed to do
+it, compaction should expose that omission rather than silently repairing project
+truth.
 
-### Required code/test changes
+### Required code/tests
 
-- move automatic threshold handling out of `before_agent_start` to the verified
+- move automatic threshold handling from `before_agent_start` to the verified
   settled-turn lifecycle;
 - prevent duplicate/re-entrant compaction around the same settled boundary;
 - redesign compaction schema, validation, rendering, and prompt;
 - preserve bounded canonical snapshots and current project-status evidence;
 - test project-state gap classification and `INBOX.md` proposals;
 - test explicit-decision versus inferred-rationale labeling;
-- test that canonical files are never mutated by compaction;
-- test large-turn/emergency fallback behavior and queued follow-up interactions.
+- test that canonical files are never mutated by compaction; and
+- test large-turn/emergency fallback behavior and queued follow-up interaction.
 
 ## Skill quality across model strengths
 
-Do not add large weak-model/strong-model copies of every skill. Keep the core
-guidance concise and put procedural scaffolding in examples/templates when a
-weaker model benefits from it. Model-specific instruction profiles remain a
-possible later optimization, but only after repeated use shows a concrete
-failure that the common skill cannot address cheaply.
+Do not create large weak-model/strong-model copies of every skill. Keep common
+invariants concise and put extra procedural scaffolding in examples/templates
+only where repeated use shows it is needed.
 
-For now, judge skill changes by repeated observed failures:
+For now, judge changes by observed failures:
 
 - does the instruction prevent the known problem?
 - did it introduce a new recurring failure?
 - is the guidance doing work above what the model already does reliably?
 - can the same behavior be obtained with less prompt surface?
 
+## Documentation still to reconcile
+
+Before release, update all present-tense documentation and diagrams that still
+show the older six-skill catalogue or old compaction shape. Historical changelog
+entries should remain historical rather than being rewritten.
+
+In particular, reconcile README, architecture/configuration documentation, the
+skills architecture image, and any generated site text after the remaining
+runtime decisions are implemented.
+
 ## Release boundary
 
 Before tagging v7:
 
-- implement and verify the runtime/test work above;
-- update canonical documentation only when it describes actual behavior;
-- update `PROJECT.md` current direction/state after the implemented runtime and
-  seventh skill are true;
-- run the normal formatter, typecheck, unit/integration tests, package dry run,
-  source-budget check, site build, audit, and independent read-only review;
-- do not tag or publish until the owner separately approves release.
+- implement and verify the retained runtime work above;
+- ensure current documentation describes actual behavior;
+- run formatter, typecheck, unit/integration tests, package dry run,
+  source-budget check, site build, production audit, and independent read-only
+  review;
+- confirm the main pipeline is green; and
+- do not tag, publish, or release v7.0.0 without separate owner instruction.
