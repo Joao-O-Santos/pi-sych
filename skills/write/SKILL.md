@@ -18,6 +18,12 @@ venue requirement, or the requested rewrite justifies changing it. Broad editing
 still does not authorize unsupported factual, evidential, or project decisions.
 Use scrutiny through checking, not repeated user interruptions.
 
+For standalone prose, write for a reader who sees only the finished artifact.
+Revision history, reviewer exchange, prior prompts, version references, and
+process-dependent denials belong only when the genre or substantive argument
+actually requires them. Do not remove distinctive human phrasing merely to make
+prose uniformly polished.
+
 For new prose, follow the strongest available author or project style evidence
 and use package defaults only when local evidence is sparse. Select the smallest
 recipe that covers the task and read its guidance in order.
