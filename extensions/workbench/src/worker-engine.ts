@@ -76,12 +76,20 @@ export interface DispatchOutcome {
 }
 export type WorkerLauncher = (spec: WorkerLaunchSpec) => Promise<WorkerLaunchOutcome>;
 export const dispatchSchema = Type.Object({
-	task: Type.String({ description: "One explicit bounded assignment; include the outcome and material authorization boundary" }),
-	mode: StringEnum(WORKER_MODES, { description: "Visible worker tool capability; not a sandbox or host-permission boundary" }),
-	expectedOutput: Type.String({ description: "Concrete terminal result or file deliverable that marks the assignment complete" }),
+	task: Type.String({
+		description:
+			"One explicit bounded assignment; include the outcome and material authorization boundary",
+	}),
+	mode: StringEnum(WORKER_MODES, {
+		description: "Visible worker tool capability; not a sandbox or host-permission boundary",
+	}),
+	expectedOutput: Type.String({
+		description: "Concrete terminal result or file deliverable that marks the assignment complete",
+	}),
 	contextMode: Type.Optional(
 		StringEnum(CONTEXT_MODES, {
-			description: "Context source: clean by default, or persisted pre-dispatch supervisor trajectory when history materially helps",
+			description:
+				"Context source: clean by default, or persisted pre-dispatch supervisor trajectory when history materially helps",
 		}),
 	),
 	contextFiles: Type.Array(
@@ -103,7 +111,10 @@ export const dispatchSchema = Type.Object({
 		}),
 	),
 	remoteResearch: Type.Optional(
-		Type.Boolean({ description: "Expose configured remote-research integrations because remote retrieval is part of this assignment" }),
+		Type.Boolean({
+			description:
+				"Expose configured remote-research integrations because remote retrieval is part of this assignment",
+		}),
 	),
 	timeoutMs: Type.Optional(
 		Type.Integer({
@@ -279,11 +290,20 @@ export async function writeImmutableResult(path: string, result: WorkerResult) {
 }
 export const workerResultSchema = Type.Object({
 	status: StringEnum(["complete", "partial", "failed"] as const, {
-		description: "Actual terminal state of the assigned work, not approval or quality certification",
+		description:
+			"Actual terminal state of the assigned work, not approval or quality certification",
 	}),
-	summary: Type.String({ description: "Substantive terminal result or concise explanation of what was completed" }),
-	files: Type.Array(Type.String(), { description: "Existing project-relative files produced or materially updated by this assignment" }),
-	limitations: Type.Array(Type.String(), { description: "Missing context, unresolved ambiguity, unavailable checks, or other material limits" }),
+	summary: Type.String({
+		description: "Substantive terminal result or concise explanation of what was completed",
+	}),
+	files: Type.Array(Type.String(), {
+		description:
+			"Existing project-relative files produced or materially updated by this assignment",
+	}),
+	limitations: Type.Array(Type.String(), {
+		description:
+			"Missing context, unresolved ambiguity, unavailable checks, or other material limits",
+	}),
 });
 const conciseActivity = (text: string) =>
 	text.length > ACTIVITY_TEXT_LIMIT ? `${text.slice(0, ACTIVITY_TEXT_LIMIT - 3)}...` : text;
