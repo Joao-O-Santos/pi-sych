@@ -165,14 +165,15 @@ is relevant.
 - `project` --- project state, artifacts, dependencies, decisions, and
   plans;
 - `write` --- scholarly, professional, instructional, slide, and web
-  content;
+  content, including preservation of author voice and standalone artifact
+  self-containment;
 - `analyze` --- quantitative, qualitative, R/Quarto, and reporting work;
 - `code` --- software design, implementation, testing, automation, CLI
   and developer tooling, integration, Git, npm, and web work;
 - `review` --- structure, evidence, detail, copyediting, code, analysis,
-  response, and verification;
-- `research` --- search, source assessment, synthesis, and citations;
-  and
+  response, verification, reader friction, and context leakage;
+- `research` --- search, source assessment, synthesis, citations, and
+  capability-aware retrieval; and
 - `automation` --- capability selection, deterministic data/file work,
   workflow composition, and browser/UI automation.
 
@@ -228,6 +229,17 @@ The index is a discovery surface: returned metadata and snippets do not
 verify the underlying source or prove collection completeness. Inspect
 the source when wording, methods, results, quotations, correction
 status, or precise metadata matters.
+
+Research guidance also tells the model to use other available research
+capabilities according to their native job rather than by provider name.
+For example, a local index can discover material already in the corpus;
+a scholarly metadata or graph service can help recover identifiers and
+relationships; a scholarly gateway can retrieve focused literature; a
+PDF/full-text reader can establish what a source actually says; broad
+search can discover unknown sources; and a targeted fetch/browser tool
+can verify a known publisher, DOI, repository, correction, or
+documentation page. These are capability roles, not a required sequence
+or a claim that any named external service is installed.
 
 ## How it works
 

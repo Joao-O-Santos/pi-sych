@@ -30,9 +30,17 @@ and the author agrees. A writer exposed to the whole debate may produce
 A fresh edit worker given only the accepted correction can instead
 produce the clean statement "Y."
 
+The same problem appears in subtler forms: "in this version", "we now",
+"as requested", a denial of a claim no standalone reader would infer,
+or reviewer-response language copied into the manuscript. These phrases
+are not inherently wrong. They become a problem when their only purpose
+is to answer historical context the manuscript reader cannot see.
+
 The purpose is not to conceal relevant evidence. It is to distinguish
 the context needed to write the artifact from the historical discussion
-used to decide what should change.
+used to decide what should change. A response-to-reviewers letter or
+revision memo is different: reviewer, version, and change language may
+be exactly what that genre requires.
 
 ## Review lenses
 
@@ -52,11 +60,21 @@ alternative explanations and limitations, and looks for overclaiming,
 missing reasoning, and structural weaknesses. Adversarial does not mean
 contrarian: a strong manuscript may legitimately receive few findings.
 
-For substantial prose, both lenses treat structure, clarity, repetition,
-argument coherence, and voice coherence as first-class review targets.
-Structural review starts with a reverse outline rather than sentence
-polishing. Repetition includes duplicated rhetorical jobs and repeated
-implications even when the wording differs.
+A **reader-friction/context-leakage** lens asks whether the finished
+artifact makes sense to a reader who never saw the prompt, earlier draft,
+review exchange, or agent conversation. It flags process residue,
+unexplained version language, unmotivated denials or contrasts,
+over-signposting, generic model polish, and other rhetoric that jars with
+the surrounding voice or is motivated only by hidden process history.
+It does not ban constructions simply because generated prose often uses
+them.
+
+For substantial prose, these lenses treat structure, clarity,
+repetition, argument coherence, voice coherence, and artifact
+self-containment as first-class review targets. Structural review starts
+with a reverse outline rather than sentence polishing. Repetition
+includes duplicated rhetorical jobs and repeated implications even when
+the wording differs.
 
 When accepted project state is available, review also compares the
 artifact's apparent objective, contribution, scope, and major claims
@@ -86,6 +104,12 @@ outline can expose duplication, missing moves, and badly sequenced
 paragraphs in an existing draft. Copyediting should wait until the
 location and job of the prose are reasonably stable.
 
+A standalone manuscript should normally state its claims directly for
+the manuscript reader. Revision history, reviewer requests, earlier
+prompts, and previous-draft comparisons belong only when they have an
+independent scholarly purpose. Legitimate history, such as a material
+protocol amendment that the methods must report, should remain.
+
 ### 2. Request an independent review
 
 The supervisor checks mechanical project state and creates a bounded
@@ -95,9 +119,10 @@ timeout.
 
 The reviewer receives no supervisor transcript. It sees the context and
 tools selected for that review. The task can request a collaborative,
-adversarial, structural, evidential, detail, or copyediting focus. Use
-the smallest review recipe that covers the question rather than loading
-every review concern into every pass.
+adversarial, structural, evidential, detail, copyediting, or
+reader-friction/context-leakage focus. Use the smallest review recipe
+that covers the question rather than loading every review concern into
+every pass.
 
 ### 3. Decide what to do with the findings
 
@@ -132,7 +157,9 @@ minimum intervention. Clear, accurate, audience-appropriate prose that
 fits the intended voice does not need rewriting merely because the model
 can phrase it differently. New drafting should instead follow the
 strongest available project or author style evidence without copying
-phrases from examples.
+phrases from examples. Before finalizing a standalone artifact, the
+worker should also remove revision-process residue that has no
+reader-visible purpose.
 
 ### 5. Verify in another fresh context
 

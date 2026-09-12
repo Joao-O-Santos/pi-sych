@@ -103,12 +103,32 @@ provenance evidence rather than source verification. Exact claims still
 require inspection of the underlying source when material. Search access
 does not establish completeness.
 
+The `research` skill is capability-aware at the guidance layer. It tells
+the model to inspect what is actually available and choose by function:
+local corpus discovery, scholarly metadata/graph lookup, focused
+scholarly retrieval, PDF/full-text inspection, broad discovery search,
+or targeted fetch/browser verification. OpenAlex, Scholar Gateway, and
+PyPDF/PyMuPDF-style readers are examples of roles that may be filled by
+available tools, not Pi Sych runtime dependencies or guaranteed
+integrations. Tool outputs should refine later retrieval rather than be
+called mechanically.
+
 ## Skills and supporting guidance
 
 Seven umbrella skills are public: `project`, `write`, `analyze`, `code`,
 `review`, `research`, and `automation`. Each uses bounded ordered task
 recipes. Shared methods under `skills/_methods` provide reusable
 procedures; local modules adapt them to a genre, artifact, or task.
+
+Writing and review guidance treats standalone artifact self-containment
+as a quality criterion. Process residue, unexplained version/revision
+language, reviewer-response wording, and unmotivated denials or
+contrasts are potential context leakage when they have no reader-visible
+job. This is not an AI-detector or banned-phrase rule: established voice,
+useful idiosyncrasy, and constructions that genuinely serve the genre or
+argument should remain. Response letters and revision memos may
+appropriately discuss reviewers, versions, and changes because the
+revision process is part of their subject.
 
 The prompt hierarchy is intentionally layered:
 
