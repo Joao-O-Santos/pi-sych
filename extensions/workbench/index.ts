@@ -170,8 +170,10 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 	pi.registerTool({
 		name: "dispatch_worker",
 		label: "Dispatch worker",
-		description: "Delegate one bounded task to a short-lived worker and return its validated result.",
-		promptSnippet: "Delegate one bounded task; choose clean or trajectory context by actual context need",
+		description:
+			"Delegate one bounded task to a short-lived worker and return its validated result.",
+		promptSnippet:
+			"Delegate one bounded task; choose clean or trajectory context by actual context need",
 		promptGuidelines: [
 			"Choose direct work versus delegation by task and context, not a fixed default. Use clean context when the explicit packet is sufficient; use trajectory only when prior supervisor conversation materially improves the assignment.",
 			"A prepared plan, TODO, or brief can make clean delegation sufficient after supervisor pre-work; needing conversation context does not force the supervisor to execute the task itself.",
