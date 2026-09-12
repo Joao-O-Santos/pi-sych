@@ -5,8 +5,8 @@ description: Retrieve, assess, and synthesize sources with explicit provenance, 
 
 # Research
 
-Local evidence and source limits govern. Separate verified content, inference, and
-gaps; never invent citations, quotations, consensus, or retrieval.
+Source limits govern. Separate verified content, inference, and gaps; never
+invent citations, quotations, consensus, or retrieval.
 
 Once question and source boundary are clear, use a proportionate stopping rule.
 Retrieve material that can change the answer, compare rather than collect, and
