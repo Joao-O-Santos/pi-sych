@@ -1,191 +1,133 @@
 # Architecture
 
-This section is for the supervisor model and for contributors who need
-to understand the runtime boundary. Pi Sych is deliberately a small
-mechanical layer: it tracks paths and hashes, launches bounded workers,
+Pi Sych is deliberately a small mechanical layer: it tracks paths and
+hashes, launches bounded workers, exposes read-only literature lookup,
 and preserves explicit human review. Skills and humans own semantic
 judgment.
 
 ## Supervisor contract
 
-The supervisor sees three Pi Sych agent tools:
+The supervisor sees three Pi Sych tools:
 
 - `project_status` checks or acknowledges mechanical project state;
-- `dispatch_worker` runs one short-lived worker with clean-by-default or
-  explicitly inherited trajectory context; and
-- `literature_search` performs direct read-only lookup in the configured
-  local literature index.
+- `dispatch_worker` runs one short-lived worker with clean or trajectory
+  context; and
+- `literature_search` performs read-only lookup in the configured local
+  literature index.
 
-A separately installed and active read-only `web` tool can remain
-available directly to the supervisor. Pi Sych does not register a web
-tool or expose generic MCPorter to the supervisor.
+At turn start Pi Sych adds concise supervisor guidance plus configured
+project `agents` instructions when present. The supervisor guidance uses
+two independent task-posture dimensions:
 
-Human commands are separate: `/pi-sych-status`, `/pi-sych-mcp`,
-`/plannotator-last`, `/plannotator-annotate`, and `/plannotator-review`.
-There is no plan controller, worker registry, semantic reconciliation
-tool, or automatic promotion mechanism. The supported surface and SemVer
-boundary are defined in [the public contract](public-contract.md).
+- **persistence** — once the requested outcome and authorization boundary
+  are clear, continue until completion or a genuine blocker rather than
+  stopping merely to ask whether to continue; and
+- **scrutiny** — increase checking for authored prose, consequential
+  project-state decisions, release/publication work, external side
+  effects, and ambiguous intent.
 
-When a turn starts, Pi Sych adds its static guidance and, when present,
-the configured project `agents` file. The private model catalog is
-loaded lazily: direct project work does not require worker setup, while
-a worker dispatch requires a valid exact-role catalog.
+High scrutiny does not itself require another user checkpoint. A clear
+request to review, rewrite, implement, or complete a defined scope is
+authorization for that scope. A new checkpoint is needed when the work
+would cross into a new consequential choice, side effect, or material
+ambiguity not already covered by the user's instruction or accepted
+project state.
 
-Direct work and read-only retrieval are preferred for small or tightly
-connected exploration. Dispatch is useful when independent context,
-breadth, specialization, or substantial execution materially improves
-the result. Before dispatch, the supervisor inspects the available skill
-catalogue and selects only skills valuable for the assignment. It should
-pass the smallest complete worker packet: task, expected output, context
-mode, capability mode, context files, selected skills, model role, and a
-bounded timeout. In both modes, existing configured `agents` and `style`
-files are automatically added to the context-file list. Other required
-project files must be supplied explicitly. Clean workers receive no
-supervisor transcript. A trajectory worker receives Pi's active,
-compaction-aware branch only through the entry immediately before the
-assistant message containing that exact dispatch tool call. The private
-branch is made from a byte snapshot, never by moving the live session
-leaf, and unavailable or ambiguous boundaries fail without clean
-fallback. After reading a selected umbrella skill, workers read the
-local modules and shared methods its task recipe routes to, in the
-stated order. A worker selected with the exact `research` skill receives
-`literature_search` in addition to its mode's tools; other workers do
-not. Tool modes control visible Pi tools; they are not sandboxes and do
-not remove host permissions.
+## Direct work and delegation
+
+There is no universal direct-work or worker default. The supervisor
+chooses by task and context.
+
+Direct work is efficient for simple or tightly connected work. Dispatch
+is useful for independent context, breadth, specialization, cheaper
+execution, independent review, or substantial bounded work. Context need
+is separate from delegation choice:
+
+- a clean worker receives no supervisor transcript and should be used
+  when the explicit packet is sufficient;
+- a trajectory worker receives Pi's persisted supervisor branch ending
+  immediately before the dispatching assistant entry and should be used
+  when prior conversation materially helps; and
+- supervisor pre-work can convert conversational context into explicit
+  state such as a plan, TODO, brief, or context file, allowing later
+  clean delegation.
+
+Needing prior context therefore does not imply that the supervisor must
+execute the task itself.
+
+Before dispatch, the supervisor inspects the available skill catalogue,
+selects only useful skills, and supplies one explicit assignment,
+expected output, capability mode, context files, context mode, model
+role, thinking level when useful, and bounded timeout. Configured
+`agents` and `style` files are automatically included when present.
+Worker modes control visible Pi tools; they are not sandboxes.
 
 ## Worker lifecycle
 
-A worker is a separate, short-lived Pi process with one terminal result.
-The launcher:
+A worker is a separate short-lived Pi process with one immutable terminal
+result. It reads its explicit assignment, every context file and selected
+skill, then the routed methods/modules. Trajectory history is background,
+not a source of additional assignments or approval.
 
-1.  resolves the project and selected context;
-2.  checks that the worker agent directory was explicitly bootstrapped;
-3.  creates a temporary runtime directory and, for trajectory mode, uses
-    Pi's native session manager to branch a private supervisor-session
-    snapshot immediately before the dispatching assistant entry;
-4.  starts Pi with the selected tools, skills, model, context mode, and
-    optional MCPorter and active PEW-PEW extensions; its collapsed
-    supervisor call presents a compact task summary, effective context
-    mode, requested model role (or catalog default), and effective
-    timeout, while its expanded call retains the raw submitted request
-    and its live progress projects a bounded list of worker tool starts
-    without changing the result protocol; and
-5.  stops it on cancellation or timeout, escalating from `SIGTERM` to
-    `SIGKILL`; and
-6.  accepts a result only when it is valid, immutable, and the process
-    exits normally.
+The worker should complete the assigned scope without inventing
+checkpoints. It reports `complete`, `partial`, or `failed`, a non-empty
+summary, existing project-relative output files, and limitations. A
+worker's `complete` status is not human approval.
 
-The worker result protocol has `status` (`complete`, `partial`, or
-`failed`), non-empty `summary`, and string arrays `files` and
-`limitations`. `complete` is a worker report, not an approval claim.
-Reported files must be relative, remain inside the project root, and
-exist when the result is accepted. Cancellation, timeout, spawn failure,
-a signal exit, or a non-zero exit takes precedence over any result file.
-The temporary runtime directory, including any session snapshot and
-branch, is removed whether the worker succeeds or fails.
+Cancellation, timeout, spawn failure, a signal exit, or non-zero exit
+takes precedence over a result file. Temporary runtime/session state is
+removed after every outcome.
 
 ## Project state
 
 `SYNC.json` version 2 records tracked file hashes and dependency paths.
-`project_status` reports missing files, changed hashes, persisted
-statuses, project-brief validation problems, and direct or transitive
-dependency impact. It never decides semantic drift, authority, quality,
-or correctness.
-
-Acknowledgement is atomic and rechecks selected files immediately before
-writing. If a file changed during the review window, acknowledgement
-aborts instead of recording an obsolete fingerprint. A changed hash
-proves only that content changed after acknowledgement.
-
-Artifact paths are project-local by lexical path, while symlinks remain
-ordinary project files and are not treated as a security boundary.
-Explicit canonical paths are configuration: they may be absolute or
-external and are checked for readability rather than treated as a
-sandbox boundary.
+`project_status` reports missing files, changed hashes, persisted status,
+project-brief problems, and dependency impact. A changed hash proves
+only changed content. Acknowledgement records reviewed state, not
+correctness or semantic authority.
 
 ## Compaction
 
-When `compaction.custom` is enabled, Pi Sych calls the active supervisor
-model through the custom-compaction seam; it does not use a worker role.
-Returning no custom result on unavailable model/authentication or
-failure leaves Pi's normal compactor in control. Compaction sends the
-previous summary, compacted conversation, a concise status projection,
-and bounded snapshots of the configured `project`, `todo`, and
-`decisions` files when present. It retains relevant artifact paths
-without loading every artifact. The prompt explicitly preserves
-continuity-critical unresolved alternatives, negative results, failed
-approaches that constrain the next action, and commitments not yet
-written to canonical files, using the existing memory fields. `INBOX.md`
-is intentionally excluded because it contains unreviewed proposals.
-
-Text snapshots are capped per file and in total. Truncation is reported
-to the model. At most five validated proposals may be appended to the
-configured inbox, which is created as needed and counted by proposal
-lines, not by newline accidents.
-
-The current implementation remains the pre-v7-revision compaction shape.
-`PLAN.md` records the proposed settled-turn trigger, richer trajectory
-memory, and conversation-to-project-state reconciliation. Those planned
-changes are not runtime behavior until implemented and verified.
+Current custom compaction remains the pre-v7-revision implementation. It
+uses the active supervisor model and a bounded six-field continuation
+shape, with bounded snapshots of configured project/todo/decision state
+and optional proposal lines in `INBOX.md`. The richer settled-turn
+trajectory design remains planned in `PLAN.md`, not current runtime
+behavior.
 
 ## Local literature
 
-`literature_search` is registered by the workbench for direct supervisor
-lookup and by the worker extension for selected research workers. It
-opens the selected database read-only and queries the supported SQLite
-FTS5 `papers` plus external-content `papers_fts` schema. Supervisor
-lookup resolves the current project root before selecting the database;
-the supervisor forwards the resolved Pi Sych configuration-directory
-path to isolated workers while retaining their separate Pi agent
-directory. Search joins the index to canonical metadata, searches
-filepath, title, abstract, tags, and DOI, ranks with FTS5, snippets
-`abstract`, and returns source paths resolved relative to the database.
-Database selection and the `literatureDatabase` setting are documented
-in [configuration](configuration.md#local-literature-search).
+`literature_search` queries the configured read-only SQLite FTS5 index.
+Its model-facing guidance explicitly frames results as discovery and
+provenance evidence rather than source verification. Exact claims still
+require inspection of the underlying source when material. Search access
+does not establish completeness.
 
-## Skills, MCPorter, and Plannotator
+## Skills and supporting guidance
 
 Seven umbrella skills are public: `project`, `write`, `analyze`, `code`,
-`review`, `research`, and `automation`. Each contains bounded ordered
-task recipes. Recipes compose two kinds of plain supporting file:
+`review`, `research`, and `automation`. Each uses bounded ordered task
+recipes. Shared methods under `skills/_methods` provide reusable
+procedures; local modules adapt them to a genre, artifact, or task.
 
-- shared methods under `skills/_methods` define reusable procedures for
-  prose, hypothesis generation, argument analysis, and claim-to-evidence
-  mapping; and
-- local modules adapt those procedures to a genre, artifact, review
-  mode, or automation concern.
+The prompt hierarchy is intentionally layered:
 
-`automation` is semantic guidance, not a new orchestration runtime. It
-helps the supervisor or a selected worker choose among actual available
-capabilities, user stack preferences when explicitly supplied, local
-deterministic processing, and browser/UI work. The planned derived
-capability summary and user-level `STACK.md` resolution are not yet
-implemented runtime features.
+1. always-visible supervisor/tool text carries only high-salience task
+   posture, authority, and capability boundaries;
+2. umbrella skills establish domain posture and route the task; and
+3. routed methods/modules carry detailed procedure.
 
-`_methods` contains no `SKILL.md`, so neither methods nor modules
-enlarge the public catalog. Routes are ordinary Markdown links resolved
-relative to the umbrella file. Methods may include examples, templates,
-rubrics, or scripts; scripts remain ordinary support files, not
-registered tools. Intellectual influences are recorded once in packaged
-`docs/attribution.md`, outside routed model context. There is no method
-registry, composition engine, prompt inheritance, or automatic import
-mechanism.
+This avoids duplicating detailed doctrine into the system prompt while
+keeping consequential invariants salient. Routes are ordinary Markdown
+links, not a workflow engine or prompt inheritance mechanism.
 
-MCPorter is enabled only for explicitly requested remote research. Its
-configuration is not generated by worker bootstrap. When the supervisor
-already has the `web` tool active and its loaded provenance identifies a
-valid `pi-pew-pew` package, that extension and tool are also exposed to
-the remote-research worker. Pi Sych neither discovers nor overrides a
-disabled PEW-PEW package. Diagnostics report MCPorter availability,
-configuration presence, and server names without printing credentials.
+`automation` is semantic guidance, not a new orchestration runtime. The
+planned derived capability summary and optional user-level `STACK.md`
+remain unimplemented.
 
-The core workbench and the Plannotator adapter are separate package
-extensions. Pi package filters or `pi config` can omit Plannotator;
-`extensions: []` or `--no-extensions` omits all package extensions while
-skills may remain loaded. `--tools` and `--exclude-tools` narrow visible
-tools for one Pi session. None of these controls makes a worker a
-sandbox.
+## Optional integrations
 
-Plannotator remains a narrow human review adapter. Last-message feedback
-enters the conversation. File annotation writes `<input>.feedback.md`;
-code-review feedback writes `<projectRoot>/PLANNOTATOR_REVIEW.md`.
+MCPorter remains an explicit remote-research integration. A separately
+active validated PEW-PEW `web` tool may be reused for remote-research
+workers. Plannotator remains a narrow human-review adapter. None of these
+mechanisms silently promotes model output into accepted project state.

@@ -18,11 +18,10 @@ ordinary files, gives bounded tasks to short-lived model contexts, and
 keeps consequential decisions with the user.
 
 Long chats mix accepted decisions with stale assumptions, rejected
-ideas, and review debate. That makes it easy for a later task to inherit
-context that was discussed but not adopted. Pi Sych takes a file-first
-approach: ordinary project files form the durable record, mechanical
-status reports changed content and dependency impact, and short-lived
-workers make clean-context delegation and independent review possible.
+ideas, and review debate. Pi Sych takes a file-first approach: ordinary
+project files form the durable record, mechanical status reports changed
+content and dependency impact, and short-lived workers make clean-context
+delegation and independent review possible.
 
 It is deliberately not an autonomous project manager or a hierarchy of
 persistent agents. It does not silently decide what a project means or
@@ -30,8 +29,11 @@ promote model output into project truth.
 
 At a glance, you describe the work in ordinary language; Pi Sych makes
 project files and task-specific guidance available and, when useful,
-helps the supervisor give one bounded task to a short-lived worker. You
-review the result and retain consequential decisions.
+helps the supervisor give one bounded task to a short-lived worker. The
+supervisor should keep working through an already-authorized task until
+completion or a genuine blocker, while increasing scrutiny for authored
+prose, consequential decisions, and external side effects without
+inventing extra approval checkpoints.
 
 ![Pi Sych overview: a request can use task-specific skills and project
 files, optionally involve a focused worker, and return for human review
@@ -106,14 +108,10 @@ The separation between review and editing is deliberate. Rejected
 alternatives and the arguments used to evaluate them do not normally
 belong in the writer's context.
 
-Suppose an earlier draft said X. A reviewer recommends Y, and you agree.
-A writer exposed to the entire debate may produce "Not X, but Y."
-
-A fresh edit worker given the accepted correction can instead produce
-the clean statement "Y."
-
-See the [review and revision workflow](docs/review-workflow.md) for the
-worked pattern and its limits.
+A broad request can still authorize broad work. “Review the whole
+manuscript”, “rewrite the whole section”, or “implement this plan” should
+normally be completed across the named scope. High scrutiny means more
+careful checking, not repeated prompts asking whether to continue.
 
 ## Project files as shared memory
 
@@ -126,30 +124,18 @@ become useful. `EVIDENCE.md` is optional task evidence, not a required
 repository file.
 
 | File | Typical purpose |
-|------------------------------------|------------------------------------|
-| `PROJECT.md` | The objective, accepted direction, definition of done, previous action, and immediate next step. |
-| `EVIDENCE.md` | Important claims, sources, quotations, outputs, caveats, and material that may support the artifact. |
-| `DECISIONS.md` | Accepted methodological, conceptual, editorial, or architectural decisions and their reasons. |
+| --- | --- |
+| `PROJECT.md` | Objective, accepted direction, definition of done, previous action, and immediate next step. |
+| `EVIDENCE.md` | Important claims, sources, outputs, caveats, and task evidence. |
+| `DECISIONS.md` | Accepted consequential decisions and their reasons. |
 | `TODO.md` | Open work that has not yet been completed. |
 | `STYLE.md` | Stable terminology, spelling, venue conventions, and writing preferences. |
 | `SYNC.json` | Mechanical fingerprints, statuses, and declared relationships between files. |
 | `INBOX.md` | Unreviewed proposals that have not become authoritative project state. |
 
 These files are not an invitation to document everything. They preserve
-the information that another person or model would need to continue the
-work without reconstructing it from chat history.
-
-For example, a small manuscript project might contain:
-
-``` text
-my-paper/
-├── PROJECT.md
-├── manuscript.qmd
-├── DECISIONS.md
-├── TODO.md
-├── STYLE.md
-└── SYNC.json
-```
+the information another person or model would need to continue without
+reconstructing the project from chat history.
 
 ## Why separate contexts?
 
@@ -157,104 +143,60 @@ A model can be influenced by everything in its current context window,
 including ideas that were considered and rejected. That can be useful
 during discussion, but it is not always useful during implementation.
 
-Reviewing and revising a manuscript in one long conversation can cause
-the final prose to retain traces of the debate. Rejected alternatives
-may reappear as unnecessary qualifications, contrasts, defensive
-language, or explanations that the reader never needed.
+Pi Sych therefore supports two worker context modes. `clean` receives no
+supervisor transcript and is best when an explicit task packet is enough.
+`trajectory` receives the persisted supervisor branch immediately before
+the dispatch and is useful when prior exploration materially helps the
+assignment. A plan, TODO, or task brief produced during supervisor
+pre-work can make a later clean worker sufficient. Needing context does
+not imply that the supervisor must perform the task itself.
 
-Pi Sych can instead launch a short-lived worker in the default `clean`
-context mode with a deliberately selected packet:
-
-- the task;
-- the expected result;
-- the files required for that task;
-- the relevant skills and guidance;
-- the selected model and tool mode;
-- optional integrations; and
-- a bounded timeout.
-
-Context files normally use project-relative paths. For a deliberately
-selected external input, the supervisor may instead supply a readable
-absolute path; it remains external in the worker packet. Worker-reported
-files remain project-relative.
-
-A `trajectory` worker receives Pi's active, compaction-aware supervisor
-branch ending before the assistant message containing that dispatch; it
-does not receive that message or any of its tool calls. This is useful
-when prior exploration materially helps the bounded assignment. It fails
-rather than silently becoming clean when the persisted branch boundary
-is unavailable. Context mode is independent of files, skills, model,
-tool mode, and research access.
-
-In either mode the result returns to the supervisor, where the user
-decides what should happen next. Context selection is not an
-operating-system sandbox. The supervisor still chooses what the worker
-receives. Depending on the task, that may include editing tools, Bash,
-or remote-research tools.
+Context mode is independent of files, skills, model, tool mode, and
+research access. In either mode the result returns to the supervisor.
+Context selection is not an operating-system sandbox.
 
 ## What Pi Sych can help with
 
 Skills are reusable guidance for a model, not persistent agents. Pi Sych
-initially exposes six broad skills and loads more specific guidance only
-when it is relevant.
+exposes seven broad skills and loads more specific guidance only when it
+is relevant.
 
-- `project` --- project state, artifacts, dependencies, decisions, and
+- `project` — project state, artifacts, dependencies, decisions, and
   plans;
-- `write` --- scholarly, professional, instructional, slide, and web
+- `write` — scholarly, professional, instructional, slide, and web
   content;
-- `analyze` --- quantitative, qualitative, R/Quarto, and reporting work;
-- `code` --- software design, implementation, testing, automation, CLI
+- `analyze` — quantitative, qualitative, R/Quarto, and reporting work;
+- `code` — software design, implementation, testing, automation, CLI
   and developer tooling, integration, Git, npm, and web work;
-- `review` --- structure, evidence, detail, copyediting, code, analysis,
-  response, and verification; and
-- `research` --- search, source assessment, synthesis, and citations.
+- `review` — structure, evidence, detail, copyediting, code, analysis,
+  response, and verification;
+- `research` — search, source assessment, synthesis, and citations; and
+- `automation` — capability selection, deterministic data/file work,
+  workflow composition, and browser/UI automation.
 
 Each umbrella skill contains small ordered task recipes. A recipe
-selects only the shared methods and local modules needed for that task:
-
-- shared methods define reusable procedures for prose, hypothesis
-  generation, argument analysis, and claim-to-evidence mapping; and
-- local modules adapt those procedures to a genre, artifact, or review
-  mode.
-
-Shared methods have no `SKILL.md`, so Pi still discovers exactly six
-public skills. The recipes are plain Markdown links, not a loader,
-inheritance system, or workflow controller. Project, user, and packaged
-versions can override one another without enlarging the public
-catalogue. See [skill
-customization](docs/configuration.md#skill-customization) for the lookup
-order and customization paths.
+selects only the shared methods and local modules needed for that task.
+Shared methods have no `SKILL.md`, so Pi discovers exactly seven public
+skills. The recipes are plain Markdown links, not a loader, inheritance
+system, or workflow controller.
 
 ## Commands you can use
 
 Human-facing commands:
 
-- `/pi-sych-status` --- show mechanical project state;
-- `/pi-sych-mcp` --- inspect optional MCPorter configuration without
+- `/pi-sych-status` — show mechanical project state;
+- `/pi-sych-mcp` — inspect optional MCPorter configuration without
   printing credentials;
-- `/plannotator-annotate <project-local-markdown-file>` --- annotate a
+- `/plannotator-annotate <project-local-markdown-file>` — annotate a
   project-local `.md` or `.mdx` file and save feedback beside it;
-- `/plannotator-last` --- annotate the last assistant response and
-  return the feedback to the conversation; and
-- `/plannotator-review` --- open Plannotator code review for current
+- `/plannotator-last` — annotate the last assistant response and return
+  the feedback to the conversation; and
+- `/plannotator-review` — open Plannotator code review for current
   changes or a pull request.
 
 Plannotator is a separately selectable human review adapter. It does not
 add a plan controller, automatically accept feedback, or promote
 generated output into project state.
-
-### Enable, disable, and narrow runtime resources
-
-Pi Sych's package enables its workbench and Plannotator extensions by
-default. Use `pi config` to disable either extension or use a package
-filter such as `"extensions": ["extensions/workbench/index.ts"]` to keep
-the core while omitting Plannotator; use `"extensions": []` to load no
-package extensions while retaining package skills. Use `--no-extensions`
-for a session with no extensions. For a selected session, `--tools`
-allow-lists tools and `--exclude-tools` removes named tools; these
-control visible Pi tools, not host permissions. See
-[configuration](docs/configuration.md#pi-native-resource-controls) and
-the [public contract](docs/public-contract.md).
 
 ### Tools available to the supervising model
 
@@ -266,90 +208,42 @@ Pi Sych gives the supervisor three tools:
   local literature index.
 
 A separately installed and active read-only `web` tool can also remain
-available to the supervisor. Pi Sych does not register one. Direct
-read-only retrieval is appropriate for small or tightly connected
-exploration; dispatch is reserved for cases where independent context,
-breadth, specialization, or substantial execution materially helps.
+available to the supervisor. Pi Sych does not register one.
 
-In Pi's terminal interface, a collapsed `dispatch_worker` call shows a
-compact task summary, requested model role (or catalog default), and
-effective context mode and timeout. Omitted context is presented as the
-`clean` default. Expand it with the configured tool-expansion shortcut
-(`Ctrl+O` by default) to inspect the raw submitted request. While it
-runs, its tool row shows a bounded live list of worker tool starts; it
-is activity visibility, not a worker console or result protocol.
-
-These tools support a workflow; they do not decide what the workflow
-must be.
+Choosing direct work versus delegation is contextual rather than a fixed
+default. Direct work is efficient for simple or tightly connected work.
+Dispatch helps when independent context, breadth, specialization, a
+cheaper model, or substantial execution is useful. Clean workers are
+appropriate when an explicit packet contains what they need; trajectory
+workers are appropriate when conversation history itself materially
+helps.
 
 ### Research workers and local literature
 
 The supervisor can call `literature_search` directly. A worker selected
-with the exact `research` skill also receives the same read-only tool;
-it is not added to other workers. The tool searches a local SQLite FTS5
-database. Its v7 schema stores canonical metadata in `papers` and uses
-an external-content FTS5 table named `papers_fts`. It searches filepath,
-title, abstract, tags, and DOI; returns ranked metadata (`title`,
-nullable `itemType`, nullable or structured `creators`, `year`, and
-`doi`), a marked snippet from `abstract`, a score, and each source path
-resolved relative to the database. Pi Sych performs shallow creator
-shape checks but does not validate CSL semantics, format citations, or
-choose roles for a citation style. v6 databases require an external
-migration or rebuild before upgrading; `first_author` is not converted
-because it may be a lossy citation stem. See
-[configuration](docs/configuration.md#local-literature-search) for the
-schema, database resolution, and `literatureDatabase`.
-
-## Optional: enable workers
-
-Direct work does not require a worker model catalogue. To let the
-supervisor launch separate workers, first create a private catalogue. A
-common user-level setup begins with:
-
-``` sh
-mkdir -p ~/.config/pi/pi-sych
-$EDITOR ~/.config/pi/pi-sych/models.json
-```
-
-Then request a worker dispatch. If the worker directory is not yet
-initialized, Pi Sych reports the exact bootstrap command with the
-resolved package and configuration paths. Run that command once.
-
-The catalogue contains provider model identifiers and remains outside
-the package. Pi Sych does not ship credentials, rank providers, or
-choose models for you. The bootstrap operation is explicit and does not
-silently modify your home directory during ordinary use.
-
-See [configuration](docs/configuration.md) for model roles, worker
-directories, canonical paths, skill overrides, and optional remote
-research.
+with the exact `research` skill also receives the same read-only tool.
+The index is a discovery surface: returned metadata and snippets do not
+verify the underlying source or prove collection completeness. Inspect
+the source when wording, methods, results, quotations, correction status,
+or precise metadata matters.
 
 ## How it works
 
 Pi Sych supplies a few mechanical pieces rather than a general
 orchestration system:
 
-- **Explicit project state:** `PROJECT.md` records the accepted
-  direction and `SYNC.json` records fingerprints and declared
-  dependencies.
+- **Explicit project state:** ordinary files record accepted direction,
+  decisions, evidence, style, and work state when useful.
 - **Mechanical status:** `project_status` reports changed or missing
   files and affected dependants. Human review supplies the meaning.
-- **Direct retrieval:** `literature_search`, and an independently active
-  read-only `web` tool when present, let the supervisor inspect small or
-  tightly connected sources without creating a second model context.
+- **Direct retrieval:** local literature and an independently active
+  read-only web tool can support small exploration without another model
+  context.
 - **Bounded delegation:** `dispatch_worker` starts one short-lived
-  worker with an explicit task, clean-by-default or inherited-trajectory
-  context, files, skills, model role, tool mode, and timeout. A worker
-  submits one immutable `status`, `summary`, `files`, and `limitations`
-  result; Pi Sych accepts it only after normal process exit and
-  validates reported project files.
-- **Small working memory:** configured custom compaction uses the active
-  supervisor model to produce bounded structured continuation memory,
-  with Pi's standard compactor remaining available when it is disabled
-  or custom compaction fails. It retains a bounded continuation summary,
-  including consequential unresolved alternatives, negative results, and
-  failed approaches, and may place plainly marked proposals in
-  `INBOX.md`.
+  worker with an explicit assignment, clean or trajectory context,
+  files, skills, model role, tool mode, and timeout.
+- **Small working memory:** custom compaction can retain bounded
+  continuation state and place clearly marked proposals in `INBOX.md`.
 - **Human review:** Plannotator provides annotation and code-review
   interfaces without becoming a workflow controller.
 
@@ -357,71 +251,26 @@ This is intentionally not an autonomous project manager. It does not
 silently turn model output into evidence, citations, release state,
 approval, or project truth.
 
-## Limits and responsibilities
-
-Pi Sych provides context and process boundaries, not proof that an
-artifact is correct.
-
-- A changed hash establishes that content changed; it does not establish
-  conceptual drift, improvement, or error.
-- A successful test establishes only what that test examined.
-- A worker result is model-generated output and still requires
-  appropriate review.
-- Worker modes control which Pi tools are visible. They do not remove
-  the worker process's underlying host permissions.
-- Remote research and external tools may return incomplete, outdated, or
-  incorrect information.
-- Human users remain responsible for consequential decisions,
-  publication, release, and final approval.
-
-Inspect sources, generated outputs, external results, and package
-behaviour before relying on them for consequential work.
-
-## Why I built this
-
-Pi Sych grew out of my move from OpenCode to Pi. I was attracted to Pi
-because its core is small and its extension model leaves room for users
-to build the workflow they need.
-
-I did not want to reproduce a large orchestration framework or maintain
-a roster of persistent specialist agents. Other extensions already
-explore those approaches, and they may be a better fit for people who
-want them. I wanted to see how far a smaller set of mechanisms could go:
-explicit project files, normal Pi skills, short-lived workers, and human
-review.
-
-The project was also shaped by experience with memory systems. Many of
-those tools are useful, and Pi Sych is not an argument that they should
-not exist. My difficulty was that memories could become large, opaque,
-or closely tied to one model and one conversation. Important findings
-were not always easy for another researcher, collaborator, or model to
-inspect.
-
-Pi Sych therefore treats ordinary files as the durable record. The
-conversation remains useful working space, but accepted evidence,
-decisions, and project direction should be written somewhere that can be
-reviewed and handed over.
-
-This is an experiment in keeping that approach useful without adding
-more machinery than the problem appears to require.
-
 ## For supervising models
 
 When working in a Pi Sych project:
 
-- inspect project state before substantial work;
-- read `PROJECT.md` and only the additional files needed for the task;
-- treat accepted project files, rather than conversational recollection,
-  as the durable project record;
-- use direct work and read-only retrieval for small or tightly connected
-  exploration;
-- dispatch when independent context, breadth, specialization, or
-  substantial execution materially improves the result;
+- infer authorization from the actual request: a clear request to review,
+  rewrite, implement, or complete a named scope normally authorizes that
+  scope;
+- separate persistence from scrutiny: continue authorized work until
+  complete or genuinely blocked, while checking consequential and
+  authored work more carefully;
+- inspect project state before substantial work and read only relevant
+  canonical files;
+- choose direct work or delegation by task and context, not a universal
+  default;
+- use clean workers when an explicit task packet is sufficient and
+  trajectory workers when prior conversation materially helps;
+- remember that supervisor pre-work captured in a plan, TODO, or brief
+  can enable later clean delegation;
 - inspect the available skill catalogue before dispatch and select only
-  skills valuable for the assignment;
-- give workers the smallest complete packet; use no supervisor
-  transcript by default and inherit trajectory only when it materially
-  helps the assignment;
+  valuable skills;
 - treat changed hashes as evidence of changed content, not semantic
   drift;
 - do not treat proposals, generated text, successful checks, or reviewer
@@ -430,49 +279,16 @@ When working in a Pi Sych project:
   actually occurred.
 
 See [architecture](docs/ARCHITECTURE.md) for the complete runtime
-contract.
-
-## Status and contributions
-
-Pi Sych is alpha software. Its current design reflects one approach to
-organizing long-running LLM-assisted work, and it will not suit every
-project.
-
-Issues and contributions are welcome, especially from researchers,
-writers, analysts, and maintainers using it outside conventional
-software-development workflows.
-
-Useful contributions include:
-
-- clearer documentation and examples;
-- improvements to the public skills;
-- small reproducible bug reports;
-- project templates;
-- accessibility improvements; and
-- reports of where the file-first approach does or does not work well.
-
-See [contributing](docs/CONTRIBUTING.md) before proposing code or
-release changes.
+contract and [configuration](docs/configuration.md) for setup and skill
+customization.
 
 ## Detailed documentation
 
-- [Review and revision workflow](docs/review-workflow.md) --- a
-  user-guided pattern for independent review, clean-context editing, and
-  fresh verification;
-- [Configuration](docs/configuration.md) --- private models, worker
-  setup, project roots, canonical paths, skill customization, Pi-native
-  resource controls, and optional integrations;
-- [Public contract](docs/public-contract.md) --- supported userland,
-  compatibility-sensitive internals, and SemVer/migration rules;
-- [Architecture](docs/ARCHITECTURE.md) --- supervisor-facing runtime
-  boundaries and mechanical invariants;
-- [Development](docs/development.md) --- checks, deterministic test
-  posture, style, and design constraints for contributors;
-- [Code tour](docs/code-tour.md) --- a guided map of the current runtime
-  and its [live generated code
-  reference](https://joao-o-santos.gitlab.io/pi-sych/code-reference.html);
-- [Contributing](docs/CONTRIBUTING.md) --- issues, pull requests, and
-  release ownership;
-- [Attribution](docs/attribution.md) --- cited influences behind the
-  skills and package design, plus platform and integration
-  acknowledgements.
+- [Review and revision workflow](docs/review-workflow.md)
+- [Configuration](docs/configuration.md)
+- [Public contract](docs/public-contract.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Development](docs/development.md)
+- [Code tour](docs/code-tour.md)
+- [Contributing](docs/CONTRIBUTING.md)
+- [Attribution](docs/attribution.md)
