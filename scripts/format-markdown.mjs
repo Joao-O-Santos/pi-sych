@@ -92,16 +92,31 @@ export function formatMarkdown(path) {
 	return result.stdout;
 }
 
+function firstDifference(left, right) {
+	const limit = Math.min(left.length, right.length);
+	let index = 0;
+	while (index < limit && left[index] === right[index]) index += 1;
+	return index;
+}
+
 async function main() {
 	const fix = process.argv.includes("--write");
 	const changed = [];
-	const expected = [];
+	const diagnostics = [];
 	for (const path of MARKDOWN_FILES) {
 		const before = await readFile(path, "utf8");
 		const after = formatMarkdown(path);
 		if (before === after) continue;
 		changed.push(path);
-		expected.push({ path, after });
+		const index = firstDifference(before, after);
+		diagnostics.push({
+			path,
+			index,
+			beforeLength: before.length,
+			afterLength: after.length,
+			before: before.slice(Math.max(0, index - 80), index + 160),
+			after: after.slice(Math.max(0, index - 80), index + 160),
+		});
 		if (fix) {
 			const temporary = join(dirname(path), `.${basename(path)}.tmp`);
 			await writeFile(temporary, after);
@@ -115,8 +130,7 @@ async function main() {
 				`Markdown differs from Pandoc 72-column formatting:\n${changed.join("\n")}\nRun npm run markdown:fix.`,
 			);
 			if (process.env.CI)
-				for (const item of expected)
-					console.error(`\n--- ${item.path} (Pandoc expected) ---\n${item.after}`);
+				for (const item of diagnostics) console.error(`MARKDOWN_DIAGNOSTIC ${JSON.stringify(item)}`);
 			process.exitCode = 1;
 		}
 	} else console.log("Markdown matches Pandoc 72-column formatting.");
