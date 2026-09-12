@@ -123,15 +123,15 @@ A project can begin with `PROJECT.md` and add other files only when they
 become useful. `EVIDENCE.md` is optional task evidence, not a required
 repository file.
 
-| File           | Typical purpose                                                                              |
+| File | Typical purpose |
 |------------------------------------|------------------------------------|
-| `PROJECT.md`   | Objective, accepted direction, definition of done, previous action, and immediate next step. |
-| `EVIDENCE.md`  | Important claims, sources, outputs, caveats, and task evidence.                              |
-| `DECISIONS.md` | Accepted consequential decisions and their reasons.                                          |
-| `TODO.md`      | Open work that has not yet been completed.                                                   |
-| `STYLE.md`     | Stable terminology, spelling, venue conventions, and writing preferences.                    |
-| `SYNC.json`    | Mechanical fingerprints, statuses, and declared relationships between files.                 |
-| `INBOX.md`     | Unreviewed proposals that have not become authoritative project state.                       |
+| `PROJECT.md` | Objective, accepted direction, definition of done, previous action, and immediate next step. |
+| `EVIDENCE.md` | Important claims, sources, outputs, caveats, and task evidence. |
+| `DECISIONS.md` | Accepted consequential decisions and their reasons. |
+| `TODO.md` | Open work that has not yet been completed. |
+| `STYLE.md` | Stable terminology, spelling, venue conventions, and writing preferences. |
+| `SYNC.json` | Mechanical fingerprints, statuses, and declared relationships between files. |
+| `INBOX.md` | Unreviewed proposals that have not become authoritative project state. |
 
 These files are not an invitation to document everything. They preserve
 the information another person or model would need to continue without
@@ -162,20 +162,19 @@ Skills are reusable guidance for a model, not persistent agents. Pi Sych
 exposes seven broad skills and loads more specific guidance only when it
 is relevant.
 
--   `project` --- project state, artifacts, dependencies, decisions, and
-    plans;
--   `write` --- scholarly, professional, instructional, slide, and web
-    content;
--   `analyze` --- quantitative, qualitative, R/Quarto, and reporting
-    work;
--   `code` --- software design, implementation, testing, automation, CLI
-    and developer tooling, integration, Git, npm, and web work;
--   `review` --- structure, evidence, detail, copyediting, code,
-    analysis, response, and verification;
--   `research` --- search, source assessment, synthesis, and citations;
-    and
--   `automation` --- capability selection, deterministic data/file work,
-    workflow composition, and browser/UI automation.
+- `project` --- project state, artifacts, dependencies, decisions, and
+  plans;
+- `write` --- scholarly, professional, instructional, slide, and web
+  content;
+- `analyze` --- quantitative, qualitative, R/Quarto, and reporting work;
+- `code` --- software design, implementation, testing, automation, CLI
+  and developer tooling, integration, Git, npm, and web work;
+- `review` --- structure, evidence, detail, copyediting, code, analysis,
+  response, and verification;
+- `research` --- search, source assessment, synthesis, and citations;
+  and
+- `automation` --- capability selection, deterministic data/file work,
+  workflow composition, and browser/UI automation.
 
 Each umbrella skill contains small ordered task recipes. A recipe
 selects only the shared methods and local modules needed for that task.
@@ -187,15 +186,15 @@ system, or workflow controller.
 
 Human-facing commands:
 
--   `/pi-sych-status` --- show mechanical project state;
--   `/pi-sych-mcp` --- inspect optional MCPorter configuration without
-    printing credentials;
--   `/plannotator-annotate <project-local-markdown-file>` --- annotate a
-    project-local `.md` or `.mdx` file and save feedback beside it;
--   `/plannotator-last` --- annotate the last assistant response and
-    return the feedback to the conversation; and
--   `/plannotator-review` --- open Plannotator code review for current
-    changes or a pull request.
+- `/pi-sych-status` --- show mechanical project state;
+- `/pi-sych-mcp` --- inspect optional MCPorter configuration without
+  printing credentials;
+- `/plannotator-annotate <project-local-markdown-file>` --- annotate a
+  project-local `.md` or `.mdx` file and save feedback beside it;
+- `/plannotator-last` --- annotate the last assistant response and
+  return the feedback to the conversation; and
+- `/plannotator-review` --- open Plannotator code review for current
+  changes or a pull request.
 
 Plannotator is a separately selectable human review adapter. It does not
 add a plan controller, automatically accept feedback, or promote
@@ -205,10 +204,10 @@ generated output into project state.
 
 Pi Sych gives the supervisor three tools:
 
--   `project_status` checks or acknowledges project state;
--   `dispatch_worker` starts one bounded, short-lived worker; and
--   `literature_search` performs direct read-only lookup in the
-    configured local literature index.
+- `project_status` checks or acknowledges project state;
+- `dispatch_worker` starts one bounded, short-lived worker; and
+- `literature_search` performs direct read-only lookup in the configured
+  local literature index.
 
 A separately installed and active read-only `web` tool can also remain
 available to the supervisor. Pi Sych does not register one.
@@ -235,20 +234,20 @@ status, or precise metadata matters.
 Pi Sych supplies a few mechanical pieces rather than a general
 orchestration system:
 
--   **Explicit project state:** ordinary files record accepted
-    direction, decisions, evidence, style, and work state when useful.
--   **Mechanical status:** `project_status` reports changed or missing
-    files and affected dependants. Human review supplies the meaning.
--   **Direct retrieval:** local literature and an independently active
-    read-only web tool can support small exploration without another
-    model context.
--   **Bounded delegation:** `dispatch_worker` starts one short-lived
-    worker with an explicit assignment, clean or trajectory context,
-    files, skills, model role, tool mode, and timeout.
--   **Small working memory:** custom compaction can retain bounded
-    continuation state and place clearly marked proposals in `INBOX.md`.
--   **Human review:** Plannotator provides annotation and code-review
-    interfaces without becoming a workflow controller.
+- **Explicit project state:** ordinary files record accepted direction,
+  decisions, evidence, style, and work state when useful.
+- **Mechanical status:** `project_status` reports changed or missing
+  files and affected dependants. Human review supplies the meaning.
+- **Direct retrieval:** local literature and an independently active
+  read-only web tool can support small exploration without another model
+  context.
+- **Bounded delegation:** `dispatch_worker` starts one short-lived
+  worker with an explicit assignment, clean or trajectory context,
+  files, skills, model role, tool mode, and timeout.
+- **Small working memory:** custom compaction can retain bounded
+  continuation state and place clearly marked proposals in `INBOX.md`.
+- **Human review:** Plannotator provides annotation and code-review
+  interfaces without becoming a workflow controller.
 
 This is intentionally not an autonomous project manager. It does not
 silently turn model output into evidence, citations, release state,
@@ -258,28 +257,28 @@ approval, or project truth.
 
 When working in a Pi Sych project:
 
--   infer authorization from the actual request: a clear request to
-    review, rewrite, implement, or complete a named scope normally
-    authorizes that scope;
--   separate persistence from scrutiny: continue authorized work until
-    complete or genuinely blocked, while checking consequential and
-    authored work more carefully;
--   inspect project state before substantial work and read only relevant
-    canonical files;
--   choose direct work or delegation by task and context, not a
-    universal default;
--   use clean workers when an explicit task packet is sufficient and
-    trajectory workers when prior conversation materially helps;
--   remember that supervisor pre-work captured in a plan, TODO, or brief
-    can enable later clean delegation;
--   inspect the available skill catalogue before dispatch and select
-    only valuable skills;
--   treat changed hashes as evidence of changed content, not semantic
-    drift;
--   do not treat proposals, generated text, successful checks, or
-    reviewer output as human approval; and
--   report only retrieval, execution, review, and verification that
-    actually occurred.
+- infer authorization from the actual request: a clear request to
+  review, rewrite, implement, or complete a named scope normally
+  authorizes that scope;
+- separate persistence from scrutiny: continue authorized work until
+  complete or genuinely blocked, while checking consequential and
+  authored work more carefully;
+- inspect project state before substantial work and read only relevant
+  canonical files;
+- choose direct work or delegation by task and context, not a universal
+  default;
+- use clean workers when an explicit task packet is sufficient and
+  trajectory workers when prior conversation materially helps;
+- remember that supervisor pre-work captured in a plan, TODO, or brief
+  can enable later clean delegation;
+- inspect the available skill catalogue before dispatch and select only
+  valuable skills;
+- treat changed hashes as evidence of changed content, not semantic
+  drift;
+- do not treat proposals, generated text, successful checks, or reviewer
+  output as human approval; and
+- report only retrieval, execution, review, and verification that
+  actually occurred.
 
 See [architecture](docs/ARCHITECTURE.md) for the complete runtime
 contract and [configuration](docs/configuration.md) for setup and skill
@@ -287,11 +286,11 @@ customization.
 
 ## Detailed documentation
 
--   [Review and revision workflow](docs/review-workflow.md)
--   [Configuration](docs/configuration.md)
--   [Public contract](docs/public-contract.md)
--   [Architecture](docs/ARCHITECTURE.md)
--   [Development](docs/development.md)
--   [Code tour](docs/code-tour.md)
--   [Contributing](docs/CONTRIBUTING.md)
--   [Attribution](docs/attribution.md)
+- [Review and revision workflow](docs/review-workflow.md)
+- [Configuration](docs/configuration.md)
+- [Public contract](docs/public-contract.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Development](docs/development.md)
+- [Code tour](docs/code-tour.md)
+- [Contributing](docs/CONTRIBUTING.md)
+- [Attribution](docs/attribution.md)
