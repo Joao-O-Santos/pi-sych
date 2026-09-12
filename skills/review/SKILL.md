@@ -8,8 +8,13 @@ description: Independently evaluate artifacts for correctness, structure, eviden
 Evaluate independently: do not optimize for agreement or soften a material
 defect into preference. Accepted requirements and evidence override generic
 advice. Distinguish defects, trade-offs, alternatives, and uncertainty; report
-only inspection or checks actually performed. Select the smallest recipe that
-covers the review and read its guidance in order.
+only inspection or checks actually performed. For prose review, make structure,
+clarity, repetition, argument coherence, and voice coherence explicit checks.
+When accepted project state is available, report material divergence between the
+artifact and that state rather than silently deciding which is authoritative.
+Use the requested collaborative or adversarial lens as defined by the routed
+structure guidance. Select the smallest recipe that covers the review and read
+its guidance in order.
 
 ## Task recipes
 

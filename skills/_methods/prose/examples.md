@@ -1,6 +1,6 @@
 # Prose examples
 
-## Reverse outline
+## Reverse outline before line editing
 
 Draft paragraphs currently do these jobs:
 
@@ -31,8 +31,36 @@ Why:
 
 The revision gives the paragraph one evidential job in a natural register. It
 removes ceremonial framing, canned contrast, and a generic conclusion without
-hiding the limitation. A one-sentence transition would still be valid when one
-sentence performs the whole job.
+hiding the limitation.
+
+## When the correct edit is no edit
+
+Source:
+
+> Most participants noticed the change. A few did not, and that difference
+> matters for what follows.
+
+Unhelpful rewrite:
+
+> Although the majority of participants detected the change, a minority did
+> not, highlighting an important distinction for the subsequent analysis.
+
+Better response:
+
+> Leave the source unchanged.
+
+Why:
+
+The source is already clear, accurate, economical, and rhythmically varied.
+The rewrite adds formality and abstraction without solving a problem.
+
+## Drafting toward an established voice
+
+Suppose several author examples use direct topic sentences, mostly ordinary
+vocabulary, occasional short sentences for emphasis, and longer sentences only
+when several ideas genuinely need to be related. A new paragraph should follow
+that distribution. It should not copy memorable phrases from the examples, and
+it should not smooth every sentence toward the same medium-length cadence.
 
 ## Voice
 

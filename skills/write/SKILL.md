@@ -7,10 +7,15 @@ description: Draft and revise scholarly, professional, instructional, presentati
 
 User, project, venue, and genre requirements override package defaults.
 Presentation overrides never weaken evidential standards; evidence limits
-override pressure for a stronger conclusion. State claims with
-their support and label inference or uncertainty. Do not invent facts,
-citations, quotations, requirements, or results. Select the smallest recipe
-that covers the task and read its guidance in order.
+override pressure for a stronger conclusion. State claims with their support and
+label inference or uncertainty. Do not invent facts, citations, quotations,
+requirements, or results.
+
+For new prose, follow the strongest available author or project style evidence
+and the package prose defaults when local evidence is sparse. For revision,
+preserve clear and appropriate authored prose unless a concrete defect,
+structural need, venue requirement, or explicit request justifies changing it.
+Select the smallest recipe that covers the task and read its guidance in order.
 
 ## Task recipes
 
