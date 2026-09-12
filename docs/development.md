@@ -48,7 +48,8 @@ copies can drift or compete for attention.
 
 Prefer concrete verbs, explicit authority and scope, short decision
 rules, and stated failure modes. Distinguish authorization from task
-size, persistence from scrutiny, and context need from delegation choice.
+size, persistence from scrutiny, and context need from delegation
+choice.
 
 ## Design constraints
 
