@@ -46,6 +46,30 @@ change?
 **Failure mode:** Turning authored prose into generic professional prose,
 homogenizing sentence lengths, or replacing one model tic with another.
 
+## Artifact self-containment
+
+A finished standalone artifact should make sense to a reader who never saw the
+prompt, earlier draft, reviewer exchange, or agent conversation. Before
+finalizing, remove or rewrite process residue that has no independent job in the
+artifact: unexplained references to "this version", what "we now" do, what was
+"requested", earlier wording, reviewer comments, prior prompts, or the history
+of the revision.
+
+Treat an unmotivated negation or contrast as a context-leakage warning. A phrase
+such as "we do not claim Y" or "not X but Y" is useful when Y is a live,
+plausible interpretation the intended reader needs ruled out. If it only answers
+a concern raised in prior conversation, delete it or state the positive claim
+directly. The same test applies to qualifications, caveats, and definitions that
+make sense only because of hidden process history.
+
+Genre controls the exception. A response-to-reviewers letter, revision memo,
+change log, or methods history may need explicit reviewer, version, previous-
+draft, and change language. Do not transfer that language into the revised
+manuscript merely because it was useful in the response document.
+
+**Review test:** Would every sentence still have an intelligible purpose if the
+reader received only the finished artifact?
+
 ## Information flow
 
 Use familiar-to-new flow when it supports continuity. Put the main action early
@@ -63,10 +87,11 @@ reader already knows.
 Unless audience or genre requires formality, use a natural professional
 register. Keep hedges that represent real uncertainty; remove defensive fog and
 unsupported intensifiers. Treat punctuation and rhetorical templates as
-choices. Avoid habitual em-dash qualifications, repeated `not X but Y`
-contrasts, formulaic symmetry, ceremonial openings, generic importance claims,
+choices. Watch for locally unmotivated model-like habits: habitual em-dash
+qualifications, repeated `not X but Y` contrasts, formulaic symmetry, ceremonial
+openings, generic importance claims, over-signposting, unnecessary recap,
 repeated conclusions, and metadiscourse. These are failure patterns, not banned
-forms.
+forms; retain them when they genuinely serve the argument and established voice.
 
 ## Voice and agency
 

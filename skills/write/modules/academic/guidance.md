@@ -16,3 +16,12 @@ discriminating tests; and end with a calibrated take-home rather than a generic
 call for more research. Write the abstract last; it must match the manuscript
 and introduce no unsupported claim, citation, or method. Do not force empirical
 structure onto theory.
+
+Treat a submission manuscript as a standalone scholarly object. Revision
+history, reviewer requests, prior prompts, and earlier versions belong in the
+manuscript only when they are themselves substantively relevant. Otherwise
+rewrite "in this version", "we now", "as requested", comparisons with prior
+drafts, and defensive denials so the argument is motivated by the scholarly
+problem visible to the reader. A response-to-reviewers letter is a different
+genre and may appropriately refer to reviewers, changes, versions, and previous
+wording.

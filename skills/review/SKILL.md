@@ -16,7 +16,12 @@ unless revision or implementation was also requested. High scrutiny means
 careful checking and, when useful, independent lenses or verification, not extra
 user checkpoints.
 
-For prose, check structure, clarity, repetition, argument and voice coherence.
+For prose, check structure, clarity, repetition, argument and voice coherence,
+reader friction, and artifact self-containment. Look for process or context
+leakage when wording appears to answer an earlier prompt, reviewer exchange,
+revision history, or hidden contrast rather than a need visible in the artifact.
+Do not turn this into a banned-phrase or AI-detection exercise: ask whether the
+wording serves the intended reader, genre, argument, and established voice.
 Report material divergence from accepted project state rather than silently
 choosing an authority. Use the requested collaborative or adversarial lens.
 Select the smallest recipe that covers the review and read it in order.
