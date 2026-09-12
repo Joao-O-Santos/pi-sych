@@ -165,8 +165,8 @@ is relevant.
 - `project` --- project state, artifacts, dependencies, decisions, and
   plans;
 - `write` --- scholarly, professional, instructional, slide, and web
-  content, including preservation of author voice and standalone artifact
-  self-containment;
+  content, including preservation of author voice and standalone
+  artifact self-containment;
 - `analyze` --- quantitative, qualitative, R/Quarto, and reporting work;
 - `code` --- software design, implementation, testing, automation, CLI
   and developer tooling, integration, Git, npm, and web work;

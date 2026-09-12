@@ -31,10 +31,10 @@ A fresh edit worker given only the accepted correction can instead
 produce the clean statement "Y."
 
 The same problem appears in subtler forms: "in this version", "we now",
-"as requested", a denial of a claim no standalone reader would infer,
-or reviewer-response language copied into the manuscript. These phrases
-are not inherently wrong. They become a problem when their only purpose
-is to answer historical context the manuscript reader cannot see.
+"as requested", a denial of a claim no standalone reader would infer, or
+reviewer-response language copied into the manuscript. These phrases are
+not inherently wrong. They become a problem when their only purpose is
+to answer historical context the manuscript reader cannot see.
 
 The purpose is not to conceal relevant evidence. It is to distinguish
 the context needed to write the artifact from the historical discussion
@@ -61,8 +61,8 @@ missing reasoning, and structural weaknesses. Adversarial does not mean
 contrarian: a strong manuscript may legitimately receive few findings.
 
 A **reader-friction/context-leakage** lens asks whether the finished
-artifact makes sense to a reader who never saw the prompt, earlier draft,
-review exchange, or agent conversation. It flags process residue,
+artifact makes sense to a reader who never saw the prompt, earlier
+draft, review exchange, or agent conversation. It flags process residue,
 unexplained version language, unmotivated denials or contrasts,
 over-signposting, generic model polish, and other rhetoric that jars with
 the surrounding voice or is motivated only by hidden process history.
