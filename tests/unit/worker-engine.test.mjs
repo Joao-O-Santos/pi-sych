@@ -36,7 +36,7 @@ test("worker request and result retain the bounded protocol", () => {
 	assert.equal(Value.Check(dispatchSchema, { ...bounded, thinkingLevel: "maximum" }), false);
 	assert.equal(Value.Check(dispatchSchema, { ...bounded, thinkingLevel: "HIGH" }), false);
 	assert.equal(Value.Check(dispatchSchema, { ...bounded, thinkingLevel: 1 }), false);
-	assert.match(dispatchSchema.properties.skills.description, /skill catalogue/);
+	assert.match(dispatchSchema.properties.skills.description, /inspecting the available catalogue/i);
 	assert.match(dispatchSchema.properties.contextMode.description, /clean by default/);
 	assert.match(dispatchSchema.properties.thinkingLevel.description, /model's default/);
 	assert.deepEqual(
@@ -174,7 +174,7 @@ test("worker prompt requires routed method and module reads", () => {
 	assert.match(prompt, /receive no supervisor conversation/i);
 	assert.match(prompt, /Read every context file and selected skill/i);
 	assert.match(prompt, /routed modules/i);
-	assert.match(prompt, /Report missing context and unperformed checks as limitations/i);
+	assert.match(prompt, /Report missing context, unresolved ambiguity, and checks you could not perform as limitations/i);
 	assert.match(prompt, /existing project-relative paths/i);
 	assert.match(prompt, /submit_artifact once as the final tool call/i);
 	const research = taskPrompt(

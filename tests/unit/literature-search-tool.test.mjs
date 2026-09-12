@@ -69,7 +69,10 @@ test("registered literature tool exposes the v7 result and exact text/details eq
 	const tool = registeredTool();
 	assert.equal(tool.name, "literature_search");
 	assert.equal(tool.label, "Search local literature");
-	assert.equal(tool.description, "Search the configured local FTS5 literature database.");
+	assert.equal(
+		tool.description,
+		"Search the configured local read-only FTS5 literature index. Results are discovery metadata and snippets, not verification of the underlying source or completeness of the collection.",
+	);
 	assert.equal(tool.parameters.type, "object");
 	assert.deepEqual(tool.parameters.required, ["query"]);
 	assert.deepEqual(tool.parameters.properties.query, { type: "string", minLength: 1 });
