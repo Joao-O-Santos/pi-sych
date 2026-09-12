@@ -95,11 +95,13 @@ export function formatMarkdown(path) {
 async function main() {
 	const fix = process.argv.includes("--write");
 	const changed = [];
+	const expected = [];
 	for (const path of MARKDOWN_FILES) {
 		const before = await readFile(path, "utf8");
 		const after = formatMarkdown(path);
 		if (before === after) continue;
 		changed.push(path);
+		expected.push({ path, after });
 		if (fix) {
 			const temporary = join(dirname(path), `.${basename(path)}.tmp`);
 			await writeFile(temporary, after);
@@ -112,6 +114,9 @@ async function main() {
 			console.error(
 				`Markdown differs from Pandoc 72-column formatting:\n${changed.join("\n")}\nRun npm run markdown:fix.`,
 			);
+			if (process.env.CI)
+				for (const item of expected)
+					console.error(`\n--- ${item.path} (Pandoc expected) ---\n${item.after}`);
 			process.exitCode = 1;
 		}
 	} else console.log("Markdown matches Pandoc 72-column formatting.");
