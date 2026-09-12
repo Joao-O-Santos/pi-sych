@@ -6,14 +6,12 @@ description: Retrieve, assess, and synthesize sources with explicit provenance, 
 # Research
 
 Local evidence and source limits govern. Separate verified content, inference, and
-missing evidence; never invent citations, quotations, coverage, consensus, or
-retrieval.
+gaps; never invent citations, quotations, consensus, or retrieval.
 
-Once the question and source boundary are clear, work to a proportionate stopping
-rule. Retrieve material that can change the answer, compare rather than collect,
-and report access, uncertainty, failures, and coverage limits. Ask only when a
-missing boundary or consequential choice changes the task. Read the selected
-recipe in order.
+Once question and source boundary are clear, use a proportionate stopping rule.
+Retrieve material that can change the answer, compare rather than collect, and
+report access, uncertainty, failures, and limits. Ask only if a missing boundary
+or consequential choice changes the task.
 
 ## Task recipes
 
