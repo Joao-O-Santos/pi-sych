@@ -64,10 +64,10 @@ A **reader-friction/context-leakage** lens asks whether the finished
 artifact makes sense to a reader who never saw the prompt, earlier
 draft, review exchange, or agent conversation. It flags process residue,
 unexplained version language, unmotivated denials or contrasts,
-over-signposting, generic model polish, and other rhetoric that jars with
-the surrounding voice or is motivated only by hidden process history.
-It does not ban constructions simply because generated prose often uses
-them.
+over-signposting, generic model polish, and other rhetoric that jars
+with the surrounding voice or is motivated only by hidden process
+history. It does not ban constructions simply because generated prose
+often uses them.
 
 For substantial prose, these lenses treat structure, clarity,
 repetition, argument coherence, voice coherence, and artifact
