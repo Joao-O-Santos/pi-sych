@@ -97,16 +97,24 @@ export function registerLiteratureSearch(
 		label: "Search local literature",
 		description:
 			"Search the configured local read-only FTS5 literature index. Results are discovery metadata and snippets, not verification of the underlying source or completeness of the collection.",
-		promptSnippet: "Search the local literature index for relevant sources; inspect underlying sources before relying on precise claims",
+		promptSnippet:
+			"Search the local literature index for relevant sources; inspect underlying sources before relying on precise claims",
 		promptGuidelines: [
 			"Use results for discovery and provenance. A match or snippet does not establish that the source supports a claim.",
 			"Inspect the underlying source when wording, method, result, quotation, correction status, or precise metadata matters.",
 			"Do not claim the index is complete; state material retrieval or coverage limits when relevant.",
 		],
 		parameters: Type.Object({
-			query: Type.String({ minLength: 1, description: "FTS5 query for the local literature index" }),
+			query: Type.String({
+				minLength: 1,
+				description: "FTS5 query for the local literature index",
+			}),
 			limit: Type.Optional(
-				Type.Integer({ minimum: 1, maximum: 50, description: "Maximum results; defaults to 10" }),
+				Type.Integer({
+					minimum: 1,
+					maximum: 50,
+					description: "Maximum results; defaults to 10",
+				}),
 			),
 		}),
 		async execute(_id, params, _signal, _update, ctx) {
