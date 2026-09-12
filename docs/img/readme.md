@@ -8,11 +8,13 @@
   general audience and does not replace the detailed review diagram.
 - `architecture.png` shows the two supervisor tools, project state, one
   bounded worker, and optional adapters.
-- `supervisors_context.png` shows the bounded six-field compaction flow
-  and human review of proposal lines.
-- `skills_architecture.png` shows the six public skills, shared methods,
-  and local modules as a composition boundary rather than extra public
-  skills.
+- `supervisors_context.png` shows the current bounded six-field
+  compaction flow and human review of proposal lines. The planned v7
+  compaction revision is documented in `PLAN.md`, not yet in this image.
+- `skills_architecture.png` predates the automation umbrella and still
+  shows the earlier six-skill catalogue. The shipped catalogue now has
+  seven public skills; update this image before the v7 documentation
+  graphics are treated as current.
 - `review_workflow.png` shows the detailed review and revision pattern,
   including a separate debate or feedback path and the human decision to
   revise, verify, or acknowledge. Plannotator is one optional review

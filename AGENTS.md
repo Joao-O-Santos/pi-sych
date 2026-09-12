@@ -16,7 +16,7 @@ bounded delegation, and human-owned judgment.
 - Keep mechanically decidable behavior in TypeScript: process bounds,
   schemas, safe paths, hashes, dependency traversal, atomic
   acknowledgement, immutable worker results, and review fallback state.
-- Keep semantic interpretation in the six umbrella skills and normal
+- Keep semantic interpretation in the seven umbrella skills and normal
   supervisor/user conversation.
 - A hash mismatch proves only that content changed after
   acknowledgement.

@@ -64,10 +64,11 @@ empty `PI_CODING_AGENT_DIR`, explicit `--no-*` resource flags, and exact
 registered surface assertions. Keep deterministic tests local:
 `npm run test:usage` is the separate opt-in live-model evidence path.
 
-Skill-architecture tests mechanically verify the six public `SKILL.md`
-files, hidden shared methods, required guidance and examples, resolvable
-ordered recipes, acyclic routes, and prompt budgets. They do not freeze
-semantic guidance through keyword or prose-presence assertions.
+Skill-architecture tests mechanically verify the seven public
+`SKILL.md` files, hidden shared methods, required guidance and examples,
+resolvable ordered recipes, acyclic routes, and prompt budgets. They do
+not freeze semantic guidance through keyword or prose-presence
+assertions.
 
 The prompt-quality fixtures run only through the opt-in live model
 evaluation. That test validates each scenario, injects its target
