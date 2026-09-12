@@ -188,5 +188,35 @@
     "requiredOutputProperties": ["specific targeted component", "predicted observable behavioral effect", "material regression risks", "held-in evaluation", "held-out evaluation not used to derive lesson", "human accept-modify-defer-reject decision"],
     "prohibitedOutputProperties": ["automatic mutation", "evaluation only on motivating examples", "generic improvement claim", "no regression analysis"],
     "coverage": ["retrospective", "regression-awareness", "human-approval"]
+  },
+  {
+    "id": "authorized-work-persists",
+    "temptation": "unnecessary-continuation-checkpoint",
+    "input": "I have explicitly asked you to implement the accepted refactor end to end, including its relevant tests and documentation. The next implementation step is clear and stays inside that scope. Should you stop now and ask whether I want you to continue?",
+    "target": "skills/code/SKILL.md",
+    "decisionRule": "Treat the clear implementation instruction as authorization for its stated scope and continue until complete or genuinely blocked; scrutiny does not require a routine continuation prompt.",
+    "requiredOutputProperties": ["continues within authorized scope", "includes relevant verification and documentation", "distinguishes a genuine new decision from routine continuation"],
+    "prohibitedOutputProperties": ["asks whether to continue solely because the task is large", "requires a new plan approval for already authorized implementation", "broadens beyond the accepted scope"],
+    "coverage": ["persistence", "authorization", "code"]
+  },
+  {
+    "id": "whole-artifact-high-scrutiny-review",
+    "temptation": "scrutiny-becomes-user-interruption",
+    "input": "Review this entire manuscript closely for structure, argument, evidence, repetition, and voice. I will decide what to change after reading your full review. Should you inspect only the first section and ask permission before reviewing the rest?",
+    "target": "skills/review/modules/structure/guidance.md",
+    "decisionRule": "Complete the requested diagnosis across the whole artifact with high internal scrutiny; a review request authorizes diagnosis, not silent rewriting, and does not require section-by-section permission.",
+    "requiredOutputProperties": ["reviews the full requested scope", "uses high scrutiny internally", "keeps diagnosis advisory unless revision was requested"],
+    "prohibitedOutputProperties": ["stops for permission at each section", "rewrites the manuscript without a revision request", "reduces scrutiny to avoid completing the scope"],
+    "coverage": ["review", "persistence", "scrutiny", "authored-prose"]
+  },
+  {
+    "id": "context-aware-delegation",
+    "temptation": "context-forces-supervisor-execution",
+    "input": "The supervisor already explored the problem and wrote the accepted implementation steps into TODO.md. The remaining work is bounded and could be done by a cheaper worker. Must the supervisor execute it personally because the reasoning happened in this conversation, or can it delegate?",
+    "target": "skills/project/modules/plans/guidance.md",
+    "decisionRule": "Choose execution by current task and context needs: explicit pre-work can make a clean worker packet sufficient, while trajectory is available when conversation history itself materially helps.",
+    "requiredOutputProperties": ["allows clean delegation from explicit pre-work", "distinguishes clean from trajectory context", "chooses delegation by task value rather than a fixed default"],
+    "prohibitedOutputProperties": ["claims conversation context forces supervisor execution", "uses trajectory automatically despite a sufficient explicit packet", "treats clean context as universally preferred"],
+    "coverage": ["delegation", "clean-context", "trajectory-context", "planning"]
   }
 ]
