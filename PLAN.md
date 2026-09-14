@@ -183,15 +183,8 @@ Completed for this reconciliation:
 - Markdown formatting, documentation-link, style, dependency, audit, and
 diff checks pass.
 - Typecheck and the source-budget check pass at 2,800/3,000 rounded lines.
-- Full deterministic suite passes: 161 unit and 17 integration tests
-  (178 total), and `make verify` exits 0 with coverage at 98.34% lines,
-  91.50% branches, and 95.49% functions against the 90% thresholds.
-  An earlier host-side Pi stderr warning about an operator-side model
-  pattern (`openrouter/z-ai/glm-5.2:free`) was fixed upstream in Pi; the
-  strict-empty-stderr assertions stand unchanged. New v7 branches are
-  covered by focused validation, compaction, MCPorter, and worker-engine
-  regressions; unknown message roles are filtered rather than crashing
-  serialization.
+- Full deterministic suite passes: 161 unit and 17 integration tests;
+  `make verify` (including coverage thresholds) exits 0.
 - Custom compaction carries instruction/data isolation, aggregate input
 bounds, line-break rejection in model-derived memory values, and
 notification-safe proposal persistence, with focused regressions.
