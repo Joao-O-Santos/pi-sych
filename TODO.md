@@ -62,6 +62,9 @@ file records the implementation sequence and current verification state.
 - [ ] Run opt-in live prompt-quality fixtures if the configured models and cost
   make them useful; report separately from deterministic verification.
 - [ ] Confirm main CI and Pages after commits are available remotely.
+- [ ] Consider quarantining or relaxing the strict-empty-stderr integration
+  assertion against host Pi warnings; the `openrouter` warning is
+  operator-environmental and absent from this repository.
 
 Constraints for this work: no release, tag, publication, package-version,
 or `SYNC.json` change; do not push, tag, publish, deploy, or release
