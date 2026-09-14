@@ -32,6 +32,11 @@ inferential step and how far the conclusion generalizes?
 assumptions without textual basis, or producing an exhaustive map that obscures
 the material issue.
 
+When a claim depends on a construct, separate it from neighboring constructs and
+from the measure used to represent it. If the claim is expressed in alternate
+representations, check that the construct, relation, and scope remain consistent
+across them.
+
 ## Classify the problem
 
 **Default:** Use the narrowest accurate category:

@@ -9,7 +9,7 @@ also requested.
 
 ## Structure before wording
 
-Work from the argument outward. For substantial new prose, identify the artifact
+Before structural revision, check the intended reader, their likely prior knowledge, and the context or definition they need for unfamiliar concepts. Work from the argument outward. For substantial new prose, identify the artifact
 or section job and use a topic-sentence outline when sequence is unclear. Before
 major revision, reverse-outline what each section and paragraph does, then
 reorder, merge, cut, split, or expand before polishing sentences. An ordinary
@@ -98,8 +98,7 @@ forms; retain them when they genuinely serve the argument and established voice.
 Choose active or passive voice from topic continuity, information focus, and
 responsibility. A form of *be* alone is not passive. Retain passive voice when
 the acted-on entity should remain the topic or the actor is unknown, irrelevant,
-obvious, or already established. Prefer active voice when agency or
-responsibility matters. Never apply an active-voice quota.
+obvious, or already established. When responsibility matters, name the known actor in either voice; do not invent an actor merely to use active voice. Never apply an active-voice quota.
 
 ## Supporting files
 
