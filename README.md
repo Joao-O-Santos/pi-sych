@@ -214,6 +214,12 @@ Pi Sych gives the supervisor three tools:
 - `literature_search` performs direct read-only lookup in the configured
   local literature index.
 
+Every `dispatch_worker` call requires a worker tool `mode`: use
+`read-only` for inspection or review, `edit` for file changes without
+Bash, and `full-host` only when Bash or wider host access is required.
+This is separate from the optional `contextMode` choice of `clean` or
+`trajectory`.
+
 A separately installed and active read-only `web` tool can also remain
 available to the supervisor. Pi Sych does not register one.
 

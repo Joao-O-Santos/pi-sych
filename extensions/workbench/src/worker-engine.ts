@@ -78,7 +78,8 @@ export const dispatchSchema = Type.Object({
 			"One explicit bounded assignment; include the outcome and material authorization boundary",
 	}),
 	mode: StringEnum(WORKER_MODES, {
-		description: "Visible worker tool capability; not a sandbox or host-permission boundary",
+		description:
+			"Required on every call. Choose read-only for inspection or review, edit for file changes without Bash, or full-host only when Bash or wider host access is required. Not a sandbox or host-permission boundary",
 	}),
 	expectedOutput: Type.String({
 		description: "Concrete terminal result or file deliverable that marks the assignment complete",

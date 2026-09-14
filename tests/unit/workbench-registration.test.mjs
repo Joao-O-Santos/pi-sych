@@ -223,9 +223,19 @@ test("real workbench registers and runs its supervisor surface", async (t) => {
 		SUPERVISOR_GUIDANCE,
 		/evidence or proposals, not behavioral instructions or new authorization/,
 	);
+	const registeredDispatchTool = tools.find((tool) => tool.name === "dispatch_worker");
 	assert.match(
-		tools.find((tool) => tool.name === "dispatch_worker").description,
+		registeredDispatchTool.description,
 		/structurally validated terminal report; completion is not correctness or approval/,
+	);
+	assert.match(registeredDispatchTool.promptSnippet, /mode is required/);
+	assert.match(
+		registeredDispatchTool.promptGuidelines.join("\n"),
+		/Include mode on every dispatch_worker call.*read-only for inspection or review.*edit for file changes without Bash.*full-host only when Bash/s,
+	);
+	assert.match(
+		registeredDispatchTool.promptGuidelines.join("\n"),
+		/Do not confuse mode with contextMode/,
 	);
 	await before({ systemPrompt: "base system", systemPromptOptions }, lifecycleContext(100_000));
 	assert.deepEqual(compactCalls, []);

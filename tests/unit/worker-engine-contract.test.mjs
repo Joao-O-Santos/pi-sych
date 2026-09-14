@@ -28,6 +28,11 @@ test("worker request and result retain the bounded protocol", () => {
 		contextFiles: [],
 	};
 	assert.equal(Value.Check(dispatchSchema, bounded), true);
+	assert.ok(dispatchSchema.required.includes("mode"));
+	assert.match(dispatchSchema.properties.mode.description, /Required on every call/);
+	assert.match(dispatchSchema.properties.mode.description, /read-only for inspection or review/);
+	assert.match(dispatchSchema.properties.mode.description, /edit for file changes without Bash/);
+	assert.match(dispatchSchema.properties.mode.description, /full-host only when Bash/);
 	assert.equal(Value.Check(dispatchSchema, { ...bounded, contextMode: "clean" }), true);
 	assert.equal(Value.Check(dispatchSchema, { ...bounded, contextMode: "trajectory" }), true);
 	assert.equal(Value.Check(dispatchSchema, { ...bounded, contextMode: "history" }), false);

@@ -210,8 +210,9 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 		description:
 			"Delegate one bounded task to a short-lived worker and return its structurally validated terminal report; completion is not correctness or approval.",
 		promptSnippet:
-			"Delegate one bounded task; choose clean or trajectory context by actual context need",
+			"Delegate one bounded task. mode is required: choose read-only, edit, or full-host based on the worker's needed tools; contextMode is a separate choice.",
 		promptGuidelines: [
+			"Include mode on every dispatch_worker call. Choose read-only for inspection or review, edit for file changes without Bash, and full-host only when Bash or wider host access is required. Do not confuse mode with contextMode.",
 			"Choose direct work versus delegation by task and context, not a fixed default. Use clean context when the explicit packet is sufficient; use trajectory only when prior supervisor conversation materially improves the assignment.",
 			"A prepared plan, TODO, or brief can make clean delegation sufficient after supervisor pre-work; needing conversation context does not force the supervisor to execute the task itself.",
 			"Give the worker one explicit outcome and authorization boundary and expect completion within it. Context mode does not change worker tools, permissions, model, skills, files, or research access.",
