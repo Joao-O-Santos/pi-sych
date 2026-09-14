@@ -16,10 +16,5 @@ writes the canonical brief.
 
 Propose only useful canonical roles—`project`, and when needed `style`,
 `evidence`, `decisions`, or `todo`—plus `SYNC.json`; use configured paths, not
-assumed filenames. If the user explicitly asked to create or refresh this state,
-that request authorizes the covered writes after inspection; do not add a second
-checkpoint merely because several files are involved. Use `/pi-sych-status` to
-inspect or acknowledge reviewed state, `/pi-sych-mcp` only for explicit remote
-research, and Plannotator commands for narrow human review. Synchronization
-records reviewed content and dependencies; it neither proves truth nor resolves
-disagreement.
+assumed filenames. Synchronization records reviewed content and dependencies;
+it neither proves truth nor resolves disagreement.
