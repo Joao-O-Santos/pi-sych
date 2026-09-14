@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
+import type { ToolInfo } from "@earendil-works/pi-coding-agent";
 import { piSychConfigPath } from "./config-directory.js";
+import { literatureCapabilityState } from "./literature-search.js";
 
 const require = createRequire(import.meta.url);
 export const remoteResearchExtensionPaths = (
@@ -60,6 +62,46 @@ export function inspectMcporter(configPath = mcporterConfigPath()): McporterDiag
 		};
 	}
 }
+const isOwnedActiveTool = (
+	allTools: readonly Pick<ToolInfo, "name" | "sourceInfo">[],
+	active: readonly string[],
+	name: string,
+	workbenchSourcePath: string,
+) => {
+	const matches = allTools.filter((tool) => tool.name === name && active.includes(tool.name));
+	return matches.length === 1 && matches[0]?.sourceInfo.path === workbenchSourcePath;
+};
+export const capabilitySummary = (
+	allTools: readonly Pick<ToolInfo, "name" | "sourceInfo">[],
+	active: readonly string[],
+	projectRoot: string,
+	workbenchSourcePath: string,
+) => {
+	const names = [...new Set(active)]
+			.filter((name) => allTools.some((tool) => tool.name === name))
+			.sort(),
+		lines = [
+			"Active capabilities (derived from this session; availability is not authorization):",
+			`- active tools: ${names.join(", ") || "none"}`,
+		];
+	if (isOwnedActiveTool(allTools, active, "literature_search", workbenchSourcePath))
+		lines.push(`- local literature: ${literatureCapabilityState(projectRoot)}`);
+	if (isOwnedActiveTool(allTools, active, "dispatch_worker", workbenchSourcePath)) {
+		const remote = inspectMcporter(mcporterConfigPath(projectRoot));
+		const remoteState = !remote.available
+			? "unavailable — MCPorter extension is not installed"
+			: remote.configError
+				? "degraded — MCPorter configuration is invalid"
+				: !remote.configExists || !remote.servers.length
+					? "degraded — MCPorter has no configured servers"
+					: `configured — ${remote.servers.length} configured server${remote.servers.length === 1 ? "" : "s"}; credentials and reachability unverified`;
+		lines.push(
+			"- workers: exposed — clean or trajectory context; read-only, edit, or full-host tool mode; worker setup and model access unverified",
+		);
+		lines.push(`- remote research workers: ${remoteState}`);
+	}
+	return lines.join("\n");
+};
 export const formatMcporterDiagnostic = (value: McporterDiagnostic) =>
 	[
 		"Pi Sych MCPorter diagnostics",

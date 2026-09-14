@@ -10,6 +10,13 @@ import piSychWorker from "../../.test-build/worker/index.js";
 import { bootstrapWorkerAgentDir } from "../../scripts/bootstrap-worker-agent-dir.mjs";
 
 const run = promisify(execFile);
+const PUBLIC_PROMPT_COMMANDS = [
+	"review-adversarial",
+	"review-collaborative",
+	"review-reader-friction",
+	"review-structural",
+	"review-verification",
+];
 const PUBLIC_SKILL_COMMANDS = [
 	"skill:analyze",
 	"skill:automation",
@@ -19,6 +26,16 @@ const PUBLIC_SKILL_COMMANDS = [
 	"skill:review",
 	"skill:write",
 ];
+
+function packagedPromptCommands(commands) {
+	return commands
+		.filter(
+			(command) =>
+				command.source === "prompt" && command.sourceInfo.path.startsWith(resolve("prompts")),
+		)
+		.map((command) => command.name)
+		.sort();
+}
 
 function packagedSkillCommands(commands) {
 	return commands
@@ -215,7 +232,7 @@ test("Pi discovers exactly the seven public skills without exposing modules", as
 	assert.deepEqual(packagedSkillCommands(commands), PUBLIC_SKILL_COMMANDS);
 });
 
-test("package defaults expose all seven public skills", async (t) => {
+test("package defaults expose the five review prompts and seven public skills", async (t) => {
 	const agentDir = await tempRoot(t, "pi-sych-package-skills-");
 	await writeFile(
 		join(agentDir, "settings.json"),
@@ -224,7 +241,6 @@ test("package defaults expose all seven public skills", async (t) => {
 				{
 					source: process.cwd(),
 					extensions: [],
-					prompts: [],
 					themes: [],
 				},
 			],
@@ -235,6 +251,7 @@ test("package defaults expose all seven public skills", async (t) => {
 		{ PI_CODING_AGENT_DIR: agentDir },
 	);
 	assert.equal(stderr, "");
+	assert.deepEqual(packagedPromptCommands(commands), PUBLIC_PROMPT_COMMANDS);
 	assert.deepEqual(packagedSkillCommands(commands), PUBLIC_SKILL_COMMANDS);
 });
 
@@ -262,6 +279,7 @@ test("package metadata keeps attribution and release version consistent", async 
 		"./extensions/plannotator/index.ts",
 	]);
 	assert.deepEqual(manifest.pi.skills, ["./skills"]);
+	assert.deepEqual(manifest.pi.prompts, ["./prompts"]);
 	assert.equal(
 		manifest.pi.image,
 		"https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/main/docs/img/logo.png",
@@ -303,6 +321,11 @@ test("packed install omitting optional dependencies retains the core package", a
 		"docs/img/workflow.png",
 		"docs/img/review_workflow.png",
 		"templates/config.json",
+		"prompts/review-adversarial.md",
+		"prompts/review-collaborative.md",
+		"prompts/review-reader-friction.md",
+		"prompts/review-structural.md",
+		"prompts/review-verification.md",
 		"site/page.html",
 		"site/static/styles.css",
 		"scripts/check-mcporter-dependencies.mjs",

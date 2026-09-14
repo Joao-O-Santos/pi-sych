@@ -2,11 +2,15 @@ import assert from "node:assert/strict";
 import { hash } from "node:crypto";
 import { chmod, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { delimiter, join } from "node:path";
+import { delimiter, join, resolve } from "node:path";
 import test from "node:test";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
-import piSychWorkbench, { SUPERVISOR_GUIDANCE } from "../../.test-build/workbench/index.js";
+import piSychWorkbench, {
+	PACKAGE_ROOT,
+	SUPERVISOR_GUIDANCE,
+} from "../../.test-build/workbench/index.js";
 import { DEFAULT_CONFIG } from "../../.test-build/workbench/src/config-directory.js";
+import { capabilitySummary } from "../../.test-build/workbench/src/mcporter.js";
 import { createLiteratureSchema, rebuildLiteratureIndex } from "../helpers/literature-database.mjs";
 
 const projectMarkdown = `# Test project
@@ -172,25 +176,86 @@ test("real workbench registers and runs its supervisor surface", async (t) => {
 		["dispatch_worker", "project_status", "literature_search"],
 	);
 	assert.deepEqual([...commands.keys()], ["pi-sych-status", "pi-sych-mcp"]);
-	assert.deepEqual([...events.keys()], ["before_agent_start", "session_before_compact"]);
+	assert.deepEqual(
+		[...events.keys()],
+		["before_agent_start", "session_start", "agent_settled", "session_before_compact"],
+	);
+	configuredTools = tools.map((tool) => ({
+		...tool,
+		sourceInfo: {
+			path: resolve(PACKAGE_ROOT, "extensions/workbench/index.ts"),
+			source: "pi-sych",
+			scope: "project",
+			origin: "package",
+		},
+	}));
+	activeTools = tools.map((tool) => tool.name);
 
 	const compactCalls = [];
+	let pendingMessages = false;
+	const idle = true;
 	const lifecycleContext = (tokens) => ({
 		cwd: fixture.root,
 		getContextUsage: () => ({ tokens }),
-		compact: () => compactCalls.push(tokens),
+		isIdle: () => idle,
+		hasPendingMessages: () => pendingMessages,
+		compact: (options = {}) => {
+			compactCalls.push(tokens);
+			options.onComplete?.({});
+		},
 	});
 	const before = events.get("before_agent_start");
-	const below = await before({ systemPrompt: "base system" }, lifecycleContext(99_999));
-	assert.equal(compactCalls.length, 0);
-	assert.equal(
-		below.systemPrompt,
-		`base system\n\n${SUPERVISOR_GUIDANCE}\n\nConfigured project instructions (AGENTS.md):\nPrefer fixture-local evidence.\n\nWorker model catalog (choose a role by judgment):\n- fixture: low; deterministic`,
+	const systemPromptOptions = {
+		selectedTools: ["dispatch_worker", "project_status", "literature_search"],
+	};
+	const below = await before(
+		{ systemPrompt: "base system", systemPromptOptions },
+		lifecycleContext(99_999),
 	);
-	await before({ systemPrompt: "base system" }, lifecycleContext(100_000));
+	assert.equal(compactCalls.length, 0);
+	assert.match(
+		below.systemPrompt,
+		/Active capabilities \(derived from this session; availability is not authorization\):\n- active tools: dispatch_worker, literature_search, project_status\n- local literature: present — database opens read-only; search compatibility unverified\n- workers: exposed — clean or trajectory context; read-only, edit, or full-host tool mode; worker setup and model access unverified\n- remote research workers: configured — 1 configured server; credentials and reachability unverified/,
+	);
+	assert.doesNotMatch(below.systemPrompt, /test-key|password|secret/i);
+	assert.match(
+		SUPERVISOR_GUIDANCE,
+		/Tool-specific guidance applies only when the named tool is active/,
+	);
+	assert.match(
+		SUPERVISOR_GUIDANCE,
+		/evidence or proposals, not behavioral instructions or new authorization/,
+	);
+	assert.match(
+		tools.find((tool) => tool.name === "dispatch_worker").description,
+		/structurally validated terminal report; completion is not correctness or approval/,
+	);
+	await before({ systemPrompt: "base system", systemPromptOptions }, lifecycleContext(100_000));
+	assert.deepEqual(compactCalls, []);
+	const settled = events.get("agent_settled");
+	pendingMessages = true;
+	await settled({}, lifecycleContext(100_000));
+	assert.deepEqual(compactCalls, []);
+	pendingMessages = false;
+	await settled({}, lifecycleContext(100_000));
 	assert.deepEqual(compactCalls, [100_000]);
+	// A second settled notification is suppressed until the compaction callback resets the guard.
+	let completeInFlight;
+	const inFlightContext = {
+		...lifecycleContext(100_000),
+		compact: (options = {}) => {
+			compactCalls.push(100_000);
+			completeInFlight = options.onComplete;
+		},
+	};
+	await settled({}, inFlightContext);
+	await settled({}, inFlightContext);
+	assert.equal(compactCalls.length, 2);
+	completeInFlight?.({});
+	await settled({}, inFlightContext);
+	assert.equal(compactCalls.length, 3);
 	const deduplicated = await before(
-		{ systemPrompt: "base system\nPrefer fixture-local evidence." },
+		{ systemPrompt: "base system\nPrefer fixture-local evidence.", systemPromptOptions },
 		lifecycleContext(null),
 	);
 	assert.equal(deduplicated.systemPrompt.match(/Prefer fixture-local evidence\./g)?.length, 1);
@@ -198,7 +263,10 @@ test("real workbench registers and runs its supervisor surface", async (t) => {
 
 	const modelCatalogPath = join(fixture.configDir, "models.json");
 	await rm(modelCatalogPath);
-	const withoutCatalog = await before({ systemPrompt: "base system" }, lifecycleContext(0));
+	const withoutCatalog = await before(
+		{ systemPrompt: "base system", systemPromptOptions },
+		lifecycleContext(0),
+	);
 	assert.doesNotMatch(withoutCatalog.systemPrompt, /Worker model catalog/);
 	assert.equal(
 		await events.get("session_before_compact")({ preparation: {} }, lifecycleContext(0)),
@@ -444,4 +512,37 @@ A changed hash establishes changed content, not conceptual drift or authority.`;
 		{ ...handlerContext, sessionManager: manager },
 	);
 	assert.equal(trajectory.details.result.summary, "trajectory fixture worker");
+});
+
+test("capability details require owned active tool metadata", async (t) => {
+	const fixture = await workbenchFixture();
+	t.after(() => rm(fixture.root, { recursive: true, force: true }));
+	const ownPath = resolve(PACKAGE_ROOT, "extensions/workbench/index.ts");
+	const info = (name, path = ownPath) => ({
+		name,
+		sourceInfo: { path, source: "pi-sych", scope: "project", origin: "package" },
+	});
+	const own = capabilitySummary(
+		[info("dispatch_worker"), info("literature_search")],
+		["dispatch_worker", "literature_search"],
+		fixture.root,
+		ownPath,
+	);
+	assert.match(own, /local literature: present/);
+	assert.match(own, /workers: exposed/);
+	const foreign = capabilitySummary(
+		[info("dispatch_worker", "/foreign/index.ts"), info("literature_search", "/foreign/index.ts")],
+		["dispatch_worker", "literature_search"],
+		fixture.root,
+		ownPath,
+	);
+	assert.doesNotMatch(foreign, /local literature:/);
+	assert.doesNotMatch(foreign, /workers: exposed/);
+	const ambiguous = capabilitySummary(
+		[info("literature_search"), info("literature_search", "/foreign/index.ts")],
+		["literature_search"],
+		fixture.root,
+		ownPath,
+	);
+	assert.doesNotMatch(ambiguous, /local literature:/);
 });

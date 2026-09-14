@@ -35,6 +35,12 @@ async function capturedExtension(extension, t) {
 	process.env.PI_CODING_AGENT_DIR = agentDir;
 	try {
 		await extension({
+			getAllTools() {
+				return tools;
+			},
+			getActiveTools() {
+				return tools.map((tool) => tool.name);
+			},
 			on(name, handler) {
 				events.set(name, handler);
 			},
@@ -205,10 +211,15 @@ test("workbench lifecycle and status commands cover configured branches", async 
 		cwd,
 		model: undefined,
 		getContextUsage: () => ({ tokens: 100_000 }),
+		isIdle: () => true,
+		hasPendingMessages: () => false,
 		compact: () => compacted.push(true),
 		ui: { notify: (message, type) => notifications.push({ message, type }) },
 	};
-	const before = await extension.events.get("before_agent_start")({ systemPrompt: "system" }, ctx);
+	const before = await extension.events.get("before_agent_start")(
+		{ systemPrompt: "system", systemPromptOptions: { selectedTools: [] } },
+		ctx,
+	);
 	assert.match(before.systemPrompt, /Pi Sych/);
 	await writeFile(join(cwd, "AGENTS.md"), "Local rule\n");
 	await writeFile(
@@ -216,10 +227,12 @@ test("workbench lifecycle and status commands cover configured branches", async 
 		JSON.stringify({ default: "x", models: { x: { model: "x/y" } } }),
 	);
 	const withCatalog = await extension.events.get("before_agent_start")(
-		{ systemPrompt: "system" },
+		{ systemPrompt: "system", systemPromptOptions: { selectedTools: [] } },
 		{ ...ctx, getContextUsage: () => ({ tokens: null }) },
 	);
 	assert.match(withCatalog.systemPrompt, /x: cost unspecified; no notes/);
+	await extension.events.get("session_start")({}, ctx);
+	await extension.events.get("agent_settled")({}, ctx);
 	const withExisting = await configuredSupervisorInstructions(cwd, "Local rule");
 	assert.equal(withExisting, undefined);
 	assert.equal(compacted.length, 1);

@@ -39,6 +39,21 @@ async function readyProject(t) {
 	return { root, agentDir, resolved: project(root) };
 }
 
+test("dispatch rejects empty assignment fields at the worker boundary", async (t) => {
+	const { agentDir, resolved } = await readyProject(t);
+	for (const field of ["task", "expectedOutput"]) {
+		await assert.rejects(
+			dispatchWorker({
+				project: resolved,
+				workerAgentDir: agentDir,
+				request: { ...request, [field]: " \t\n" },
+				catalog,
+			}),
+			new RegExp(`${field} must be a non-empty string`),
+		);
+	}
+});
+
 test("dispatch accepts a valid result and rejects reported path escapes", async (t) => {
 	const { agentDir, resolved } = await readyProject(t);
 	const outcome = await dispatchWorker({

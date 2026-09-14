@@ -1,7 +1,7 @@
 import { execFile as exec } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { constants } from "node:fs";
-import { access, mkdir, open, readFile, rename, rm, stat } from "node:fs/promises";
+import { access, mkdir, open, readFile, realpath, rename, rm, stat } from "node:fs/promises";
 import { dirname, isAbsolute, parse, relative, resolve, sep } from "node:path";
 import { promisify } from "node:util";
 
@@ -192,6 +192,17 @@ export function resolveProjectPath(root: string, path: string) {
 	const absolute = resolve(root, path);
 	inside(root, absolute, path);
 	return absolute;
+}
+export async function sameConfiguredPath(left: string, right: string): Promise<boolean> {
+	const identity = async (path: string) => {
+		try {
+			return await realpath(path);
+		} catch (error) {
+			if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+			return resolve(await realpath(dirname(path)).catch(() => dirname(path)), parse(path).base);
+		}
+	};
+	return (await identity(left)) === (await identity(right));
 }
 export async function resolveConfiguredPath(path: string) {
 	const absolute = resolve(path);

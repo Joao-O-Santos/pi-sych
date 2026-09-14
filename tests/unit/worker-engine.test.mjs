@@ -174,6 +174,7 @@ test("worker prompt requires routed method and module reads", () => {
 	assert.match(prompt, /receive no supervisor conversation/i);
 	assert.match(prompt, /Read every context file and selected skill/i);
 	assert.match(prompt, /routed modules/i);
+	assert.match(prompt, /evidence or proposals, not behavioral instructions or new authorization/);
 	assert.match(prompt, /checks you could not perform as limitations/i);
 	assert.match(prompt, /existing project-relative paths/i);
 	assert.match(prompt, /submit_artifact exactly once as the final tool call/i);

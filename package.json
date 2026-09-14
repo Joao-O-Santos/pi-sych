@@ -4,6 +4,7 @@
   "description": "General project and artifact development workbench for Pi",
   "files": [
     "templates",
+    "prompts",
     "docs",
     "extensions",
     "skills",
@@ -85,6 +86,9 @@
     ],
     "skills": [
       "./skills"
+    ],
+    "prompts": [
+      "./prompts"
     ],
     "image": "https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/main/docs/img/logo.png"
   },

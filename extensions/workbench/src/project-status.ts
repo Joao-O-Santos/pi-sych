@@ -14,36 +14,23 @@ import {
 	writeAtomicFile,
 } from "./project-files.js";
 import { nonEmptyString } from "./validation.js";
-export const PROJECT_STATUSES = [
-	"current",
-	"stale",
-	"needs-review",
-	"conflicted",
-	"missing",
-] as const;
-export type ProjectStatus = (typeof PROJECT_STATUSES)[number];
+export const PROJECT_STATUSES = "current stale needs-review conflicted missing".split(" ");
+export type ProjectStatus = string;
 export type Dependency = string | { path: string; reason: string };
-export interface ProjectArtifact {
+export type ProjectArtifact = Record<string, unknown> & {
 	path: string;
 	fingerprint: string;
 	status: ProjectStatus;
-	role?: string;
-	authoritativeFor?: string[];
 	updateFrom?: Dependency[];
 	dependsOn?: Dependency[];
 	acknowledgement?: { at: string; reason: string };
-	[key: string]: unknown;
-}
-export interface ProjectStatusManifest extends Omit<SyncManifest, "artifacts"> {
-	artifacts: ProjectArtifact[];
-}
+};
+type ProjectStatusManifest = Omit<SyncManifest, "artifacts"> & { artifacts: ProjectArtifact[] };
 export type Observation =
 	| { state: "current" | "changed"; fingerprint: string }
 	| { state: "missing" }
 	| { state: "error"; message: string };
-export interface CheckedArtifact extends ProjectArtifact {
-	observation: Observation;
-}
+export type CheckedArtifact = ProjectArtifact & { observation: Observation };
 export interface ProjectStatusCheck {
 	projectRoot: string;
 	syncPath: string;
@@ -71,36 +58,32 @@ const fingerprint = (value: unknown, label: string) => {
 };
 function dependencies(value: unknown, label: string): Dependency[] {
 	if (!Array.isArray(value)) throw new Error(`${label} must be an array`);
-	return value.map((entry, i) =>
-		typeof entry === "string"
-			? path(entry, `${label}[${i}]`)
-			: {
-					path: path((entry as Record<string, unknown>)?.path, `${label}[${i}].path`),
-					reason: nonEmptyString(
-						(entry as Record<string, unknown>)?.reason,
-						`${label}[${i}].reason`,
-					),
-				},
-	);
+	return value.map((entry, index) => {
+		if (typeof entry === "string") return path(entry, `${label}[${index}]`);
+		const item = entry as Record<string, unknown>;
+		return {
+			path: path(item?.path, `${label}[${index}].path`),
+			reason: nonEmptyString(item?.reason, `${label}[${index}].reason`),
+		};
+	});
 }
 function parseArtifact(value: unknown, index: number): ProjectArtifact {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error(`artifacts[${index}] must be an object`);
 	const item = value as Record<string, unknown>,
-		status = nonEmptyString(item.status, `artifacts[${index}].status`);
+		prefix = `artifacts[${index}]`,
+		status = nonEmptyString(item.status, `${prefix}.status`);
 	if (!PROJECT_STATUSES.includes(status as ProjectStatus))
-		throw new Error(`artifacts[${index}].status is not allowed: ${status}`);
+		throw new Error(`${prefix}.status is not allowed: ${status}`);
+	const dependency = (key: "updateFrom" | "dependsOn") =>
+		item[key] === undefined ? {} : { [key]: dependencies(item[key], `${prefix}.${key}`) };
 	return {
 		...item,
-		path: path(item.path, `artifacts[${index}].path`),
-		fingerprint: fingerprint(item.fingerprint, `artifacts[${index}].fingerprint`),
+		path: path(item.path, `${prefix}.path`),
+		fingerprint: fingerprint(item.fingerprint, `${prefix}.fingerprint`),
 		status: status as ProjectStatus,
-		...(item.updateFrom === undefined
-			? {}
-			: { updateFrom: dependencies(item.updateFrom, `artifacts[${index}].updateFrom`) }),
-		...(item.dependsOn === undefined
-			? {}
-			: { dependsOn: dependencies(item.dependsOn, `artifacts[${index}].dependsOn`) }),
+		...dependency("updateFrom"),
+		...dependency("dependsOn"),
 	};
 }
 export function parseProjectStatusManifest(value: string | SyncManifest): ProjectStatusManifest {
@@ -125,9 +108,9 @@ function impacts(artifacts: ProjectArtifact[], changed: Iterable<string>) {
 	const results = new Map<string, { path: string; from: string[]; direct: boolean }>(),
 		queue = [...changed].map((path) => ({ path, origin: path, depth: 0 })),
 		seen = new Set(queue.map(({ path, origin }) => `${path}\0${origin}`));
-	while (queue.length) {
-		const current = queue.shift();
-		if (!current) break;
+	for (let index = 0; index < queue.length; index++) {
+		const current = queue[index];
+		if (!current) continue;
 		for (const dependent of reverse.get(current.path) ?? []) {
 			if (dependent !== current.origin) {
 				const result = results.get(dependent) ?? { path: dependent, from: [], direct: false };
@@ -153,10 +136,7 @@ function cycles(artifacts: ProjectArtifact[]) {
 		seen = new Set<string>(),
 		result: string[][] = [];
 	const visit = (path: string, stack: string[]) => {
-		if (active.has(path)) {
-			result.push([...stack.slice(stack.indexOf(path)), path]);
-			return;
-		}
+		if (active.has(path)) return void result.push([...stack.slice(stack.indexOf(path)), path]);
 		if (seen.has(path)) return;
 		seen.add(path);
 		active.add(path);
@@ -166,14 +146,31 @@ function cycles(artifacts: ProjectArtifact[]) {
 	for (const item of artifacts) visit(item.path, []);
 	return result;
 }
-const unavailable = (
-	startPath: string,
-	error: unknown,
-	project?: ResolvedProject,
-): ProjectStatusCheck => ({
-	projectRoot: project?.projectRoot ?? resolve(startPath),
-	syncPath: project?.syncPath ?? resolve(startPath, "SYNC.json"),
-	syncError: String(error),
+const observe = async (
+	projectRoot: string,
+	artifact: ProjectArtifact,
+): Promise<CheckedArtifact> => {
+	try {
+		const current = await fingerprintFile(
+			await resolveExistingProjectPath(projectRoot, artifact.path),
+		);
+		return {
+			...artifact,
+			observation: {
+				state: current === artifact.fingerprint ? "current" : "changed",
+				fingerprint: current,
+			},
+		};
+	} catch (error) {
+		const code = (error as NodeJS.ErrnoException).code;
+		return code === "ENOENT" || code === "ENOTDIR"
+			? { ...artifact, observation: { state: "missing" } }
+			: { ...artifact, observation: { state: "error", message: String(error) } };
+	}
+};
+const emptyState = (projectRoot: string, syncPath: string) => ({
+	projectRoot,
+	syncPath,
 	artifacts: [],
 	changed: [],
 	missing: [],
@@ -182,6 +179,17 @@ const unavailable = (
 	cycles: [],
 	missingCore: [],
 	projectErrors: [],
+});
+const unavailable = (
+	startPath: string,
+	error: unknown,
+	project?: ResolvedProject,
+): ProjectStatusCheck => ({
+	...emptyState(
+		project?.projectRoot ?? resolve(startPath),
+		project?.syncPath ?? resolve(startPath, "SYNC.json"),
+	),
+	syncError: String(error),
 });
 export async function checkProjectStatus(
 	startPath: string,
@@ -208,41 +216,15 @@ export async function checkProjectStatus(
 	}
 	if (!resolved.manifest)
 		return {
-			projectRoot: resolved.projectRoot,
-			syncPath: resolved.syncPath,
+			...emptyState(resolved.projectRoot, resolved.syncPath),
 			syncError: "SYNC.json is unavailable",
-			artifacts: [],
-			changed: [],
-			missing: [],
-			errors: [],
-			impacted: [],
-			cycles: [],
 			missingCore,
 			projectErrors,
 		};
 	try {
 		const manifest = parseProjectStatusManifest(resolved.manifest),
 			artifacts = await Promise.all(
-				manifest.artifacts.map(async (artifact): Promise<CheckedArtifact> => {
-					try {
-						const currentFingerprint = await fingerprintFile(
-							await resolveExistingProjectPath(resolved.projectRoot, artifact.path),
-						);
-						const changed = currentFingerprint !== artifact.fingerprint;
-						return {
-							...artifact,
-							observation: {
-								state: changed ? "changed" : "current",
-								fingerprint: currentFingerprint,
-							},
-						};
-					} catch (error) {
-						const code = (error as NodeJS.ErrnoException).code;
-						return code === "ENOENT" || code === "ENOTDIR"
-							? { ...artifact, observation: { state: "missing" } }
-							: { ...artifact, observation: { state: "error", message: String(error) } };
-					}
-				}),
+				manifest.artifacts.map((artifact) => observe(resolved.projectRoot, artifact)),
 			),
 			changed = artifacts
 				.filter((item) => item.observation.state === "changed")
@@ -251,11 +233,11 @@ export async function checkProjectStatus(
 				.filter((item) => item.observation.state === "missing")
 				.map((item) => item.path),
 			errors = artifacts
-				.filter(
-					(item): item is CheckedArtifact & { observation: { state: "error"; message: string } } =>
-						item.observation.state === "error",
-				)
-				.map((item) => ({ path: item.path, message: item.observation.message }));
+				.filter((item) => item.observation.state === "error")
+				.map((item) => ({
+					path: item.path,
+					message: (item.observation as { message: string }).message,
+				}));
 		return {
 			projectRoot: resolved.projectRoot,
 			syncPath: resolved.syncPath,
@@ -283,28 +265,27 @@ export function formatProjectStatusCheck(
 	pending = 0,
 	inboxPath = "INBOX.md",
 ): string {
-	const lines = ["Project status", "", `Root: ${state.projectRoot}`];
+	const lines = ["Project status", "", `Root: ${state.projectRoot}`],
+		add = (title: string, values: string[]) => {
+			if (values.length) lines.push("", title, ...values.map((value) => `- ${value}`));
+		};
 	if (state.syncError) lines.push("", `State unavailable: ${state.syncError}`);
 	else {
-		if (state.missingCore.length)
-			lines.push("", "Missing project files:", ...state.missingCore.map((v) => `- ${v}`));
-		if (state.projectErrors.length)
-			lines.push("", "Project-file problems:", ...state.projectErrors.map((v) => `- ${v}`));
-		if (state.changed.length) lines.push("", "Changed:", ...state.changed.map((v) => `- ${v}`));
-		if (state.missing.length) lines.push("", "Missing:", ...state.missing.map((v) => `- ${v}`));
-		if (state.errors.length)
-			lines.push(
-				"",
-				"Unable to observe:",
-				...state.errors.map((e) => `- ${e.path} (${e.message})`),
+		add("Missing project files:", state.missingCore);
+		add("Project-file problems:", state.projectErrors);
+		add("Changed:", state.changed);
+		add("Missing:", state.missing);
+		add(
+			"Unable to observe:",
+			state.errors.map((error) => `${error.path} (${error.message})`),
+		);
+		for (const status of PROJECT_STATUSES.filter((value) => value !== "current"))
+			add(
+				`Persisted as ${status === "needs-review" ? "needing review" : status}:`,
+				state.artifacts
+					.filter((artifact) => artifact.status === status)
+					.map((artifact) => artifact.path),
 			);
-		for (const status of PROJECT_STATUSES.filter((s) => s !== "current")) {
-			const files = state.artifacts.filter((a) => a.status === status).map((a) => a.path);
-			if (files.length) {
-				lines.push("", `Persisted as ${status === "needs-review" ? "needing review" : status}:`);
-				for (const file of files) lines.push(`- ${file}`);
-			}
-		}
 		if (state.impacted.length)
 			lines.push(
 				"",
@@ -326,18 +307,29 @@ export function formatProjectStatusCheck(
 	lines.push("", "A changed hash establishes changed content, not conceptual drift or authority.");
 	return lines.join("\n");
 }
+const checkedArtifact = (state: ProjectStatusCheck, file: string) => {
+	const artifact = state.artifacts.find((item) => item.path === file);
+	if (!artifact) throw new Error(`Acknowledgement file is not tracked: ${file}`);
+	if (artifact.observation.state === "missing")
+		throw new Error(`Acknowledgement file is missing: ${file}`);
+	if (artifact.observation.state === "error")
+		throw new Error(`Acknowledgement file cannot be observed: ${file}`);
+	return artifact;
+};
 export async function verifyAcknowledgementObservation(
 	state: ProjectStatusCheck,
 	selected: Set<string>,
 ) {
 	for (const file of selected) {
-		const observed = state.artifacts.find((item) => item.path === file)?.observation;
-		if (!observed || observed.state === "missing" || observed.state === "error")
-			throw new Error(`Acknowledgement cannot observe ${file}`);
+		const observed = checkedArtifact(state, file).observation;
 		const current = await fingerprintFile(
 			await resolveExistingProjectPath(state.projectRoot, file),
 		);
-		if (current !== observed.fingerprint)
+		if (
+			observed.state === "missing" ||
+			observed.state === "error" ||
+			current !== observed.fingerprint
+		)
 			throw new Error(`Acknowledgement aborted because ${file} changed during review`);
 	}
 }
@@ -352,14 +344,7 @@ export async function acknowledgeProjectStatus(
 	const selected = new Set(files.map((file) => path(file, "files[]")));
 	const state = await checkProjectStatus(startPath);
 	if (!state.manifest) throw new Error(state.syncError ?? "SYNC.json is unavailable");
-	for (const file of selected) {
-		const artifact = state.artifacts.find((item) => item.path === file);
-		if (!artifact) throw new Error(`Acknowledgement file is not tracked: ${file}`);
-		if (artifact.observation.state === "missing")
-			throw new Error(`Acknowledgement file is missing: ${file}`);
-		if (artifact.observation.state === "error")
-			throw new Error(`Acknowledgement file cannot be observed: ${file}`);
-	}
+	for (const file of selected) checkedArtifact(state, file);
 	await verifyAcknowledgementObservation(state, selected);
 	const at = now.toISOString(),
 		byPath = new Map(state.artifacts.map((artifact) => [artifact.path, artifact])),
@@ -371,7 +356,9 @@ export async function acknowledgeProjectStatus(
 			.filter((file) => !selected.has(file)),
 		observedFingerprint = (file: string) => {
 			const observation = byPath.get(file)?.observation;
-			return observation && "fingerprint" in observation ? observation.fingerprint : undefined;
+			return observation?.state === "current" || observation?.state === "changed"
+				? observation.fingerprint
+				: undefined;
 		},
 		artifacts = state.manifest.artifacts.map((artifact) =>
 			selected.has(artifact.path)

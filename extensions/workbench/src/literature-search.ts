@@ -31,6 +31,22 @@ export function literatureDatabasePath(projectRoot: string, configDirectory?: st
 		throw new Error(`Configured literature database is unavailable at ${path}`);
 	return path;
 }
+export function literatureCapabilityState(projectRoot: string): string {
+	try {
+		const path = literatureDatabasePath(projectRoot);
+		if (!existsSync(path)) return "unavailable — no database at the resolved path";
+		using database = new DatabaseSync(path, { readOnly: true });
+		const rows = database
+			.prepare("SELECT name FROM sqlite_master WHERE name IN ('papers', 'papers_fts')")
+			.all() as Array<{ name?: unknown }>;
+		const names = new Set(rows.map((row) => row.name));
+		return names.has("papers") && names.has("papers_fts")
+			? "present — database opens read-only; search compatibility unverified"
+			: "degraded — database is present but the supported schema is incomplete";
+	} catch (error) {
+		return `degraded — inspection failed: ${error instanceof Error ? error.message : String(error)}`;
+	}
+}
 export function searchLiterature(
 	projectRoot: string,
 	queryText: string,
