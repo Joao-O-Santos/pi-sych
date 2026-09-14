@@ -271,7 +271,7 @@ export const serializeObservableMessages = (
 ) => {
 	const values = messages
 		.map(observable)
-		.filter((value) => value.trim())
+		.filter((value): value is string => !!value?.trim())
 		.map((value) => clipped(value, 4_000));
 	if (!values.length || limit <= 0) return "";
 	const omission = "[earlier messages omitted to stay within the compaction input bound]\n";

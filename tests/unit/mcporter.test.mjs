@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import {
+	capabilitySummary,
 	formatMcporterDiagnostic,
 	inspectMcporter,
 	remoteResearchExtensionPaths,
@@ -45,4 +46,63 @@ test("MCPorter treats a missing optional config as legitimate and reports malfor
 	const valid = join(root, "valid.json");
 	await writeFile(valid, '{"mcpServers":{"research":{}}}');
 	assert.deepEqual(inspectMcporter(valid).servers, ["research"]);
+});
+
+test("MCPorter rejects non-object configs and reports shaped diagnostics", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-mcporter-shapes-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const shaped = join(root, "shaped.json");
+	await writeFile(shaped, "[]");
+	assert.match(inspectMcporter(shaped).configError ?? "", /must be an object/);
+	await writeFile(shaped, '{"servers":[]}');
+	assert.match(inspectMcporter(shaped).configError ?? "", /must be an object/);
+	await writeFile(shaped, '{"servers":"x"}');
+	assert.match(inspectMcporter(shaped).configError ?? "", /must be an object/);
+	await mkdir(shaped.replace("shaped.json", "shaped-dir"));
+	const directory = inspectMcporter(join(root, "shaped-dir"));
+	assert.equal(directory.configExists, true);
+	assert.ok((directory.configError ?? "").length > 0);
+	const empty = join(root, "empty.json");
+	await writeFile(empty, "{}");
+	assert.deepEqual(inspectMcporter(empty).servers, []);
+	assert.match(
+		formatMcporterDiagnostic({
+			available: false,
+			configPath: "p",
+			configExists: false,
+			servers: [],
+		}),
+		/unavailable[\s\S]*missing[\s\S]*none/,
+	);
+	assert.match(
+		formatMcporterDiagnostic({
+			available: true,
+			configPath: "p",
+			configExists: true,
+			servers: ["a", "b"],
+		}),
+		/a, b/,
+	);
+});
+
+test("capability summary distinguishes remote research states", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-remote-states-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	await mkdir(join(root, ".pi", "pi-sych", "mcp"), { recursive: true });
+	const config = join(root, ".pi", "pi-sych", "mcp", "mcporter.json");
+	const summary = () =>
+		capabilitySummary(
+			[{ name: "dispatch_worker", sourceInfo: { path: "/workbench/index.ts" } }],
+			["dispatch_worker"],
+			root,
+			"/workbench/index.ts",
+		);
+	await writeFile(config, "not json");
+	assert.match(summary(), /degraded — MCPorter configuration is invalid/);
+	await writeFile(config, "{}");
+	assert.match(summary(), /degraded — MCPorter has no configured servers/);
+	await writeFile(config, '{"mcpServers":{"solo":{}}}');
+	assert.match(summary(), /configured — 1 configured server;/);
+	await writeFile(config, '{"servers":{"a":{},"b":{}}}');
+	assert.match(summary(), /configured — 2 configured servers;/);
 });
