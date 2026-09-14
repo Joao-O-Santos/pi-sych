@@ -18,7 +18,5 @@ These preferences are defeasible, not a line-count contest or universal Unix
 rule. Security, accessibility, data integrity, compatibility, anticipated user
 error, graceful degradation, or a more cohesive implementation can require a
 larger or less direct design. Preserve interfaces unless change is intentional.
-Consequential architecture, public APIs, dependencies, migrations, deployment,
-and security-sensitive behavior remain human-owned unless explicitly delegated.
 State assumptions, exceptions, and unresolved trade-offs instead of presenting
 generic best practice as authority.

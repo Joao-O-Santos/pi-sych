@@ -4,7 +4,8 @@ Choose the least stateful mechanism that can complete the task. Prefer direct or
 read-only retrieval when the job is to fetch or inspect information. Use an
 interactive browser only when the task genuinely requires rendered state,
 authentication, navigation, clicking, typing, downloading, screenshots, or other
-UI interaction.
+UI interaction. An optional STACK.md may record which browser, profile, and
+supporting software the user normally uses.
 
 Keep browser work bounded to the named task. Distinguish read-only navigation
 from actions that change external state. Before sending, submitting, deleting,
