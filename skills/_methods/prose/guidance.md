@@ -112,7 +112,10 @@ alternative rather than repeating the prompt's list.
 Choose active or passive voice from topic continuity, information focus, and
 responsibility. A form of *be* alone is not passive. Retain passive voice when
 the acted-on entity should remain the topic or the actor is unknown, irrelevant,
-obvious, or already established. When responsibility matters, name the known actor in either voice; do not invent an actor merely to use active voice. Never apply an active-voice quota.
+obvious, or already established. When responsibility matters, name the known actor
+in either voice; do not invent an actor merely to use active voice. Do not propose
+an invented `we` as an active replacement when no responsible actor is supplied.
+Never apply an active-voice quota.
 
 ## Supporting files
 
