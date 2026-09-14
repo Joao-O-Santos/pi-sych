@@ -9,6 +9,18 @@ state.
 
 ### Changed
 
+- Make `dispatch_worker.mode` prominent in the model-facing prompt and
+  schema, with explicit guidance for selecting `read-only`, `edit`, or
+  `full-host` rather than confusing it with `contextMode`.
+- Add contextual package writing defaults in
+  `skills/write/DEFAULT_STYLE.md`. Writing workers load them as a
+  baseline and layer project `STYLE.md` overrides only for writing
+  tasks; explicit user, venue, renderer, accessibility, and evidence
+  requirements remain higher precedence.
+- Add vision-model diff/patch comments for stale documentation diagrams,
+  covering the missing automation skill, literature-search tool, current
+  compaction boundaries, and other corrections. The PNGs themselves
+  remain unchanged until regenerated and reviewed.
 - Reconcile v7 runtime documentation with the derived non-authorizing
   capability summary, settled-turn compaction, thin review prompts, and
   inspected-only local/remote integration state; raise the nonblank
