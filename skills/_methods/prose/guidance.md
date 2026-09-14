@@ -104,6 +104,8 @@ qualifications, repeated `not X but Y` contrasts, formulaic symmetry, ceremonial
 openings, generic importance claims, over-signposting, unnecessary recap,
 repeated conclusions, and metadiscourse. These are failure patterns, not banned
 forms; retain them when they genuinely serve the argument and established voice.
+When diagnosing them, answer the proposed change directly and offer a concrete
+alternative rather than repeating the prompt's list.
 
 ## Voice and agency
 
