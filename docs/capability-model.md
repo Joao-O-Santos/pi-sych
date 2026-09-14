@@ -11,6 +11,16 @@ Pi Sych currently provides `project_status`, `dispatch_worker`, and
 other active packages. Pi Sych should not copy their full schemas merely to know
 that a relevant capability exists.
 
+Distinguish capabilities already directly visible to the supervisor as
+normal active tools from Pi-Sych-owned or conditional state that is
+hard to know otherwise. A normal active tool's own schema and
+description should generally be enough; do not mechanically summarize
+every installed third-party tool merely so Pi Sych can classify it.
+The summary focuses on worker modes and context modes, local
+literature configuration, remote-research availability and
+degradation, optional Pi-Sych integrations, and other genuinely
+hidden or conditional capability state.
+
 Worker tool modes are `read-only`, `edit`, and `full-host`. These names describe
 visible Pi tools, not OS sandbox boundaries. Worker context is independent:
 `clean` is the default and `trajectory` adds the persisted supervisor branch
@@ -33,6 +43,9 @@ questions useful for routing work, such as:
 - whether a relevant capability is unavailable or degraded.
 
 It should not reproduce credentials, full tool schemas, or every host command.
+Capability availability is factual; user preference (durable `STACK.md`
+or project `AGENTS.md` conventions) is separate; authorization for
+consequential action is separate.
 Remote MCPorter state is likewise only inspected/configured; configured servers
 and an installed extension do not verify credentials, reachability, or access.
 Availability never implies user authorization for a new consequential action.

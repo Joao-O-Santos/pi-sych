@@ -25,6 +25,26 @@ The desired result is a supervisor that feels persistent without becoming
 self-authorizing, capable without becoming monolithic, and helpful without
 hiding important state transitions from the user.
 
+## Design principles
+
+Pi Sych should work across model strengths. Cheaper workers may need
+explicit methodological scaffolding; stronger models should not be
+burdened by unnecessary fixed procedure. Preserve useful scaffolding
+without keeping duplicated instructions merely for repetition.
+
+Each instruction has one canonical owner: universal invariants live
+with supervisor guidance; task semantics with skills; specific
+task/genre judgment with modules; reusable intellectual procedures
+with shared methods; concrete tool operation with the tool/package;
+project constraints with `AGENTS.md`; machine/environment facts with
+`STACK.md`; writing-style deltas with `STYLE.md`.
+
+Pi Sych reasons in capability classes. Ordinary tools describe
+themselves through their own schema and guidance; runtime state
+determines availability; external packages remain optional.
+Package-specific special cases should not be generalized until
+repeated use cases justify an abstraction.
+
 ## Verified baseline
 
 The current branch already has seven umbrella skills (`project`, `write`,
@@ -62,13 +82,15 @@ Implementation acceptance criteria:
 
 See [capability model](docs/capability-model.md).
 
-## 2. Optional durable stack preferences (rejected)
+## 2. Optional machine/environment stack (accepted)
 
-`STACK.md` was deliberately rejected after inspecting Pi's existing
-user-level instruction/configuration mechanisms. Global/project `AGENTS.md`
-provides the durable instruction boundary and established precedence; a second
-preference file or loader would add machinery without a distinct contract.
-The rejected design remains documented in [STACK design](docs/stack.md).
+`STACK.md` is an optional user-maintained description of durable
+computer/environment facts for computer-use work: OS, desktop
+environment, Wayland/X11, shell, browsers, screenshot and document
+tools, development tooling, and non-secret paths and conventions.
+Automation skills look for it when such knowledge matters; its absence
+changes nothing. It creates no capability, carries no secrets, and is
+not a security policy. See [STACK design](docs/stack.md).
 
 ## 3. Writing and review quality
 
@@ -125,6 +147,13 @@ Relevant capability classes include:
 - targeted fetch/browser tools for a specific DOI landing page, publisher page,
   correction/retraction notice, repository record, documentation page, or other
   known URL.
+
+MCPorter exposes whatever research services the user configured, which
+may be arbitrary suitable providers; Pi Sych must not require OpenAlex,
+Scholar Gateway, Context7, Parallel, Perplexity, or any other specific
+provider. Preserve the existing `pi-filler` decision (no filler skill,
+registry, or operation matrix) and keep PEW-PEW a narrow optional
+integration without generalizing it for symmetry.
 
 Use each tool for its native strength. Form purpose-built requests, learn from
 returned identifiers, provenance, gaps, and failures, and use those results to
@@ -191,9 +220,15 @@ notification-safe proposal persistence, with focused regressions.
 - Capability claims are ownership-aware; empty worker assignments are
 rejected at the request boundary.
 - Final-review documentation corrections are applied: configuration
-defaults and literature schema, skill-copy precedence, rejected-STACK
+defaults and literature schema, skill-copy precedence, optional-STACK
 marking, compaction lifecycle and field names, and consistent 3,000-line
 budget statements.
+
+Later validation should cover at least one cheaper routine worker and
+at least one stronger model, watching for both under-scaffolding and
+overconstraint. Audit prompts and skills for deletion when wording is
+stale, duplicated, contradictory, provider-specific without need, or
+no longer earning its context cost.
 
 Live prompt-quality fixtures, remote CI/Pages confirmation, and an independent
 external diff review are not claimed here. No tag, publication, deployment, or

@@ -6,15 +6,16 @@ description: Compose practical automations from actual capabilities, determinist
 # Automation
 
 Start from the user's outcome, inputs, outputs, side effects, and authorization
-boundary. Explicit user/project instructions override package
-preferences. Inspect what tools and extensions are actually
-available; a preferred stack entry does not make a capability exist. Tool
-schemas explain invocation. This skill chooses the smallest useful composition.
+boundary. Inspect what tools and extensions are actually
+available; a preference does not make a capability exist. When
+computer-use or local-software knowledge matters, look for an optional
+user-maintained STACK.md describing the user's machine; its absence
+changes nothing. Tool schemas explain invocation. This skill chooses
+the smallest useful composition.
 
-Once the outcome and side-effect boundary are clear, complete the authorized
-internal workflow rather than asking whether to continue after each step. A new
-send, publish, delete, purchase, remote-state change, privacy exposure, or other
-consequential effect outside that boundary requires owner authorization, not ambiguous fresh judgment. Prefer
+A new send, publish, delete, purchase, remote-state change, privacy
+exposure, or other consequential effect outside that boundary requires
+owner authorization. Prefer
 deterministic local processing for deterministic work; use model judgment only
 where semantic interpretation helps, and keep bulk or sensitive data out of the
 model path when local tools can transform it. Reuse existing helpers and platform

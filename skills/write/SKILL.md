@@ -10,13 +10,10 @@ Presentation rules never weaken evidential standards; evidence limits override
 pressure for a stronger conclusion. Do not invent facts, citations, quotations,
 requirements, or results.
 
-First identify the requested operation. A request to draft or rewrite a whole
-artifact authorizes work across that stated scope; do not require
-paragraph-by-paragraph permission. For revision, preserve clear,
+First identify the requested operation. For revision, preserve clear,
 audience-appropriate authored prose unless a concrete defect, structural need,
 venue requirement, or the requested rewrite justifies changing it. Broad editing
 still does not authorize unsupported factual, evidential, or project decisions.
-Use scrutiny through checking, not repeated user interruptions.
 
 For standalone prose, write for a reader who sees only the finished artifact.
 Revision history, reviewer exchange, prior prompts, version references, and

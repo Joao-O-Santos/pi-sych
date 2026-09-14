@@ -18,7 +18,7 @@ subsequent retrieval. Do not mechanically call every available tool.
 
 Use a proportionate stopping rule. Retrieve material that can change the answer,
 compare rather than collect, and report access, uncertainty, failures, and
-limits. Ask only if a missing boundary or consequential choice changes the task.
+limits.
 
 ## Task recipes
 

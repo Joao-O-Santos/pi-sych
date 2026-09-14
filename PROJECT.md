@@ -91,9 +91,9 @@ drafting/rewrite or review to run to completion without repeated
 permission prompts.
 
 {accepted} Runtime capability summaries, thin packaged review prompts,
-and settled-turn compaction are implemented. `STACK.md` was deliberately
-rejected: configured `AGENTS.md` mechanisms provide the durable
-instruction boundary without another preference loader.
+and settled-turn compaction are implemented. An optional user-maintained
+`STACK.md` may describe durable computer/environment facts for
+computer-use work.
 
 ## Current state
 
@@ -163,6 +163,5 @@ taken.
 
 {accepted} Keep the implemented v7 behavior under review, reconcile
 `SYNC.json` only through the normal human-owned status workflow, and run
-the repository gates when changes continue. `STACK.md` remains rejected
-and images remain unchanged. Do not tag, publish, or release v7.0.0
-without separate owner instruction.
+the repository gates when changes continue. Images remain unchanged. Do
+not tag, publish, or release v7.0.0 without separate owner instruction.

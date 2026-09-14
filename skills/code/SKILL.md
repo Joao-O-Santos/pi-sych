@@ -11,12 +11,9 @@ complete solution; prefer deletion, direct reuse, standard-library, platform,
 and established project mechanisms before new machinery. Diagnose defects at
 the demonstrated shared boundary rather than patching one visible symptom.
 
-Once an implementation scope is clearly authorized, carry it through relevant
-implementation, tests, documentation, and project-state updates without asking
-whether to continue after each routine step. A new public API, dependency,
-migration, release, security boundary, irreversible effect, or other
-consequential choice not implied by that scope still requires owner judgment.
-More scrutiny means stronger inspection and verification, not extra checkpoints.
+A new public API, dependency, migration, release, security boundary,
+irreversible effect, or other consequential choice not implied by the
+task scope still requires owner judgment.
 
 These are strong but defeasible preferences. Security, accessibility, data
 integrity, compatibility, cohesive implementation, anticipated user error, and

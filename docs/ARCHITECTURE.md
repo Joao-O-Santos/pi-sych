@@ -157,10 +157,11 @@ links, not a workflow engine or prompt inheritance mechanism.
 
 `automation` is semantic guidance, not a new orchestration runtime. Five
 thin packaged review prompts select a lens and defer substantive
-procedure to the `review` skill. `STACK.md` was deliberately rejected:
-configured `AGENTS.md` mechanisms already provide durable instructions
-without another preference loader. The optional capability summary is
-derived at each supervisor start.
+procedure to the `review` skill. An optional user-maintained `STACK.md`
+may describe durable computer/environment facts for computer-use work;
+automation guidance consults it when available, while runtime state
+remains the authority for what can be used now. The optional capability
+summary is derived at each supervisor start.
 
 ## Optional integrations
 

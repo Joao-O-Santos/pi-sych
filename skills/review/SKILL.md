@@ -10,11 +10,7 @@ advice; do not optimize for agreement or soften a material defect into
 preference. Distinguish defects, trade-offs, alternatives, and uncertainty.
 Report only checks actually performed.
 
-A whole-artifact review request authorizes reviewing the whole artifact. Finish
-and return the findings rather than pausing at each issue. Review is advisory
-unless revision or implementation was also requested. High scrutiny means
-careful checking and, when useful, independent lenses or verification, not extra
-user checkpoints.
+Review is advisory unless revision or implementation was also requested.
 
 For prose, check structure, clarity, repetition, argument and voice coherence,
 reader friction, and artifact self-containment. Look for process or context

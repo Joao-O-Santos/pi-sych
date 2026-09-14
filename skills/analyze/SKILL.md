@@ -11,21 +11,18 @@ distinguish observation, statistical result, inference, confirmatory work,
 exploration, and unresolved limitation. Software output, thresholds, and
 reproducibility are evidence about execution, not authority for a claim.
 
-Once the analysis scope is clear, carry routine execution, diagnostics,
-cross-checks, and reporting through to completion. Do not pause merely to ask
-whether to continue. Stop for a real blocker or when a new choice would
-materially change the estimand, data, exclusions, model, or claim beyond the
-authorized scope. Report only work actually run or inspected. Read the selected
-recipe in order.
+Stop for a real blocker or when a new choice would materially change
+the estimand, data, exclusions, model, or claim beyond the task scope.
+Read the selected recipe in order.
 
 ## Task recipes
 
 | Task | Read in order |
 | --- | --- |
-| quantitative inference | [claim and evidence](../_methods/claim-evidence/guidance.md) → [argument analysis](../_methods/argument-analysis/guidance.md) → [quantitative](modules/quantitative/guidance.md) |
-| qualitative inquiry | [claim and evidence](../_methods/claim-evidence/guidance.md) → [qualitative](modules/qualitative/guidance.md) |
-| explanations from qualitative material | [hypothesis generation](../_methods/hypothesis-generation/guidance.md) → [argument analysis](../_methods/argument-analysis/guidance.md) → [claim and evidence](../_methods/claim-evidence/guidance.md) → [qualitative](modules/qualitative/guidance.md) |
+| quantitative inference | [quantitative](modules/quantitative/guidance.md), plus [claim and evidence](../_methods/claim-evidence/guidance.md) when interpreting claims |
+| qualitative inquiry | [qualitative](modules/qualitative/guidance.md), plus [claim and evidence](../_methods/claim-evidence/guidance.md) when interpreting claims |
+| explanations from qualitative material | [hypothesis generation](../_methods/hypothesis-generation/guidance.md) → [qualitative](modules/qualitative/guidance.md) |
 | routine R or Quarto workflow | [R and Quarto](modules/r-quarto/guidance.md) |
-| R or Quarto work that changes claims | [claim and evidence](../_methods/claim-evidence/guidance.md) → [R and Quarto](modules/r-quarto/guidance.md) |
-| tables or figures | [claim and evidence](../_methods/claim-evidence/guidance.md) → [reporting](modules/reporting/guidance.md) |
-| results prose | [claim and evidence](../_methods/claim-evidence/guidance.md) → [prose](../_methods/prose/guidance.md) → [reporting](modules/reporting/guidance.md) |
+| R or Quarto work that changes claims | [R and Quarto](modules/r-quarto/guidance.md), plus [claim and evidence](../_methods/claim-evidence/guidance.md) |
+| tables or figures | [reporting](modules/reporting/guidance.md), plus [claim and evidence](../_methods/claim-evidence/guidance.md) when numbers carry claims |
+| results prose | [reporting](modules/reporting/guidance.md) → [prose](../_methods/prose/guidance.md) |

@@ -28,17 +28,10 @@ bounded delegation, and human-owned judgment.
 
 ## Task posture
 
-- Separate persistence from scrutiny. Once the requested outcome and
-  authorization boundary are clear, continue until completion or a real
-  blocker; use more internal checking for consequential or authored work
-  without inventing user checkpoints.
-- A clear owner request to review, rewrite, implement, or complete a
-  named scope authorizes that scope. Ask when a new consequential choice
-  or side effect falls outside it.
-- Choose direct work or delegation by task and context. Needing context
-  does not force supervisor execution: trajectory can preserve useful
-  conversation, while supervisor pre-work written into a plan, TODO, or
-  brief can enable a later clean worker.
+Package-wide supervisor guidance owns the universal invariants:
+authorized scope, persistence versus scrutiny, verification without
+invented checkpoints, and direct-work versus delegation judgment. This
+file states only what is repository-specific about them.
 
 ## Changes and review
 
@@ -51,6 +44,8 @@ bounded delegation, and human-owned judgment.
   current rather than accumulating them as changelogs.
 - Update canonical documentation and `SYNC.json` with every accepted
   behavior/documentation change once they describe true state.
+- Do not copy package-wide supervisor, skill, method, or tool guidance
+  into this file. Keep it repository-specific.
 
 ## Verification
 

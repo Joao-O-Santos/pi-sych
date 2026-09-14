@@ -180,3 +180,8 @@ credentials, reachability, or access. If the supervisor already has an
 active `web` tool from a valid loaded `pi-pew-pew` package, a
 remote-research worker may reuse it. Pi Sych does not discover or enable
 a disabled package.
+
+An optional user-maintained `STACK.md` may record durable
+computer/environment facts for computer-use work, as described in the
+[STACK design](stack.md). It is machine context, not capability
+availability: runtime state still determines what can be used now.
