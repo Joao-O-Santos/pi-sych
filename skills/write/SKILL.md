@@ -6,9 +6,10 @@ description: Draft, rewrite, revise, and structure scholarly, professional, inst
 # Write
 
 User, project, venue, and genre requirements override package defaults.
-Presentation rules never weaken evidential or claim-support standards; preserve
-claim-level support and let evidence limits override pressure for a stronger
-conclusion. Do not invent facts, citations, quotations, requirements, or
+A project style override controls presentation, not whether claims need
+support. Presentation rules never weaken evidential or claim-support standards;
+preserve claim-level support and let evidence limits override pressure for a
+stronger conclusion. Do not invent facts, citations, quotations, requirements, or
 results.
 
 First identify the requested operation. For revision, preserve clear,
