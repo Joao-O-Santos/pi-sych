@@ -12,8 +12,8 @@ contains unreviewed proposals; read it only when the user requests inbox review.
 
 Label observations, assumptions, uncertainty, accepted decisions, and unresolved
 questions. Create durable state only when it has a real use and is accepted or
-explicitly requested. Before an `agents` promotion, require the owner to choose
-project or personal scope. Shared conventions belong in the configured project
+explicitly requested. Before an `agents` promotion, ask the owner to choose project or
+personal scope; do not promote it until that approval is explicit. Shared conventions belong in the configured project
 path; stable private preferences belong in personal Pi instructions. Report only
 work actually performed. Select the smallest applicable route.
 
