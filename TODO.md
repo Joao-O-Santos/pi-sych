@@ -1,83 +1,68 @@
 # Pi Sych v7 execution checklist
 
 `PLAN.md` is the authority for goals, boundaries, and acceptance criteria. This
-file tracks implementation status and handoff work.
+file records the implementation sequence and current verification state.
 
-## Guidance and design preparation
+## Verified baseline
 
-- [x] Reframe `PLAN.md` around the complete remaining v7 program.
-- [x] Replace the stale worker-thinking checklist with current execution state.
-- [x] Document the target runtime capability model.
-- [x] Document the optional `STACK.md` hypothesis and its boundaries.
-- [x] Document thin review lenses and prompt-entry-point constraints.
-- [x] Document the settled-turn compaction target and required regressions.
-- [x] Strengthen prose guidance for artifact self-containment, context leakage,
-  reader-jarring model-like rhetoric, and preservation of human voice.
-- [x] Clarify that reviewer/version language can belong in response letters but
-  should not leak into a standalone manuscript without a substantive reason.
-- [x] Strengthen research guidance to discover and use available capability
-  classes, with local literature, OpenAlex-like metadata, Scholar Gateway-like
-  scholarly retrieval, PDF readers, search, and targeted fetch tools as
-  examples rather than mandatory providers.
-- [x] Confirm Markdown formatting, links, deterministic CI, and Pages are green
-  for the guidance/design changes. Commit `2fd793ee` passed verify with 97.86%
-  coverage and deployed Pages in pipeline `2843301780`.
+- [x] Complete the v7 guidance/design pass and record the runtime acceptance
+  criteria.
+- [x] Strengthen writing, review, and research guidance for self-contained,
+  evidence-aware artifacts.
+- [x] Verify the guidance/design commit in pipeline `2843301780` (97.86%
+  coverage and deployed Pages).
 
-## Runtime capability summary
+## Runtime decisions
 
-- [ ] Inspect current Pi extension/session APIs for authoritative active-tool and
-  package state.
-- [ ] Decide the smallest useful capability projection; avoid a central
-  registry.
-- [ ] Implement the derived supervisor-facing summary.
-- [ ] Test absent, present, partial, and degraded integration states.
-- [ ] Update present-tense architecture/configuration documentation after the
-  runtime contract is implemented.
+- [x] Inspect current Pi extension, compaction, package, prompt-template, and
+  user-instruction APIs.
+- [x] Use Pi's active tool projection and source metadata rather than creating a
+  capability registry.
+- [x] Do not add `STACK.md`: global/project `AGENTS.md` already provides durable
+  user preferences with established loading and precedence; selective stack
+  loading would add machinery without a distinct contract.
+- [x] Package only prefixed, thin review templates that select a lens and defer
+  substantive procedure to the existing `review` skill.
 
-## Optional `STACK.md`
+## Implementation complete
 
-- [ ] Check whether existing Pi user-level instructions/configuration already
-  satisfy the need.
-- [ ] Decide whether a distinct `STACK.md` earns runtime surface.
-- [ ] If retained, define discovery and precedence and implement optional
-  loading.
-- [ ] Test that preferences cannot create or imply unavailable capabilities.
-- [ ] Add a template only after the runtime contract is settled.
+- [x] Inject a compact capability summary derived from active tools and local
+  integration inspection at supervisor start; keep it non-authorizing.
+- [x] Represent local-literature and remote MCPorter state as inspected/configured
+  only, without claiming credentials, reachability, or verified access.
+- [x] Admit optional 100k compaction at `agent_settled` with idle, pending-message,
+  and reentrancy guards.
+- [x] Retain bounded observable trajectory: objective, authorization,
+  constraints, progress, provenance-labelled decisions and inferences,
+  failed/rejected paths, unresolved issues, active work, next action, files,
+  and classified project-state gaps.
+- [x] Preserve native fallback and bounded visibly unreviewed inbox proposals;
+  canonical semantic files are never mutated by compaction.
+- [x] Cover capability projection, settled lifecycle, reentrancy, queued
+  follow-ups, bounded validation, provenance, gap classification,
+  non-mutation, and failure fallback in focused tests.
+- [x] Package five thin review prompts that defer substantive procedure to the
+  `review` skill.
 
-## Review prompt entry points
+## Reconciliation and verification
 
-- [ ] Verify current Pi prompt discovery, substitution, invocation, and package
-  behavior.
-- [ ] Decide whether packaged thin templates improve discoverability enough to
-  justify public surface.
-- [ ] If retained, package only entry points that defer substantive procedure to
-  the `review` skill.
-- [ ] Verify prompts do not create fixed review pipelines, revision authority,
-  or approval semantics.
+- [x] Reconcile canonical documentation and project state with v7 runtime.
+- [x] Raise the nonblank runtime source-budget script limit to 3,000.
+- [x] Preserve the deliberate `STACK.md` rejection, unchanged images, and
+  human-ownership/non-sandbox boundaries.
+- [x] Harden custom compaction: instruction/data isolation, aggregate input
+  bounds, line-break rejection in model-derived memory values, and
+  notification-safe proposal persistence.
+- [x] Make capability claims ownership-aware and reject empty worker
+  assignments at the request boundary.
+- [x] Apply material findings from final documentation review; keep image
+  files unchanged.
+- [x] Finalize `PROJECT.md` and `TODO.md` after accepted corrections; leave
+  `SYNC.json` unchanged in this work.
+- [ ] Run opt-in live prompt-quality fixtures if the configured models and cost
+  make them useful; report separately from deterministic verification.
+- [ ] Confirm main CI and Pages after commits are available remotely.
 
-## Settled-turn compaction redesign
-
-- [ ] Identify the exact settled-turn lifecycle boundary and reentrancy rules.
-- [ ] Implement bounded observable trajectory memory.
-- [ ] Reconcile bounded canonical project state without silent semantic
-  mutation.
-- [ ] Preserve explicit decisions, visible rationale, failed/rejected paths,
-  unresolved alternatives, current work, and next action.
-- [ ] Handle queued follow-ups and compaction failure deterministically.
-- [ ] Add focused lifecycle, labeling, non-mutation, and fallback regressions.
-- [ ] Obtain independent review before accepting the redesign.
-
-## Documentation and images
-
-- [ ] Audit present-tense README and docs against final implemented behavior.
-- [ ] Reconcile workflow/capability images with non-autonomous semantics.
-- [ ] Verify generated site links and accessibility.
-
-## Final v7 gate
-
-- [ ] Run full deterministic verification and packaging/site/audit gates.
-- [ ] Run live prompt-quality fixtures if useful; report separately from CI.
-- [ ] Independently review the final diff.
-- [ ] Reconcile final durable project state after runtime work is stable.
-- [ ] Confirm main CI and Pages are green.
-- [ ] Do not tag, publish, or release without separate owner instruction.
+Constraints for this work: no release, tag, publication, package-version,
+or `SYNC.json` change; do not push, tag, publish, deploy, or release
+without separate owner instruction.

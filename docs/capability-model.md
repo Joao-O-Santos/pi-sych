@@ -17,18 +17,24 @@ visible Pi tools, not OS sandbox boundaries. Worker context is independent:
 immediately before the exact dispatch entry when prior discussion materially
 helps.
 
-## Target summary
+## Injected supervisor summary
 
-The planned v7 capability summary should answer only questions useful for
-routing work, such as:
+At supervisor start, the workbench derives and injects a compact summary from
+active session tools plus Pi Sych's local integration inspection. It is useful
+for routing, but remains non-authorizing: availability does not grant
+permission, credentials, or successful access. The summary answers only
+questions useful for routing work, such as:
 
 - which broad supervisor capabilities are active;
 - which optional integrations relevant to the task are actually usable;
-- whether local literature discovery is configured;
+- whether local literature discovery is configured or degraded (inspection
+  does not verify source access or search compatibility);
 - which worker capability and context modes Pi Sych can provide; and
 - whether a relevant capability is unavailable or degraded.
 
 It should not reproduce credentials, full tool schemas, or every host command.
+Remote MCPorter state is likewise only inspected/configured; configured servers
+and an installed extension do not verify credentials, reachability, or access.
 Availability never implies user authorization for a new consequential action.
 
 ## Research capabilities as an example
@@ -53,7 +59,15 @@ able to represent degraded capability, and non-authorizing. If Pi already
 provides a canonical active-capability projection, reuse it rather than adding a
 Pi Sych registry.
 
-## Questions for the coding agent
+## Implemented boundary
+
+The workbench filters the active tool projection against configured tools and
+reports only active names. It reports local literature as unavailable,
+present-but-unverified, or degraded, and remote worker research as unavailable,
+degraded, or configured-but-unverified. The summary is refreshed at each
+supervisor start rather than stored as a second registry.
+
+## Historical design questions
 
 Before writing code, inspect current Pi APIs and establish:
 

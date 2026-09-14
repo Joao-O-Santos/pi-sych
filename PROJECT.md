@@ -90,9 +90,10 @@ prose, while allowing explicitly requested whole-artifact
 drafting/rewrite or review to run to completion without repeated
 permission prompts.
 
-{accepted} Runtime capability summaries, optional user-level `STACK.md`,
-prompt-template packaging, and the richer settled-turn compaction
-redesign remain planned rather than implemented.
+{accepted} Runtime capability summaries, thin packaged review prompts,
+and settled-turn compaction are implemented. `STACK.md` was deliberately
+rejected: configured `AGENTS.md` mechanisms provide the durable
+instruction boundary without another preference loader.
 
 ## Current state
 
@@ -108,9 +109,10 @@ makes clean-versus-trajectory delegation depend on actual context need.
 {verified} `literature_search` states that index results are discovery
 metadata/snippets rather than source verification or completeness
 evidence. Worker terminal-result fields expose their semantic limits in
-schema descriptions. Current compaction prompt wording was audited but
-left unchanged because it already has a narrow constrained role and the
-planned compaction redesign will replace its present shape.
+schema descriptions. The supervisor-start capability summary is derived
+from active tools and local inspection and remains non-authorizing.
+Local literature and remote MCPorter state are inspected/configured
+only; neither verifies access.
 
 {verified} Writing and review guidance now includes artifact
 self-containment and reader-friction/context-leakage checks. Standalone
@@ -129,38 +131,38 @@ Metadata and snippets remain discovery evidence until the underlying
 source is inspected when exact claims, methods, results, quotations, or
 correction status matter.
 
-{verified} `PLAN.md` now records the complete remaining v7 program and
-acceptance criteria. `TODO.md` tracks implementation status. Design
-notes document the runtime capability summary, optional `STACK.md`, thin
-review lenses, and settled-turn compaction target so a full coding-agent
-harness can continue without reconstructing the preceding conversation.
+{verified} `PLAN.md` and `TODO.md` record the v7 implementation and
+verification state. Five packaged review prompts remain thin and defer
+to the `review` skill. Custom compaction retains bounded observable
+trajectory at the settled boundary, preserves recorded decision labels
+without verification, appends only bounded unreviewed inbox proposals,
+never mutates canonical semantic files, and falls back to the native
+compactor on omission or failure.
 
-{verified} Present-tense README/configuration/architecture/development
-text describes seven skills and the persistence/scrutiny plus
-clean/trajectory delegation semantics. Prompt word-count accounting has
-been removed; the nonblank runtime source-code budget remains the only
-repository size budget.
+{verified} Present-tense
+README/configuration/architecture/public-contract text describes seven
+skills, derived non-authorizing capability state, the
+persistence/scrutiny and clean/trajectory semantics, and implemented
+settled compaction. Prompt word-count accounting has been removed; the
+nonblank runtime source-code budget is 3,000 lines.
 
-{verified} Three opt-in live prompt-quality fixtures cover authorized
-persistence, whole-artifact high-scrutiny review, and context-aware
-delegation. `npm run test:usage` has not been run as part of this pass.
-No release/tag/publication action has been performed.
+{verified} Deterministic formatting, documentation links, type checking,
+source budget, and focused compaction/package tests are recorded for
+this reconciliation. No release, tag, publication, or package-version
+change has been performed.
 
 ## Previous action
 
-{verified} Completed the safe Markdown guidance/design pass:
-strengthened writing, review, and research guidance; replaced the stale
-TODO; expanded the v7 plan around the desired outcome; and added handoff
-design notes for runtime capabilities, stack preferences, review lenses,
-and settled-turn compaction. Runtime implementation was deliberately
-left for a full coding-agent harness.
+{verified} Completed the v7 runtime and documentation reconciliation:
+capability summary, settled admission, bounded observable compaction,
+packaged review prompts, truthful integration states, and the 3,000-line
+source budget are implemented and documented. No release action was
+taken.
 
 ## Immediate next step
 
-{accepted} In a full agent harness, continue the remaining runtime work
-in `PLAN.md`: derive the runtime capability summary; decide whether
-`STACK.md` and packaged review prompts earn runtime surface; implement
-and independently review the settled-turn compaction redesign; then
-reconcile final documentation, images, and durable state. Reconcile
-`SYNC.json` after the implementation state is stable. Do not tag,
-publish, or release v7.0.0 without separate owner instruction.
+{accepted} Keep the implemented v7 behavior under review, reconcile
+`SYNC.json` only through the normal human-owned status workflow, and run
+the repository gates when changes continue. `STACK.md` remains rejected
+and images remain unchanged. Do not tag, publish, or release v7.0.0
+without separate owner instruction.

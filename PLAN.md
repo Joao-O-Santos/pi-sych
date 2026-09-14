@@ -1,7 +1,6 @@
-# Pi Sych v7 remaining work
+# Pi Sych v7 execution record
 
-This plan is the durable handoff for the remaining v7 program. It describes the
-full target, including runtime work that requires a capable coding-agent harness.
+This plan records the implemented v7 runtime and documentation reconciliation.
 Keep the package small: solve repeated observed failures with the least prompt
 and runtime surface that works, then verify behavior rather than adding process.
 
@@ -36,10 +35,12 @@ persistence versus scrutiny, and deterministic verification. Prompt word-count
 accounting has been removed; the nonblank runtime source-code budget remains the
 repository size budget.
 
-The current custom compaction implementation is still the earlier pre-v7 design.
-The settled-turn redesign below is planned, not implemented.
+The current custom compaction implementation is the settled-turn v7 design:
+optional 100k admission is guarded by idle, pending-message, and reentrancy
+checks, and custom output retains bounded observable trajectory with native
+fallback on omission or failure.
 
-## 1. Capability awareness without a registry
+## 1. Capability awareness without a registry (implemented)
 
 Expose a compact mechanically derived view of relevant active capabilities to
 the supervisor. It should be enough to choose among direct work, delegation,
@@ -61,17 +62,13 @@ Implementation acceptance criteria:
 
 See [capability model](docs/capability-model.md).
 
-## 2. Optional durable stack preferences
+## 2. Optional durable stack preferences (rejected)
 
-Decide whether an optional user-level `STACK.md` earns runtime surface after
-inspecting Pi's existing user-level instruction/configuration mechanisms. Its
-purpose would be durable preferences about how available tools and services are
-normally combined. It must describe preference, not capability availability.
-
-If existing Pi mechanisms already express this cleanly, do not add another file
-or loader.
-
-See [STACK design](docs/stack.md).
+`STACK.md` was deliberately rejected after inspecting Pi's existing
+user-level instruction/configuration mechanisms. Global/project `AGENTS.md`
+provides the durable instruction boundary and established precedence; a second
+preference file or loader would add machinery without a distinct contract.
+The rejected design remains documented in [STACK design](docs/stack.md).
 
 ## 3. Writing and review quality
 
@@ -136,17 +133,17 @@ search snippets, and gateway summaries remain discovery evidence until the
 underlying source is inspected when the exact claim, method, result, quotation,
 or correction status matters.
 
-## 5. Thin review prompt entry points
+## 5. Thin review prompt entry points (implemented)
 
-Verify Pi's actual prompt discovery, substitution, invocation, and package
-rules. If thin prompts compose naturally with the `review` skill, package only
-small entry points that improve discoverability. If packaging would duplicate
-policy or create orchestration, leave the documented prompts as examples.
+Five thin prompt templates are packaged: collaborative, adversarial,
+reader-friction, structural, and verification. They select a lens and defer
+substantive procedure to the `review` skill without creating orchestration or
+approval.
 
-## 6. Settled-turn compaction
+## 6. Settled-turn compaction (implemented)
 
-Replace the current pre-turn threshold handling with a verified settled-turn
-lifecycle and a richer bounded continuation representation. Preserve observable
+The settled lifecycle admits optional 100k compaction only when idle, with no
+pending messages and no in-flight pass. It preserves bounded observable
 trajectory rather than claiming hidden chain-of-thought recovery.
 
 The continuation should retain, when materially relevant:
@@ -172,31 +169,41 @@ gap classification, canonical non-mutation, and deterministic fallback.
 
 See [compaction design](docs/compaction-design.md).
 
-## 7. Documentation and images
+## 7. Documentation and images (reconciled)
 
-After runtime behavior settles, reconcile README, architecture, configuration,
-development, public contract, review workflow, generated site, and diagrams
-against actual behavior. Present-tense material must not imply autonomous goal
-selection, a fixed workflow, guaranteed accuracy, or automatic approval.
+README, architecture, configuration, public contract, code tour, review prompt
+documentation, changelog, project state, and image status now describe actual
+behavior. Images remain unchanged and their stale-diagram limitations remain
+explicitly documented.
 
-## 8. Final v7 gate
+## 8. Verification record
 
-Before owner release consideration:
+Completed for this reconciliation:
 
-- run the full deterministic repository verification, packaging, site, and audit
-  gates;
-- run live prompt-quality fixtures when useful and report them separately from
-  deterministic CI;
-- obtain an independent final diff review;
-- reconcile durable project state after runtime work is stable;
-- confirm main CI and Pages are green; and
-- do not tag, publish, or release without separate owner instruction.
+- Markdown formatting, documentation-link, style, dependency, audit, and
+diff checks pass.
+- Typecheck and the source-budget check pass at 2,800/3,000 rounded lines.
+- Full deterministic suite passes: 140 unit and 17 integration tests.
+- Custom compaction carries instruction/data isolation, aggregate input
+bounds, line-break rejection in model-derived memory values, and
+notification-safe proposal persistence, with focused regressions.
+- Capability claims are ownership-aware; empty worker assignments are
+rejected at the request boundary.
+- Final-review documentation corrections are applied: configuration
+defaults and literature schema, skill-copy precedence, rejected-STACK
+marking, compaction lifecycle and field names, and consistent 3,000-line
+budget statements.
+
+Live prompt-quality fixtures, remote CI/Pages confirmation, and an independent
+external diff review are not claimed here. No tag, publication, deployment, or
+release action is authorized or performed.
 
 ## Definition of done
 
-v7 is ready for owner release consideration when capability awareness is
-truthful and derived, delegation remains bounded and non-pipelined, writing and
-research guidance produce self-contained evidence-aware artifacts, any stack or
-prompt-template surface has justified its cost, compaction preserves observable
-continuity at a safe lifecycle boundary, documentation matches implementation,
-and the full repository gate is green with the runtime source budget intact.
+The authorized v7 implementation and documentation scope is complete when
+capability awareness is truthful and derived, delegation remains bounded and
+non-pipelined, review prompts defer to the skill, compaction preserves
+observable continuity at a safe lifecycle boundary, documentation matches
+implementation, and repository checks pass with the 3,000-line runtime source
+budget. This record makes no release claim; version, `SYNC.json`, and images
+remain unchanged.

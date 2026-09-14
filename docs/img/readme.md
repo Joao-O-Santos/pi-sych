@@ -8,9 +8,11 @@
   general audience and does not replace the detailed review diagram.
 - `architecture.png` shows the two supervisor tools, project state, one
   bounded worker, and optional adapters.
-- `supervisors_context.png` shows the current bounded six-field
-  compaction flow and human review of proposal lines. The planned v7
-  compaction revision is documented in `PLAN.md`, not yet in this image.
+- `supervisors_context.png` is a bounded compaction-flow illustration
+  with human review of proposal lines. It is not a complete diagram of
+  the current settled-turn observable trajectory; the canonical
+  compaction behavior is documented in `docs/compaction-design.md` and
+  the runtime source.
 - `skills_architecture.png` predates the automation umbrella and still
   shows the earlier six-skill catalogue. The shipped catalogue now has
   seven public skills; update this image before the v7 documentation

@@ -1,9 +1,10 @@
 # Code tour
 
-Pi Sych starts in `extensions/workbench/index.ts`. The workbench adds
-guidance at the beginning of a supervisor turn, loads project-scoped
-configuration, and registers the tools and commands that connect Pi to
-the focused runtime modules.
+Pi Sych starts in `extensions/workbench/index.ts`. The workbench adds a
+derived, non-authorizing capability summary and guidance at the
+beginning of a supervisor turn, loads project-scoped configuration, and
+registers the tools and commands that connect Pi to the focused runtime
+modules.
 
 ## Dispatch and worker lifecycle
 
@@ -32,28 +33,32 @@ not decide whether that change is correct or conceptually important.
 
 ## Compaction and configuration
 
-The workbench can invoke custom compaction when configuration enables
-it. The compaction module builds a bounded snapshot of selected project
-state and the conversation, asks the active supervisor model for
-structured working memory, filters its file references, and appends a
-small number of unreviewed proposals to the inbox. Returning no custom
-result leaves Pi's standard compactor in control. Configuration is
-resolved through the config-directory module so the workbench, worker
-setup, model catalog, and optional local resources agree on where
-private settings live.
+The workbench invokes custom compaction when configuration enables it.
+Optional 100k admission occurs at `agent_settled` only when idle, with
+no pending messages and no in-flight compaction. The compaction module
+builds a bounded snapshot of selected project state and the
+conversation, asks the active supervisor model for structured working
+memory, filters its file references, and appends a small number of
+unreviewed proposals to the inbox. Returning no custom result leaves
+Pi's standard compactor in control. Canonical semantic files are never
+mutated; recorded label attributions are preserved without verification,
+and omission or failure returns native fallback. Defaults are custom
+true and compactAt100k false. Configuration is resolved through the
+config-directory module so the workbench, worker setup, model catalog,
+and optional local resources agree on where private settings live.
 
 ## Optional integrations
 
 MCPorter is an explicit remote-research adapter. It is only added to a
 worker that requested remote research, and its diagnostics describe
-configuration without exposing credentials. Such a worker also receives
-PEW-PEW when the supervisor's active `web` tool has validated
-`pi-pew-pew` package provenance; disabled or excluded PEW-PEW remains
-absent. A separately installed active `web` tool remains directly usable
-by the supervisor. Plannotator is separate from the workbench: it is a
-narrow human-review adapter that brings feedback from a message or file
-back into the review flow rather than controlling plans or project
-state.
+configuration without exposing credentials or verifying server access.
+Such a worker also receives PEW-PEW when the supervisor's active `web`
+tool has validated `pi-pew-pew` package provenance; disabled or excluded
+PEW-PEW remains absent. A separately installed active `web` tool remains
+directly usable by the supervisor. Plannotator is separate from the
+workbench: it is a narrow human-review adapter that brings feedback from
+a message or file back into the review flow rather than controlling
+plans or project state.
 
 Literature search is a direct supervisor tool and a gated worker tool.
 The workbench registers `literature_search` for supervisor lookup. The

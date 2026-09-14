@@ -41,7 +41,10 @@ and decision](docs/img/workflow.png)
 
 This is an orientation, not a required sequence or a complete runtime
 contract. Direct work need not use a worker, skills guide rather than
-decide, and important decisions remain yours.
+decide, and important decisions remain yours. At supervisor start, Pi
+Sych injects a compact summary derived from the session's active tools
+and local integration inspection. The summary helps routing but does not
+authorize work.
 
 Pi Sych requires Node 26 or newer and is installed as a package for
 [Pi](https://pi.dev/). In this README, the **supervisor** is the model
@@ -223,12 +226,18 @@ helps.
 
 ### Research workers and local literature
 
-The supervisor can call `literature_search` directly. A worker selected
-with the exact `research` skill also receives the same read-only tool.
-The index is a discovery surface: returned metadata and snippets do not
-verify the underlying source or prove collection completeness. Inspect
-the source when wording, methods, results, quotations, correction
-status, or precise metadata matters.
+The supervisor can call `literature_search` directly. Local literature
+state is only inspected/configured: an available database does not
+verify source access, search compatibility, or collection completeness.
+Remote MCPorter state is likewise inspected/configured for explicitly
+requested workers; configured servers do not prove credentials,
+reachability, or retrieval access.
+
+A worker selected with the exact `research` skill also receives the same
+read-only tool. The index is a discovery surface: returned metadata and
+snippets do not verify the underlying source or prove collection
+completeness. Inspect the source when wording, methods, results,
+quotations, correction status, or precise metadata matters.
 
 Research guidance also tells the model to use other available research
 capabilities according to their native job rather than by provider name.
@@ -256,8 +265,12 @@ orchestration system:
 - **Bounded delegation:** `dispatch_worker` starts one short-lived
   worker with an explicit assignment, clean or trajectory context,
   files, skills, model role, tool mode, and timeout.
-- **Small working memory:** custom compaction can retain bounded
-  continuation state and place clearly marked proposals in `INBOX.md`.
+- **Small working memory:** custom compaction handles configured manual
+  and native requests; optional 100,000-token admission runs at the
+  settled `agent_settled` boundary. It retains bounded observable
+  continuation state. It can append clearly marked, unreviewed proposals
+  to `INBOX.md`, but never mutates canonical semantic files; omission or
+  failure returns control to Pi's native compactor.
 - **Human review:** Plannotator provides annotation and code-review
   interfaces without becoming a workflow controller.
 

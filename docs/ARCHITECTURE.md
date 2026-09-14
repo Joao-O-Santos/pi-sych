@@ -15,9 +15,11 @@ The supervisor sees three Pi Sych tools:
 - `literature_search` performs read-only lookup in the configured local
   literature index.
 
-At turn start Pi Sych adds concise supervisor guidance plus configured
-project `agents` instructions when present. The supervisor guidance uses
-two independent task-posture dimensions:
+At supervisor start Pi Sych adds concise supervisor guidance, a compact
+capability summary derived from active session tools and local
+integration inspection, plus configured project `agents` instructions
+when present. The summary is routing context, not authorization. The
+supervisor guidance uses two independent task-posture dimensions:
 
 - **persistence** --- once the requested outcome and authorization
   boundary are clear, continue until completion or a genuine blocker
@@ -88,12 +90,24 @@ correctness or semantic authority.
 
 ## Compaction
 
-Current custom compaction remains the pre-v7-revision implementation. It
-uses the active supervisor model and a bounded six-field continuation
-shape, with bounded snapshots of configured project/todo/decision state
-and optional proposal lines in `INBOX.md`. The richer settled-turn
-trajectory design remains planned in `PLAN.md`, not current runtime
-behavior.
+Custom compaction uses the active supervisor model and runs for
+configured manual/native compaction requests. Optional automatic
+admission occurs at `agent_settled` when context usage reaches 100,000
+tokens, the agent is idle, no messages are pending, and no compaction is
+already in flight. The defaults are `custom: true` and
+`compactAt100k: false`.
+
+The continuation is a bounded observable trajectory: objective,
+authorization, constraints, progress, decisions, inferences, failed or
+rejected paths, unresolved issues, active work, next action, files, and
+project-state gaps. It uses bounded observable messages, bounded
+retained tail, and bounded canonical snapshots. Recorded `user-explicit`
+and `accepted-project` decision attributions are preserved without
+verification; inferences are kept separate. At most bounded one-line
+proposals are appended to the configured inbox as visibly unreviewed
+state. Canonical semantic files are never mutated. If the custom model
+omits a result, fails, is cancelled, or produces invalid output, Pi's
+native compactor remains in control.
 
 ## Local literature
 
@@ -141,14 +155,18 @@ This avoids duplicating detailed doctrine into the system prompt while
 keeping consequential invariants salient. Routes are ordinary Markdown
 links, not a workflow engine or prompt inheritance mechanism.
 
-`automation` is semantic guidance, not a new orchestration runtime. The
-planned derived capability summary and optional user-level `STACK.md`
-remain unimplemented.
+`automation` is semantic guidance, not a new orchestration runtime. Five
+thin packaged review prompts select a lens and defer substantive
+procedure to the `review` skill. `STACK.md` was deliberately rejected:
+configured `AGENTS.md` mechanisms already provide durable instructions
+without another preference loader. The optional capability summary is
+derived at each supervisor start.
 
 ## Optional integrations
 
-MCPorter remains an explicit remote-research integration. A separately
-active validated PEW-PEW `web` tool may be reused for remote-research
-workers. Plannotator remains a narrow human-review adapter. None of
-these mechanisms silently promotes model output into accepted project
-state.
+MCPorter remains an explicit remote-research integration. Its
+configuration and installed extension are inspected, not verified for
+credentials, reachability, or access. A separately active validated
+PEW-PEW `web` tool may be reused for remote-research workers.
+Plannotator remains a narrow human-review adapter. None of these
+mechanisms silently promotes model output into accepted project state.

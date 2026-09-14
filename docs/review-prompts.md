@@ -1,9 +1,12 @@
 # Thin review lenses
 
-Pi Sych already has one `review` umbrella skill. Review prompts, if packaged at
-all, should expose useful postures rather than duplicate procedure or create
-persistent reviewer agents. The examples below are design references, not
-installed prompt templates.
+Pi Sych already has one `review` umbrella skill. Review prompts, if
+packaged at all, should expose useful postures rather than duplicate
+procedure or create persistent reviewer agents. The package installs
+five thin prompt templates: collaborative, adversarial, reader-friction,
+structural, and verification. They select a lens and defer substantive
+procedure to the `review` skill; they do not create reviewer agents, a
+fixed sequence, automatic revision, or approval.
 
 ## Collaborative
 
@@ -67,11 +70,15 @@ semantic correctness.
 
 ## Packaging rule
 
-Before converting any example into a public prompt template, verify Pi's current
-prompt discovery, substitution, invocation, and package behavior. A packaged
-entry point should contain little more than posture and output intent, then rely
-on the `review` skill for substantive procedure.
+The packaged entry points contain little more than posture and output
+intent, then rely on the `review` skill for substantive procedure. Pi
+discovers them from the package prompt directory; `$@` supplies the
+optional focus. A packaged prompt must not repeat skill policy, imply a
+fixed sequence of agents, silently authorize revision, treat independent
+review as approval, or require new orchestration merely to save a few
+words.
 
-Do not package a prompt if it repeats skill policy, implies a fixed sequence of
-agents, silently authorizes revision, treats independent review as approval, or
-requires new orchestration merely to save a few words.
+Do not package a prompt if it repeats skill policy, implies a fixed
+sequence of agents, silently authorizes revision, treats independent
+review as approval, or requires new orchestration merely to save a few
+words.

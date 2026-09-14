@@ -1,5 +1,8 @@
 # Optional STACK.md design
 
+Status: rejected. The following is the historical proposal, not current
+guidance; configured `AGENTS.md` mechanisms supply durable preferences.
+
 `STACK.md` is a proposed user-level preference file for relationships among
 available tools and services. It is not implemented in the current runtime and
 should be added only if existing Pi user-level instructions or configuration

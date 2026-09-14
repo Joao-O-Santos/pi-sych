@@ -33,6 +33,25 @@ exists; `$PI_CODING_AGENT_DIR/pi-sych`; `$XDG_CONFIG_HOME/pi/pi-sych`;
 `~/.config/pi/pi-sych` when that Pi directory exists; then
 `~/.pi/pi-sych`.
 
+The workbench creates `<resolved-config-directory>/config.json` with
+these defaults:
+
+``` json
+{
+  "version": 1,
+  "workerAgentDir": "worker-agent",
+  "modelCatalog": "models.json",
+  "mcporterConfig": "mcp/mcporter.json",
+  "compaction": { "custom": true, "compactAt100k": false },
+  "review": { "mode": "plannotator" }
+}
+```
+
+Edit this file to configure behavior. Set `compaction.compactAt100k` to
+`true` and reload the workbench to enable optional settled-turn
+admission at the `agent_settled` boundary. `compaction.custom` controls
+custom handling of manual and native compaction requests.
+
 ## Initialize the worker runtime
 
 Run the packaged bootstrap script once for that directory's
@@ -66,7 +85,10 @@ files, or research access.
 
 `literature_search` is available directly to the supervisor. A
 dispatched worker also receives it when its selected skills include the
-exact `research` selector. The database is selected in this order:
+exact `research` selector. Capability inspection can report whether the
+resolved database is absent, present with an unverified search schema,
+or degraded; it does not verify access to the underlying sources. The
+database is selected in this order:
 
 1.  `<projectRoot>/LITERATURE.sqlite`, when it exists;
 2.  `literatureDatabase` in resolved `pi-sych/config.json`; or
@@ -79,9 +101,29 @@ completeness. Inspect the source when exact wording, method, result,
 quotation, correction status, or precise metadata matters.
 
 The supported v7 schema stores canonical metadata in `papers` and uses
-an external-content FTS5 table named `papers_fts`. Pi Sych performs
-shallow structural validation but does not infer creators, validate CSL
-semantics, format citations, or migrate older schemas.
+an external-content FTS5 table named `papers_fts`:
+
+``` sql
+CREATE TABLE papers (
+  id INTEGER PRIMARY KEY, filepath TEXT, directory TEXT,
+  filename TEXT, year INTEGER, item_type TEXT,
+  creators_json TEXT, title TEXT, abstract TEXT,
+  topic_tags TEXT, doi TEXT
+);
+CREATE VIRTUAL TABLE papers_fts USING fts5(
+  filepath, title, abstract, topic_tags, doi,
+  content='papers', content_rowid='id'
+);
+```
+
+Maintain the external-content index outside Pi Sych; rebuild it after
+population with
+`INSERT INTO papers_fts(papers_fts) VALUES ('rebuild');`. Relative
+source paths resolve against the database directory. Creator-shape and
+SQL-null rules are specified in the public contract; a malformed
+returned row fails the query rather than returning partial results. Pi
+Sych performs shallow structural validation but does not infer creators,
+validate CSL semantics, format citations, or migrate older schemas.
 
 ## Project canonical paths
 
@@ -102,18 +144,20 @@ Pi Sych exposes seven umbrella skills: `project`, `write`, `analyze`,
 `code`, `review`, `research`, and `automation`. Their task recipes use
 relative links to local modules and shared methods.
 
-To customize one durably, copy its umbrella directory and any routed
-`_methods` directories into one of:
+To customize one durably, copy its umbrella directory, its routed shared
+methods, and every routed module under other umbrellas, preserving their
+relative paths, into one of:
 
 ``` text
-~/.pi/agent/skills/
+<resolved Pi root>/skills/
 .pi/skills/
 .agents/skills/
 ```
 
-Preserve the relative layout so recipe links continue to resolve. For
-named worker selection, `.pi/skills/` wins over `.agents/skills/`, which
-wins over user and packaged skills.
+Preserve the relative layout so recipe links continue to resolve. Named
+workers search `.pi/skills/`, then `.agents/skills/`, then the resolved
+Pi root's `skills/`, then packaged skills; selecting a project `.pi`
+root does not add a separate global-root fallback.
 
 Edit local `modules/*/examples.md` or shared `_methods/*/examples.md`
 first. Change guidance or task-recipe order only when you intentionally
@@ -130,7 +174,9 @@ loaded resources or visible tools, not host permissions.
 ## Optional integrations
 
 Plannotator is a separate human-review adapter. MCPorter is enabled only
-for explicitly requested remote research. If the supervisor already has
-an active `web` tool from a valid loaded `pi-pew-pew` package, a
+for explicitly requested remote research. Startup inspection may report
+its installation and configured servers, but does not verify
+credentials, reachability, or access. If the supervisor already has an
+active `web` tool from a valid loaded `pi-pew-pew` package, a
 remote-research worker may reuse it. Pi Sych does not discover or enable
 a disabled package.

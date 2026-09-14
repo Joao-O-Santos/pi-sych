@@ -5,6 +5,16 @@ npm registry metadata establish publication status and dates; headings
 below record versioned changes without duplicating that live release
 state.
 
+## Unreleased
+
+### Changed
+
+- Reconcile v7 runtime documentation with the derived non-authorizing
+  capability summary, settled-turn compaction, thin review prompts, and
+  inspected-only local/remote integration state; raise the nonblank
+  runtime source-budget limit to 3,000. No package version or release is
+  declared.
+
 ## v7.0.0
 
 ### Breaking
