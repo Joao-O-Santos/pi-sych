@@ -162,7 +162,12 @@ root does not add a separate global-root fallback.
 Edit local `modules/*/examples.md` or shared `_methods/*/examples.md`
 first. Change guidance or task-recipe order only when you intentionally
 want different behavior. A project `STYLE.md` should record durable
-local deltas rather than copy package prose doctrine.
+local deltas rather than copy package prose doctrine. Writing workers
+load `skills/write/DEFAULT_STYLE.md` as a package baseline and
+`STYLE.md`, when present, as a project override; explicit user, venue,
+renderer, accessibility, and evidence requirements remain higher
+precedence. These style resources are loaded only for workers selected
+with the `write` skill.
 
 ## Pi-native resource controls
 

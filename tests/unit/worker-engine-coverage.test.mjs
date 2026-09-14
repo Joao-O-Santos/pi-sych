@@ -73,6 +73,48 @@ test("dispatch resolves explicit and configured context files", async (t) => {
 	);
 });
 
+test("writing workers receive package defaults and project style overrides", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-writing-style-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const agentDir = join(root, "worker-agent");
+	await writeFile(join(root, "A.md"), "a");
+	await mkdir(agentDir, { recursive: true });
+	await writeFile(join(agentDir, "settings.json"), "{}\n");
+	const resolved = project(root);
+	const packageRoot = join(root, "package");
+	await mkdir(join(packageRoot, "skills", "write"), { recursive: true });
+	await writeFile(join(packageRoot, "skills", "write", "DEFAULT_STYLE.md"), "package defaults\n");
+	await writeFile(join(root, "STYLE.md"), "project overrides\n");
+	let captured;
+	const outcome = await dispatchWorker({
+		project: resolved,
+		workerAgentDir: agentDir,
+		packageRoot,
+		request: { ...request, skills: ["write"] },
+		catalog,
+		launcher: async (spec) => {
+			captured = spec;
+			await writeImmutableResult(spec.resultPath, {
+				status: "complete",
+				summary: "done",
+				files: ["A.md"],
+				limitations: [],
+			});
+			return { exitCode: 0, stderr: "" };
+		},
+	});
+	assert.equal(outcome.result?.summary, "done");
+	assert.ok(
+		captured.request.contextFiles.some((file) => file.purpose === "package writing defaults"),
+	);
+	assert.ok(
+		captured.request.contextFiles.some(
+			(file) => file.path === "STYLE.md" && file.purpose === "project writing style overrides",
+		),
+	);
+	assert.match(captured.prompt, /Writing defaults are a baseline/);
+});
+
 test("launcher forwards an explicit thinking level to Pi", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-thinking-"));
 	t.after(() => rm(root, { recursive: true, force: true }));

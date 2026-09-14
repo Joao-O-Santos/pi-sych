@@ -24,8 +24,9 @@ requires it. Do not remove distinctive human phrasing merely to make prose
 uniformly polished.
 
 For new prose, follow the strongest available author or project style evidence
-and use package defaults only when local evidence is sparse. Select the smallest
-route that covers the task.
+and use the package defaults in `DEFAULT_STYLE.md` only as a baseline. Explicit
+user, venue, renderer, accessibility, and evidence requirements override them.
+Select the smallest route that covers the task.
 
 ## Task routes
 

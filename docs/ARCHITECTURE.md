@@ -61,8 +61,11 @@ Before dispatch, the supervisor inspects the available skill catalogue,
 selects only useful skills, and supplies one explicit assignment,
 expected output, capability mode, context files, context mode, model
 role, thinking level when useful, and bounded timeout. Configured
-`agents` and `style` files are automatically included when present.
-Worker modes control visible Pi tools; they are not sandboxes.
+`agents` files are automatically included when present. For a writing
+worker, the package `skills/write/DEFAULT_STYLE.md` is included as a
+baseline and a project `STYLE.md`, when present, is included as a local
+override. These style files are not loaded for unrelated work. Worker
+modes control visible Pi tools; they are not sandboxes.
 
 ## Worker lifecycle
 
