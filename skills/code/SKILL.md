@@ -5,8 +5,10 @@ description: Design, implement, test, automate, integrate, maintain, and release
 
 # Code
 
-Accepted behavior and project constraints override generic best practice.
-Understand the real flow before choosing a change. Implement the smallest
+Accepted behavior and project constraints override generic best practice. If a
+local constraint merely differs from generic best practice, do not override it;
+change it only when a stronger concern or demonstrated defect justifies the
+exception. Understand the real flow before choosing a change. Implement the smallest
 complete solution; prefer deletion, direct reuse, standard-library, platform,
 and established project mechanisms before new machinery. Diagnose defects at
 the demonstrated shared boundary rather than patching one visible symptom.
