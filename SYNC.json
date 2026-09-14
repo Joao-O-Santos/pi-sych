@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-14T13:38:30.372Z",
+  "confirmedAt": "2026-09-14T13:45:53.503Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -72,15 +72,15 @@
     },
     {
       "path": "docs/configuration.md",
-      "fingerprint": "sha256:b75e3d9d4d915609b551b476e99bd9f4dbf8760b509c9858a61a906bd6bdc50a",
+      "fingerprint": "sha256:bad9fb05e8d5f3fe377072de625a165ef6c02d449fcb01bca9d05d5348297095",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-09-14T13:38:30.372Z",
-        "reason": "Reviewed current documentation and skill changes against the implementation and accepted project direction."
+        "at": "2026-09-14T13:45:53.503Z",
+        "reason": "Reviewed the final configuration documentation and its published-site link."
       }
     },
     {
