@@ -1,19 +1,6 @@
 # Sections
 
-Before drafting sentences, decide the reader, the artifact's job, its central
-claim or decision, available evidence, and remaining uncertainty. For a
-substantial manuscript or section, map the argument at three levels: what the
-whole artifact changes for the reader, what job each section performs, and what
-job each paragraph performs inside that section. Use a topic-sentence outline
-for new work when the sequence is not already clear and a reverse outline for
-major revision.
-
-Check sequence before polish. Each section should receive something intelligible
-from what precedes it, contribute something necessary, and leave the next
-section prepared. Identify missing moves, duplicated moves, disproportionate
-sections, premature conclusions, and material introduced only after the reader
-needed it. Repetition can be structural even when the wording differs. Do not
-copyedit a paragraph whose role or location is still unsettled.
+Generic paragraph and section mechanics live with the [prose method](../../../_methods/prose/guidance.md); read it first when the sequence or paragraph jobs are unclear.
 
 For an abstract state the problem, approach, contribution or result, and
 implication without adding content. An introduction establishes the problem and

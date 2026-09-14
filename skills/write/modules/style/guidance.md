@@ -12,12 +12,16 @@ voice from subject vocabulary and beliefs: examples can establish register,
 rhythm, sentence-length distribution, terminology, degree of explicitness, and
 rhetorical habits without making their claims or phrases reusable content.
 
+## Applying an established style
+
 When drafting new prose, match the strongest available evidence for the intended
 author or project while following the routed prose method. Aim for continuity
 with the author's voice, not generic model polish. When revising existing prose,
 preservation is the stricter rule: style matching does not justify rewriting a
 clear, accurate, appropriate sentence merely because the model would phrase it
 differently.
+
+## Learning or promoting a durable style
 
 For calibration, compare gold, silver, and negative examples rather than copying
 phrases. Propose durable rules in reviewable `STYLE.proposed.md`; for each state

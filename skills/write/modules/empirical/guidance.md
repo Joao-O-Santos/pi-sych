@@ -15,5 +15,6 @@ relevant simple effects. A non-significant result is not proof of no effect; a
 threshold statistic is not importance. Use the routed claim map for
 interpretation. When a conclusion depends on contested premises, causal links,
 or rival accounts, select the empirical-argument recipe as well. Cross-check
-every number, model, exclusion, table, and figure against output, and make
-prose, tables, and figures consistent. Never invent results.
+numbers, models, exclusions, tables, and figures against output as applicable
+to the design, and make prose, tables, and figures consistent. Never invent
+results.

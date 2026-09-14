@@ -13,7 +13,7 @@ discussion. In discussion, synthesize patterns rather than repeat results;
 interpret through multiple serious lenses when they fit; identify what the
 design or perspective cannot capture; give concrete next studies or
 discriminating tests; and end with a calibrated take-home rather than a generic
-call for more research. Write the abstract last; it must match the manuscript
+call for more research. Draft or refresh the abstract after substantive content stabilizes; it must match the manuscript
 and introduce no unsupported claim, citation, or method. Do not force empirical
 structure onto theory.
 
