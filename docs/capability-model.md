@@ -43,9 +43,9 @@ questions useful for routing work, such as:
 - whether a relevant capability is unavailable or degraded.
 
 It should not reproduce credentials, full tool schemas, or every host command.
-Capability availability is factual; user preference (durable `STACK.md`
-or project `AGENTS.md` conventions) is separate; authorization for
-consequential action is separate.
+Capability availability is factual; machine context from `STACK.md`,
+project conventions from `AGENTS.md`, and authorization for consequential
+action are separate concerns.
 Remote MCPorter state is likewise only inspected/configured; configured servers
 and an installed extension do not verify credentials, reachability, or access.
 Availability never implies user authorization for a new consequential action.

@@ -3,6 +3,10 @@
 Pi Sych package prose methods apply unless overridden below. Use this
 file for durable author-, project-, audience-, language-, venue-, or
 artifact-specific deltas. You do not need to restate package defaults.
+Load this file only when style, voice, audience, venue, or formatting
+can materially affect the task; workers do not need it for unrelated
+work. In a real project, omit empty sections rather than keeping unused
+placeholders forever.
 
 Gold examples can be especially useful for voice calibration. Prefer a
 small set of representative passages over a long style manifesto.

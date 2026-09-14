@@ -1,4 +1,6 @@
 # Project agent instructions
 
-State conventions, authority boundaries, relevant checks, and when the
-project owner must decide. Keep this file concise and project-specific.
+Only project-specific instructions belong here: state conventions,
+authority boundaries, relevant checks, and when the project owner must
+decide. Do not repeat package defaults, skill methodology, or tool
+schemas. Keep this file concise.

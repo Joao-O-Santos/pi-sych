@@ -20,14 +20,34 @@ Use a proportionate stopping rule. Retrieve material that can change the answer,
 compare rather than collect, and report access, uncertainty, failures, and
 limits.
 
-## Task recipes
+## Task routes
 
-| Task | Read in order |
+Start with the primary route and add only the overlays required by the
+question or evidence boundary.
+
+| Task | Route |
 | --- | --- |
 | query design and stopping rule | [search](modules/search/guidance.md) |
-| supplied-source synthesis | [claim and evidence](../_methods/claim-evidence/guidance.md) → [sources](modules/sources/guidance.md) → [synthesis](modules/synthesis/guidance.md) |
-| literature retrieval and synthesis | [search](modules/search/guidance.md) → [sources](modules/sources/guidance.md) → [claim and evidence](../_methods/claim-evidence/guidance.md) → [synthesis](modules/synthesis/guidance.md) |
-| explanation or hypothesis search | [hypothesis generation](../_methods/hypothesis-generation/guidance.md) → [search](modules/search/guidance.md) → [sources](modules/sources/guidance.md) → [claim and evidence](../_methods/claim-evidence/guidance.md) → [synthesis](modules/synthesis/guidance.md) |
-| citation verification | [claim and evidence](../_methods/claim-evidence/guidance.md) → [citations](modules/citations/guidance.md) |
-| compare explanations in supplied sources | [hypothesis generation](../_methods/hypothesis-generation/guidance.md) → [argument analysis](../_methods/argument-analysis/guidance.md) → [sources](modules/sources/guidance.md) → [claim and evidence](../_methods/claim-evidence/guidance.md) → [synthesis](modules/synthesis/guidance.md) |
-| retrieve and compare explanations | [hypothesis generation](../_methods/hypothesis-generation/guidance.md) → [argument analysis](../_methods/argument-analysis/guidance.md) → [search](modules/search/guidance.md) → [sources](modules/sources/guidance.md) → [claim and evidence](../_methods/claim-evidence/guidance.md) → [synthesis](modules/synthesis/guidance.md) |
+| supplied-source synthesis | [synthesis](modules/synthesis/guidance.md) |
+| literature retrieval | [search](modules/search/guidance.md) |
+| source inspection | [sources](modules/sources/guidance.md) |
+| citation verification | [citations](modules/citations/guidance.md) |
+| compare explanations | [synthesis](modules/synthesis/guidance.md) |
+
+### Optional overlays
+
+- Add [sources](modules/sources/guidance.md) when exact source content,
+  methods, results, quotations, or corrections matter.
+- Add [claim and evidence](../_methods/claim-evidence/guidance.md) when
+  material claims need explicit provenance and calibration.
+- Add [argument analysis](../_methods/argument-analysis/guidance.md) when
+  premises, inference, or rival accounts determine the comparison.
+- Add [hypothesis generation](../_methods/hypothesis-generation/guidance.md)
+  when generating candidate explanations.
+- Add [search](modules/search/guidance.md) when the relevant source or
+  identifier is not yet known.
+
+The common retrieval dependency is search → sources: discover candidates,
+then inspect the underlying source when the claim requires it. Synthesis
+can follow either supplied material or retrieved sources; it is not a
+required stage for every search.

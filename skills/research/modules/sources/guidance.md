@@ -6,15 +6,12 @@ and relevance to the claim. Distinguish primary evidence from secondary
 reporting; verify the version, corrections, and time sensitivity when they
 matter.
 
-Discovery metadata is not source inspection. Local indexes, OpenAlex-like
-metadata services, scholarly gateways, search results, and snippets can identify
-or prioritize sources, but inspect the underlying article, chapter, report,
-dataset documentation, or authoritative page when exact wording, methods,
-results, quotations, limitations, or correction status matter. If a PDF or
-other full-text file is available, use an available document-reading capability
-rather than inferring its contents from metadata. A PyPDF/PyMuPDF-style reader
-is one possible implementation; any tool that reliably exposes the relevant
-full text or structure can serve the same role.
+Discovery metadata is not source inspection. Indexes, metadata services,
+scholarly gateways, search results, and snippets can identify or prioritize
+sources, but inspect the underlying article, chapter, report, dataset
+documentation, or authoritative page when exact wording, methods, results,
+quotations, limitations, or correction status matter. Use whatever available
+source-reading capability reliably exposes the relevant full text or structure.
 
 For known web sources, prefer a targeted fetch or browser read of the specific
 page over relying on a search snippet. For bibliographic identity or citation

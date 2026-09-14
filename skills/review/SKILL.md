@@ -12,28 +12,43 @@ Report only checks actually performed.
 
 Review is advisory unless revision or implementation was also requested.
 
-For prose, check structure, clarity, repetition, argument and voice coherence,
-reader friction, and artifact self-containment. Look for process or context
-leakage when wording appears to answer an earlier prompt, reviewer exchange,
-revision history, or hidden contrast rather than a need visible in the artifact.
-Do not turn this into a banned-phrase or AI-detection exercise: ask whether the
-wording serves the intended reader, genre, argument, and established voice.
-Report material divergence from accepted project state rather than silently
-choosing an authority. Use the requested collaborative or adversarial lens.
-Select the smallest recipe that covers the review and read it in order.
+For prose, route generic structure, voice, reader-friction, and
+self-containment checks to the [prose method](../_methods/prose/guidance.md).
+Use the requested collaborative or adversarial lens. Report material
+divergence from accepted project state rather than silently choosing an
+authority. Select the smallest route that covers the review.
 
-## Task recipes
+## Task routes
 
-| Task | Read in order |
+Use the smallest lens that covers the review. Add a shared method when
+its distinction materially affects the review; lenses are not a fixed
+multi-pass workflow.
+
+| Task | Route |
 | --- | --- |
-| structural prose review | [prose](../_methods/prose/guidance.md) → [structure](modules/structure/guidance.md) |
-| copyedit | [prose](../_methods/prose/guidance.md) → [copyedit](modules/copyedit/guidance.md) |
-| theoretical review | [argument analysis](../_methods/argument-analysis/guidance.md) → [claim and evidence](../_methods/claim-evidence/guidance.md) → [evidence](modules/evidence/guidance.md) → [detail](modules/detail/guidance.md) |
-| empirical inference review | [claim and evidence](../_methods/claim-evidence/guidance.md) → [argument analysis](../_methods/argument-analysis/guidance.md) → [analysis](modules/analysis/guidance.md) |
-| citation audit | [claim and evidence](../_methods/claim-evidence/guidance.md) → [citations](../research/modules/citations/guidance.md) → [evidence](modules/evidence/guidance.md) |
-| implementation review | [code](modules/code/guidance.md) → [testing](../code/modules/testing/guidance.md) → [verification](modules/verification/guidance.md) |
-| R or Quarto verification | [R and Quarto](../analyze/modules/r-quarto/guidance.md) → [verification](modules/verification/guidance.md) |
-| package or release verification | [npm](../code/modules/npm/guidance.md) → [verification](modules/verification/guidance.md) |
-| response to findings | [argument analysis](../_methods/argument-analysis/guidance.md) → [response](modules/response/guidance.md) |
-| completed prose or scholarly verification | [prose](../_methods/prose/guidance.md) → [claim and evidence](../_methods/claim-evidence/guidance.md) → [verification](modules/verification/guidance.md) |
-| completed-artifact verification | [claim and evidence](../_methods/claim-evidence/guidance.md) → [verification](modules/verification/guidance.md) |
+| structural prose review | [structure](modules/structure/guidance.md) |
+| copyedit | [copyedit](modules/copyedit/guidance.md) |
+| theoretical review | [detail](modules/detail/guidance.md) |
+| empirical inference review | [analysis](modules/analysis/guidance.md) |
+| citation audit | [evidence](modules/evidence/guidance.md) |
+| implementation review | [code](modules/code/guidance.md) |
+| R or Quarto verification | [verification](modules/verification/guidance.md) |
+| package or release verification | [verification](modules/verification/guidance.md) |
+| response to findings | [response](modules/response/guidance.md) |
+| completed-artifact verification | [verification](modules/verification/guidance.md) |
+
+### Optional overlays
+
+- Add [prose](../_methods/prose/guidance.md) for generic prose quality,
+  reader friction, or context leakage.
+- Add [claim and evidence](../_methods/claim-evidence/guidance.md) when
+  support, provenance, or claim calibration is under review.
+- Add [argument analysis](../_methods/argument-analysis/guidance.md) when
+  premises, inference, or rival accounts matter.
+- Add [citations](../research/modules/citations/guidance.md) for
+  bibliographic identity and version checks.
+- Add [testing](../code/modules/testing/guidance.md) for implementation
+  failure-path or contract checks.
+- Add [R and Quarto](../analyze/modules/r-quarto/guidance.md) for
+  domain-specific computational verification.
+- Add [npm](../code/modules/npm/guidance.md) for package checks.

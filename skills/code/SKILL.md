@@ -19,11 +19,11 @@ These are strong but defeasible preferences. Security, accessibility, data
 integrity, compatibility, cohesive implementation, anticipated user error, and
 graceful degradation can justify another choice. State assumptions and limits.
 Run and report only checks actually performed; passing checks do not equal
-approval or semantic correctness. Read the selected recipe in order.
+approval or semantic correctness. Select the smallest applicable route.
 
-## Task recipes
+## Task routes
 
-| Task | Read in order |
+| Task | Route |
 | --- | --- |
 | design or simplify components | [architecture](modules/architecture/guidance.md) |
 | behavior-changing implementation | [testing](modules/testing/guidance.md) |

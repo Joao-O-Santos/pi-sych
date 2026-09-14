@@ -68,7 +68,8 @@ function parseFrontmatter(content, path) {
 }
 
 function routeRows(content, path, required = false) {
-	const heading = "## Task recipes";
+	const headings = ["## Task routes", "## Task recipes"],
+		heading = headings.find((candidate) => content.includes(candidate)) ?? headings[0];
 	const start = content.indexOf(heading);
 	if (start < 0) {
 		assert.equal(required, false, `${path} has no Task recipes section`);
@@ -77,7 +78,11 @@ function routeRows(content, path, required = false) {
 	const remainder = content.slice(start + heading.length);
 	const nextHeading = remainder.search(/\n##\s/);
 	const section = nextHeading < 0 ? remainder : remainder.slice(0, nextHeading);
-	assert.ok(section.includes("| Task | Read in order |"), `${path} lacks the recipe table header`);
+	assert.match(
+		section,
+		/\| Task \| (?:Read in order|Route) \|/,
+		`${path} lacks the recipe table header`,
+	);
 	const rows = [];
 	for (const line of section.split("\n")) {
 		const targets = [...line.matchAll(/\[[^\]]+\]\(([^)]+\.md)\)/g)].map((match) =>
@@ -156,7 +161,7 @@ test("shared methods contain guidance and examples without becoming skills", asy
 	}
 });
 
-test("task recipes are ordered, resolvable, and acyclic", async () => {
+test("task routes are resolvable and acyclic", async () => {
 	const graph = new Map();
 	const routedMethods = new Set();
 	for (const [skill, expectedModules] of Object.entries(modules)) {
@@ -208,25 +213,23 @@ test("task recipes load only the intended specialist composition", async () => {
 	const search = resolve("skills/research/modules/search/guidance.md");
 	const sources = resolve("skills/research/modules/sources/guidance.md");
 	const synthesis = resolve("skills/research/modules/synthesis/guidance.md");
-	const citations = resolve("skills/research/modules/citations/guidance.md");
 	const evidence = resolve("skills/review/modules/evidence/guidance.md");
 	const reviewCode = resolve("skills/review/modules/code/guidance.md");
 	const testing = resolve("skills/code/modules/testing/guidance.md");
 	const npm = resolve("skills/code/modules/npm/guidance.md");
 	const verification = resolve("skills/review/modules/verification/guidance.md");
-	const academic = resolve("skills/write/modules/academic/guidance.md");
 	const empirical = resolve("skills/write/modules/empirical/guidance.md");
 	const theoretical = resolve("skills/write/modules/theoretical/guidance.md");
 
 	const analyzePath = resolve("skills/analyze/SKILL.md");
 	const analyzeRows = routeRows(await readFile(analyzePath, "utf8"), analyzePath, true);
 	for (const [targets, label] of [
-		[[claim, qualitative], "qualitative inquiry"],
-		[[hypothesis, argument, claim, qualitative], "qualitative explanation"],
+		[[qualitative], "qualitative inquiry"],
+		[[qualitative, hypothesis], "qualitative explanation"],
 		[[rQuarto], "routine R or Quarto"],
-		[[claim, rQuarto], "claim-changing R or Quarto"],
-		[[claim, reporting], "tables or figures"],
-		[[claim, prose, reporting], "results prose"],
+		[[rQuarto], "claim-changing R or Quarto"],
+		[[reporting], "tables or figures"],
+		[[reporting, prose], "results prose"],
 	])
 		assertHasRoute(analyzeRows, targets, label);
 
@@ -234,41 +237,47 @@ test("task recipes load only the intended specialist composition", async () => {
 	const automationRows = routeRows(await readFile(automationPath, "utf8"), automationPath, true);
 	for (const [targets, label] of [
 		[[automationCapabilities], "automation capability selection"],
-		[[automationCapabilities, automationWorkflow], "automation workflow"],
-		[[automationCapabilities, automationData], "automation data transform"],
-		[[automationCapabilities, automationBrowser], "browser automation"],
+		[[automationWorkflow], "automation workflow"],
+		[[automationData], "automation data transform"],
+		[[automationBrowser], "browser automation"],
 	])
 		assertHasRoute(automationRows, targets, label);
 
 	const researchPath = resolve("skills/research/SKILL.md");
 	const researchRows = routeRows(await readFile(researchPath, "utf8"), researchPath, true);
 	for (const [targets, label] of [
-		[[claim, sources, synthesis], "supplied-source synthesis"],
-		[[search, sources, claim, synthesis], "retrieval and synthesis"],
-		[[hypothesis, search, sources, claim, synthesis], "hypothesis search"],
-		[[hypothesis, argument, sources, claim, synthesis], "supplied competing accounts"],
-		[[hypothesis, argument, search, sources, claim, synthesis], "retrieved competing accounts"],
+		[[synthesis], "supplied-source synthesis"],
+		[[search], "literature retrieval"],
+		[[sources], "source inspection"],
+		[[hypothesis], "hypothesis overlay"],
+		[[argument], "argument overlay"],
 	])
 		assertHasRoute(researchRows, targets, label);
 
 	const reviewPath = resolve("skills/review/SKILL.md");
 	const reviewRows = routeRows(await readFile(reviewPath, "utf8"), reviewPath, true);
 	for (const [targets, label] of [
-		[[claim, citations, evidence], "citation audit"],
-		[[reviewCode, testing, verification], "implementation verification"],
-		[[rQuarto, verification], "R or Quarto verification"],
-		[[npm, verification], "release verification"],
-		[[prose, claim, verification], "prose verification"],
-		[[claim, verification], "generic artifact verification"],
+		[[evidence], "citation audit"],
+		[[reviewCode], "implementation review"],
+		[[verification], "artifact verification"],
+		[[prose], "prose overlay"],
+		[[claim], "evidence overlay"],
+		[[argument], "argument overlay"],
+		[[testing], "testing overlay"],
+		[[rQuarto], "R or Quarto overlay"],
+		[[npm], "npm overlay"],
 	])
 		assertHasRoute(reviewRows, targets, label);
 
 	const writePath = resolve("skills/write/SKILL.md");
 	const writeRows = routeRows(await readFile(writePath, "utf8"), writePath, true);
 	for (const [targets, label] of [
-		[[claim, prose, academic, empirical], "empirical manuscript"],
-		[[claim, argument, empirical], "empirical argument"],
-		[[argument, prose, academic, theoretical], "theoretical manuscript"],
+		[[empirical], "empirical manuscript"],
+		[[theoretical], "theoretical manuscript"],
+		[[claim], "evidence overlay"],
+		[[argument], "argument overlay"],
+		[[prose], "prose overlay"],
+		[[hypothesis], "hypothesis overlay"],
 	])
 		assertHasRoute(writeRows, targets, label);
 });
@@ -281,7 +290,9 @@ test("local modules retain required guidance and examples", async () => {
 			for (const file of ["guidance.md", "examples.md"]) {
 				const path = join(root, file);
 				assert.ok((await stat(path)).isFile(), `${path} is unavailable`);
-				assert.ok((await readFile(path, "utf8")).trim(), `${path} is empty`);
+				const content = await readFile(path, "utf8");
+				assert.ok(content.trim(), `${path} is empty`);
+				await assertLocalLinks(path, content);
 			}
 		}
 	}

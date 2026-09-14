@@ -14,6 +14,11 @@ state.
   inspected-only local/remote integration state; raise the nonblank
   runtime source-budget limit to 3,000. No package version or release is
   declared.
+- Refine Markdown guidance around primary task routes, optional method
+  overlays, provider-independent capabilities, and optional user machine
+  context in `STACK.md`; add the model-facing tool convention to pi-tin.
+- Ignore empty optional project-state gap records during working-memory
+  validation instead of discarding an otherwise usable continuation.
 
 ## v7.0.0
 

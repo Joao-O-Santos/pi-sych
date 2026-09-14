@@ -5,7 +5,8 @@ interpretation. Prefer local lessons; require repeated evidence or an obvious
 structural defect before proposing a general rule. Do not mine unattended
 transcripts, create global memory, edit package state, or commit automatically.
 
-For each candidate record, proportionate to the lesson's weight (trivial lessons\nneed only evidence and the smallest candidate lesson):
+For each candidate record, proportionate to the lesson's weight (trivial lessons
+need only evidence and the smallest candidate lesson):
 
 - observed evidence, including commands or artifacts;
 - repetition or structural basis and an alternative explanation;

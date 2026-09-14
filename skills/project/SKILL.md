@@ -15,11 +15,11 @@ questions. Create durable state only when it has a real use and is accepted or
 explicitly requested. Before an `agents` promotion, require the owner to choose
 project or personal scope. Shared conventions belong in the configured project
 path; stable private preferences belong in personal Pi instructions. Report only
-work actually performed. Read the selected recipe in order.
+work actually performed. Select the smallest applicable route.
 
-## Task recipes
+## Task routes
 
-| Task | Read in order |
+| Task | Route |
 | --- | --- |
 | new or recovered project | [bootstrap](modules/bootstrap/guidance.md) |
 | move between state and deliverable | [artifacts](modules/artifacts/guidance.md) |

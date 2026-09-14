@@ -1,9 +1,10 @@
 # Theory
 
 Define constructs only far enough to distinguish neighboring ideas. For each
-retained proposition state inputs, mechanism, outputs, assumptions, scope,
-rival account, and discriminating implication. A new label is not an
-explanation, and illustration is not evidence.
+substantive retained proposition, state the inputs, mechanism, outputs,
+assumptions, scope, rival account, and discriminating implication that matter;
+minor assertions do not need the full schema. A new label is not an explanation,
+and illustration is not evidence.
 
 Apply the routed hypothesis-generation method selectively, then turn retained
 candidates into explicit propositions or mechanisms. Restate difficult accounts

@@ -180,10 +180,11 @@ is relevant.
 - `automation` --- capability selection, deterministic data/file work,
   workflow composition, and browser/UI automation.
 
-Each umbrella skill contains small ordered task recipes. A recipe
-selects only the shared methods and local modules needed for that task.
+Each umbrella skill contains small task routes with a primary module and
+optional methods or overlays. Routes select only the guidance needed for
+the task rather than imposing one chain on every related operation.
 Shared methods have no `SKILL.md`, so Pi discovers exactly seven public
-skills. The recipes are plain Markdown links, not a loader, inheritance
+skills. The routes are plain Markdown links, not a loader, inheritance
 system, or workflow controller.
 
 ## Commands you can use

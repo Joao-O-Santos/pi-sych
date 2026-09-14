@@ -9,8 +9,8 @@ file records the implementation sequence and current verification state.
   criteria.
 - [x] Strengthen writing, review, and research guidance for self-contained,
   evidence-aware artifacts.
-- [x] Verify the guidance/design commit in pipeline `2843301780` (97.86%
-  coverage and deployed Pages).
+- [x] Verify the guidance/design baseline through the repository's
+  deterministic acceptance checks.
 
 ## Runtime decisions
 
@@ -18,9 +18,9 @@ file records the implementation sequence and current verification state.
   user-instruction APIs.
 - [x] Use Pi's active tool projection and source metadata rather than creating a
   capability registry.
-- [x] Do not add `STACK.md`: global/project `AGENTS.md` already provides durable
-  user preferences with established loading and precedence; selective stack
-  loading would add machinery without a distinct contract.
+- [x] Define `STACK.md` as an optional user-maintained computer-environment
+  profile at `~/.pi/agent/STACK.md`; it is not project software-stack state,
+  capability truth, or an authorization policy.
 - [x] Package only prefixed, thin review templates that select a lens and defer
   substantive procedure to the existing `review` skill.
 
@@ -43,13 +43,26 @@ file records the implementation sequence and current verification state.
   non-mutation, and failure fallback in focused tests.
 - [x] Package five thin review prompts that defer substantive procedure to the
   `review` skill.
+- [x] Keep malformed empty optional compaction gap details from discarding an
+  otherwise usable continuation.
+
+## Markdown architecture pass
+
+- [x] Define `STACK.md` as optional user machine context, separate from
+  project software requirements, capability truth, and authorization.
+- [x] Route roots through a primary module with explicit optional overlays;
+  preserve shared-method and genre-specific scaffolding.
+- [x] Remove duplicated portable provider, workflow, and authorization prose
+  while retaining domain-specific safeguards.
+- [x] Align pi-tin's model-facing tool convention without adding a runtime
+  dependency.
 
 ## Reconciliation and verification
 
 - [x] Reconcile canonical documentation and project state with v7 runtime.
 - [x] Raise the nonblank runtime source-budget script limit to 3,000.
-- [x] Preserve the deliberate `STACK.md` rejection, unchanged images, and
-  human-ownership/non-sandbox boundaries.
+- [x] Preserve the optional machine-context `STACK.md` boundary, unchanged
+  images, and human-ownership/non-sandbox boundaries.
 - [x] Harden custom compaction: instruction/data isolation, aggregate input
   bounds, line-break rejection in model-derived memory values, and
   notification-safe proposal persistence.
@@ -57,12 +70,11 @@ file records the implementation sequence and current verification state.
   assignments at the request boundary.
 - [x] Apply material findings from final documentation review; keep image
   files unchanged.
-- [x] Finalize `PROJECT.md` and `TODO.md` after accepted corrections; leave
-  `SYNC.json` unchanged in this work.
+- [x] Finalize `PROJECT.md` and `TODO.md` after accepted corrections.
 - [ ] Run opt-in live prompt-quality fixtures if the configured models and cost
   make them useful; report separately from deterministic verification.
 - [ ] Confirm main CI and Pages after commits are available remotely.
 
-Constraints for this work: no release, tag, publication, package-version,
-or `SYNC.json` change; do not push, tag, publish, deploy, or release
-without separate owner instruction.
+Constraints for this work: no release, tag, publication, or package-version
+change; do not push, tag, publish, deploy, or release without separate
+owner instruction.

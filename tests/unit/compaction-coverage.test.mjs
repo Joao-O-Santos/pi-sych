@@ -65,6 +65,18 @@ test("compaction output requires a JSON object with bounded promotions", () => {
 		() => parseCompactionModelOutput(valid({ projectStateGaps: [{ kind: "bogus", detail: "x" }] })),
 		/kind is not allowed/,
 	);
+	const sparseGaps = parseCompactionModelOutput(
+		valid({
+			projectStateGaps: [
+				{ kind: "missing-durable-state", detail: "" },
+				{ kind: "conflict", detail: "real gap" },
+				{ kind: "unreviewed-proposal", detail: null },
+			],
+		}),
+	);
+	assert.deepEqual(sparseGaps.workingMemory.projectStateGaps, [
+		{ kind: "conflict", detail: "real gap" },
+	]);
 	assert.throws(
 		() => parseCompactionModelOutput(valid({ authorization: 42 })),
 		/authorization must be an array of strings/,

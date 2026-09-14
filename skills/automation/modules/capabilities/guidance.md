@@ -7,13 +7,14 @@ information, and the current environment. This is the authority for what can be
 used now. Do not claim a browser, remote service, formatter, converter, worker,
 or local utility is available without evidence.
 
-**Preferred stack:** When applicable user/project instructions are
-available, use them to choose among available capabilities. An
-optional user-maintained STACK.md may record durable environment
-knowledge: preferred retrieval tools, browser automation, shell
-utilities, document workflows, analysis tools, hosting CLIs,
-deterministic-processing preferences, and approval/privacy boundaries.
-It describes preference, not availability.
+**Machine context:** When computer-use or local-software knowledge
+matters, inspect the optional user-maintained `~/.pi/agent/STACK.md`
+when it exists. It records durable facts about the user's computer,
+not project software requirements, capability truth, or governing
+approval, privacy, and security rules. Its absence changes nothing.
+
+Use project `AGENTS.md` and `PROJECT.md` for project-specific
+requirements and workflow conventions.
 
 Availability constrains the options; current user instructions and
 accepted project constraints still govern. If a preferred capability

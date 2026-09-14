@@ -84,10 +84,11 @@ const decision = (value: unknown, index: number): MemoryDecision => {
 			: { rationale: text(item.rationale, `decisions[${index}].rationale`) }),
 	};
 };
-const gap = (value: unknown, index: number): ProjectStateGap => {
+const gap = (value: unknown, index: number): ProjectStateGap | undefined => {
 	const item = objectRecord(value, `projectStateGaps[${index}]`),
 		kind = text(item.kind, `projectStateGaps[${index}].kind`);
 	if (!GAP_KINDS.includes(kind)) throw new Error(`projectStateGaps[${index}].kind is not allowed`);
+	if (typeof item.detail !== "string" || !item.detail.trim()) return undefined;
 	return {
 		kind,
 		detail: text(item.detail, `projectStateGaps[${index}].detail`),
@@ -112,7 +113,7 @@ export function validateWorkingMemory(value: unknown): Memory {
 			"projectStateGaps",
 			MEMORY_ITEM_LIMIT,
 			gap,
-		),
+		).filter((item): item is ProjectStateGap => item !== undefined),
 	};
 }
 const promotion = (value: unknown): Promotion => {

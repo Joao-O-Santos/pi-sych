@@ -23,15 +23,15 @@ differently.
 
 ## Learning or promoting a durable style
 
+When applying style, inspect terminology, rhythm, register, dialect, and the
+routed prose method before editing. Prefer concrete local findings over generic
+rules. Language- or dialect-specific conventions belong in explicit user,
+project, or private style guidance rather than being assumed for every Pi Sych
+user.
+
 For calibration, compare gold, silver, and negative examples rather than copying
 phrases. Propose durable rules in reviewable `STYLE.proposed.md`; for each state
 priority (`required`, `preferred`, `acceptable`, or `avoid`), confidence,
 evidence, and exceptions. Test on held-out text when useful, report drift as
 local fixes, and never infer a durable rule from one accidental example or alter
 durable style without approval.
-
-When applying style, inspect terminology, rhythm, register, dialect, and the
-routed prose method before editing. Prefer concrete local findings over generic
-rules. Language- or dialect-specific conventions belong in explicit user,
-project, or private style guidance rather than being assumed for every Pi Sych
-user.

@@ -6,9 +6,15 @@ computer/environment, especially for automation and computer-use tasks.
 Automation skills look for it when such knowledge matters; its absence
 changes nothing.
 
-`STACK.md` is user-defined and user-local. It may name the user's
-actual applications and tools because it is configuration, unlike
-public Pi Sych semantic guidance, which must stay provider-independent.
+`STACK.md` is user-defined and user-local. The recommended location is
+`~/.pi/agent/STACK.md`, alongside Pi's global instructions. Pi Sych does
+not currently auto-load or parse this file. Automation instructions may
+inspect the conventional path when it exists. Workers do not inherit it
+automatically; pass it as explicit context when relevant.
+
+It may name the user's actual applications and tools because it is
+configuration, unlike public Pi Sych semantic guidance, which must stay
+provider-independent.
 
 ## Suggested content
 
@@ -29,28 +35,30 @@ as:
   languages/runtimes, project-native tooling preferences.
 - Filesystem/conventions: useful non-secret paths, normal locations
   for screenshots/downloads/work, naming or launch conventions.
-- Optional workflow preferences: for example, preferring deterministic
-  local transforms when a model need not inspect raw data.
+Do not use this file for project software requirements or workflows;
+those belong in `AGENTS.md` and/or `PROJECT.md`.
+
+Do not use this file for approval, privacy, security, or authorization
+rules. Put those in the applicable user or project instruction
+mechanism.
 
 ## Boundary
 
 `STACK.md` must never create a capability the runtime does not expose,
 assert that credentials or network access work, override a current
 explicit user instruction, serve as a security policy, contain secrets,
-or duplicate tool schemas/package state. Runtime capability state wins
-whenever preference and availability differ.
-
-Current explicit user instructions outrank accepted project
-requirements, which outrank durable preferences. Capability
-availability is an independent factual constraint: a preference cannot
-make a missing tool exist.
+or duplicate tool schemas/package state. Runtime availability is a
+factual constraint: a stale preference cannot make a missing tool
+exist. Current explicit user instructions and accepted project
+constraints govern choices among the available options.
 
 ## Loading and precedence
 
-No path or parser precedence is fixed here; inspect Pi's current
-user-level instruction/config discovery first, and reuse it rather
-than inventing machinery merely to have a `STACK.md`. Do not inject
-stack context into every turn merely because the file exists; expose
-it only when computer use, tool choice, or local-software knowledge
-makes it relevant. It should not be loaded into unrelated
-writing/research/theory work.
+Pi's normal context discovery loads `AGENTS.md`, not `STACK.md`. Keep
+the optional stack file outside automatic context loading unless the
+user or a relevant instruction explicitly supplies it. Automation
+skills should look for it only when computer use, tool choice, or
+local-software knowledge makes it relevant; do not load it into
+unrelated writing, research, or theory work. Current explicit
+instructions outrank accepted project constraints, which outrank
+machine preferences.

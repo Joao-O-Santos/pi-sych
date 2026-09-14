@@ -49,8 +49,7 @@ file states only what is repository-specific about them.
 
 ## Verification
 
-For substantive behavior changes, obtain independent test design before
-implementation and independent read-only review afterwards when useful.
-Run repository-native formatter, type checker, tests, packaging,
-production audit, source-budget, and site checks as applicable. Report
-actual outcomes and limitations.
+For substantive behavior changes, use independent test design and
+read-only review when proportionate. Run repository-native formatter,
+type checker, tests, packaging, production audit, source-budget, and
+site checks as applicable. Report actual outcomes and limitations.

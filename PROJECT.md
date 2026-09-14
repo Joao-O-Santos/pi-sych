@@ -80,10 +80,10 @@ limits, and verification without relying on hidden agent memory.
 ## Current direction
 
 {accepted} Keep seven public umbrella skills (`project`, `write`,
-`analyze`, `code`, `review`, `research`, and `automation`) with bounded
-ordered task recipes, four shared methods, focused local modules,
-bounded workers, independent substantive review, and no workflow
-controller. Keep always-visible supervisor/tool text short and
+`analyze`, `code`, `review`, `research`, and `automation`) with small
+task routes, optional method overlays, four shared methods, focused
+local modules, bounded workers, independent substantive review, and no
+workflow controller. Keep always-visible supervisor/tool text short and
 high-salience; put domain posture/routing in umbrella skills and
 detailed procedure in routed methods/modules. Preserve acceptable human
 prose, while allowing explicitly requested whole-artifact
@@ -92,8 +92,9 @@ permission prompts.
 
 {accepted} Runtime capability summaries, thin packaged review prompts,
 and settled-turn compaction are implemented. An optional user-maintained
-`STACK.md` may describe durable computer/environment facts for
-computer-use work.
+`STACK.md` may describe the user's durable computer/environment facts
+for computer-use work. Project software requirements and workflows
+remain in `AGENTS.md` and/or `PROJECT.md`.
 
 ## Current state
 
@@ -131,13 +132,13 @@ Metadata and snippets remain discovery evidence until the underlying
 source is inspected when exact claims, methods, results, quotations, or
 correction status matter.
 
-{verified} `PLAN.md` and `TODO.md` record the v7 implementation and
-verification state. Five packaged review prompts remain thin and defer
-to the `review` skill. Custom compaction retains bounded observable
-trajectory at the settled boundary, preserves recorded decision labels
-without verification, appends only bounded unreviewed inbox proposals,
-never mutates canonical semantic files, and falls back to the native
-compactor on omission or failure.
+{verified} `PLAN.md` and `TODO.md` record the v7 implementation state.
+Five packaged review prompts remain thin and defer to the `review`
+skill. Custom compaction retains bounded observable trajectory at the
+settled boundary, preserves recorded decision labels without
+verification, appends only bounded unreviewed inbox proposals, never
+mutates canonical semantic files, and falls back to the native compactor
+on omission or failure.
 
 {verified} Present-tense
 README/configuration/architecture/public-contract text describes seven
@@ -146,10 +147,9 @@ persistence/scrutiny and clean/trajectory semantics, and implemented
 settled compaction. Prompt word-count accounting has been removed; the
 nonblank runtime source-code budget is 3,000 lines.
 
-{verified} Deterministic formatting, documentation links, type checking,
-source budget, and focused compaction/package tests are recorded for
-this reconciliation. No release, tag, publication, or package-version
-change has been performed.
+{verified} Repository-native formatting, documentation, type, budget,
+and test checks are part of the maintained acceptance boundary. No
+release, tag, publication, or package-version change has been performed.
 
 ## Previous action
 

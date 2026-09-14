@@ -71,10 +71,10 @@ often uses them.
 
 For substantial prose, these lenses treat structure, clarity,
 repetition, argument coherence, voice coherence, and artifact
-self-containment as first-class review targets. Structural review starts
-with a reverse outline rather than sentence polishing. Repetition
-includes duplicated rhetorical jobs and repeated implications even when
-the wording differs.
+self-containment as first-class review targets. Structural review may
+use a reverse outline before sentence polishing when the sequence is
+unclear. Repetition includes duplicated rhetorical jobs and repeated
+implications even when the wording differs.
 
 When accepted project state is available, review also compares the
 artifact's apparent objective, contribution, scope, and major claims

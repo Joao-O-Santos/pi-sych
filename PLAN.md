@@ -84,13 +84,14 @@ See [capability model](docs/capability-model.md).
 
 ## 2. Optional machine/environment stack (accepted)
 
-`STACK.md` is an optional user-maintained description of durable
-computer/environment facts for computer-use work: OS, desktop
-environment, Wayland/X11, shell, browsers, screenshot and document
-tools, development tooling, and non-secret paths and conventions.
-Automation skills look for it when such knowledge matters; its absence
-changes nothing. It creates no capability, carries no secrets, and is
-not a security policy. See [STACK design](docs/stack.md).
+`STACK.md` is an optional user-maintained description of the user's
+computer environment for computer-use work: OS, desktop environment,
+Wayland/X11, shell, browsers, screenshot and document tools, and
+relevant non-secret paths and conventions. The recommended location is
+`~/.pi/agent/STACK.md`; Pi Sych does not auto-load it, and automation
+skills inspect it only when relevant. It is not project software-stack
+state, a capability registry, or an authorization policy. See [STACK
+design](docs/stack.md).
 
 ## 3. Writing and review quality
 
@@ -205,34 +206,32 @@ documentation, changelog, project state, and image status now describe actual
 behavior. Images remain unchanged and their stale-diagram limitations remain
 explicitly documented.
 
-## 8. Verification record
+## 8. Reconciliation state
 
-Completed for this reconciliation:
+The v7 runtime boundaries remain implemented: capability claims are
+ownership-aware, worker assignments are bounded, compaction is settled,
+bounded, observable, and non-mutating, and review prompts remain thin.
+The Markdown architecture pass keeps shared methods and specialist
+scaffolding while routing through a primary module with optional
+overlays. `STACK.md` is optional user machine context, not project
+software-stack state or an authorization mechanism.
 
-- Markdown formatting, documentation-link, style, dependency, audit, and
-diff checks pass.
-- Typecheck and the source-budget check pass at 2,800/3,000 rounded lines.
-- Full deterministic suite passes: 161 unit and 17 integration tests;
-  `make verify` (including coverage thresholds) exits 0.
-- Custom compaction carries instruction/data isolation, aggregate input
-bounds, line-break rejection in model-derived memory values, and
-notification-safe proposal persistence, with focused regressions.
-- Capability claims are ownership-aware; empty worker assignments are
-rejected at the request boundary.
-- Final-review documentation corrections are applied: configuration
-defaults and literature schema, skill-copy precedence, optional-STACK
-marking, compaction lifecycle and field names, and consistent 3,000-line
-budget statements.
+Audit prompts and skills for deletion when wording is stale, duplicated,
+contradictory, provider-specific without need, procedure is duplicated at
+multiple layers, or instructions no longer earn their context cost.
 
-Later validation should cover at least one cheaper routine worker and
-at least one stronger model, watching for both under-scaffolding and
-overconstraint. Audit prompts and skills for deletion when wording is
-stale, duplicated, contradictory, provider-specific without need, or
-no longer earning its context cost.
+## 9. Later runtime follow-up (not this Markdown pass)
 
-Live prompt-quality fixtures, remote CI/Pages confirmation, and an independent
-external diff review are not claimed here. No tag, publication, deployment, or
-release action is authorized or performed.
+- Review worker context selection so unrelated workers do not receive
+  `STYLE.md` automatically; pass relevant machine context explicitly
+  when computer-use work needs `STACK.md`.
+- Review the capability summary's scope: ordinary active tools should
+  remain self-describing, while the summary should focus on hidden or
+  conditional Pi-Sych state and distinguish unavailable from degraded.
+- Preserve the narrow PEW-PEW worker reuse special case unless repeated
+  independent pass-through needs justify a generic mechanism.
+- Evaluate one cheaper routine worker and one stronger model for both
+  under-scaffolding and unnecessary constraint.
 
 ## Definition of done
 

@@ -1,8 +1,9 @@
 # Pi Sych
 
-For Pi Sych questions, read the installed README and linked documentation first: README for normal
-use, CONFIGURATION for setup, ARCHITECTURE for design, DEVELOPMENT for implementation, and AGENTS
-for conventions. Describe installed behavior, not remembered proposals. Identify the requested tool,
+For Pi Sych questions, read the installed README and linked documentation first:
+`README.md` for normal use, `docs/configuration.md` for setup,
+`docs/ARCHITECTURE.md` for design, `docs/development.md` for implementation,
+and `AGENTS.md` for conventions. Describe installed behavior, not remembered proposals. Identify the requested tool,
 command, canonical role, or worker outcome; distinguish its mechanical result from the owner's
 semantic decision.
 

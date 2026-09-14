@@ -130,9 +130,10 @@ called mechanically.
 ## Skills and supporting guidance
 
 Seven umbrella skills are public: `project`, `write`, `analyze`, `code`,
-`review`, `research`, and `automation`. Each uses bounded ordered task
-recipes. Shared methods under `skills/_methods` provide reusable
-procedures; local modules adapt them to a genre, artifact, or task.
+`review`, `research`, and `automation`. Each uses bounded task routes
+with primary guidance and optional overlays. Shared methods under
+`skills/_methods` provide reusable procedures; local modules adapt them
+to a genre, artifact, or task.
 
 Writing and review guidance treats standalone artifact self-containment
 as a quality criterion. Process residue, unexplained version/revision
