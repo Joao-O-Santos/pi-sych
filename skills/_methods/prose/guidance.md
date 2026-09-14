@@ -7,13 +7,17 @@ citations, placeholders, dialect, purposeful variation, and established voice.
 
 ## Structure before wording
 
-Before structural revision, check the intended reader, their likely prior knowledge, and the context or definition they need for unfamiliar concepts. Work from the argument outward. For substantial new prose, identify the artifact
-or section job and use a topic-sentence outline when sequence is unclear. Before
+Before structural revision, check the intended reader, their likely prior
+knowledge, and the context or definition they need for unfamiliar concepts. Work
+from the argument outward. For substantial new prose, identify the artifact or
+section job and use a topic-sentence outline when sequence is unclear. Before
 major revision, reverse-outline what each section and paragraph does, then
 reorder, merge, cut, split, or expand before polishing sentences. An ordinary
-expository paragraph should normally have one discernible job: establish a claim
-or topic, develop it with reasoning or evidence, and leave a consequence or
-useful transition.
+expository paragraph should normally have one discernible job. For ordinary
+expository paragraphs, prefer a loose hamburger shape: topic or claim,
+development with reasoning or evidence, then consequence or link. This is a
+default, not a template; transitional, serial, dialogic, and deliberately
+fragmentary paragraphs may legitimately differ.
 
 **Review test:** Can a reader state what each section and paragraph contributes,
 and does the sequence make the argument easier rather than harder to reconstruct?
@@ -68,17 +72,27 @@ manuscript merely because it was useful in the response document.
 **Review test:** Would every sentence still have an intelligible purpose if the
 reader received only the finished artifact?
 
-## Information flow
+## Sentence construction and information flow
+
+Keep the main grammatical spine easy to recover. Avoid placing substantial
+parenthetical or comma-delimited material between closely related parts of the
+main clause, especially subject and verb or verb and object. Move a substantial
+interruption before or after the main clause, or give it its own sentence, when
+that makes the relation easier to recover. Parentheticals remain legitimate when
+short and genuinely useful.
 
 Use familiar-to-new flow when it supports continuity. Put the main action early
 when delay increases memory load, and use end-weight for longer or more complex
 material. Prefer concrete verbs and nouns while retaining precise technical
-terms. Revise in this order when feasible: argument, section jobs, paragraph
-logic, information flow, sentences, then words.
+terms. Use short sentences when they provide emphasis or reset complexity. Use
+longer sentences when several ideas genuinely need to be related. Vary length
+and structure according to the thought, not according to a mechanical
+alternation rule. Revise in this order when feasible: argument, section jobs,
+paragraph logic, information flow, sentences, then words.
 
-**Failure mode:** Moving every verb forward mechanically, stripping necessary
-technical language, or adding summaries and transitions that repeat what the
-reader already knows.
+**Failure mode:** Moving every verb forward mechanically, imposing a blanket
+comma ban, stripping necessary technical language, or adding summaries and
+transitions that repeat what the reader already knows.
 
 ## Register and model defaults
 
