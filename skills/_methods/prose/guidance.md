@@ -4,8 +4,6 @@ Use this method for substantial drafting, revision, and diagnostic review.
 Explicit user instructions, accepted project style, venue requirements, and
 artifact needs override package defaults. Preserve evidence, uncertainty,
 citations, placeholders, dialect, purposeful variation, and established voice.
-A review request authorizes diagnosis, not silent rewriting, unless revision was
-also requested.
 
 ## Structure before wording
 
