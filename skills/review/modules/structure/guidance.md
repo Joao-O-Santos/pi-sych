@@ -2,8 +2,9 @@
 
 For substantial prose review, reconstruct the artifact before judging its
 sentences. State its apparent purpose, central contribution or decision, and the
-reader's intended path through the argument. Produce a reverse outline that
-names every section and paragraph's actual job. Then inspect purpose,
+reader's intended path through the argument. A reverse outline that names each
+section and paragraph's actual job is a useful diagnostic for this. Then inspect
+purpose,
 contribution visibility, sequence, proportion, navigation, clarity, repetition,
 and fair treatment of alternatives against accepted requirements and audience.
 
@@ -22,11 +23,8 @@ lens tests whether contribution, inference, alternatives, and limitations surviv
 skeptical reading. Neither lens licenses manufactured objections or automatic
 rewriting.
 
-A request to review the whole artifact authorizes completing this diagnosis
-across the artifact. Return prioritized findings rather than stopping to ask
-whether to inspect the next section. If the review also requests revision, apply
-the authorized revision after the structural diagnosis; otherwise keep the
-review advisory.
+Return prioritized findings. If the review also requests revision, apply it
+after the structural diagnosis; otherwise keep the review advisory.
 
 When accepted project state exists, compare it with the artifact. Report a
 material difference as possible intentional change, stale project state, or
