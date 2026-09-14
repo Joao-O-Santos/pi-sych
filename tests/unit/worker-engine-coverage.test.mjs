@@ -35,6 +35,7 @@ test("dispatch resolves explicit and configured context files", async (t) => {
 	const agentDir = join(root, "worker-agent");
 	await writeFile(join(root, "A.md"), "a");
 	await writeFile(join(root, "AGENTS.md"), "conventions");
+	await writeFile(join(root, "STYLE.md"), "author voice");
 	await mkdir(agentDir, { recursive: true });
 	await writeFile(join(agentDir, "settings.json"), "{}\n");
 	let captured;
@@ -59,6 +60,7 @@ test("dispatch resolves explicit and configured context files", async (t) => {
 	assert.ok(
 		captured.request.contextFiles.some((file) => file.purpose === "configured agents conventions"),
 	);
+	assert.ok(!captured.request.contextFiles.some((file) => file.path === "STYLE.md"));
 	await assert.rejects(
 		dispatchWorker({
 			project: project(root),

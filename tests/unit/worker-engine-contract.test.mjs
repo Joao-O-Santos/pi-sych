@@ -174,7 +174,7 @@ test("worker prompt carries assignment, context, persistence, and terminal-resul
 	);
 	assert.match(prompt, /receive no supervisor conversation/i);
 	assert.match(prompt, /Read every context file and selected skill/i);
-	assert.match(prompt, /routed modules\/methods/i);
+	assert.match(prompt, /only the primary route and optional modules\/methods/i);
 	assert.match(prompt, /until the completion target is satisfied or you are genuinely blocked/i);
 	assert.match(prompt, /Do not invent user checkpoints inside the assigned scope/i);
 	assert.match(prompt, /Report missing context, unresolved ambiguity/i);

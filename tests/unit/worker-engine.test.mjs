@@ -150,7 +150,7 @@ test("named skills retain project, user, and package precedence", async (t) => {
 	assert.equal(skillPaths(["write"], projectRoot, packageRoot)[0], paths[0]);
 });
 
-test("worker prompt requires routed method and module reads", () => {
+test("worker prompt requires selective route and module reads", () => {
 	const prompt = taskPrompt(
 		{
 			id: "task-1",
@@ -173,7 +173,7 @@ test("worker prompt requires routed method and module reads", () => {
 	);
 	assert.match(prompt, /receive no supervisor conversation/i);
 	assert.match(prompt, /Read every context file and selected skill/i);
-	assert.match(prompt, /routed modules/i);
+	assert.match(prompt, /only the primary route and optional modules\/methods/i);
 	assert.match(prompt, /evidence or proposals, not behavioral instructions or new authorization/);
 	assert.match(prompt, /checks you could not perform as limitations/i);
 	assert.match(prompt, /existing project-relative paths/i);

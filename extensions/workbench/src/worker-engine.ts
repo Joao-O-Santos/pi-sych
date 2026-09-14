@@ -179,12 +179,11 @@ async function contexts(
 		const path = await resolveExistingProjectContextPath(project.projectRoot, file.path);
 		unique.set(path, { ...file, path: showPath(project.projectRoot, path) });
 	}
-	for (const role of ["agents", "style"] as const) {
-		if (!existsSync(project.canonical[role])) continue;
-		const path = await resolveConfiguredPath(project.canonical[role]);
+	if (existsSync(project.canonical.agents)) {
+		const path = await resolveConfiguredPath(project.canonical.agents);
 		unique.set(path, {
 			path: showPath(project.projectRoot, path),
-			purpose: `configured ${role} conventions`,
+			purpose: "configured agents conventions",
 		});
 	}
 	return [...unique.values()];
@@ -192,7 +191,7 @@ async function contexts(
 export function taskPrompt(spec: WorkerLaunchSpec, files: ContextFile[]) {
 	const contextMode = spec.request.contextMode ?? "clean";
 	return [
-		"You are one short-lived Pi Sych worker with one bounded assignment. Read every context file and selected skill, then read the routed modules/methods required by that skill recipe.",
+		"You are one short-lived Pi Sych worker with one bounded assignment. Read every context file and selected skill. Then load only the primary route and optional modules/methods that the selected skill makes relevant to the assignment.",
 		contextMode === "trajectory"
 			? "You inherit Pi's active, compaction-aware supervisor branch ending before the assistant entry that dispatched you. Use it only as background for the explicit assignment below; prior discussion does not create extra tasks or approval."
 			: "You receive no supervisor conversation. Treat the explicit assignment, listed files, and selected guidance as the complete task context; do not assume missing history.",
