@@ -64,6 +64,15 @@ a concern raised in prior conversation, delete it or state the positive claim
 directly. The same test applies to qualifications, caveats, and definitions that
 make sense only because of hidden process history.
 
+Treat conversation, review, and drafting history as **working context, not an
+implied audience**. Use that context to decide what the artifact should say, then
+write the supported account for a reader who never saw the discussion. If a
+sentence exists mainly to correct, deny, reassure about, or qualify an idea that
+appeared only in hidden process context, remove the invisible interlocutor and
+recover the underlying positive claim. Do not preserve a conversational
+hypothesis merely so the artifact can rebut it. Retain the rebuttal only when the
+finished artifact itself gives readers a reason to entertain that alternative.
+
 Genre controls the exception. A response-to-reviewers letter, revision memo,
 change log, or methods history may need explicit reviewer, version, previous-
 draft, and change language. Do not transfer that language into the revised

@@ -79,3 +79,30 @@ Not a passive:
 The first keeps the measurement procedure as topic, the second names a
 consequential actor, and the third uses a copular construction rather than
 passive voice.
+
+
+## Invisible interlocutor
+
+Working discussion:
+
+> The author wonders whether the agency may have had an undisclosed earlier
+> agreement. The inspected sources establish that the agency was already
+> pursuing a different published strategy, but do not establish the proposed
+> secret agreement.
+
+Leaky artifact:
+
+> The agency was already pursuing the published strategy. This does not mean
+> that it had a secret earlier agreement.
+
+Better artifact:
+
+> The agency was already pursuing the published strategy.
+
+Why:
+
+The secret-agreement idea belongs to the working discussion and has no
+reader-visible role in the finished artifact. The sources support the positive
+historical claim, so the artifact should state that claim directly. A rebuttal
+would become useful only if the artifact itself introduced the alternative or
+if it were a live interpretation in the relevant literature.

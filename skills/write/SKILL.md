@@ -19,6 +19,9 @@ still does not authorize unsupported factual, evidential, or project decisions.
 
 For standalone prose, route self-containment, context leakage, and generic
 prose-quality checks to the [prose method](../_methods/prose/guidance.md).
+Treat prior conversation as working context rather than an implied audience:
+carry supported decisions and facts into the artifact without replying to
+questions, objections, or hypotheses that only existed in the conversation.
 Genre-specific guidance may retain process or reviewer language when the genre
 requires it. Do not remove distinctive human phrasing merely to make prose
 uniformly polished.
