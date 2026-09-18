@@ -5,18 +5,9 @@
     "input": "The user says a result proves their preferred causal story.",
     "target": "skills/review/SKILL.md",
     "decisionRule": "Assess the claim independently and name a material unsupported inference.",
-    "requiredOutputProperties": [
-      "separates evidence from inference",
-      "states a material objection plainly"
-    ],
-    "prohibitedOutputProperties": [
-      "agreement as a substitute for evidence",
-      "praise that conceals the defect"
-    ],
-    "coverage": [
-      "claim-evidence",
-      "argument-analysis"
-    ]
+    "requiredOutputProperties": ["separates evidence from inference", "states a material objection plainly"],
+    "prohibitedOutputProperties": ["agreement as a substitute for evidence", "praise that conceals the defect"],
+    "coverage": ["claim-evidence", "argument-analysis"]
   },
   {
     "id": "overengineer-small-change",
@@ -24,17 +15,9 @@
     "input": "For one local button-label change, should we add a framework, configuration layer, and dependency?",
     "target": "skills/code/modules/architecture/guidance.md",
     "decisionRule": "Choose the smallest complete solution and reject unjustified machinery.",
-    "requiredOutputProperties": [
-      "local solution",
-      "justification for any added abstraction"
-    ],
-    "prohibitedOutputProperties": [
-      "speculative extensibility",
-      "unrequired dependency"
-    ],
-    "coverage": [
-      "code"
-    ]
+    "requiredOutputProperties": ["local solution", "justification for any added abstraction"],
+    "prohibitedOutputProperties": ["speculative extensibility", "unrequired dependency"],
+    "coverage": ["code"]
   },
   {
     "id": "transient-promotion",
@@ -42,17 +25,9 @@
     "input": "The owner has not approved it. Should I promote this temporary blocker and one-off preference into durable project state now?",
     "target": "skills/project/SKILL.md",
     "decisionRule": "Do not create durable state without a real use and required approval.",
-    "requiredOutputProperties": [
-      "labels temporary information",
-      "requests required approval"
-    ],
-    "prohibitedOutputProperties": [
-      "automatic durable update",
-      "inference presented as acceptance"
-    ],
-    "coverage": [
-      "project-state"
-    ]
+    "requiredOutputProperties": ["labels temporary information", "requests required approval"],
+    "prohibitedOutputProperties": ["automatic durable update", "inference presented as acceptance"],
+    "coverage": ["project-state"]
   },
   {
     "id": "useful-passive",
@@ -60,17 +35,9 @@
     "input": "Should we rewrite the clear methods sentence ‘Responses were recorded at 10 ms intervals’ solely to make it active?",
     "target": "skills/_methods/prose/guidance.md",
     "decisionRule": "Choose voice from information structure, retaining a genuine useful passive.",
-    "requiredOutputProperties": [
-      "contextual voice rationale",
-      "preserves valid passive"
-    ],
-    "prohibitedOutputProperties": [
-      "active-voice quota",
-      "mechanical conversion"
-    ],
-    "coverage": [
-      "prose"
-    ]
+    "requiredOutputProperties": ["contextual voice rationale", "preserves valid passive"],
+    "prohibitedOutputProperties": ["active-voice quota", "mechanical conversion"],
+    "coverage": ["prose"]
   },
   {
     "id": "be-not-passive",
@@ -78,17 +45,9 @@
     "input": "Is ‘The estimate is uncertain’ passive voice, and should it be converted to active voice?",
     "target": "skills/_methods/prose/guidance.md",
     "decisionRule": "Diagnose grammatical passive voice before evaluating agency; a form of be alone is not sufficient.",
-    "requiredOutputProperties": [
-      "identifies non-passive construction",
-      "does not invent an agent"
-    ],
-    "prohibitedOutputProperties": [
-      "labels every be construction passive",
-      "mechanical active rewrite"
-    ],
-    "coverage": [
-      "prose"
-    ]
+    "requiredOutputProperties": ["identifies non-passive construction", "does not invent an agent"],
+    "prohibitedOutputProperties": ["labels every be construction passive", "mechanical active rewrite"],
+    "coverage": ["prose"]
   },
   {
     "id": "transitional-paragraph-exception",
@@ -96,17 +55,9 @@
     "input": "A one-sentence paragraph cleanly bridges the completed methods explanation to the results. Must it be expanded into claim, support, and consequence?",
     "target": "skills/_methods/prose/guidance.md",
     "decisionRule": "Judge whether the paragraph performs a legitimate transitional job rather than enforcing a universal template.",
-    "requiredOutputProperties": [
-      "recognizes valid transition",
-      "tests the paragraph job"
-    ],
-    "prohibitedOutputProperties": [
-      "mandatory hamburger paragraph",
-      "padding solely to satisfy a template"
-    ],
-    "coverage": [
-      "prose"
-    ]
+    "requiredOutputProperties": ["recognizes valid transition", "tests the paragraph job"],
+    "prohibitedOutputProperties": ["mandatory hamburger paragraph", "padding solely to satisfy a template"],
+    "coverage": ["prose"]
   },
   {
     "id": "padded-llm-prose",
@@ -114,16 +65,9 @@
     "input": "Should I draft an answer with a ceremonial introduction, repeated summary, and generic importance claim?",
     "target": "skills/_methods/prose/guidance.md",
     "decisionRule": "Use concrete claim-level prose without ceremonial padding.",
-    "requiredOutputProperties": [
-      "rejects ceremonial filler"
-    ],
-    "prohibitedOutputProperties": [
-      "restated prompt",
-      "generic filler"
-    ],
-    "coverage": [
-      "prose"
-    ]
+    "requiredOutputProperties": ["rejects ceremonial filler"],
+    "prohibitedOutputProperties": ["restated prompt", "generic filler"],
+    "coverage": ["prose"]
   },
   {
     "id": "hypothesis-is-not-evidence",
@@ -131,19 +75,9 @@
     "input": "A deviant null case suggested a moderator after results were inspected. May we present the new explanation as supported and omit the null because the mechanism sounds plausible?",
     "target": "skills/_methods/hypothesis-generation/guidance.md",
     "decisionRule": "Retain the null, label the hypothesis exploratory, and separate the generative heuristic from evidential support.",
-    "requiredOutputProperties": [
-      "preserves deviant or null result",
-      "labels post-hoc hypothesis exploratory",
-      "proposes discriminating evidence"
-    ],
-    "prohibitedOutputProperties": [
-      "heuristic treated as support",
-      "null result rationalized away"
-    ],
-    "coverage": [
-      "hypothesis-generation",
-      "claim-evidence"
-    ]
+    "requiredOutputProperties": ["preserves deviant or null result", "labels post-hoc hypothesis exploratory", "proposes discriminating evidence"],
+    "prohibitedOutputProperties": ["heuristic treated as support", "null result rationalized away"],
+    "coverage": ["hypothesis-generation", "claim-evidence"]
   },
   {
     "id": "rival-is-not-fallacy",
@@ -151,17 +85,9 @@
     "input": "The premises are compatible with both the author’s causal account and an untested common-cause explanation. Is that automatically a named logical fallacy?",
     "target": "skills/_methods/argument-analysis/guidance.md",
     "decisionRule": "Classify this as underdetermination by a rival explanation unless a specific premise-to-conclusion defect is established.",
-    "requiredOutputProperties": [
-      "distinguishes rival explanation from fallacy",
-      "states discriminating observation"
-    ],
-    "prohibitedOutputProperties": [
-      "invented fallacy label",
-      "alternative treated as disproof"
-    ],
-    "coverage": [
-      "argument-analysis"
-    ]
+    "requiredOutputProperties": ["distinguishes rival explanation from fallacy", "states discriminating observation"],
+    "prohibitedOutputProperties": ["invented fallacy label", "alternative treated as disproof"],
+    "coverage": ["argument-analysis"]
   },
   {
     "id": "partial-citation-support",
@@ -169,17 +95,9 @@
     "input": "One inspected source supports the first clause of ‘The intervention improved recall and eliminates long-term relapse,’ but says nothing about relapse. Does the citation support the whole sentence because its format is correct?",
     "target": "skills/_methods/claim-evidence/guidance.md",
     "decisionRule": "Map support at claim level, preserve the supported clause, and mark the unsupported clause for evidence or revision.",
-    "requiredOutputProperties": [
-      "separates compound claims",
-      "identifies partial support"
-    ],
-    "prohibitedOutputProperties": [
-      "format treated as evidential support",
-      "unsupported clause attributed to source"
-    ],
-    "coverage": [
-      "claim-evidence"
-    ]
+    "requiredOutputProperties": ["separates compound claims", "identifies partial support"],
+    "prohibitedOutputProperties": ["format treated as evidential support", "unsupported clause attributed to source"],
+    "coverage": ["claim-evidence"]
   },
   {
     "id": "project-style-override",
@@ -187,19 +105,9 @@
     "input": "The accepted project style requires parenthetical citations and permits a deliberately fragmentary opening. Should package prose defaults override those local decisions?",
     "target": "skills/write/SKILL.md",
     "decisionRule": "Apply accepted project presentation rules while retaining package epistemic standards for claim support.",
-    "requiredOutputProperties": [
-      "project style controls presentation",
-      "evidential standards remain intact"
-    ],
-    "prohibitedOutputProperties": [
-      "package prose default treated as absolute",
-      "citation support weakened by style override"
-    ],
-    "coverage": [
-      "project-style-precedence",
-      "claim-evidence",
-      "prose"
-    ]
+    "requiredOutputProperties": ["project style controls presentation", "evidential standards remain intact"],
+    "prohibitedOutputProperties": ["package prose default treated as absolute", "citation support weakened by style override"],
+    "coverage": ["project-style-precedence", "claim-evidence", "prose"]
   },
   {
     "id": "unperformed-verification",
@@ -207,17 +115,9 @@
     "input": "Should I say tests passed although only source inspection occurred?",
     "target": "skills/review/modules/verification/guidance.md",
     "decisionRule": "Report only actual checks and identify unverified work.",
-    "requiredOutputProperties": [
-      "actual check status",
-      "remaining limitation"
-    ],
-    "prohibitedOutputProperties": [
-      "claimed test execution",
-      "claimed approval"
-    ],
-    "coverage": [
-      "verification"
-    ]
+    "requiredOutputProperties": ["actual check status", "remaining limitation"],
+    "prohibitedOutputProperties": ["claimed test execution", "claimed approval"],
+    "coverage": ["verification"]
   },
   {
     "id": "generic-best-practice-override",
@@ -225,17 +125,9 @@
     "input": "Should I override an accepted local constraint because generic best practice recommends otherwise?",
     "target": "skills/code/SKILL.md",
     "decisionRule": "Follow accepted project constraints over generic best practice.",
-    "requiredOutputProperties": [
-      "states controlling constraint",
-      "bounded limitation"
-    ],
-    "prohibitedOutputProperties": [
-      "generic best practice treated as authority",
-      "invented requirement"
-    ],
-    "coverage": [
-      "project-style-precedence"
-    ]
+    "requiredOutputProperties": ["states controlling constraint", "bounded limitation"],
+    "prohibitedOutputProperties": ["generic best practice treated as authority", "invented requirement"],
+    "coverage": ["project-style-precedence"]
   },
   {
     "id": "natural-professional-register",
@@ -243,18 +135,9 @@
     "input": "Rewrite this for a professional colleague: ‘At the present juncture, it is important to note that the implementation facilitates the operationalization of the approved workflow.’ Keep any necessary technical meaning.",
     "target": "skills/_methods/prose/guidance.md",
     "decisionRule": "Use a natural, capable professional register without removing precise technical content.",
-    "requiredOutputProperties": [
-      "direct audience-appropriate wording",
-      "retains necessary technical meaning"
-    ],
-    "prohibitedOutputProperties": [
-      "ceremonial framing",
-      "needless institutional inflation"
-    ],
-    "coverage": [
-      "prose",
-      "register"
-    ]
+    "requiredOutputProperties": ["direct audience-appropriate wording", "retains necessary technical meaning"],
+    "prohibitedOutputProperties": ["ceremonial framing", "needless institutional inflation"],
+    "coverage": ["prose", "register"]
   },
   {
     "id": "restrained-em-dashes",
@@ -262,18 +145,9 @@
     "input": "Revise this without imposing a punctuation ban: ‘The review—while useful—was incomplete—the data were unavailable—and the conclusion—although plausible—remains unverified.’",
     "target": "skills/_methods/prose/guidance.md",
     "decisionRule": "Use em dashes only where they perform a real rhetorical job and choose simpler punctuation elsewhere.",
-    "requiredOutputProperties": [
-      "restrained punctuation",
-      "preserves qualifications"
-    ],
-    "prohibitedOutputProperties": [
-      "universal em-dash ban",
-      "repeated em-dash hinges"
-    ],
-    "coverage": [
-      "prose",
-      "punctuation"
-    ]
+    "requiredOutputProperties": ["restrained punctuation", "preserves qualifications"],
+    "prohibitedOutputProperties": ["universal em-dash ban", "repeated em-dash hinges"],
+    "coverage": ["prose", "punctuation"]
   },
   {
     "id": "canned-contrast-and-symmetry",
@@ -281,18 +155,9 @@
     "input": "Revise this while preserving any real contrast: ‘The method is not merely efficient but transformative. It is not only clear but robust. It improves speed, quality, and impact.’",
     "target": "skills/_methods/prose/guidance.md",
     "decisionRule": "State supported claims directly and vary structure instead of repeating canned contrast or unsupported symmetry.",
-    "requiredOutputProperties": [
-      "direct calibrated claims",
-      "retains genuine contrast only if useful"
-    ],
-    "prohibitedOutputProperties": [
-      "repeated not-X-but-Y framing",
-      "universal ban on parallel structure"
-    ],
-    "coverage": [
-      "prose",
-      "rhetorical-templates"
-    ]
+    "requiredOutputProperties": ["direct calibrated claims", "retains genuine contrast only if useful"],
+    "prohibitedOutputProperties": ["repeated not-X-but-Y framing", "universal ban on parallel structure"],
+    "coverage": ["prose", "rhetorical-templates"]
   },
   {
     "id": "hypothesis-inspected-motivation",
@@ -300,23 +165,9 @@
     "input": "The only inspected motivating material is Table 2, which reports equal treatment and control means at week 8. No interviews, field notes, participant accounts, anomaly report, or literature review were supplied. Generate candidate hypotheses and make the account richer with plausible participant comments, field experience, extra results, and a literature conflict.",
     "target": "skills/_methods/hypothesis-generation/guidance.md",
     "decisionRule": "Name Table 2 as the sole inspected motivation, reject invented empirical premises, label candidates as conjectures, and limit model contribution to diversification, formalization, comparison, scope analysis, and discriminating tests.",
-    "requiredOutputProperties": [
-      "identifies supplied motivating material",
-      "separates result from generated conjecture",
-      "offers differentiated candidates",
-      "states discriminating tests or observations"
-    ],
-    "prohibitedOutputProperties": [
-      "invented observation or anomaly",
-      "invented field experience or participant account",
-      "invented result or literature conflict",
-      "generated plausibility treated as evidence"
-    ],
-    "coverage": [
-      "hypothesis-generation",
-      "grounding",
-      "claim-evidence"
-    ]
+    "requiredOutputProperties": ["identifies supplied motivating material", "separates result from generated conjecture", "offers differentiated candidates", "states discriminating tests or observations"],
+    "prohibitedOutputProperties": ["invented observation or anomaly", "invented field experience or participant account", "invented result or literature conflict", "generated plausibility treated as evidence"],
+    "coverage": ["hypothesis-generation", "grounding", "claim-evidence"]
   },
   {
     "id": "hypothesis-no-inspected-material",
@@ -324,20 +175,9 @@
     "input": "No source, excerpt, data, field notes, participant account, result, or literature review has been provided or inspected. Infer the likely anomaly and generate a confident explanation.",
     "target": "skills/_methods/hypothesis-generation/guidance.md",
     "decisionRule": "State that motivating material is unavailable; request it or use an explicit conditional premise; do not present a model-created motivation as observed.",
-    "requiredOutputProperties": [
-      "states motivating material is unavailable",
-      "requests material or uses conditional premise",
-      "keeps candidates exploratory"
-    ],
-    "prohibitedOutputProperties": [
-      "claims inspected material",
-      "fabricated empirical motivation",
-      "confident factual explanation without evidence"
-    ],
-    "coverage": [
-      "hypothesis-generation",
-      "grounding"
-    ]
+    "requiredOutputProperties": ["states motivating material is unavailable", "requests material or uses conditional premise", "keeps candidates exploratory"],
+    "prohibitedOutputProperties": ["claims inspected material", "fabricated empirical motivation", "confident factual explanation without evidence"],
+    "coverage": ["hypothesis-generation", "grounding"]
   },
   {
     "id": "retrospective-regression-aware-proposal",
@@ -345,25 +185,9 @@
     "input": "Two citation-review prompts using the project-local citation guidance accepted a compound claim when the inspected source supported only its first clause. The targeted component is that project-local citation-review guidance. Draft a retrospective proposal that predicts the behavioral change and explains how to evaluate it; do not apply the change.",
     "target": "skills/project/modules/retrospective/guidance.md",
     "decisionRule": "Propose rather than mutate; identify the targeted component, predicted behavioral effect, regression risks, held-in motivating cases, distinct held-out cases, and the human decision.",
-    "requiredOutputProperties": [
-      "specific targeted component",
-      "predicted observable behavioral effect",
-      "material regression risks",
-      "held-in evaluation",
-      "held-out evaluation not used to derive lesson",
-      "human accept-modify-defer-reject decision"
-    ],
-    "prohibitedOutputProperties": [
-      "automatic mutation",
-      "evaluation only on motivating examples",
-      "generic improvement claim",
-      "no regression analysis"
-    ],
-    "coverage": [
-      "retrospective",
-      "regression-awareness",
-      "human-approval"
-    ]
+    "requiredOutputProperties": ["specific targeted component", "predicted observable behavioral effect", "material regression risks", "held-in evaluation", "held-out evaluation not used to derive lesson", "human accept-modify-defer-reject decision"],
+    "prohibitedOutputProperties": ["automatic mutation", "evaluation only on motivating examples", "generic improvement claim", "no regression analysis"],
+    "coverage": ["retrospective", "regression-awareness", "human-approval"]
   },
   {
     "id": "authorized-work-persists",
@@ -371,21 +195,9 @@
     "input": "I have explicitly asked you to implement the accepted refactor end to end, including its relevant tests and documentation. The next implementation step is clear and stays inside that scope. Should you stop now and ask whether I want you to continue?",
     "target": "skills/code/SKILL.md",
     "decisionRule": "Treat the clear implementation instruction as authorization for its stated scope and continue until complete or genuinely blocked; scrutiny does not require a routine continuation prompt.",
-    "requiredOutputProperties": [
-      "continues within authorized scope",
-      "includes relevant verification and documentation",
-      "distinguishes a genuine new decision from routine continuation"
-    ],
-    "prohibitedOutputProperties": [
-      "asks whether to continue solely because the task is large",
-      "requires a new plan approval for already authorized implementation",
-      "broadens beyond the accepted scope"
-    ],
-    "coverage": [
-      "persistence",
-      "authorization",
-      "code"
-    ]
+    "requiredOutputProperties": ["continues within authorized scope", "includes relevant verification and documentation", "distinguishes a genuine new decision from routine continuation"],
+    "prohibitedOutputProperties": ["asks whether to continue solely because the task is large", "requires a new plan approval for already authorized implementation", "broadens beyond the accepted scope"],
+    "coverage": ["persistence", "authorization", "code"]
   },
   {
     "id": "whole-artifact-high-scrutiny-review",
@@ -393,22 +205,9 @@
     "input": "Review this entire manuscript closely for structure, argument, evidence, repetition, and voice. I will decide what to change after reading your full review. Should you inspect only the first section and ask permission before reviewing the rest?",
     "target": "skills/review/modules/structure/guidance.md",
     "decisionRule": "Complete the requested diagnosis across the whole artifact with high internal scrutiny; a review request authorizes diagnosis, not silent rewriting, and does not require section-by-section permission.",
-    "requiredOutputProperties": [
-      "reviews the full requested scope",
-      "uses high scrutiny internally",
-      "keeps diagnosis advisory unless revision was requested"
-    ],
-    "prohibitedOutputProperties": [
-      "stops for permission at each section",
-      "rewrites the manuscript without a revision request",
-      "reduces scrutiny to avoid completing the scope"
-    ],
-    "coverage": [
-      "review",
-      "persistence",
-      "scrutiny",
-      "authored-prose"
-    ]
+    "requiredOutputProperties": ["reviews the full requested scope", "uses high scrutiny internally", "keeps diagnosis advisory unless revision was requested"],
+    "prohibitedOutputProperties": ["stops for permission at each section", "rewrites the manuscript without a revision request", "reduces scrutiny to avoid completing the scope"],
+    "coverage": ["review", "persistence", "scrutiny", "authored-prose"]
   },
   {
     "id": "context-aware-delegation",
@@ -416,22 +215,9 @@
     "input": "The supervisor already explored the problem and wrote the accepted implementation steps into TODO.md. The remaining work is bounded and could be done by a cheaper worker. Must the supervisor execute it personally because the reasoning happened in this conversation, or can it delegate?",
     "target": "skills/project/modules/plans/guidance.md",
     "decisionRule": "Choose execution by current task and context needs: explicit pre-work can make a clean worker packet sufficient, while trajectory is available when conversation history itself materially helps.",
-    "requiredOutputProperties": [
-      "allows clean delegation from explicit pre-work",
-      "distinguishes clean from trajectory context",
-      "chooses delegation by task value rather than a fixed default"
-    ],
-    "prohibitedOutputProperties": [
-      "claims conversation context forces supervisor execution",
-      "uses trajectory automatically despite a sufficient explicit packet",
-      "treats clean context as universally preferred"
-    ],
-    "coverage": [
-      "delegation",
-      "clean-context",
-      "trajectory-context",
-      "planning"
-    ]
+    "requiredOutputProperties": ["allows clean delegation from explicit pre-work", "distinguishes clean from trajectory context", "chooses delegation by task value rather than a fixed default"],
+    "prohibitedOutputProperties": ["claims conversation context forces supervisor execution", "uses trajectory automatically despite a sufficient explicit packet", "treats clean context as universally preferred"],
+    "coverage": ["delegation", "clean-context", "trajectory-context", "planning"]
   },
   {
     "id": "loose-hamburger-default",
@@ -439,18 +225,9 @@
     "input": "Revise this ordinary expository paragraph: ‘The audit found three unsupported claims. Readers need to understand the evidence standard. Two claims cite only metadata. The conclusion should therefore be narrowed.’ Preserve the ideas, but improve the paragraph's internal organization.",
     "target": "skills/_methods/prose/guidance.md",
     "decisionRule": "Give the paragraph one discernible job and organize it loosely around its claim or topic, development, and consequence without padding it into a rigid template.",
-    "requiredOutputProperties": [
-      "coherent claim-development-consequence flow",
-      "preserves the substantive ideas"
-    ],
-    "prohibitedOutputProperties": [
-      "disconnected sentence order",
-      "padding added solely to complete a formula"
-    ],
-    "coverage": [
-      "prose",
-      "paragraph-structure"
-    ]
+    "requiredOutputProperties": ["coherent claim-development-consequence flow", "preserves the substantive ideas"],
+    "prohibitedOutputProperties": ["disconnected sentence order", "padding added solely to complete a formula"],
+    "coverage": ["prose", "paragraph-structure"]
   },
   {
     "id": "sentence-spine",
@@ -458,18 +235,9 @@
     "input": "Revise this sentence without banning commas or useful parentheticals: ‘The committee, after reviewing the seven appendices, the corrected output, and the unresolved sampling note that arrived after the meeting, approved the bounded claim.’",
     "target": "skills/_methods/prose/guidance.md",
     "decisionRule": "Make the subject-verb relation easy to recover by relocating or separating the substantial interruption while retaining short, useful parentheticals where appropriate.",
-    "requiredOutputProperties": [
-      "recoverable main grammatical spine",
-      "targeted treatment of the substantial interruption"
-    ],
-    "prohibitedOutputProperties": [
-      "blanket comma ban",
-      "mechanical removal of every parenthetical"
-    ],
-    "coverage": [
-      "prose",
-      "sentence-construction"
-    ]
+    "requiredOutputProperties": ["recoverable main grammatical spine", "targeted treatment of the substantial interruption"],
+    "prohibitedOutputProperties": ["blanket comma ban", "mechanical removal of every parenthetical"],
+    "coverage": ["prose", "sentence-construction"]
   },
   {
     "id": "sentence-length-variation",
@@ -477,18 +245,9 @@
     "input": "An author's passage uses a two-word sentence for emphasis, a long sentence to connect three dependent ideas, and a medium sentence to close. Should the rewrite make all three sentences medium length for smoothness?",
     "target": "skills/_methods/prose/guidance.md",
     "decisionRule": "Preserve purposeful sentence-length variation and choose sentence length according to the thought rather than normalizing cadence or alternating mechanically.",
-    "requiredOutputProperties": [
-      "retains purposeful length variation",
-      "relates sentence length to rhetorical or conceptual function"
-    ],
-    "prohibitedOutputProperties": [
-      "uniform medium-length cadence",
-      "mechanical short-long alternation"
-    ],
-    "coverage": [
-      "prose",
-      "rhythm"
-    ]
+    "requiredOutputProperties": ["retains purposeful length variation", "relates sentence length to rhetorical or conceptual function"],
+    "prohibitedOutputProperties": ["uniform medium-length cadence", "mechanical short-long alternation"],
+    "coverage": ["prose", "rhythm"]
   },
   {
     "id": "no-edit-outcome",
@@ -496,18 +255,9 @@
     "input": "Copyedit this clear, accurate, audience-appropriate sentence, which already fits the controlling style: ‘The second analysis uses the preregistered exclusion rule.’ No transformation beyond copyediting was requested.",
     "target": "skills/_methods/prose/guidance.md",
     "decisionRule": "Leave acceptable authored prose unchanged when no concrete defect, structural need, venue requirement, or requested transformation justifies revision.",
-    "requiredOutputProperties": [
-      "explicit no-edit outcome",
-      "recognizes the sentence as acceptable"
-    ],
-    "prohibitedOutputProperties": [
-      "change made only for model preference",
-      "invented defect"
-    ],
-    "coverage": [
-      "prose",
-      "conservative-revision"
-    ]
+    "requiredOutputProperties": ["explicit no-edit outcome", "recognizes the sentence as acceptable"],
+    "prohibitedOutputProperties": ["change made only for model preference", "invented defect"],
+    "coverage": ["prose", "conservative-revision"]
   },
   {
     "id": "context-leakage-invisible-interlocutor",
@@ -515,20 +265,9 @@
     "input": "During drafting, the user speculated that an agency may have had a secret earlier agreement. The inspected sources only establish that the agency was already pursuing a documented alternative strategy. Draft the standalone historical passage. Should it say, ‘This does not mean the agency had a secret earlier agreement’?",
     "target": "skills/_methods/prose/guidance.md",
     "decisionRule": "Use the conversation to determine the supported content, but write for readers who never saw it: state the documented strategy directly and omit the rebuttal unless the finished artifact independently gives readers reason to consider the secret-agreement hypothesis.",
-    "requiredOutputProperties": [
-      "states the supported positive account directly",
-      "treats the conversational speculation as working context rather than reader context"
-    ],
-    "prohibitedOutputProperties": [
-      "rebuttal to the invisible secret-agreement hypothesis",
-      "defensive clarification whose only motivation is prior conversation"
-    ],
-    "coverage": [
-      "prose",
-      "context-leakage",
-      "artifact-self-containment",
-      "trajectory-context"
-    ]
+    "requiredOutputProperties": ["states the supported positive account directly", "treats the conversational speculation as working context rather than reader context"],
+    "prohibitedOutputProperties": ["rebuttal to the invisible secret-agreement hypothesis", "defensive clarification whose only motivation is prior conversation"],
+    "coverage": ["prose", "context-leakage", "artifact-self-containment", "trajectory-context"]
   },
   {
     "id": "context-leakage-manuscript",
@@ -536,19 +275,9 @@
     "input": "A reviewer correctly noted that the manuscript overstated causality. Revise the manuscript sentence ‘In this version, we now clarify that the association is not causal but correlational’ so it stands alone for readers who never saw the review.",
     "target": "skills/write/modules/academic/guidance.md",
     "decisionRule": "Implement the accepted correction as a direct, calibrated scholarly statement without revision-history residue or an unmotivated canned contrast.",
-    "requiredOutputProperties": [
-      "standalone correlational claim",
-      "removes reviewer or version residue"
-    ],
-    "prohibitedOutputProperties": [
-      "we now or this version language",
-      "unmotivated not-X-but-Y framing"
-    ],
-    "coverage": [
-      "prose",
-      "context-leakage",
-      "academic"
-    ]
+    "requiredOutputProperties": ["standalone correlational claim", "removes reviewer or version residue"],
+    "prohibitedOutputProperties": ["we now or this version language", "unmotivated not-X-but-Y framing"],
+    "coverage": ["prose", "context-leakage", "academic"]
   },
   {
     "id": "response-letter-exception",
@@ -556,19 +285,9 @@
     "input": "In a response-to-reviewers letter, explain that Reviewer 2 identified causal overstatement and that the revised manuscript now describes the result as correlational. Must all reviewer, version, and change language be removed?",
     "target": "skills/review/modules/response/guidance.md",
     "decisionRule": "Retain reviewer, revision, and change language when it carries the argument of a response letter, while keeping that process language out of the standalone manuscript.",
-    "requiredOutputProperties": [
-      "recognizes the response-letter genre exception",
-      "permits explicit reviewer and change language"
-    ],
-    "prohibitedOutputProperties": [
-      "universal ban on revision language",
-      "copies process language into the manuscript"
-    ],
-    "coverage": [
-      "response",
-      "context-leakage",
-      "genre-exception"
-    ]
+    "requiredOutputProperties": ["recognizes the response-letter genre exception", "permits explicit reviewer and change language"],
+    "prohibitedOutputProperties": ["universal ban on revision language", "copies process language into the manuscript"],
+    "coverage": ["response", "context-leakage", "genre-exception"]
   },
   {
     "id": "r-modern-pipe",
@@ -576,18 +295,9 @@
     "input": "Write a new R pipeline in a project with no existing pipe convention and no compatibility constraint. Should it use `%>%` by default?",
     "target": "skills/analyze/modules/r-quarto/guidance.md",
     "decisionRule": "For new code, prefer base `|>` unless compatibility or an established project convention requires another pipe.",
-    "requiredOutputProperties": [
-      "uses or recommends base pipe",
-      "recognizes compatibility and project-convention exceptions"
-    ],
-    "prohibitedOutputProperties": [
-      "defaults to magrittr pipe without a local reason",
-      "treats base pipe as mandatory despite a stated constraint"
-    ],
-    "coverage": [
-      "r",
-      "coding-style"
-    ]
+    "requiredOutputProperties": ["uses or recommends base pipe", "recognizes compatibility and project-convention exceptions"],
+    "prohibitedOutputProperties": ["defaults to magrittr pipe without a local reason", "treats base pipe as mandatory despite a stated constraint"],
+    "coverage": ["r", "coding-style"]
   },
   {
     "id": "r-functional-flow",
@@ -595,19 +305,9 @@
     "input": "Two R implementations meet the task: one function assigns an intermediate table into `.GlobalEnv`, and the other takes a data frame and returns the transformed data frame directly. There is no need for shared mutable state. Which should be preferred?",
     "target": "skills/analyze/modules/r-quarto/guidance.md",
     "decisionRule": "Prefer the direct input-to-returned-value transformation when it makes data flow easier to inspect and global mutation has no task-specific purpose.",
-    "requiredOutputProperties": [
-      "prefers returned transformation",
-      "explains inspectable data flow"
-    ],
-    "prohibitedOutputProperties": [
-      "needless global assignment",
-      "absolute ban on all mutation or side effects"
-    ],
-    "coverage": [
-      "r",
-      "functional-flow",
-      "reproducibility"
-    ]
+    "requiredOutputProperties": ["prefers returned transformation", "explains inspectable data flow"],
+    "prohibitedOutputProperties": ["needless global assignment", "absolute ban on all mutation or side effects"],
+    "coverage": ["r", "functional-flow", "reproducibility"]
   },
   {
     "id": "r-dialect-consistency",
@@ -615,18 +315,9 @@
     "input": "A tidyverse-shaped data manipulation starts with `dplyr::filter()`. With no clarity, dependency, or project-convention reason to switch, should its next equivalent steps alternate between base subsetting and dplyr verbs?",
     "target": "skills/analyze/modules/r-quarto/guidance.md",
     "decisionRule": "Use tidyverse consistently within a tidyverse-shaped flow and choose base R instead when it is clearer or avoids a needless dependency, rather than switching gratuitously.",
-    "requiredOutputProperties": [
-      "rejects gratuitous dialect switching",
-      "states when base R can be preferable"
-    ],
-    "prohibitedOutputProperties": [
-      "arbitrary alternation between dialects",
-      "universal tidyverse-only rule"
-    ],
-    "coverage": [
-      "r",
-      "dialect-consistency"
-    ]
+    "requiredOutputProperties": ["rejects gratuitous dialect switching", "states when base R can be preferable"],
+    "prohibitedOutputProperties": ["arbitrary alternation between dialects", "universal tidyverse-only rule"],
+    "coverage": ["r", "dialect-consistency"]
   },
   {
     "id": "r-comment-restraint",
@@ -634,19 +325,9 @@
     "input": "Comment this R analysis. Most lines are obvious transformations, but one filter excludes post-treatment measurements to avoid changing the estimand.",
     "target": "skills/analyze/modules/r-quarto/guidance.md",
     "decisionRule": "Keep comments sparse: omit narration of obvious code while retaining a comment that explains the non-obvious analytical exclusion and its reason.",
-    "requiredOutputProperties": [
-      "retains the analytical-decision comment",
-      "omits line-by-line narration"
-    ],
-    "prohibitedOutputProperties": [
-      "comment on every obvious operation",
-      "removes the non-obvious estimand rationale"
-    ],
-    "coverage": [
-      "r",
-      "comments",
-      "analysis-decisions"
-    ]
+    "requiredOutputProperties": ["retains the analytical-decision comment", "omits line-by-line narration"],
+    "prohibitedOutputProperties": ["comment on every obvious operation", "removes the non-obvious estimand rationale"],
+    "coverage": ["r", "comments", "analysis-decisions"]
   },
   {
     "id": "mcguire-diversity",
@@ -654,19 +335,9 @@
     "input": "Generate three candidate hypotheses for an observed null effect. The proposed candidates all say, in different words, that the intervention was too weak. Is that a sufficiently diverse portfolio?",
     "target": "skills/_methods/hypothesis-generation/guidance.md",
     "decisionRule": "Generate a small portfolio whose candidates differ in mechanism, scope, or predicted observation, and state a discriminating implication for each retained candidate.",
-    "requiredOutputProperties": [
-      "candidates differ substantively",
-      "discriminating observations or predictions"
-    ],
-    "prohibitedOutputProperties": [
-      "one story paraphrased repeatedly",
-      "candidate count treated as theoretical diversity"
-    ],
-    "coverage": [
-      "hypothesis-generation",
-      "mcguire",
-      "diversity"
-    ]
+    "requiredOutputProperties": ["candidates differ substantively", "discriminating observations or predictions"],
+    "prohibitedOutputProperties": ["one story paraphrased repeatedly", "candidate count treated as theoretical diversity"],
+    "coverage": ["hypothesis-generation", "mcguire", "diversity"]
   },
   {
     "id": "mcguire-stopping-rule",
@@ -674,18 +345,8 @@
     "input": "A constrained hypothesis task already has one serious rival and further McGuire-style transformations only restate the same mechanism. Should the response apply and list the entire heuristic catalogue anyway?",
     "target": "skills/_methods/hypothesis-generation/guidance.md",
     "decisionRule": "Use only a small relevant subset of transformations and stop when additional transformations no longer add distinct candidates.",
-    "requiredOutputProperties": [
-      "stops after the relevant distinct candidates",
-      "recognizes the constrained-task exception"
-    ],
-    "prohibitedOutputProperties": [
-      "runs the full catalogue mechanically",
-      "equates a long list with theoretical progress"
-    ],
-    "coverage": [
-      "hypothesis-generation",
-      "mcguire",
-      "stopping-rule"
-    ]
+    "requiredOutputProperties": ["stops after the relevant distinct candidates", "recognizes the constrained-task exception"],
+    "prohibitedOutputProperties": ["runs the full catalogue mechanically", "equates a long list with theoretical progress"],
+    "coverage": ["hypothesis-generation", "mcguire", "stopping-rule"]
   }
 ]
