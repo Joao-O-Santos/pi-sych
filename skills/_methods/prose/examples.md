@@ -80,7 +80,6 @@ The first keeps the measurement procedure as topic, the second names a
 consequential actor, and the third uses a copular construction rather than
 passive voice.
 
-
 ## Invisible interlocutor
 
 Working discussion:
