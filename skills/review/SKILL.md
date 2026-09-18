@@ -14,9 +14,14 @@ Review is advisory unless revision or implementation was also requested.
 
 For prose, route generic structure, voice, reader-friction, and
 self-containment checks to the [prose method](../_methods/prose/guidance.md).
-Use the requested collaborative or adversarial lens. Report material
-divergence from accepted project state rather than silently choosing an
-authority. Select the smallest route that covers the review.
+When reviewing a standalone artifact, explicitly test for an **invisible
+interlocutor**: would any sentence make sense only to someone who saw the
+prompt, chat, reviewer exchange, or drafting history? Flag rebuttals,
+qualifications, reassurances, or corrections that answer hidden context instead
+of serving the artifact's own readers. Use the requested collaborative or
+adversarial lens. Report material divergence from accepted project state rather
+than silently choosing an authority. Select the smallest route that covers the
+review.
 
 ## Task routes
 

@@ -13,6 +13,14 @@ repeated scene-setting, repeated implications, defensive restatement, and
 multiple paragraphs doing the same job. Check whether important claims arrive
 when readers need them, whether opening and closing moves align, and whether
 headings and transitions expose the reasoning without narrating it mechanically.
+
+Also perform an **invisible-interlocutor check** on standalone prose. Read as if
+you had never seen the prompt, review exchange, or earlier drafts. A sentence
+that denies an alternative, reassures the reader, or explains a correction must
+have a reason inside the artifact itself. If its only motivation is hidden
+process context, report it as context leakage and recommend the smallest direct
+positive formulation that preserves the supported content.
+
 Check voice coherence as well as logical coherence: unexplained shifts in
 register, confidence, terminology, or intellectual posture can signal a deeper
 structural problem.
