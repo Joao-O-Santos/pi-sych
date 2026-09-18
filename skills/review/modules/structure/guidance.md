@@ -14,6 +14,13 @@ multiple paragraphs doing the same job. Check whether important claims arrive
 when readers need them, whether opening and closing moves align, and whether
 headings and transitions expose the reasoning without narrating it mechanically.
 
+At sentence level, ask whether each sentence earns its keep in the reader's
+path through the artifact. Caveats, qualifications, and clarifications should
+normally earn their place by preventing a plausible misunderstanding, marking a
+material limitation, or distinguishing a live alternative. A qualification that
+makes the prose technically safer but leaves an external reader wondering why it
+is there is structural friction, not added rigor.
+
 Also perform a **possible invisible-interlocutor check** on standalone prose.
 Read only from what the artifact gives its audience. Pay particular attention to
 negations, caveats, clarifications, rebuttals, reassurances, and corrective

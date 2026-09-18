@@ -50,6 +50,15 @@ homogenizing sentence lengths, or replacing one model tic with another.
 
 ## Artifact self-containment
 
+Every sentence should **earn its keep**. It should advance the argument, supply
+needed evidence or context, define something the reader needs, guide the reader
+through a genuine transition, or prevent a plausible misunderstanding. Caveats,
+qualifications, and clarifications have a particularly high burden because they
+interrupt the main line. Keep them when they rule out an interpretation a
+reasonable reader could actually make, mark a material limitation, or calibrate
+a claim. Remove them when they merely add defensive precision that would puzzle
+a reader who never saw the drafting conversation.
+
 A finished standalone artifact should make sense to a reader who never saw the
 prompt, earlier draft, reviewer exchange, or agent conversation. Before
 finalizing, remove or rewrite process residue that has no independent job in the
