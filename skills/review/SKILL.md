@@ -14,11 +14,14 @@ Review is advisory unless revision or implementation was also requested.
 
 For prose, route generic structure, voice, reader-friction, and
 self-containment checks to the [prose method](../_methods/prose/guidance.md).
-When reviewing a standalone artifact, explicitly test for an **invisible
-interlocutor**: would any sentence make sense only to someone who saw the
-prompt, chat, reviewer exchange, or drafting history? Flag rebuttals,
-qualifications, reassurances, or corrections that answer hidden context instead
-of serving the artifact's own readers. Use the requested collaborative or
+When reviewing a standalone artifact, explicitly test for a **possible invisible
+interlocutor**. The reviewer may not know the hidden drafting context, so do not
+claim that a sentence came from it without evidence. Instead, look for
+negations, caveats, clarifications, rebuttals, reassurances, or corrections that
+feel unmotivated from the artifact alone. Ask whether an external reader would
+wonder "why am I being told this?" or "what objection is this answering?" Flag
+that reader friction when the artifact has not supplied the premise, dispute, or
+alternative needed to motivate the sentence. Use the requested collaborative or
 adversarial lens. Report material divergence from accepted project state rather
 than silently choosing an authority. Select the smallest route that covers the
 review.
