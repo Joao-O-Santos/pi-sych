@@ -12,9 +12,14 @@ Lead with the pattern, then its estimate, uncertainty, and necessary statistical
 evidence. Report effect sizes when useful. Do not give an unqualified main
 effect when an interaction changes its meaning: report the interaction and
 relevant simple effects. A non-significant result is not proof of no effect; a
-threshold statistic is not importance. Use the routed claim map for
-interpretation. When a conclusion depends on contested premises, causal links,
-or rival accounts, select the empirical-argument recipe as well. Cross-check
-numbers, models, exclusions, tables, and figures against output as applicable
-to the design, and make prose, tables, and figures consistent. Never invent
-results.
+threshold statistic is not importance. Do not call an observed sample difference
+"significant" as though significance were a property of the difference itself;
+use the statistical result as evidence for the appropriately scoped inferential
+claim. Keep within-unit and between-unit language distinct so the prose reflects
+who or what was actually observed under each condition.
+
+Use the routed claim map for interpretation. When a conclusion depends on
+contested premises, causal links, or rival accounts, select the
+empirical-argument recipe as well. Cross-check numbers, models, exclusions,
+tables, and figures against output as applicable to the design, and make prose,
+tables, and figures consistent. Never invent results.
