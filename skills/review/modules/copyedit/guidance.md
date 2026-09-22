@@ -16,10 +16,10 @@ voice and identify whether agency matters.
 Include a reader-friction pass for locally unmotivated process residue and
 model-like rhetoric. Flag version/revision language, reviewer-response wording,
 unexplained denials or contrasts, generic importance framing, ceremonial
-transitions, over-signposting, repeated symmetry, recap, or metadiscourse when
-it makes sense only in prior context or jars with the surrounding voice. Do not
-remove a construction merely because models often use it; retain it when it has
-a real rhetorical job.
+transitions, over-signposting, repeated symmetry, habitual semicolon chaining,
+recap, or metadiscourse when it makes sense only in prior context or jars with
+the surrounding voice. Do not remove a construction merely because models often
+use it; retain it when it has a real rhetorical job.
 
 For each material finding state location, concern, why it matters, and the
 minimum local wording or consistency response. Report concrete local drift from

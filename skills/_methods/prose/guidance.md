@@ -118,10 +118,13 @@ Unless audience or genre requires formality, use a natural professional
 register. Keep hedges that represent real uncertainty; remove defensive fog and
 unsupported intensifiers. Treat punctuation and rhetorical templates as
 choices. Watch for locally unmotivated model-like habits: habitual em-dash
-qualifications, repeated `not X but Y` contrasts, formulaic symmetry, ceremonial
-openings, generic importance claims, over-signposting, unnecessary recap,
-repeated conclusions, and metadiscourse. These are failure patterns, not banned
-forms; retain them when they genuinely serve the argument and established voice.
+qualifications, semicolon chains that pack several claims into one sentence,
+repeated `not X but Y` contrasts, formulaic symmetry, ceremonial openings,
+generic importance claims, over-signposting, unnecessary recap, repeated
+conclusions, and metadiscourse. These are failure patterns, not banned forms;
+retain them when they genuinely serve the argument and established voice. If a
+semicolon is doing the work of a paragraph break or a clear full stop, prefer
+the clearer structure rather than preserving density for its own sake.
 When diagnosing them, answer the proposed change directly and offer a concrete
 alternative rather than repeating the prompt's list.
 
