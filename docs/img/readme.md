@@ -102,9 +102,9 @@ Preserve the old image's composition and palette; this is a diagram-label
 update, not a redesign.
 -->
 
-- `architecture.png` is stale: its `SUPERVISOR TOOLS` panel shows only
-  `project_status` and `dispatch_worker`; add the current
-  `literature_search` tool before treating it as current.
+- `architecture.png` shows all three supervisor tools, including local
+  read-only `literature_search`, and distinguishes worker-reported files
+  from observed project changes, including changes left after failure.
 
 <!--
 IMAGE UPDATE PATCH — supervisors_context.png
@@ -133,10 +133,10 @@ Make the smallest legible diagram edit needed to correct these labels; retain
 the original visual language rather than inventing new architecture.
 -->
 
-- `supervisors_context.png` is stale: it predates the current
-  settled-turn observable compaction and does not distinguish worker
-  writing-style context from supervisor compaction. Use the patch
-  comment above when regenerating it.
+- `supervisors_context.png` separates bounded compaction inputs and
+  supervisor continuation from assignment-specific worker context. It
+  also shows package writing defaults as the baseline and project
+  `STYLE.md` as a local override for selected writing workers only.
 
 <!--
 IMAGE UPDATE PATCH — skills_architecture.png
@@ -157,9 +157,9 @@ Keep the old composition and palette. This is a catalogue correction, not a
 new illustration.
 -->
 
-- `skills_architecture.png` is stale: it predates the automation
-  umbrella and still shows six public skills. Regenerate it with the
-  patch comment above before treating the image as current.
+- `skills_architecture.png` shows seven public umbrella skills,
+  including `automation`, and keeps skill-local modules and shared
+  methods in the private building-block layer.
 - `review_workflow.png` shows the detailed review and revision pattern,
   including a separate debate or feedback path and the human decision to
   revise, verify, or acknowledge. Plannotator is one optional review

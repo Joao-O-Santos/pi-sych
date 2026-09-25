@@ -44,8 +44,9 @@ No unreleased changes.
   explicit project/personal scope before `agents` promotion without
   redundant questions, and make Plannotator degrade gracefully when
   optional dependencies or a compatible adapter are unavailable.
-- Add paste-ready image-edit instructions for bringing public diagrams
-  into line with current skills, tools, compaction, and worker context.
+- Refresh the workflow, architecture, context, and skills diagrams; show
+  them in the package README and add paste-ready instructions for future
+  updates.
 - Raise the nonblank runtime source budget to 3,200 lines, leaving
   headroom above the current approximately 3,000-line runtime.
 

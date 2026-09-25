@@ -70,13 +70,14 @@ file records the implementation sequence and current verification state.
 - [x] Make capability claims ownership-aware and reject empty worker
   assignments at the request boundary.
 - [x] Apply material findings from final documentation review and add
-  paste-ready image-edit instructions; PNG updates remain pending.
+  paste-ready image-edit instructions; regenerate and visually review all
+  four updated diagram PNGs.
 - [x] Finalize `PROJECT.md` and `TODO.md` after accepted corrections.
 - [x] Run opt-in live prompt-quality fixtures with OpenAI Codex; final run
   passed all 37 fixtures. This remains model/run-specific, not a deterministic
   contract.
-- [x] Confirm main CI and Pages for dogfood commit `1bf33de` (pipeline
-  `2882249914`); both jobs passed.
+- [x] Confirm main CI and Pages for initial dogfood commit `1bf33de`
+  (pipeline `2882249914`); both jobs passed.
 
 ## v7 release hardening
 
@@ -88,8 +89,11 @@ file records the implementation sequence and current verification state.
   v7 migration guide.
 - [x] Clarify project-vs-personal `agents` promotion: ask only when scope is
   not explicit.
-- [ ] Generate and visually review updated workflow, architecture, context,
-  and skills diagrams from the paste-ready prompt in `docs/img/readme.md`.
+- [x] Generate and visually review updated workflow, architecture, context,
+  and skills diagrams from the prompt in `docs/img/readme.md`; refresh the
+  text descriptions to match the current diagrams.
+- [x] Embed all diagrams in the package README using release-pinned image
+  URLs and pin the Pi gallery logo to the v7.0.0 tag.
 - [x] Consolidate intended v7 material into `docs/CHANGELOG.md` and
   review/acknowledge tracked state through `project_status`.
 - [x] Run `make verify`, `make site`, and packed-install tests with and
@@ -97,11 +101,20 @@ file records the implementation sequence and current verification state.
   opt-in and is skipped by default.
 - [x] Run the real-Pi live workflow with OpenAI Codex; it passed. Keep live
   model evaluations opt-in and out of default/cloud CI.
-- [x] Inspect the `npm pack --dry-run` file list and size: 184 files,
-  16.7 MB compressed. The existing PNGs dominate the package and remain
-  pending regeneration and review.
-- [ ] Reinspect final pack contents and exact candidate after updated PNGs
-  are supplied and visually reviewed.
+- [x] Rerun `make verify` and `make site` on the image-updated release tree.
+- [x] Inspect `npm pack --dry-run --json`: 184 files, 14,620,255 bytes
+  compressed and 15,190,079 bytes unpacked. It includes all six PNGs linked
+  from the package README and the Pi gallery logo; packed-install tests check
+  their presence and release-pinned URLs.
 
-Constraints: no push, tag, publication, deployment, or release without
-separate owner instruction.
+## Release completion
+
+- [ ] Create a signed release commit and push it to `main`; confirm verify and
+  Pages pass on that exact commit.
+- [ ] Create and push signed annotated tag `v7.0.0`; monitor the tag pipeline, which
+  publishes with npm provenance, and verify the exact registry version and
+  `latest` dist-tag.
+
+Authorization: the owner instructed “do whatever is needed for v7 to ship,”
+which authorizes this v7.0.0 release flow. Use the repository's CI publisher;
+do not publish from the local machine.

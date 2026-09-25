@@ -157,21 +157,22 @@ for the current approximately 3,000-line runtime.
 
 {verified} Repository-native formatting, documentation, type, budget,
 and test checks are part of the maintained acceptance boundary. The
-working package version is 7.0.0; no v7 Git tag exists and npm reports
-that version unpublished. No tag, publication, or release action has
-been performed.
+working package version is 7.0.0. Check current publication status from
+the release commit, annotated tag, and npm registry metadata rather than
+this project brief.
 
 ## Previous action
 
-{verified} Pushed untagged v7 dogfood changes to `main`; the current
-verify and Pages jobs passed. The OpenAI-backed real-Pi workflow and all
-37 prompt-quality fixtures passed. Added a paste-ready prompt for
-updating stale diagrams; PNG regeneration and visual review remain
-outstanding.
+{verified} Regenerated and visually reviewed the workflow, architecture,
+supervisor-context, and skills-architecture diagrams. Updated their
+textual descriptions; the local image-updated candidate is now
+undergoing release verification.
 
 ## Immediate next step
 
-{accepted} Regenerate and visually review the diagram PNGs. Then rerun
-repository gates, inspect final package contents, and recheck the exact
-image-updated candidate. Do not tag, publish, or release v7.0.0 without
-separate owner instruction.
+{user-explicit} The owner authorized doing what is needed to ship
+v7.0.0. Rerun repository gates and inspect final package contents, then
+create and push the signed release commit. Confirm main verify and Pages
+pass on that commit; push the signed annotated v7.0.0 tag to trigger CI
+publication with npm provenance. Verify the exact published version and
+`latest` dist-tag; do not publish from the local machine.

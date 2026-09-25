@@ -90,7 +90,7 @@
     "prompts": [
       "./prompts"
     ],
-    "image": "https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/main/docs/img/logo.png"
+    "image": "https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.0/docs/img/logo.png"
   },
   "optionalDependencies": {
     "@plannotator/pi-extension": "latest",

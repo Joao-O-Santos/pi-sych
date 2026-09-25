@@ -280,10 +280,18 @@ test("package metadata keeps attribution and release version consistent", async 
 	]);
 	assert.deepEqual(manifest.pi.skills, ["./skills"]);
 	assert.deepEqual(manifest.pi.prompts, ["./prompts"]);
-	assert.equal(
-		manifest.pi.image,
-		"https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/main/docs/img/logo.png",
-	);
+	const releaseImageBase = `https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v${manifest.version}/docs/img/`;
+	assert.equal(manifest.pi.image, `${releaseImageBase}logo.png`);
+	const packageReadme = await readFile("README.md", "utf8");
+	for (const image of [
+		"logo.png",
+		"workflow.png",
+		"review_workflow.png",
+		"architecture.png",
+		"supervisors_context.png",
+		"skills_architecture.png",
+	])
+		assert.ok(packageReadme.includes(`${releaseImageBase}${image}`), image);
 	assert.deepEqual(Object.keys(manifest.optionalDependencies).sort(), [
 		"@plannotator/pi-extension",
 		"jiti",
@@ -321,6 +329,9 @@ test("packed install omitting optional dependencies retains the core package", a
 		"docs/img/logo.png",
 		"docs/img/workflow.png",
 		"docs/img/review_workflow.png",
+		"docs/img/architecture.png",
+		"docs/img/supervisors_context.png",
+		"docs/img/skills_architecture.png",
 		"templates/config.json",
 		"prompts/review-adversarial.md",
 		"prompts/review-collaborative.md",

@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-25T12:51:19.641Z",
+  "confirmedAt": "2026-09-25T13:44:08.998Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:f436de94a21d0cf3d17a8fc32be5b60dd750c30775b6610d0c83eee2afb0cf93",
+      "fingerprint": "sha256:84e51926275ec87240cf32f7daedc51e1674d250e7d815fd58defbdca7c4e20e",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,8 +15,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-09-25T12:51:19.641Z",
-        "reason": "Recorded current dogfood and verification state: successful local gates and site build, OpenAI live workflow and prompt-quality suite pass, and remaining image regeneration/review plus final post-image inspection."
+        "at": "2026-09-25T13:44:08.998Z",
+        "reason": "Reviewed the image-updated release documentation, README image URLs and package gallery metadata, changelog, package manifest dependency relation, and package integration assertions for the v7 release candidate."
       }
     },
     {
@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:1ace6dbcef62fb0cb101059e678a93f18136b056c9c60d146ce01466a6daf8a4",
+      "fingerprint": "sha256:b38aa53a739730ef42c35be38916505d9173a5605acef44e86a31b5a8e6ea5cc",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,13 +46,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-09-25T10:22:52.007Z",
-        "reason": "Reviewed the v7 release-hardening implementation, reconciled tracked project and public documentation with current worker observation, optional Plannotator, literature migration, and promotion-scope behavior; reviewed README against architecture."
+        "at": "2026-09-25T13:44:08.998Z",
+        "reason": "Reviewed the image-updated release documentation, README image URLs and package gallery metadata, changelog, package manifest dependency relation, and package integration assertions for the v7 release candidate."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:cd7b22087a335a878a0afff6994bc2bc768256b59c9c79fe4259be6c5226f5ec",
+      "fingerprint": "sha256:73afd4779b04d841f767346bc787cbc75961057ffbb6d85d0d46421548ab23cb",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -66,8 +66,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-09-14T13:38:30.372Z",
-        "reason": "Reviewed current documentation and skill changes against the implementation and accepted project direction."
+        "at": "2026-09-25T13:44:08.998Z",
+        "reason": "Reviewed the image-updated release documentation, README image URLs and package gallery metadata, changelog, package manifest dependency relation, and package integration assertions for the v7 release candidate."
       }
     },
     {
@@ -124,15 +124,15 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:41a67f04bf4d96a03f799515b260dbcff17da7fd8753ef17941853313f34b6fc",
+      "fingerprint": "sha256:f80e619a187d3ed67734abb554066b4e61bf7483302f38c895356d16bd050fdc",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-09-25T11:46:33.609Z",
-        "reason": "Reconciled the intended v7 changelog with the verified bounded-compaction input/status behavior and confirmed that the proposal inbox is created only when valid proposals are returned; acknowledgement records the reviewed hash, not correctness or release approval."
+        "at": "2026-09-25T13:44:08.998Z",
+        "reason": "Reviewed the image-updated release documentation, README image URLs and package gallery metadata, changelog, package manifest dependency relation, and package integration assertions for the v7 release candidate."
       }
     },
     {
