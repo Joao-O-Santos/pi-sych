@@ -1,3 +1,6 @@
 # Reviewer comment
 
-The manuscript overstates what follows from a statistic below the reference point. Failure to reject does not prove the null hypothesis, and equivalence would require a procedure designed for that claim. Please correct this interpretation.
+The manuscript overstates what follows from observing the diagnostic pattern.
+Crossing this operating boundary does not by itself prove component failure, and
+a failure claim would require an assessment designed to establish that
+condition. Please correct this interpretation.

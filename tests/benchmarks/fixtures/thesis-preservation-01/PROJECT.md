@@ -2,12 +2,19 @@
 
 ## Intended contribution
 
-{accepted} The manuscript argues that a descriptive reference point can be a useful reporting signal because it has a defined mathematical interpretation and becomes less common as the relevant alternative strengthens.
+{accepted} The manuscript argues that a simple diagnostic pattern can be a
+useful early-warning signal because it has a defined mechanistic interpretation
+and becomes less common as the target system becomes more stable.
 
 ## Argument invariants
 
-{accepted} The reference point is not evidence that the null hypothesis is true.
+{accepted} The diagnostic pattern does not by itself establish that a component
+has failed.
 
-{accepted} The reference point is nevertheless more than an arbitrary abbreviation: it combines a meaningful equality point, location opposite the rejection direction, and decreasing probability under increasingly strong alternatives.
+{accepted} The pattern is nevertheless more than an arbitrary label: it combines
+a meaningful operating boundary, movement in the direction associated with
+instability, and decreasing prevalence as system stability improves.
 
-{accepted} Necessary qualifications must delimit this positive claim rather than replace it with the weaker observation that the statistic merely falls below its equality point.
+{accepted} Necessary qualifications must delimit this positive claim rather than
+replace it with the weaker observation that the measured value merely crossed
+the operating boundary.

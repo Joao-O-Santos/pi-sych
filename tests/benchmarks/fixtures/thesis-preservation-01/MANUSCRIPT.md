@@ -1,5 +1,10 @@
-# Reporting below the reference point
+# Reporting the diagnostic pattern
 
-A statistic below the reference point proves that the null hypothesis is true. More importantly, the reference point is a useful reporting signal: it marks equality of the compared quantities, lies opposite the rejection direction, and observations below it become less common as stronger alternatives shift the sampling distribution away from that region.
+Observing the diagnostic pattern proves that the component has failed. More
+importantly, the pattern is a useful early-warning signal: it marks a meaningful
+operating boundary, moves in the direction associated with instability, and
+becomes less common as the target system becomes more stable.
 
-For this reason, the shorthand can reduce low-value numerical detail in the main text while exact results remain available in supplementary reporting.
+For this reason, the shorthand can reduce low-value diagnostic detail in the
+main report while exact measurements remain available in supplementary
+reporting.
