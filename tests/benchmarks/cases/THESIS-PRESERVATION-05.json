@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "THESIS-PRESERVATION-05",
+  "heldIn": "held-in",
+  "skills": ["write", "review"],
+  "fixture": "tests/benchmarks/fixtures/thesis-preservation-05",
+  "task": "Address REVIEW.md and revise ABSTRACT.md, DISCUSSION.md, and CONCLUSION.md accordingly. Write REVIEW-RESPONSE.md briefly explaining the revision.",
+  "expectedArtifacts": ["ABSTRACT.md", "DISCUSSION.md", "CONCLUSION.md", "REVIEW-RESPONSE.md"],
+  "objectiveChecks": [
+    { "type": "exists", "path": "REVIEW-RESPONSE.md" },
+    { "type": "includes", "path": "ABSTRACT.md", "value": "triage" },
+    { "type": "includes", "path": "CONCLUSION.md", "value": "prioritize" }
+  ],
+  "rubric": { "version": 1, "criteria": ["preserves thesis across sections", "adds requested scope qualifications", "detects cumulative thesis drift"] },
+  "criticalFailures": ["removes the triage contribution from the abstract", "reduces the conclusion to a purely descriptive association", "lets local qualifications cumulatively erase the accepted contribution"],
+  "budgets": { "timeoutMs": 120000, "judgeTimeoutMs": 60000 }
+}

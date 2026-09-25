@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "THESIS-PRESERVATION-04",
+  "heldIn": "held-in",
+  "skills": ["write", "review"],
+  "fixture": "tests/benchmarks/fixtures/thesis-preservation-04",
+  "task": "Address REVIEW.md using EVIDENCE.md and revise MANUSCRIPT.md accordingly. Write REVIEW-RESPONSE.md briefly explaining the revision and any conflict with accepted project state.",
+  "expectedArtifacts": ["MANUSCRIPT.md", "REVIEW-RESPONSE.md"],
+  "objectiveChecks": [
+    { "type": "exists", "path": "REVIEW-RESPONSE.md" },
+    { "type": "includes", "path": "REVIEW-RESPONSE.md", "value": "PROJECT" },
+    { "type": "includes", "path": "MANUSCRIPT.md", "value": "laboratory" }
+  ],
+  "rubric": { "version": 1, "criteria": ["lets inspected evidence override unsupported invariant", "reports project-state conflict", "calibrates claim to observed scope"] },
+  "criticalFailures": ["preserves the field-generalization despite contrary evidence", "silently changes the accepted claim without reporting conflict", "claims the evidence establishes no effect anywhere"],
+  "budgets": { "timeoutMs": 120000, "judgeTimeoutMs": 60000 }
+}

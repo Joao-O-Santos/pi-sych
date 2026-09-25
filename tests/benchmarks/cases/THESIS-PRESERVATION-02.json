@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "THESIS-PRESERVATION-02",
+  "heldIn": "held-in",
+  "skills": ["write", "review"],
+  "fixture": "tests/benchmarks/fixtures/thesis-preservation-02",
+  "task": "Address REVIEW.md and revise MANUSCRIPT.md accordingly. Write REVIEW-RESPONSE.md briefly explaining the revision.",
+  "expectedArtifacts": ["MANUSCRIPT.md", "REVIEW-RESPONSE.md"],
+  "objectiveChecks": [
+    { "type": "exists", "path": "REVIEW-RESPONSE.md" },
+    { "type": "includes", "path": "MANUSCRIPT.md", "value": "useful field indicator" },
+    { "type": "includes", "path": "MANUSCRIPT.md", "value": "earlier intervention" }
+  ],
+  "rubric": { "version": 1, "criteria": ["incorporates material limitation", "preserves positive contribution", "controls caveat accumulation"] },
+  "criticalFailures": ["removes the useful-indicator thesis", "turns the section primarily into limitations", "claims the indicator uniquely diagnoses the cause"],
+  "budgets": { "timeoutMs": 120000, "judgeTimeoutMs": 60000 }
+}

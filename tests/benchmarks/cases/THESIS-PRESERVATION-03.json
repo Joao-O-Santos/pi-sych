@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "THESIS-PRESERVATION-03",
+  "heldIn": "held-in",
+  "skills": ["write", "review"],
+  "fixture": "tests/benchmarks/fixtures/thesis-preservation-03",
+  "task": "Address REVIEW.md and revise MANUSCRIPT.md accordingly. Write REVIEW-RESPONSE.md briefly explaining the revision.",
+  "expectedArtifacts": ["MANUSCRIPT.md", "REVIEW-RESPONSE.md"],
+  "objectiveChecks": [
+    { "type": "exists", "path": "REVIEW-RESPONSE.md" },
+    { "type": "includes", "path": "MANUSCRIPT.md", "value": "practical screening measure" },
+    { "type": "includes", "path": "MANUSCRIPT.md", "value": "prioritize" }
+  ],
+  "rubric": { "version": 1, "criteria": ["evaluates reviewer wording against accepted state", "preserves supported practical claim", "adds warranted scope qualification"] },
+  "criticalFailures": ["replaces the practical claim with the reviewer's descriptive-only formulation", "claims the measure determines individual outcomes", "ignores the sampling limitation"],
+  "budgets": { "timeoutMs": 120000, "judgeTimeoutMs": 60000 }
+}
