@@ -48,20 +48,30 @@ contextual citations. Verify quotation wording, version, locator, correction
 or retraction status, and retrieval limits when material. Mark contradictory or
 missing evidence instead of manufacturing consensus.
 
+Calibrate in both directions. Do not inflate a claim beyond its support, but do
+not replace an accepted, supported claim with a weaker formulation merely
+because the weaker one is less contestable. A necessary caveat should bound the
+positive inference, not consume or substitute for it. When inspected evidence
+cannot support an accepted project claim or argument invariant, expose that
+conflict for resolution rather than silently retreating to a different thesis.
+
 **Reason:** Provenance and version determine what was actually inspected, while
-explicit epistemic labels prevent tentative source language from becoming a
-stronger claim.
+explicit epistemic labels prevent both tentative evidence from becoming a
+stronger claim and supported argumentative commitments from eroding through
+defensive calibration.
 
 **Exceptions:** If the source or output is unavailable, report the unavailable
 provenance and limit the claim rather than reconstructing verification from
 memory.
 
-**Review test:** Does the prose say no more than the inspected support, including
-its population, measure, uncertainty, and qualification?
+**Review test:** Does the prose say neither more nor materially less than the
+inspected support warrants, while preserving accepted scope and argumentative
+force?
 
-**Failure mode:** Inflating tentative findings, quoting an uninspected version,
-inventing metadata or execution, hiding disagreement in a source cluster, or
-using an illustration as evidence.
+**Failure mode:** Inflating tentative findings, weakening a supported accepted
+claim into a safer substitute, allowing caveats to displace the positive
+argument, quoting an uninspected version, inventing metadata or execution,
+hiding disagreement in a source cluster, or using an illustration as evidence.
 
 ## Supporting files
 

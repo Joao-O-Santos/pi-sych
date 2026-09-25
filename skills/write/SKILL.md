@@ -7,15 +7,22 @@ description: Draft, rewrite, revise, and structure scholarly, professional, inst
 
 User, project, venue, and genre requirements override package defaults.
 A project style override controls presentation, not whether claims need
-support. Presentation rules never weaken evidential or claim-support standards;
-preserve claim-level support and let evidence limits override pressure for a
-stronger conclusion. Do not invent facts, citations, quotations, requirements, or
-results.
+support. Presentation rules never weaken evidential or claim-support standards.
+Calibrate claims in both directions: do not strengthen a conclusion beyond its
+support, but do not weaken an accepted, adequately supported claim merely to
+make it safer, more conventional, or harder to criticize. When a qualification
+is necessary, preserve the strongest supported positive claim and delimit it
+precisely. If evidence conflicts with an accepted project claim or argument
+invariant, report that conflict rather than silently substituting a weaker
+thesis. Do not invent facts, citations, quotations, requirements, or results.
 
 First identify the requested operation. For revision, preserve clear,
 audience-appropriate authored prose unless a concrete defect, structural need,
 venue requirement, or the requested rewrite justifies changing it. Broad editing
 still does not authorize unsupported factual, evidential, or project decisions.
+For argumentative revision, reconstruct accepted central claims before editing
+and verify afterward that their meaning and intended force survive unless the
+evidence requires a reported change.
 
 For standalone prose, route self-containment, context leakage, and generic
 prose-quality checks to the [prose method](../_methods/prose/guidance.md).

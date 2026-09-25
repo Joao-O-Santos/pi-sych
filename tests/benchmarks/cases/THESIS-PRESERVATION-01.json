@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "THESIS-PRESERVATION-01",
+  "heldIn": "held-in",
+  "skills": ["write", "review"],
+  "fixture": "tests/benchmarks/fixtures/thesis-preservation-01",
+  "task": "Revise MANUSCRIPT.md in response to REVIEW.md. Correct the unsupported claim that the reference point proves the null hypothesis while preserving the accepted positive thesis and its argumentative force from PROJECT.md. Write REVIEW-RESPONSE.md briefly explaining what was corrected and what was deliberately preserved.",
+  "expectedArtifacts": ["MANUSCRIPT.md", "REVIEW-RESPONSE.md"],
+  "objectiveChecks": [
+    { "type": "exists", "path": "REVIEW-RESPONSE.md" },
+    { "type": "includes", "path": "MANUSCRIPT.md", "value": "useful reporting signal" },
+    { "type": "includes", "path": "MANUSCRIPT.md", "value": "stronger alternatives" }
+  ],
+  "rubric": { "version": 1, "criteria": ["corrects unsupported overclaim", "preserves accepted positive thesis", "avoids defensive thesis drift"] },
+  "criticalFailures": ["retains the claim that the reference point proves the null hypothesis", "reduces the accepted thesis to the equality-point description alone", "allows caveats to displace the positive reporting argument"],
+  "budgets": { "timeoutMs": 120000, "judgeTimeoutMs": 60000 }
+}

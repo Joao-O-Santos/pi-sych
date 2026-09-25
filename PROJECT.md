@@ -53,6 +53,14 @@ packet is sufficient; trajectory workers are appropriate when prior
 conversation materially helps. Supervisor pre-work recorded in a plan,
 TODO, brief, or context file can enable later clean delegation.
 
+{accepted} For argumentative prose, treat accepted central claims and
+their intended force as durable project state when the owner records
+them. Evidence calibration is bidirectional: prevent unsupported
+strengthening, but also prevent a supported accepted thesis from being
+silently weakened into a safer or less contestable substitute. If new
+evidence conflicts with an accepted argument invariant, surface the
+conflict rather than resolving it by semantic drift.
+
 {accepted} Finished standalone prose should be intelligible without the
 prompt, earlier drafts, reviewer exchange, or agent conversation. Treat
 unmotivated version/revision language, defensive negation,
@@ -120,9 +128,11 @@ not verify source access.
 self-containment and reader-friction/context-leakage checks. Review
 lenses now explicitly trace prose flow in reading order and diagnose
 cumulative patterns such as semicolon/em-dash repetition, unmotivated
-"not X but Y" contrasts, and stacked hedges without turning them into
-punctuation quotas or bans. They distinguish calibrated uncertainty from
-defensive hedging and require findings to explain reader effect.
+"not X but Y" contrasts, stacked hedges, and thesis drift without turning
+them into quotas or bans. They distinguish calibrated uncertainty from
+defensive hedging, require findings to explain reader effect, and treat
+evidence calibration as bidirectional: supported accepted argumentative
+force should not be lost merely because a weaker formulation is safer.
 Standalone manuscripts should not retain revision-history,
 reviewer-response, prompt, or version language without an independent
 scholarly purpose; response-to-reviewers artifacts remain free to use it
@@ -163,16 +173,13 @@ this project brief.
 
 ## Previous action
 
-{verified} Regenerated and visually reviewed the workflow, architecture,
-supervisor-context, and skills-architecture diagrams. Updated their
-textual descriptions; the local image-updated candidate is now
-undergoing release verification.
+{verified} Added bidirectional evidence calibration and thesis-drift
+protections to writing, claim-evidence, prose, and structural-review
+guidance, plus a benchmark fixture that requires correcting a real
+overclaim without weakening the accepted positive thesis.
 
 ## Immediate next step
 
-{user-explicit} The owner authorized doing what is needed to ship
-v7.0.0. Rerun repository gates and inspect final package contents, then
-create and push the signed release commit. Confirm main verify and Pages
-pass on that commit; push the signed annotated v7.0.0 tag to trigger CI
-publication with npm provenance. Verify the exact published version and
-`latest` dist-tag; do not publish from the local machine.
+{user-explicit} Evaluate the thesis-preservation change in practice. If
+it performs well, decide whether to release it as a patch or minor
+version rather than changing the runtime pre-emptively.

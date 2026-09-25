@@ -4,9 +4,20 @@ For substantial prose review, reconstruct the artifact before judging its
 sentences. State its apparent purpose, central contribution or decision, and the
 reader's intended path through the argument. A reverse outline that names each
 section and paragraph's actual job is a useful diagnostic for this. Then inspect
-purpose,
-contribution visibility, sequence, proportion, navigation, clarity, repetition,
-and fair treatment of alternatives against accepted requirements and audience.
+purpose, contribution visibility, sequence, proportion, navigation, clarity,
+repetition, and fair treatment of alternatives against accepted requirements
+and audience.
+
+When accepted project state records central claims or argument invariants,
+perform a **thesis-drift check** as part of that reconstruction. Compare the
+artifact's actual positive claim with the accepted contribution, not merely its
+topic or vocabulary. Look for semantic weakening through accumulated caveats,
+defensive framing, substitution of a safer descriptive claim for the intended
+substantive claim, disproportionate attention to limitations, or deletion of the
+positive inference while retaining its qualifications. Distinguish necessary
+evidence calibration from avoidable retreat. If the evidence genuinely conflicts
+with an accepted invariant, report the conflict rather than silently choosing
+either authority.
 
 Treat repetition broadly. Distinguish useful recurrence from duplicated claims,
 repeated scene-setting, repeated implications, defensive restatement, and

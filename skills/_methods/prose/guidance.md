@@ -3,7 +3,8 @@
 Use this method for substantial drafting, revision, and diagnostic review.
 Explicit user instructions, accepted project style, venue requirements, and
 artifact needs override package defaults. Preserve evidence, uncertainty,
-citations, placeholders, dialect, purposeful variation, and established voice.
+citations, placeholders, dialect, purposeful variation, established voice, and
+accepted argumentative commitments.
 
 ## Structure before wording
 
@@ -38,15 +39,25 @@ smooth model cadence.
 fix an identifiable problem, implement the request, satisfy a structural or
 venue need, or meet requested style. Preserve useful idiosyncrasy, rhythm,
 hedging, fragments, and effective unusual constructions. An explicit broad
-rewrite may recast broadly, but preserve meaning, evidence, uncertainty, and
-stable voice unless the user asked to change them.
+rewrite may recast broadly, but preserve meaning, evidence, uncertainty, stable
+voice, and accepted argumentative force unless the user asked to change them.
+
+For substantial argumentative revision, reconstruct the central thesis and its
+major supporting moves before editing. Treat explicit accepted project claims
+or argument invariants as semantic constraints, not merely topics to mention.
+After revision, compare the result with them. A technically safer rewrite that
+weakens, obscures, or substitutes for a supported accepted contribution is a
+regression. If new evidence genuinely requires weakening an accepted claim,
+surface the conflict rather than making the semantic change silently.
 
 **Review test:** Can each material rewrite be tied to the requested operation or
-a concrete defect, structural need, venue requirement, or requested style
-change?
+a concrete defect, structural need, venue requirement, requested style change,
+or evidence-based correction, while the supported thesis retains its intended
+force?
 
 **Failure mode:** Turning authored prose into generic professional prose,
-homogenizing sentence lengths, or replacing one model tic with another.
+homogenizing sentence lengths, replacing one model tic with another, or fixing a
+local overclaim by globally retreating from a supported thesis.
 
 ## Artifact self-containment
 
@@ -57,7 +68,10 @@ qualifications, and clarifications have a particularly high burden because they
 interrupt the main line. Keep them when they rule out an interpretation a
 reasonable reader could actually make, mark a material limitation, or calibrate
 a claim. Remove them when they merely add defensive precision that would puzzle
-a reader who never saw the drafting conversation.
+a reader who never saw the drafting conversation. Necessary caveats should
+normally delimit the positive claim close to where misunderstanding could occur;
+they should not accumulate until the limitation becomes more salient than the
+supported contribution.
 
 A finished standalone artifact should make sense to a reader who never saw the
 prompt, earlier draft, reviewer exchange, or agent conversation. Before
