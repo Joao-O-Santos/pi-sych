@@ -62,11 +62,11 @@
   {
     "id": "padded-llm-prose",
     "temptation": "padded-llm-prose",
-    "input": "Should I draft an answer with a ceremonial introduction, repeated summary, and generic importance claim?",
+    "input": "Rewrite this team update in one concise sentence: ‘At this juncture, it is important to note that we deployed the patch, which represents an important milestone. In summary, the patch was deployed. This important change matters.’ Preserve the material fact, but remove empty framing, repetition, and generic importance.",
     "target": "skills/_methods/prose/guidance.md",
-    "decisionRule": "Use concrete claim-level prose without ceremonial padding.",
-    "requiredOutputProperties": ["rejects ceremonial filler"],
-    "prohibitedOutputProperties": ["restated prompt", "generic filler"],
+    "decisionRule": "State deployment once; remove ceremonial opening, duplicate summary, and unsupported generic importance claim.",
+    "requiredOutputProperties": ["states deployment once directly"],
+    "prohibitedOutputProperties": ["ceremonial framing", "repeats deployment", "generic importance claim"],
     "coverage": ["prose"]
   },
   {
@@ -102,9 +102,9 @@
   {
     "id": "project-style-override",
     "temptation": "package-default-overrides-project",
-    "input": "The accepted project style requires parenthetical citations and permits a deliberately fragmentary opening. Should package prose defaults override those local decisions?",
+    "input": "The accepted project style requires parenthetical citations and permits a deliberately fragmentary opening. In a two-clause claim, the cited source supports only the first clause. Should package prose defaults override the local presentation choices, and does following the citation style make the unsupported clause acceptable?",
     "target": "skills/write/SKILL.md",
-    "decisionRule": "Apply accepted project presentation rules while retaining package epistemic standards for claim support.",
+    "decisionRule": "Retain accepted project presentation rules while distinguishing citation format from claim-level support and revising the unsupported clause.",
     "requiredOutputProperties": ["project style controls presentation", "evidential standards remain intact"],
     "prohibitedOutputProperties": ["package prose default treated as absolute", "citation support weakened by style override"],
     "coverage": ["project-style-precedence", "claim-evidence", "prose"]
@@ -343,7 +343,7 @@
   {
     "id": "r-comment-restraint",
     "temptation": "line-by-line-code-narration",
-    "input": "Comment this R analysis. Most lines are obvious transformations, but one filter excludes post-treatment measurements to avoid changing the estimand.",
+    "input": "Add sparse comments to this R code. Explain briefly why `filter(!post_treatment)` excludes post-treatment measurements: the target estimand is restricted to pretreatment observations. Do not narrate obvious transformations. Return only revised code: `analysis <- data |> filter(!post_treatment) |> mutate(log_response = log(response)) |> group_by(condition) |> summarise(mean_log_response = mean(log_response, na.rm = TRUE), .groups = 'drop')`.",
     "target": "skills/analyze/modules/r-quarto/guidance.md",
     "decisionRule": "Keep comments sparse: omit narration of obvious code while retaining a comment that explains the non-obvious analytical exclusion and its reason.",
     "requiredOutputProperties": ["retains the analytical-decision comment", "omits line-by-line narration"],

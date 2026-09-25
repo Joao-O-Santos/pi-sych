@@ -163,16 +163,15 @@ been performed.
 
 ## Previous action
 
-{verified} Implemented release-hardening changes for v7 literature
-compatibility, worker mutation observation, optional Plannotator
-startup, prose-review guidance, and the project/personal scope rule.
-Added a paste-ready prompt for updating stale diagrams; the PNG assets
-still need generated edits and visual review.
+{verified} Pushed untagged v7 dogfood changes to `main`; the current
+verify and Pages jobs passed. The OpenAI-backed real-Pi workflow and all
+37 prompt-quality fixtures passed. Added a paste-ready prompt for
+updating stale diagrams; PNG regeneration and visual review remain
+outstanding.
 
 ## Immediate next step
 
-{accepted} Finish the release candidate after the diagram PNGs are
-updated and visually reviewed: rerun repository gates, run opt-in live
-behavioral checks locally when provider use and cost are approved, and
-inspect final package contents. Recheck the candidate before commit. Do
-not tag, publish, or release v7.0.0 without separate owner instruction.
+{accepted} Regenerate and visually review the diagram PNGs. Then rerun
+repository gates, inspect final package contents, and recheck the exact
+image-updated candidate. Do not tag, publish, or release v7.0.0 without
+separate owner instruction.

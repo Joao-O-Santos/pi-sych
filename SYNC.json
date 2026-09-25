@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-25T11:46:33.609Z",
+  "confirmedAt": "2026-09-25T12:51:19.641Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:a70dc4dc95d4f03a1967dcd56ddae634c8ec8971ccbe6d6d0bc8b7a53535a613",
+      "fingerprint": "sha256:f436de94a21d0cf3d17a8fc32be5b60dd750c30775b6610d0c83eee2afb0cf93",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,8 +15,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-09-25T10:29:02.663Z",
-        "reason": "Reconciled the v7 changelog/project record with the implemented release hardening, revised source budget, current tag/npm status, verification results, and remaining image/evaluation work."
+        "at": "2026-09-25T12:51:19.641Z",
+        "reason": "Recorded current dogfood and verification state: successful local gates and site build, OpenAI live workflow and prompt-quality suite pass, and remaining image regeneration/review plus final post-image inspection."
       }
     },
     {

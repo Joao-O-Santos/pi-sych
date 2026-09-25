@@ -81,6 +81,9 @@ appeared only in hidden process context, remove the invisible interlocutor and
 recover the underlying positive claim. Do not preserve a conversational
 hypothesis merely so the artifact can rebut it. Retain the rebuttal only when the
 finished artifact itself gives readers a reason to entertain that alternative.
+Do not replace a direct denial with an evidence-limit variant (for example,
+"the sources do not establish ...") when both answer only an invisible
+conversational objection; state the supported positive account instead.
 
 Genre controls the exception. A response-to-reviewers letter, revision memo,
 change log, or methods history may need explicit reviewer, version, previous-

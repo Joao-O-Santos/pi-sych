@@ -72,10 +72,11 @@ file records the implementation sequence and current verification state.
 - [x] Apply material findings from final documentation review and add
   paste-ready image-edit instructions; PNG updates remain pending.
 - [x] Finalize `PROJECT.md` and `TODO.md` after accepted corrections.
-- [ ] Run opt-in live prompt-quality fixtures if the configured models and cost
-  make them useful; report separately from deterministic verification.
-- [ ] Confirm main CI and Pages after a reviewed release-candidate commit is
-  available remotely.
+- [x] Run opt-in live prompt-quality fixtures with OpenAI Codex; final run
+  passed all 37 fixtures. This remains model/run-specific, not a deterministic
+  contract.
+- [x] Confirm main CI and Pages for dogfood commit `1bf33de` (pipeline
+  `2882249914`); both jobs passed.
 
 ## v7 release hardening
 
@@ -94,8 +95,8 @@ file records the implementation sequence and current verification state.
 - [x] Run `make verify`, `make site`, and packed-install tests with and
   without optional dependencies. The public live-model usage suite remains
   opt-in and is skipped by default.
-- [ ] Run the real-Pi live workflow and behavioral evaluation locally when
-  provider use and cost are approved; do not add them to default/cloud CI.
+- [x] Run the real-Pi live workflow with OpenAI Codex; it passed. Keep live
+  model evaluations opt-in and out of default/cloud CI.
 - [x] Inspect the `npm pack --dry-run` file list and size: 184 files,
   16.7 MB compressed. The existing PNGs dominate the package and remain
   pending regeneration and review.
