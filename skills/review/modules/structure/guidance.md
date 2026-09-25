@@ -34,6 +34,25 @@ Check voice coherence as well as logical coherence: unexplained shifts in
 register, confidence, terminology, or intellectual posture can signal a deeper
 structural problem.
 
+Make a flow pass in reading order. At paragraph boundaries, state the relation
+between the preceding move and the next one; flag a transition that merely
+announces importance or sequence without making that relation clear. Within
+paragraphs, track how each sentence takes up known material and advances it.
+Watch for repeated setup, late-arriving claims, abrupt changes of subject, and
+sentences whose clauses compete for the reader's attention. A reverse outline
+and a sentence-level flow pass answer different questions; use both when the
+reader's route is difficult to reconstruct.
+
+Also scan for cumulative stylistic habits rather than treating one mark as a
+verdict. Repeated semicolons or em dashes, recurring "not X but Y" turns,
+hedge piles, parallel triples, and repeated signposts can make prose feel
+formulaic or choppy. Test whether the pattern is doing useful argumentative,
+rhythmic, or evidential work. For hedges, distinguish calibrated uncertainty
+from defensive accumulation: name the uncertainty that matters and preserve it,
+but remove qualifiers that only blur the claim. Report the pattern with a
+representative example and its effect; do not impose a punctuation quota or
+rewrite every instance.
+
 Use the requested lens. A collaborative lens reconstructs the strongest intended
 argument and identifies the smallest changes that let it work. An adversarial
 lens tests whether contribution, inference, alternatives, and limitations survive

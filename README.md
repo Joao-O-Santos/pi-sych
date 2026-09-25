@@ -234,11 +234,13 @@ helps.
 ### Research workers and local literature
 
 The supervisor can call `literature_search` directly. Local literature
-state is only inspected/configured: an available database does not
-verify source access, search compatibility, or collection completeness.
-Remote MCPorter state is likewise inspected/configured for explicitly
-requested workers; configured servers do not prove credentials,
-reachability, or retrieval access.
+state is inspected for the supported v7 schema, but an available
+database does not verify source access or collection completeness.
+Incompatible v6 databases report a migration error; see the [literature
+database v7 migration guide](docs/literature-database-v7.md). Remote
+MCPorter state is likewise inspected/configured for explicitly requested
+workers; configured servers do not prove credentials, reachability, or
+retrieval access.
 
 A worker selected with the exact `research` skill also receives the same
 read-only tool. The index is a discovery surface: returned metadata and
@@ -271,7 +273,9 @@ orchestration system:
   context.
 - **Bounded delegation:** `dispatch_worker` starts one short-lived
   worker with an explicit assignment, clean or trajectory context,
-  files, skills, model role, tool mode, and timeout.
+  files, skills, model role, tool mode, and timeout. Dispatch reports
+  worker-reported files separately from observed project changes,
+  including residual changes after failure; it does not roll them back.
 - **Small working memory:** custom compaction handles configured manual
   and native requests; optional 100,000-token admission runs at the
   settled `agent_settled` boundary. It retains bounded observable

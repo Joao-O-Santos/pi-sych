@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { EventEmitter } from "node:events";
 import { access, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -88,6 +89,95 @@ test("dispatch accepts a valid result and rejects reported path escapes", async 
 		},
 	});
 	assert.match(invalid.error ?? "", /leaves the project root/);
+});
+
+test("dispatch compares reported files with observed changes and retains failed-worker changes", async (t) => {
+	const { root, agentDir, resolved } = await readyProject(t);
+	const successful = await dispatchWorker({
+		project: resolved,
+		workerAgentDir: agentDir,
+		request,
+		catalog,
+		launcher: async (spec) => {
+			await writeFile(join(root, "A.md"), "changed\n");
+			await writeFile(join(root, "notes.tmp"), "unreported\n");
+			await writeImmutableResult(spec.resultPath, {
+				status: "complete",
+				summary: "done",
+				files: ["A.md"],
+				limitations: [],
+			});
+			return { exitCode: 0, stderr: "" };
+		},
+	});
+	assert.deepEqual(successful.reportedFiles, ["A.md"]);
+	assert.deepEqual(successful.observedChangedFiles, ["A.md", "notes.tmp"]);
+	assert.deepEqual(successful.unexpectedChanges, ["notes.tmp"]);
+
+	const failed = await dispatchWorker({
+		project: resolved,
+		workerAgentDir: agentDir,
+		request,
+		catalog,
+		launcher: async () => {
+			await writeFile(join(root, "residual.md"), "left behind\n");
+			return { exitCode: null, stderr: "", classification: "timeout" };
+		},
+	});
+	assert.match(failed.error, /timeout/i);
+	assert.deepEqual(failed.reportedFiles, []);
+	assert.deepEqual(failed.observedChangedFiles, ["residual.md"]);
+	assert.deepEqual(failed.unexpectedChanges, ["residual.md"]);
+});
+
+test("dispatch observes tracked and untracked changes in Git projects", async (t) => {
+	const { root, agentDir, resolved } = await readyProject(t);
+	for (const args of [
+		["init", "-q"],
+		["config", "user.name", "Pi Sych test"],
+		["config", "user.email", "test@example.invalid"],
+		["add", "A.md"],
+		["commit", "-qm", "baseline"],
+	])
+		execFileSync("git", args, { cwd: root, stdio: "ignore" });
+	const outcome = await dispatchWorker({
+		project: resolved,
+		workerAgentDir: agentDir,
+		request,
+		catalog,
+		launcher: async () => {
+			await writeFile(join(root, "A.md"), "changed\n");
+			await writeFile(join(root, "notes.tmp"), "new\n");
+			return { exitCode: 0, stderr: "" };
+		},
+	});
+	assert.deepEqual(outcome.observedChangedFiles, ["A.md", "notes.tmp"]);
+});
+
+test("dispatch scopes Git changes to a nested canonical project root", async (t) => {
+	const { root, agentDir } = await readyProject(t);
+	const projectRoot = join(root, "subproject");
+	await mkdir(projectRoot);
+	await writeFile(join(projectRoot, "A.md"), "base\n");
+	for (const args of [
+		["init", "-q"],
+		["config", "user.name", "Pi Sych test"],
+		["config", "user.email", "test@example.invalid"],
+		["add", "subproject/A.md"],
+		["commit", "-qm", "baseline"],
+	])
+		execFileSync("git", args, { cwd: root, stdio: "ignore" });
+	const outcome = await dispatchWorker({
+		project: project(projectRoot),
+		workerAgentDir: agentDir,
+		request,
+		catalog,
+		launcher: async () => {
+			await writeFile(join(projectRoot, "A.md"), "changed\n");
+			return { exitCode: 0, stderr: "" };
+		},
+	});
+	assert.deepEqual(outcome.observedChangedFiles, ["A.md"]);
 });
 
 test("dispatch explains how to initialize a missing worker directory", async (t) => {

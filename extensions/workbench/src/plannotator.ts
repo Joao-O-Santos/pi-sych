@@ -38,10 +38,15 @@ type Plannotator = {
 	): Promise<CodeReviewSession>;
 };
 const jiti = createJiti(import.meta.url, { interopDefault: true });
-export const plannotatorUnavailable = (reason?: string) =>
-	new Error(
-		`Plannotator unavailable; ensure its integration is installed${reason ? ` and compatible: ${reason}` : ""}`,
-	);
+export class PlannotatorUnavailableError extends Error {
+	constructor(reason?: string) {
+		super(
+			`Plannotator unavailable; ensure its integration is installed${reason ? ` and compatible: ${reason}` : ""}`,
+		);
+		this.name = "PlannotatorUnavailableError";
+	}
+}
+export const plannotatorUnavailable = (reason?: string) => new PlannotatorUnavailableError(reason);
 function validatePlannotator(value: unknown): Plannotator {
 	if (!value || typeof value !== "object")
 		throw plannotatorUnavailable("adapter did not export an API");
@@ -61,8 +66,15 @@ export async function loadPlannotator(): Promise<Plannotator> {
 			await jiti.import("@plannotator/pi-extension/plannotator-events.ts"),
 		);
 	} catch (error) {
-		if (error instanceof Error && error.message.startsWith("Plannotator unavailable")) throw error;
-		throw plannotatorUnavailable(error instanceof Error ? error.message : String(error));
+		if (error instanceof PlannotatorUnavailableError) throw error;
+		const code = (error as NodeJS.ErrnoException)?.code,
+			message = error instanceof Error ? error.message : String(error);
+		if (
+			(code === "ERR_MODULE_NOT_FOUND" && message.includes("@plannotator/pi-extension")) ||
+			message.includes("@plannotator/pi-extension/plannotator-events.ts")
+		)
+			throw plannotatorUnavailable(message);
+		throw error;
 	}
 }
 export const startFileAnnotation = async (ctx: ExtensionContext, path: string, content: string) =>

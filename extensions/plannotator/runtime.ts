@@ -3,6 +3,7 @@ import { extname, isAbsolute, resolve } from "node:path";
 import type { ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
 import {
 	loadPlannotator,
+	PlannotatorUnavailableError,
 	parseCodeReviewArgs,
 	startCodeReview,
 	startFileAnnotation,
@@ -56,6 +57,8 @@ const defaultRuntime: PlannotatorRuntime = {
 	file: startFileAnnotation,
 	review: startCodeReview,
 };
+
+export { PlannotatorUnavailableError };
 
 export async function registerPlannotator(
 	pi: ExtensionAPI,

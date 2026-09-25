@@ -50,7 +50,9 @@ these defaults:
 Edit this file to configure behavior. Set `compaction.compactAt100k` to
 `true` and reload the workbench to enable optional settled-turn
 admission at the `agent_settled` boundary. `compaction.custom` controls
-custom handling of manual and native compaction requests.
+custom handling of manual and native compaction requests. Plannotator is
+optional: if its package or compatible API is unavailable, the extension
+is skipped and the core workbench still starts.
 
 ## Initialize the worker runtime
 
@@ -85,10 +87,13 @@ files, or research access.
 
 `literature_search` is available directly to the supervisor. A
 dispatched worker also receives it when its selected skills include the
-exact `research` selector. Capability inspection can report whether the
-resolved database is absent, present with an unverified search schema,
-or degraded; it does not verify access to the underlying sources. The
-database is selected in this order:
+exact `research` selector. Capability inspection checks whether the
+resolved database is absent, compatible with required v7 columns, or
+degraded; it does not verify access to underlying sources. Incompatible
+schemas report missing columns and the rebuild/migration requirement.
+See the [v7 literature database migration
+guide](literature-database-v7.md). The database is selected in this
+order:
 
 1.  `<projectRoot>/LITERATURE.sqlite`, when it exists;
 2.  `literatureDatabase` in resolved `pi-sych/config.json`; or
@@ -134,9 +139,10 @@ canonical paths for `project`, `agents`, `style`, `evidence`,
 
 Artifact paths remain project-local. Worker context files may use a
 project-relative path or an explicitly selected readable absolute path.
-Worker-reported files remain relative-only. Configured canonical paths
-are trusted project configuration and may be external; path handling is
-not a sandbox boundary.
+Worker-reported files and observed project changes are reported as
+project-relative paths. Configured canonical paths are trusted project
+configuration and may be external; path handling is not a sandbox
+boundary.
 
 ## Skill customization
 

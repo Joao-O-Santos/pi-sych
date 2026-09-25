@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-14T13:45:53.503Z",
+  "confirmedAt": "2026-09-25T10:29:02.663Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:14b5b41c51a44fd3487e466512a8ee5f5c2b6e1a6fcc1d7083edf34ae15cb93c",
+      "fingerprint": "sha256:a70dc4dc95d4f03a1967dcd56ddae634c8ec8971ccbe6d6d0bc8b7a53535a613",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,26 +15,26 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-09-14T13:38:30.372Z",
-        "reason": "Reviewed current documentation and skill changes against the implementation and accepted project direction."
+        "at": "2026-09-25T10:29:02.663Z",
+        "reason": "Reconciled the v7 changelog/project record with the implemented release hardening, revised source budget, current tag/npm status, verification results, and remaining image/evaluation work."
       }
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:94e8dc608c5d89f070975b194189b3182022cdc51f0a2150bb7d5d1264d698c1",
+      "fingerprint": "sha256:b3c1be62f774a8da1cb6c567b2ed6f33293ed741ca04d8bc916872aef83d4af9",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-09-14T13:38:30.372Z",
-        "reason": "Reviewed current documentation and skill changes against the implementation and accepted project direction."
+        "at": "2026-09-25T10:22:52.007Z",
+        "reason": "Reviewed the v7 release-hardening implementation, reconciled tracked project and public documentation with current worker observation, optional Plannotator, literature migration, and promotion-scope behavior; reviewed README against architecture."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:ef9922ffc97fbd540f4c0db2463307d807cba21d38a54fcb565dd11d30988658",
+      "fingerprint": "sha256:1ace6dbcef62fb0cb101059e678a93f18136b056c9c60d146ce01466a6daf8a4",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,8 +46,8 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-09-14T13:38:30.372Z",
-        "reason": "Reviewed current documentation and skill changes against the implementation and accepted project direction."
+        "at": "2026-09-25T10:22:52.007Z",
+        "reason": "Reviewed the v7 release-hardening implementation, reconciled tracked project and public documentation with current worker observation, optional Plannotator, literature migration, and promotion-scope behavior; reviewed README against architecture."
       }
     },
     {
@@ -72,15 +72,15 @@
     },
     {
       "path": "docs/configuration.md",
-      "fingerprint": "sha256:bad9fb05e8d5f3fe377072de625a165ef6c02d449fcb01bca9d05d5348297095",
+      "fingerprint": "sha256:e9ae672519b9e403bca4c7617c1c671a42aae7e62b600cd15a56b592569461e8",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-09-14T13:45:53.503Z",
-        "reason": "Reviewed the final configuration documentation and its published-site link."
+        "at": "2026-09-25T10:22:52.007Z",
+        "reason": "Reviewed the v7 release-hardening implementation, reconciled tracked project and public documentation with current worker observation, optional Plannotator, literature migration, and promotion-scope behavior; reviewed README against architecture."
       }
     },
     {
@@ -98,15 +98,15 @@
     },
     {
       "path": "docs/public-contract.md",
-      "fingerprint": "sha256:ff71c1013c36d3a791e738fa450913f5d5d83bb0b19af9b1be52b4b3efe92012",
+      "fingerprint": "sha256:84c15f27341b73e17aad5c9a6df12f395b2004bcabe3249da6d312dd20ff1b87",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "compatibility"
       ],
       "acknowledgement": {
-        "at": "2026-09-14T13:38:30.372Z",
-        "reason": "Reviewed current documentation and skill changes against the implementation and accepted project direction."
+        "at": "2026-09-25T10:22:52.007Z",
+        "reason": "Reviewed the v7 release-hardening implementation, reconciled tracked project and public documentation with current worker observation, optional Plannotator, literature migration, and promotion-scope behavior; reviewed README against architecture."
       }
     },
     {
@@ -124,41 +124,41 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:e0ffc5f50825176813f44e33285fc300d73850623fa62779248df5bf8f0f80b5",
+      "fingerprint": "sha256:bb881b21a66bedafd525719ec781808dcd8519eb592094600114361f65408207",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-09-14T13:38:30.372Z",
-        "reason": "Reviewed current documentation and skill changes against the implementation and accepted project direction."
+        "at": "2026-09-25T10:29:02.663Z",
+        "reason": "Reconciled the v7 changelog/project record with the implemented release hardening, revised source budget, current tag/npm status, verification results, and remaining image/evaluation work."
       }
     },
     {
       "path": "skills/code/SKILL.md",
-      "fingerprint": "sha256:3c1829b250ca23b2b88d3172eaa5550f3cbc795d1050a22f3d19d3edffbcb485",
+      "fingerprint": "sha256:3a2d3a8a3c6075c38d9e58375701c89a6e02807222be65ed726ab3674a0153eb",
       "status": "current",
       "role": "skill",
       "authoritativeFor": [
         "code-skill"
       ],
       "acknowledgement": {
-        "at": "2026-09-14T13:38:30.372Z",
-        "reason": "Reviewed current documentation and skill changes against the implementation and accepted project direction."
+        "at": "2026-09-25T10:22:52.007Z",
+        "reason": "Reviewed the v7 release-hardening implementation, reconciled tracked project and public documentation with current worker observation, optional Plannotator, literature migration, and promotion-scope behavior; reviewed README against architecture."
       }
     },
     {
       "path": "skills/project/SKILL.md",
-      "fingerprint": "sha256:958c5943b2688cf56e057b09b6afb36e255cc60443f44b60da34fd45ef9e9699",
+      "fingerprint": "sha256:a7d4084cdfcc3138e84da94077a2d85e577b296b3a86f621bcbd42a5664e1d8e",
       "status": "current",
       "role": "skill",
       "authoritativeFor": [
         "project-skill"
       ],
       "acknowledgement": {
-        "at": "2026-09-14T13:38:30.372Z",
-        "reason": "Reviewed current documentation and skill changes against the implementation and accepted project direction."
+        "at": "2026-09-25T10:22:52.007Z",
+        "reason": "Reviewed the v7 release-hardening implementation, reconciled tracked project and public documentation with current worker observation, optional Plannotator, literature migration, and promotion-scope behavior; reviewed README against architecture."
       }
     }
   ]

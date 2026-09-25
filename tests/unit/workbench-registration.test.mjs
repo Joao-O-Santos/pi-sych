@@ -215,7 +215,7 @@ test("real workbench registers and runs its supervisor surface", async (t) => {
 	assert.equal(compactCalls.length, 0);
 	assert.match(
 		below.systemPrompt,
-		/Active capabilities \(derived from this session; availability is not authorization\):\n- active tools: dispatch_worker, literature_search, project_status\n- local literature: present — database opens read-only; search compatibility unverified\n- workers: exposed — clean or trajectory context; read-only, edit, or full-host tool mode; worker setup and model access unverified\n- remote research workers: configured — 1 configured server; credentials and reachability unverified/,
+		/Active capabilities \(derived from this session; availability is not authorization\):\n- active tools: dispatch_worker, literature_search, project_status\n- local literature: present — required v7 columns present; database opens read-only\n- workers: exposed — clean or trajectory context; read-only, edit, or full-host tool mode; worker setup and model access unverified\n- remote research workers: configured — 1 configured server; credentials and reachability unverified/,
 	);
 	assert.doesNotMatch(below.systemPrompt, /test-key|password|secret/i);
 	assert.match(SUPERVISOR_GUIDANCE, /Follow a tool's own guidance only when that tool is active/);
@@ -420,7 +420,7 @@ A changed hash establishes changed content, not conceptual drift or authority.`;
 	);
 	assert.equal(
 		dispatched.content[0].text,
-		"Worker status: partial\nSummary: fixture worker\n\nFiles:\n- A.md\n\nLimitations:\n- fake launcher",
+		"Worker status: partial\nSummary: fixture worker\n\nReported files:\n- A.md\n\nObserved project changes: none\n\nUnexpected changes: none\n\nLimitations:\n- fake launcher",
 	);
 	assert.equal(dispatched.details.result.status, "partial");
 	assert.equal(dispatched.details.launch.exitCode, 0);

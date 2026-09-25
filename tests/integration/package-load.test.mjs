@@ -315,6 +315,7 @@ test("packed install omitting optional dependencies retains the core package", a
 		"docs/ARCHITECTURE.md",
 		"docs/CHANGELOG.md",
 		"docs/CONTRIBUTING.md",
+		"docs/literature-database-v7.md",
 		"docs/LICENSE.md",
 		"docs/LICENSES/BSD-3-Clause",
 		"docs/img/logo.png",
@@ -337,6 +338,72 @@ test("packed install omitting optional dependencies retains the core package", a
 		await assert.rejects(stat(join(packageRoot, retired)));
 	await assert.rejects(stat(join(install, "node_modules/@plannotator/pi-extension")));
 	await assert.rejects(stat(join(install, "node_modules/pi-mcporter")));
+	const { commands, stderr } = await getCommands(
+		[
+			"--mode",
+			"rpc",
+			"--no-session",
+			"--no-extensions",
+			"--extension",
+			join(packageRoot, "extensions/workbench/index.ts"),
+			"--extension",
+			join(packageRoot, "extensions/plannotator/index.ts"),
+			"--no-skills",
+			"--no-prompt-templates",
+			"--no-themes",
+			"--no-context-files",
+		],
+		{ PI_CODING_AGENT_DIR: join(install, "agent") },
+		install,
+	);
+	assert.equal(stderr, "");
+	const names = commands.map((command) => command.name);
+	assert.ok(names.includes("pi-sych-status"));
+	assert.equal(
+		names.some((name) => name.startsWith("plannotator-")),
+		false,
+	);
+});
+
+test("packed install with optional dependencies exposes the three Plannotator commands", async (t) => {
+	const root = await tempRoot(t, "pi-sych-packed-optionals-");
+	const tarballs = join(root, "tarballs"),
+		install = join(root, "install");
+	await mkdir(tarballs);
+	await run("npm", ["pack", "--pack-destination", tarballs], { cwd: process.cwd() });
+	const packageFile = join(tarballs, (await readdir(tarballs))[0]);
+	await mkdir(install);
+	await run("npm", ["init", "-y"], { cwd: install });
+	await run("npm", ["install", "--ignore-scripts", packageFile], { cwd: install });
+	const packageRoot = join(install, "node_modules/pi-sych");
+	for (const dependency of ["@plannotator/pi-extension", "jiti"])
+		assert.ok((await stat(join(install, "node_modules", dependency))).isDirectory());
+	const { commands, stderr } = await getCommands(
+		[
+			"--mode",
+			"rpc",
+			"--no-session",
+			"--no-extensions",
+			"--extension",
+			join(packageRoot, "extensions/workbench/index.ts"),
+			"--extension",
+			join(packageRoot, "extensions/plannotator/index.ts"),
+			"--no-skills",
+			"--no-prompt-templates",
+			"--no-themes",
+			"--no-context-files",
+		],
+		{ PI_CODING_AGENT_DIR: join(install, "agent") },
+		install,
+	);
+	assert.equal(stderr, "");
+	assert.deepEqual(
+		commands
+			.map((command) => command.name)
+			.filter((name) => name.startsWith("plannotator-"))
+			.sort(),
+		["plannotator-annotate", "plannotator-last", "plannotator-review"],
+	);
 });
 
 test("bootstrapped worker starts with only the worker extension", async (t) => {

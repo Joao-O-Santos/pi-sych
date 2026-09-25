@@ -80,7 +80,10 @@ summary, existing project-relative output files, and limitations. A
 worker's `complete` status is not human approval.
 
 Cancellation, timeout, spawn failure, a signal exit, or non-zero exit
-takes precedence over a result file. Temporary runtime/session state is
+takes precedence over a result file. Before launch and after
+termination, Pi Sych snapshots project files and reports reported,
+observed, and unexpected changed paths independently of worker success.
+Observation does not undo changes. Temporary runtime/session state is
 removed after every outcome.
 
 ## Project state
@@ -115,10 +118,13 @@ native compactor remains in control.
 ## Local literature
 
 `literature_search` queries the configured read-only SQLite FTS5 index.
-Its model-facing guidance explicitly frames results as discovery and
-provenance evidence rather than source verification. Exact claims still
-require inspection of the underlying source when material. Search access
-does not establish completeness.
+It checks for the v7 `papers.item_type` and `papers.creators_json`
+columns before searching and reports an actionable incompatibility for
+older schemas. See the [v7 literature migration
+guide](literature-database-v7.md). Its model-facing guidance explicitly
+frames results as discovery and provenance evidence rather than source
+verification. Exact claims still require inspection of the underlying
+source when material. Search access does not establish completeness.
 
 The `research` skill is capability-aware at the guidance layer. It tells
 the model to inspect what is actually available and choose by function:
@@ -142,11 +148,14 @@ Writing and review guidance treats standalone artifact self-containment
 as a quality criterion. Process residue, unexplained version/revision
 language, reviewer-response wording, and unmotivated denials or
 contrasts are potential context leakage when they have no reader-visible
-job. This is not an AI-detector or banned-phrase rule: established
-voice, useful idiosyncrasy, and constructions that genuinely serve the
-genre or argument should remain. Response letters and revision memos may
-appropriately discuss reviewers, versions, and changes because the
-revision process is part of their subject.
+job. Review lenses trace paragraph and sentence flow in reading order,
+and examine cumulative habits such as semicolon/em-dash repetition,
+serial "not X but Y" turns, and stacked hedges. These are diagnostic
+prompts, not counts or bans: preserve useful idiosyncrasy, purposeful
+constructions, and calibrated uncertainty, while explaining concrete
+reader effects and offering minimal repairs. Response letters and
+revision memos may appropriately discuss reviewers, versions, and
+changes because the revision process is part of their subject.
 
 The prompt hierarchy is intentionally layered:
 

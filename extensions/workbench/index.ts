@@ -99,8 +99,19 @@ export function formatDispatchWorkerOutcome(outcome: DispatchOutcome) {
 		`Worker status: ${result?.status ?? "unavailable"}`,
 		`Summary: ${result?.summary ?? outcome.error ?? "no result"}`,
 		"",
-		result?.files.length ? "Files:" : "Files: none",
-		...(result?.files ?? []).map((file) => `- ${file}`),
+		outcome.reportedFiles.length ? "Reported files:" : "Reported files: none",
+		...outcome.reportedFiles.map((file) => `- ${file}`),
+		"",
+		outcome.observedChangedFiles.length
+			? "Observed project changes:"
+			: "Observed project changes: none",
+		...outcome.observedChangedFiles.map((file) => `- ${file}`),
+		"",
+		outcome.unexpectedChanges.length ? "Unexpected changes:" : "Unexpected changes: none",
+		...outcome.unexpectedChanges.map((file) => `- ${file}`),
+		...(outcome.observationError
+			? ["", `Change observation failed: ${outcome.observationError}`]
+			: []),
 		"",
 		result?.limitations.length ? "Limitations:" : "Limitations: none",
 		...(result?.limitations ?? []).map((item) => `- ${item}`),

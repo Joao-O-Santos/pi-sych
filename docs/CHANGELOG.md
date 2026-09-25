@@ -7,30 +7,7 @@ state.
 
 ## Unreleased
 
-### Changed
-
-- Make `dispatch_worker.mode` prominent in the model-facing prompt and
-  schema, with explicit guidance for selecting `read-only`, `edit`, or
-  `full-host` rather than confusing it with `contextMode`.
-- Add contextual package writing defaults in
-  `skills/write/DEFAULT_STYLE.md`. Writing workers load them as a
-  baseline and layer project `STYLE.md` overrides only for writing
-  tasks; explicit user, venue, renderer, accessibility, and evidence
-  requirements remain higher precedence.
-- Add vision-model diff/patch comments for stale documentation diagrams,
-  covering the missing automation skill, literature-search tool, current
-  compaction boundaries, and other corrections. The PNGs themselves
-  remain unchanged until regenerated and reviewed.
-- Reconcile v7 runtime documentation with the derived non-authorizing
-  capability summary, settled-turn compaction, thin review prompts, and
-  inspected-only local/remote integration state; raise the nonblank
-  runtime source-budget limit to 3,000. No package version or release is
-  declared.
-- Refine Markdown guidance around primary task routes, optional method
-  overlays, provider-independent capabilities, and optional user machine
-  context in `STACK.md`; add the model-facing tool convention to pi-tin.
-- Ignore empty optional project-state gap records during working-memory
-  validation instead of discarding an otherwise usable continuation.
+No unreleased changes.
 
 ## v7.0.0
 
@@ -42,16 +19,45 @@ state.
 - Return nullable `itemType` and nullable or structured `creators` from
   `literature_search`; remove `metadata.authors`.
 
-### Compatibility
+### Added
+
+- Add the `automation` umbrella skill and strengthen the seven-skill
+  routing architecture, with shared methods and thin review prompts.
+- Add derived supervisor capability reporting and settled-turn
+  compaction with bounded observable context and native fallback.
+- Add writing defaults and strengthen review guidance for artifact
+  self-containment, context leakage, prose flow, cumulative style
+  patterns, and calibrated uncertainty.
+- Add v7 literature migration guidance and early detection of
+  incompatible database schemas.
+- Report worker-reported files separately from mechanically observed
+  project changes, including changes left by failed or cancelled
+  workers.
+
+### Changed
+
+- Clarify worker tool mode separately from context mode, require
+  explicit project/personal scope before `agents` promotion without
+  redundant questions, and make Plannotator degrade gracefully when
+  optional dependencies or a compatible adapter are unavailable.
+- Add paste-ready image-edit instructions for bringing public diagrams
+  into line with current skills, tools, compaction, and worker context.
+- Raise the nonblank runtime source budget to 3,200 lines, leaving
+  headroom above the current approximately 3,000-line runtime.
+
+### Compatibility and migration
 
 This major release changes both the supported literature database schema
 and the public search result. Users of local literature search must
-externally rebuild or migrate v6 databases and update result consumers.
-There is no automatic conversion from `first_author`, which may contain
-lossy citation stems. Pi Sych performs shallow JSON shape checks only;
-it does not infer creators, validate the CSL vocabulary, format
-citations, or choose roles for a citation style. Users who do not use
-local literature search have no literature-data migration.
+rebuild or migrate v6 databases and update result consumers. There is no
+automatic conversion from `first_author`, which may contain lossy
+citation stems. Reconstruct creators from source documents or reliable
+structured records where possible; leave them unknown when they cannot
+be recovered. See the [v7 literature migration
+guide](literature-database-v7.md). Pi Sych does not infer creators,
+validate the CSL vocabulary, format citations, or choose roles for a
+citation style. Users who do not use local literature search have no
+literature-data migration.
 
 ## v6.5.0
 

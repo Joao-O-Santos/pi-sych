@@ -264,6 +264,9 @@ test("worker output is reduced to result essentials", () => {
 	assert.match(
 		formatDispatchWorkerOutcome({
 			launch: { exitCode: 0, stderr: "" },
+			reportedFiles: [],
+			observedChangedFiles: [],
+			unexpectedChanges: [],
 			error: "no result",
 		}),
 		/Summary: no result/,
@@ -273,8 +276,12 @@ test("worker output is reduced to result essentials", () => {
 		model: "m",
 		timeoutMs: 1,
 		launch: { exitCode: 0, stderr: "" },
+		reportedFiles: ["A.md"],
+		observedChangedFiles: ["A.md"],
+		unexpectedChanges: [],
 		result: { status: "complete", summary: "done", files: ["A.md"], limitations: [] },
 	});
-	assert.match(text, /Files:\n- A.md/);
+	assert.match(text, /Reported files:\n- A.md/);
+	assert.match(text, /Observed project changes:\n- A.md/);
 	assert.doesNotMatch(text, /Result package|Artifacts/);
 });

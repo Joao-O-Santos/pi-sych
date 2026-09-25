@@ -1,5 +1,54 @@
 # Architecture diagrams
 
+## Paste-ready image-edit prompt
+
+Attach **one target PNG at a time** to your image-generating model,
+paste the prompt below, and replace `[TARGET-SPECIFIC EDIT]` with the
+matching correction from this file. Ask the model to return an edited
+PNG, not SVG or a textual mock-up. Inspect the rendered result and all
+labels before replacing the repository asset.
+
+> Edit the attached Pi Sych diagram in place. Preserve its existing
+> illustration, palette, texture, composition, and overall visual
+> identity. Make only the content corrections listed here; do not
+> redesign the image or invent new features. Keep all text exact,
+> correctly spelled, and legible at the image's normal README display
+> size. Reflow or resize only the affected area as needed. Keep the
+> image's existing dimensions and PNG format. Do not add decorative
+> text, quotations, labels, connectors, steps, or icons that change the
+> documented behavior. Do not imply that workers are sandboxes, that
+> every task follows one required sequence, that tool availability
+> proves access, or that generated work is approved automatically.
+>
+> Target-specific edit: \[TARGET-SPECIFIC EDIT\]
+
+### Target-specific edits
+
+- **`workflow.png`:** In the skills panel, retain the six existing
+  skills and add a seventh equally legible `automation` card. Label it
+  briefly: `Workflows, data/file tasks, and browser automation.`
+  Preserve that tasks use only relevant skills and workers are optional.
+
+- **`architecture.png`:** Add `literature_search` as the third
+  supervisor tool, described as local read-only literature discovery
+  whose metadata and snippets are not source verification. Update the
+  worker/result area to show that reported files and observed project
+  changes are distinct, unexpected changes are surfaced even after
+  worker failure, and Pi Sych does not automatically undo them.
+
+- **`supervisors_context.png`:** Update the compaction area to show
+  bounded, observable conversation material and canonical snapshots
+  flowing into a bounded continuation, with native fallback and no
+  mutation of canonical semantic files. Show proposals as unreviewed
+  until human review. Keep the worker context packet separate from
+  compaction; package writing defaults and project `STYLE.md` apply only
+  to selected writing workers.
+
+- **`skills_architecture.png`:** Change six public skills to seven and
+  add `automation`. Retain project, write, analyze, code, review, and
+  research. Keep methods/modules private supporting guidance, not
+  additional public skills, and do not imply a fixed workflow.
+
 - `logo.png` is the project logo used at the top of `README.md` and as
   the Pi package gallery preview.
 

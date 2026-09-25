@@ -60,21 +60,47 @@ file records the implementation sequence and current verification state.
 ## Reconciliation and verification
 
 - [x] Reconcile canonical documentation and project state with v7 runtime.
-- [x] Raise the nonblank runtime source-budget script limit to 3,000.
-- [x] Preserve the optional machine-context `STACK.md` boundary, unchanged
-  images, and human-ownership/non-sandbox boundaries.
+- [x] Set the nonblank runtime source budget to 3,200 lines, leaving
+  headroom above the current approximately 3,000-line runtime.
+- [x] Preserve the optional machine-context `STACK.md` and
+  human-ownership/non-sandbox boundaries.
 - [x] Harden custom compaction: instruction/data isolation, aggregate input
   bounds, line-break rejection in model-derived memory values, and
   notification-safe proposal persistence.
 - [x] Make capability claims ownership-aware and reject empty worker
   assignments at the request boundary.
-- [x] Apply material findings from final documentation review; keep image
-  files unchanged.
+- [x] Apply material findings from final documentation review and add
+  paste-ready image-edit instructions; PNG updates remain pending.
 - [x] Finalize `PROJECT.md` and `TODO.md` after accepted corrections.
 - [ ] Run opt-in live prompt-quality fixtures if the configured models and cost
   make them useful; report separately from deterministic verification.
-- [ ] Confirm main CI and Pages after commits are available remotely.
+- [ ] Confirm main CI and Pages after a reviewed release-candidate commit is
+  available remotely.
 
-Constraints for this work: no release, tag, publication, or package-version
-change; do not push, tag, publish, deploy, or release without separate
-owner instruction.
+## v7 release hardening
+
+- [x] Report worker-reported, observed, and unexpected project changes,
+  including residual changes after failed dispatch; never auto-rollback.
+- [x] Keep core Pi startup available when optional Plannotator dependencies
+  are absent; test packed installs with and without optionals.
+- [x] Detect incompatible v6 literature columns before querying and publish a
+  v7 migration guide.
+- [x] Clarify project-vs-personal `agents` promotion: ask only when scope is
+  not explicit.
+- [ ] Generate and visually review updated workflow, architecture, context,
+  and skills diagrams from the paste-ready prompt in `docs/img/readme.md`.
+- [x] Consolidate intended v7 material into `docs/CHANGELOG.md` and
+  review/acknowledge tracked state through `project_status`.
+- [x] Run `make verify`, `make site`, and packed-install tests with and
+  without optional dependencies. The public live-model usage suite remains
+  opt-in and is skipped by default.
+- [ ] Run the real-Pi live workflow and behavioral evaluation locally when
+  provider use and cost are approved; do not add them to default/cloud CI.
+- [x] Inspect the `npm pack --dry-run` file list and size: 184 files,
+  16.7 MB compressed. The existing PNGs dominate the package and remain
+  pending regeneration and review.
+- [ ] Reinspect final pack contents and exact candidate after updated PNGs
+  are supplied and visually reviewed.
+
+Constraints: no push, tag, publication, deployment, or release without
+separate owner instruction.

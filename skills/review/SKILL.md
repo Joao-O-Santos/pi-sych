@@ -12,27 +12,44 @@ Report only checks actually performed.
 
 Review is advisory unless revision or implementation was also requested.
 
-For prose, route generic structure, voice, reader-friction, and
-self-containment checks to the [prose method](../_methods/prose/guidance.md).
-When reviewing a standalone artifact, ask first whether **every sentence earns
-its keep**. Then explicitly test for a **possible invisible interlocutor**. The reviewer may not know the hidden drafting context, so do not
-claim that a sentence came from it without evidence. Instead, look for
-negations, caveats, clarifications, rebuttals, reassurances, or corrections that
-feel unmotivated from the artifact alone. Ask whether an external reader would
-wonder "why am I being told this?" or "what objection is this answering?" Flag
-that reader friction when the artifact has not supplied the premise, dispute, or
-alternative needed to motivate the sentence. Apply extra scrutiny to caveats and
-qualifications: they should clarify a plausible misunderstanding, material
-limitation, or live alternative, not merely make the prose more hedged. Use the requested collaborative or
-adversarial lens. Report material divergence from accepted project state rather
-than silently choosing an authority. Select the smallest route that covers the
-review.
+For prose, route structure, voice, information flow, reader friction, and
+self-containment through the [prose method](../_methods/prose/guidance.md).
+Review the artifact as a whole before polishing sentences: identify its reader,
+purpose, argument path, and paragraph jobs. Then test whether each sentence
+advances that path or supplies context, evidence, a necessary transition, or a
+material qualification. Explicitly test for a **possible invisible
+interlocutor**. The reviewer cannot know hidden drafting context; do not claim
+that a sentence came from it. Instead ask whether the artifact itself motivates
+its denials, contrasts, caveats, rebuttals, reassurances, and corrections. Would
+a reader ask "why am I being told this?" or "what objection is this
+answering?" If so, identify the missing premise or propose the smallest direct
+positive formulation.
+
+Inspect style patterns across the artifact, not just isolated sentences:
+repeated semicolons or em dashes, serial "not X but Y" constructions, stacked
+hedges, formulaic symmetry, and signposting may cumulatively flatten voice or
+interrupt flow. These are diagnostic prompts, never count-based violations.
+For each instance, ask what rhetorical or evidential work it does. Keep
+punctuation that expresses a real relation, contrasts that distinguish live
+alternatives, and hedges that accurately calibrate uncertainty. Challenge
+hedging when several weak qualifiers obscure who knows what, how strongly, or
+why; do not convert genuine uncertainty into unwarranted certainty.
+
+Trace flow at both scales: does each paragraph follow from the previous one,
+and does each sentence connect known information to what it newly contributes?
+Notice abrupt topic shifts, delayed main clauses, overloaded sentences, and
+transitions that announce rather than establish a relationship. Read passages
+in sequence, not as a collection of quotable defects. Ground material findings
+in location and reader effect, and offer a minimal repair or a short example
+when useful. Use the requested collaborative or adversarial lens. Report
+material divergence from accepted project state rather than silently choosing
+an authority. Select the smallest route that covers the review.
 
 ## Task routes
 
-Use the smallest lens that covers the review. Add a shared method when
-its distinction materially affects the review; lenses are not a fixed
-multi-pass workflow.
+Use the smallest lens that covers the review. Add a shared method when its
+distinction materially affects the review; lenses are not a fixed multi-pass
+workflow.
 
 | Task | Route |
 | --- | --- |
@@ -55,8 +72,8 @@ multi-pass workflow.
   support, provenance, or claim calibration is under review.
 - Add [argument analysis](../_methods/argument-analysis/guidance.md) when
   premises, inference, or rival accounts matter.
-- Add [citations](../research/modules/citations/guidance.md) for
-  bibliographic identity and version checks.
+- Add [citations](../research/modules/citations/guidance.md) for bibliographic
+  identity and version checks.
 - Add [testing](../code/modules/testing/guidance.md) for implementation
   failure-path or contract checks.
 - Add [R and Quarto](../analyze/modules/r-quarto/guidance.md) for

@@ -199,18 +199,23 @@ gap classification, canonical non-mutation, and deterministic fallback.
 
 See [compaction design](docs/compaction-design.md).
 
-## 7. Documentation and images (reconciled)
+## 7. Documentation and images (release follow-up)
 
 README, architecture, configuration, public contract, code tour, review prompt
-documentation, changelog, project state, and image status now describe actual
-behavior. Images remain unchanged and their stale-diagram limitations remain
-explicitly documented.
+documentation, changelog, and project state are being reconciled with actual
+behavior. A paste-ready image-edit prompt in `docs/img/readme.md` identifies
+the specific updates needed for workflow, architecture, context, and skills
+diagrams. Existing PNGs remain stale until regenerated and visually reviewed;
+this is still a release task.
 
 ## 8. Reconciliation state
 
 The v7 runtime boundaries remain implemented: capability claims are
-ownership-aware, worker assignments are bounded, compaction is settled,
-bounded, observable, and non-mutating, and review prompts remain thin.
+ownership-aware, worker dispatch reports observed and unexpected project
+changes without rollback, optional Plannotator failure does not prevent core
+startup, incompatible literature schemas fail with migration guidance,
+compaction is settled, bounded, observable, and non-mutating, and review
+prompts remain thin.
 The Markdown architecture pass keeps shared methods and specialist
 scaffolding while routing through a primary module with optional
 overlays. `STACK.md` is optional user machine context, not project
@@ -235,10 +240,12 @@ multiple layers, or instructions no longer earn their context cost.
 
 ## Definition of done
 
-The authorized v7 implementation and documentation scope is complete when
-capability awareness is truthful and derived, delegation remains bounded and
-non-pipelined, review prompts defer to the skill, compaction preserves
-observable continuity at a safe lifecycle boundary, documentation matches
-implementation, and repository checks pass with the 3,000-line runtime source
-budget. This record makes no release claim; version, `SYNC.json`, and images
-remain unchanged.
+The v7 implementation and documentation scope is complete when capability
+awareness is truthful and derived, delegation remains bounded and
+non-pipelined, worker mutations are observable, optional integrations degrade
+safely, literature migration is actionable, review prompts defer to the skill,
+compaction preserves observable continuity at a safe lifecycle boundary,
+documentation and images match implementation, and repository checks pass
+under the 3,200-line runtime source budget, leaving headroom above the current
+approximately 3,000-line runtime. This record is release preparation, not
+publication: no v7 tag or npm publication has been made.

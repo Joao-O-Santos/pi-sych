@@ -7,6 +7,17 @@ import { loadPiSychConfig, piSychConfigDirectory } from "./config-directory.js";
 
 const query =
 	"SELECT p.filepath AS source_path, p.title, p.item_type, p.creators_json, p.year, p.doi, snippet(papers_fts, 2, '[', ']', ' … ', 32) AS snippet, bm25(papers_fts) AS score FROM papers_fts JOIN papers AS p ON p.id = papers_fts.rowid WHERE papers_fts MATCH ? ORDER BY score LIMIT ?";
+const requiredV7PapersColumns = ["item_type", "creators_json"];
+
+function missingV7PapersColumns(database: DatabaseSync): string[] {
+	const rows = database.prepare("PRAGMA table_info(papers)").all() as Array<{ name?: unknown }>;
+	const names = new Set(rows.map((row) => row.name));
+	return requiredV7PapersColumns.filter((column) => !names.has(column));
+}
+
+function incompatibleV7SchemaMessage(path: string, missingColumns: string[]): string {
+	return `Literature database at ${path} is incompatible with v7: missing required papers columns: ${missingColumns.join(", ")}. Rebuild or migrate the database before search.`;
+}
 export interface LiteratureResult {
 	metadata: {
 		title: unknown;
@@ -40,9 +51,12 @@ export function literatureCapabilityState(projectRoot: string): string {
 			.prepare("SELECT name FROM sqlite_master WHERE name IN ('papers', 'papers_fts')")
 			.all() as Array<{ name?: unknown }>;
 		const names = new Set(rows.map((row) => row.name));
-		return names.has("papers") && names.has("papers_fts")
-			? "present — database opens read-only; search compatibility unverified"
-			: "degraded — database is present but the supported schema is incomplete";
+		if (!names.has("papers") || !names.has("papers_fts"))
+			return "degraded — database is present but the supported schema is incomplete";
+		const missingColumns = missingV7PapersColumns(database);
+		return missingColumns.length
+			? `degraded — incompatible v7 schema; missing required papers columns: ${missingColumns.join(", ")}; rebuild or migrate before search`
+			: "present — required v7 columns present; database opens read-only";
 	} catch (error) {
 		return `degraded — inspection failed: ${error instanceof Error ? error.message : String(error)}`;
 	}
@@ -61,6 +75,8 @@ export function searchLiterature(
 	if (!existsSync(path)) throw new Error(`Literature database is unavailable at ${path}`);
 	try {
 		using database = new DatabaseSync(path, { readOnly: true });
+		const missingColumns = missingV7PapersColumns(database);
+		if (missingColumns.length) throw new Error(incompatibleV7SchemaMessage(path, missingColumns));
 		const rows = database.prepare(query).all(queryText, limit);
 		return rows.map((row) => {
 			if (typeof row.source_path !== "string")

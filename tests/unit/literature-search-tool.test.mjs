@@ -5,6 +5,7 @@ import { join, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import test from "node:test";
 import {
+	literatureCapabilityState,
 	registerLiteratureSearch,
 	searchLiterature,
 } from "../../.test-build/workbench/src/literature-search.js";
@@ -171,11 +172,15 @@ test("old and incomplete schemas fail before returning no matches", async (t) =>
 		);
 		for (const column of missing) database.exec(`ALTER TABLE papers DROP COLUMN ${column}`);
 		database.close();
+		const expected = missing.join(", ");
 		for (const query of ["needle", "absent"])
 			assertWrappedFailure(
 				path,
 				() => searchLiterature(root, query),
-				/no such column.*(?:item_type|creators_json)/i,
+				new RegExp(
+					`incompatible with v7: missing required papers columns: ${expected}.*Rebuild or migrate`,
+					"i",
+				),
 			);
 	}
 });
@@ -252,7 +257,7 @@ test("a v7 database remains read-only and preserves structured metadata", async 
 	assert.deepEqual(await readFile(path), before);
 });
 
-test("an incompatible papers schema reports the wrapped SQLite boundary", async (t) => {
+test("an incompatible papers schema reports the migration before the SQL query", async (t) => {
 	const root = await project(t);
 	const path = join(root, "LITERATURE.sqlite");
 	const database = new DatabaseSync(path);
@@ -263,11 +268,17 @@ test("an incompatible papers schema reports the wrapped SQLite boundary", async 
 		"CREATE VIRTUAL TABLE papers_fts USING fts5(filepath, title, abstract, content='papers', content_rowid='id')",
 	);
 	database.close();
+	assert.match(
+		literatureCapabilityState(root),
+		/degraded — incompatible v7 schema; missing required papers columns: item_type, creators_json; rebuild or migrate before search/i,
+	);
 	assert.throws(
 		() => searchLiterature(root, "paper"),
 		(error) => {
 			assert.ok(error.message.includes(path));
-			assert.match(error.message, /no such column: p\.(item_type|creators_json)/i);
+			assert.match(error.message, /incompatible with v7/i);
+			assert.match(error.message, /missing required papers columns: item_type, creators_json/i);
+			assert.match(error.message, /rebuild or migrate/i);
 			assert.doesNotMatch(error.message, /first_author/i);
 			return true;
 		},

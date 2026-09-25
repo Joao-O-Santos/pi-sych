@@ -1,9 +1,19 @@
-import { spawn } from "node:child_process";
-import { randomUUID } from "node:crypto";
+import { execFileSync, spawn } from "node:child_process";
+import { createHash, randomUUID } from "node:crypto";
 import { constants, existsSync, statSync } from "node:fs";
-import { access, mkdir, mkdtempDisposable, open, readFile, writeFile } from "node:fs/promises";
+import {
+	access,
+	lstat,
+	mkdir,
+	mkdtempDisposable,
+	open,
+	readdir,
+	readFile,
+	readlink,
+	writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { dirname, isAbsolute, resolve } from "node:path";
+import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { StringEnum } from "@earendil-works/pi-ai";
 import { type SessionEntry, SessionManager } from "@earendil-works/pi-coding-agent";
 import { type Static, Type } from "typebox";
@@ -68,6 +78,10 @@ export type DispatchOutcome = {
 	model: string;
 	timeoutMs: number;
 	launch: WorkerLaunchOutcome;
+	reportedFiles: string[];
+	observedChangedFiles: string[];
+	unexpectedChanges: string[];
+	observationError?: string;
 	result?: WorkerResult;
 	error?: string;
 };
@@ -479,6 +493,70 @@ export async function launchPiWorker(
 	}
 	return { exitCode, stderr, ...(terminationSignal ? { terminationSignal } : {}) };
 }
+async function snapshotFile(root: string, relativePath: string): Promise<string> {
+	const path = resolve(root, relativePath);
+	try {
+		const info = await lstat(path);
+		if (info.isSymbolicLink()) return `link:${await readlink(path)}`;
+		if (info.isFile())
+			return `file:${createHash("sha256")
+				.update(await readFile(path))
+				.digest("hex")}`;
+		return `other:${info.mode}`;
+	} catch (error) {
+		if ((error as NodeJS.ErrnoException).code === "ENOENT") return "missing";
+		throw error;
+	}
+}
+
+async function projectSnapshot(root: string): Promise<Map<string, string>> {
+	try {
+		const gitRoot = execFileSync("git", ["rev-parse", "--show-toplevel"], {
+			cwd: root,
+			encoding: "utf8",
+			stdio: ["ignore", "pipe", "ignore"],
+		}).trim();
+		const prefix = relative(gitRoot, resolve(root)).split(sep).join("/");
+		const paths = execFileSync(
+			"git",
+			["status", "--porcelain=v1", "-z", "--untracked-files=all", "--no-renames", "--", "."],
+			{ cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
+		)
+			.split(String.fromCharCode(0))
+			.filter(Boolean)
+			.map((entry) => entry.slice(3))
+			.filter((path) => !prefix || path.startsWith(`${prefix}/`))
+			.map((path) => (prefix ? path.slice(prefix.length + 1) : path));
+		return new Map(
+			await Promise.all(
+				paths.map(
+					async (path): Promise<[string, string]> => [path, await snapshotFile(root, path)],
+				),
+			),
+		);
+	} catch {
+		// Non-Git project roots still need observable file snapshots.
+	}
+	const snapshot = new Map<string, string>();
+	const visit = async (directory: string, prefix = ""): Promise<void> => {
+		for (const entry of await readdir(directory, { withFileTypes: true })) {
+			if (!prefix && entry.name === ".git") continue;
+			const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name;
+			const path = resolve(directory, entry.name);
+			if (entry.isDirectory()) await visit(path, relativePath);
+			else snapshot.set(relativePath, await snapshotFile(root, relativePath));
+		}
+	};
+	await visit(root);
+	return snapshot;
+}
+
+function changedProjectFiles(before: Map<string, string>, after: Map<string, string>): string[] {
+	return [...new Set([...before.keys(), ...after.keys()])]
+		.filter((path) => before.get(path) !== after.get(path))
+		.sort();
+}
+
 export async function dispatchWorker(options: {
 	project: ResolvedProject;
 	workerAgentDir: string;
@@ -539,13 +617,31 @@ export async function dispatchWorker(options: {
 		...(options.signal ? { signal: options.signal } : {}),
 	};
 	spec.prompt = taskPrompt(spec, contextFiles);
+	const before = await projectSnapshot(options.project.projectRoot);
 	const launch = await (options.launcher ?? launchPiWorker)(spec);
+	let observedChangedFiles: string[] = [],
+		observationError: string | undefined;
+	try {
+		observedChangedFiles = changedProjectFiles(
+			before,
+			await projectSnapshot(options.project.projectRoot),
+		);
+	} catch (error) {
+		observationError = error instanceof Error ? error.message : String(error);
+	}
+	const observed = {
+		reportedFiles: [] as string[],
+		observedChangedFiles,
+		unexpectedChanges: observedChangedFiles,
+		...(observationError ? { observationError } : {}),
+	};
 	if (launch.classification || launch.terminationSignal || launch.exitCode !== 0)
 		return {
 			id,
 			model,
 			timeoutMs,
 			launch,
+			...observed,
 			error: launch.classification
 				? `Worker ${launch.classification}`
 				: `Worker exited ${launch.exitCode ?? "without an exit code"}${launch.stderr ? `: ${launch.stderr}` : ""}`,
@@ -554,13 +650,26 @@ export async function dispatchWorker(options: {
 		const result = validateWorkerResult(JSON.parse(await readFile(resultPath, "utf8")));
 		for (const file of result.files)
 			await resolveExistingProjectPath(options.project.projectRoot, file);
-		return { id, model, timeoutMs, launch, result };
+		const reportedFiles = result.files,
+			reported = new Set(reportedFiles);
+		return {
+			id,
+			model,
+			timeoutMs,
+			launch,
+			reportedFiles,
+			observedChangedFiles,
+			unexpectedChanges: observedChangedFiles.filter((file) => !reported.has(file)),
+			...(observationError ? { observationError } : {}),
+			result,
+		};
 	} catch (reason) {
 		return {
 			id,
 			model,
 			timeoutMs,
 			launch,
+			...observed,
 			error: `Worker result protocol failed: ${reason instanceof Error ? reason.message : String(reason)}`,
 		};
 	}

@@ -107,21 +107,26 @@ persistence from scrutiny, narrows approval checkpoints to genuinely new
 consequential choices or side effects outside an authorized scope, and
 makes clean-versus-trajectory delegation depend on actual context need.
 
-{verified} `literature_search` states that index results are discovery
-metadata/snippets rather than source verification or completeness
-evidence. Worker terminal-result fields expose their semantic limits in
-schema descriptions. The supervisor-start capability summary is derived
-from active tools and local inspection and remains non-authorizing.
-Local literature and remote MCPorter state are inspected/configured
-only; neither verifies access.
+{verified} `literature_search` frames results as discovery metadata and
+snippets rather than source verification or completeness evidence. It
+checks for required v7 columns before search and reports incompatible
+schemas with migration guidance. Worker terminal-result fields expose
+their semantic limits in schema descriptions. The supervisor-start
+capability summary is derived from active tools and local inspection and
+remains non-authorizing. Local literature and remote MCPorter state do
+not verify source access.
 
-{verified} Writing and review guidance now includes artifact
-self-containment and reader-friction/context-leakage checks. Standalone
-manuscripts should not retain revision-history, reviewer-response,
-prompt, or version language without an independent scholarly purpose;
-response-to-reviewers artifacts remain free to use that language when
-the genre requires it. Guidance treats model-like rhetorical habits as
-contextual failure patterns rather than banned phrases.
+{verified} Writing and review guidance includes artifact
+self-containment and reader-friction/context-leakage checks. Review
+lenses now explicitly trace prose flow in reading order and diagnose
+cumulative patterns such as semicolon/em-dash repetition, unmotivated
+"not X but Y" contrasts, and stacked hedges without turning them into
+punctuation quotas or bans. They distinguish calibrated uncertainty from
+defensive hedging and require findings to explain reader effect.
+Standalone manuscripts should not retain revision-history,
+reviewer-response, prompt, or version language without an independent
+scholarly purpose; response-to-reviewers artifacts remain free to use it
+when genre requires it.
 
 {verified} Research guidance now instructs models to inspect available
 capability classes and use them for their native purpose. Local
@@ -132,36 +137,42 @@ Metadata and snippets remain discovery evidence until the underlying
 source is inspected when exact claims, methods, results, quotations, or
 correction status matter.
 
-{verified} `PLAN.md` and `TODO.md` record the v7 implementation state.
-Five packaged review prompts remain thin and defer to the `review`
-skill. Custom compaction retains bounded observable trajectory at the
-settled boundary, preserves recorded decision labels without
+{verified} `PLAN.md` and `TODO.md` record v7 implementation and release
+hardening. Five packaged review prompts remain thin and defer to the
+`review` skill. Custom compaction retains bounded observable trajectory
+at the settled boundary, preserves recorded decision labels without
 verification, appends only bounded unreviewed inbox proposals, never
 mutates canonical semantic files, and falls back to the native compactor
-on omission or failure.
+on omission or failure. Worker dispatch now reports claimed, observed,
+and unreported project changes even after failure; observation does not
+roll back changes. Plannotator absence does not prevent core startup.
 
 {verified} Present-tense
 README/configuration/architecture/public-contract text describes seven
 skills, derived non-authorizing capability state, the
 persistence/scrutiny and clean/trajectory semantics, and implemented
 settled compaction. Prompt word-count accounting has been removed; the
-nonblank runtime source-code budget is 3,000 lines.
+nonblank runtime source-code budget is 3,200 lines, providing headroom
+for the current approximately 3,000-line runtime.
 
 {verified} Repository-native formatting, documentation, type, budget,
-and test checks are part of the maintained acceptance boundary. No
-release, tag, publication, or package-version change has been performed.
+and test checks are part of the maintained acceptance boundary. The
+working package version is 7.0.0; no v7 Git tag exists and npm reports
+that version unpublished. No tag, publication, or release action has
+been performed.
 
 ## Previous action
 
-{verified} Completed the v7 runtime and documentation reconciliation:
-capability summary, settled admission, bounded observable compaction,
-packaged review prompts, truthful integration states, and the 3,000-line
-source budget are implemented and documented. No release action was
-taken.
+{verified} Implemented release-hardening changes for v7 literature
+compatibility, worker mutation observation, optional Plannotator
+startup, prose-review guidance, and the project/personal scope rule.
+Added a paste-ready prompt for updating stale diagrams; the PNG assets
+still need generated edits and visual review.
 
 ## Immediate next step
 
-{accepted} Keep the implemented v7 behavior under review, reconcile
-`SYNC.json` only through the normal human-owned status workflow, and run
-the repository gates when changes continue. Images remain unchanged. Do
+{accepted} Finish the release candidate after the diagram PNGs are
+updated and visually reviewed: rerun repository gates, run opt-in live
+behavioral checks locally when provider use and cost are approved, and
+inspect final package contents. Recheck the candidate before commit. Do
 not tag, publish, or release v7.0.0 without separate owner instruction.
