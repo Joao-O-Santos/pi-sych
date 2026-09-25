@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -174,6 +174,50 @@ test("observable serialization covers every message shape", () => {
 		serializeObservableMessages([{ role: "user", content: "   " }]),
 		"[User message]\n   ",
 	);
+	const circular = [];
+	circular.push(circular);
+	const structured = serializeObservableMessages([
+		{
+			role: "assistant",
+			content: [
+				{ type: "toolCall", name: "array", arguments: circular },
+				{
+					type: "toolCall",
+					name: "deep",
+					arguments: { a: { b: { c: { d: { e: "leaf" } } } } },
+				},
+			],
+		},
+	]);
+	assert.match(structured, /circular value omitted/);
+	assert.match(structured, /nested value omitted/);
+});
+
+test("bounded tool-call serialization handles scalar, array, inherited, and truncated values", () => {
+	const inherited = Object.create({ inherited: "skip" });
+	Object.assign(inherited, { first: true, second: 3, third: null, fourth: ["x", "y"] });
+	const values = serializeObservableMessages([
+		{
+			role: "assistant",
+			content: [
+				{ type: "toolCall", name: "scalars", arguments: inherited },
+				{ type: "toolCall", name: "empty", arguments: {} },
+				{
+					type: "toolCall",
+					name: "full",
+					arguments: Object.fromEntries(
+						Array.from({ length: 12 }, (_, index) => [`key-${index}`, "z".repeat(4_000)]),
+					),
+				},
+			],
+		},
+	]);
+	assert.match(values, /first/);
+	assert.match(values, /second/);
+	assert.match(values, /third/);
+	assert.match(values, /fourth/);
+	assert.doesNotMatch(values, /inherited/);
+	assert.ok(Buffer.byteLength(values) <= 4_000);
 });
 
 test("observable serialization bounds aggregates deterministically", () => {
@@ -205,6 +249,73 @@ test("recorded decision attributions stop at the next section and cap entries", 
 	assert.equal(previousRecordedDecisionAttributions(summary).split("\n").length, 12);
 });
 
+test("compaction prompt includes bounded missing-core and cycle diagnostics", () => {
+	const prompt = buildCompactionPrompt(
+		{
+			preparation: { messagesToSummarize: [], turnPrefixMessages: [], firstKeptEntryId: "none" },
+		},
+		{ files: [], paths: Array.from({ length: 20 }, (_, index) => `artifact-${index}.md`) },
+		{
+			changed: Array(100).fill("c".repeat(10_000)),
+			missing: Array(100).fill("m".repeat(10_000)),
+			impacted: Array(100).fill({
+				path: "p".repeat(10_000),
+				from: Array(100).fill("f".repeat(10_000)),
+				direct: true,
+			}),
+			errors: Array(100).fill({ path: "e".repeat(10_000), message: "x".repeat(10_000) }),
+			missingCore: ["PROJECT.md", ...Array.from({ length: 12 }, (_, index) => `missing-${index}`)],
+			cycles: [Array.from({ length: 14 }, (_, index) => `cycle-${index}`)],
+			projectErrors: Array(100).fill("e".repeat(10_000)),
+		},
+		"INBOX.md",
+	);
+	const statusMarker = "\nStatus:\n",
+		statusJson = prompt.slice(prompt.lastIndexOf(statusMarker) + statusMarker.length);
+	assert.ok(Buffer.byteLength(statusJson) <= 8 * 1024);
+	const status = JSON.parse(statusJson);
+	assert.match(JSON.stringify(status), /PROJECT\.md/);
+	assert.match(JSON.stringify(status), /cycle-0/);
+	assert.match(JSON.stringify(status), /additional entries omitted/);
+	assert.match(prompt, /additional paths omitted/);
+
+	const escaped = "\u0001".repeat(128),
+		missingCorePath = `PROJECT.md${escaped}`,
+		cyclePath = `A.md${escaped}`,
+		overflowPrompt = buildCompactionPrompt(
+			{
+				preparation: {
+					messagesToSummarize: [],
+					turnPrefixMessages: [],
+					firstKeptEntryId: "none",
+				},
+			},
+			{ files: [], paths: [] },
+			{
+				changed: [escaped, escaped, escaped],
+				missing: [escaped, escaped, escaped],
+				impacted: Array(3).fill({
+					path: escaped,
+					from: [escaped, escaped, escaped],
+					direct: true,
+				}),
+				errors: Array(3).fill({ path: escaped, message: escaped }),
+				missingCore: [missingCorePath, escaped, escaped, escaped],
+				cycles: [[cyclePath, escaped, escaped, escaped]],
+				projectErrors: [escaped, escaped, escaped],
+			},
+			"INBOX.md",
+		),
+		overflowJson = overflowPrompt.slice(
+			overflowPrompt.lastIndexOf(statusMarker) + statusMarker.length,
+		);
+	assert.ok(Buffer.byteLength(overflowJson) <= 8 * 1024);
+	const overflowStatus = JSON.parse(overflowJson);
+	assert.equal(overflowStatus.truncated, true);
+	assert.equal(overflowStatus.missingCore[0].startsWith("PROJECT.md"), true);
+	assert.equal(overflowStatus.cycles[0][0].startsWith("A.md"), true);
+});
+
 test("compaction prompt fills defaults for missing summary and retained tail", () => {
 	const prompt = buildCompactionPrompt(
 		{
@@ -215,7 +326,7 @@ test("compaction prompt fills defaults for missing summary and retained tail", (
 			},
 		},
 		{ files: [], paths: [] },
-		{ changed: [], missing: [], impacted: [], errors: [], projectErrors: [] },
+		{},
 		"INBOX.md",
 	);
 	assert.match(prompt, /Focus: none/);
@@ -251,17 +362,23 @@ test("pending proposals count only well-formed lines and surface read errors", a
 	await assert.rejects(pendingPromotions({ canonical: { inbox: root } }), /EISDIR/);
 });
 
-test("working-memory file filtering prefers snapshots and drops missing paths", async (t) => {
+test("working-memory file filtering drops missing/invalid paths but surfaces unexpected I/O errors", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-filter-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
 	await writeFile(join(root, "REAL.md"), "x\n");
+	await symlink("LOOP.md", join(root, "LOOP.md"));
 	assert.deepEqual(
 		await filterWorkingMemoryFiles({ projectRoot: root }, new Set(["SNAP.md"]), [
 			"REAL.md",
 			"NOPE.md",
+			"../outside.md",
 			"SNAP.md",
 		]),
 		["REAL.md", "SNAP.md"],
+	);
+	await assert.rejects(
+		filterWorkingMemoryFiles({ projectRoot: root }, new Set(), ["LOOP.md"]),
+		(error) => error.code === "ELOOP",
 	);
 });
 

@@ -60,10 +60,14 @@ conflicts with accepted state, and proposals not yet accepted.
 
 Missing durable state is a finding, not automatic permission to edit
 canonical semantic files. The implementation never mutates canonical
-semantic files. It may append only bounded, one-line, visibly unreviewed
-proposals to `INBOX.md`. If custom output is omitted, invalid,
-cancelled, or fails, the handler returns no custom result so Pi's native
-fallback remains in control.
+semantic files. Status input is capped at 8 KiB and retains bounded
+diagnostics for missing core files and dependency cycles even when other
+status fields must be omitted. It may append only bounded, one-line, visibly
+unreviewed proposals to the configured inbox. The inbox is created only
+when a valid compaction result contains one or more proposals; successful
+compaction without proposals does not create an empty `INBOX.md`. If custom output is
+omitted, invalid, cancelled, or fails, the handler returns no custom
+result so Pi's native fallback remains in control.
 
 ## Suggested continuation shape
 
@@ -85,10 +89,10 @@ projectStateGaps:
 ```
 
 `objective` and `nextAction` must be non-empty strings; omitted array
-fields normalize to empty arrays. Boundedness comes from item, message,
-retained-tail, snapshot, and proposal limits rather than prompt
-word-count budgets. Observable messages and the retained tail exclude
-hidden thinking. Recorded label attributions are carried forward without
+fields normalize to empty arrays. Boundedness comes from bounded source
+reads, item, message, status, retained-tail, snapshot, and proposal limits
+rather than prompt word-count budgets. Observable messages and the
+retained tail exclude hidden thinking. Recorded label attributions are carried forward without
 verification; inferences remain distinct.
 
 ## Required regressions

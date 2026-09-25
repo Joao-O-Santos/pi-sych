@@ -2,7 +2,9 @@
 
 These tests exercise real Pi and model behavior. They are not part of
 `npm test`, may use configured credentials, may incur provider cost, and
-can vary by model or run.
+can vary by model or run. The real-Pi fixture isolates its temporary
+agent directory and copies only the configured OpenAI Codex auth entry
+when present; the directory is removed after the run.
 
 `prompt-quality.test.mjs` reads the scenarios in
 `tests/fixtures/prompt-quality-fixtures.json`. Each fixture identifies a

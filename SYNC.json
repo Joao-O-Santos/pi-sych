@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-25T10:29:02.663Z",
+  "confirmedAt": "2026-09-25T11:46:33.609Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -124,15 +124,15 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:bb881b21a66bedafd525719ec781808dcd8519eb592094600114361f65408207",
+      "fingerprint": "sha256:41a67f04bf4d96a03f799515b260dbcff17da7fd8753ef17941853313f34b6fc",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-09-25T10:29:02.663Z",
-        "reason": "Reconciled the v7 changelog/project record with the implemented release hardening, revised source budget, current tag/npm status, verification results, and remaining image/evaluation work."
+        "at": "2026-09-25T11:46:33.609Z",
+        "reason": "Reconciled the intended v7 changelog with the verified bounded-compaction input/status behavior and confirmed that the proposal inbox is created only when valid proposals are returned; acknowledgement records the reviewed hash, not correctness or release approval."
       }
     },
     {

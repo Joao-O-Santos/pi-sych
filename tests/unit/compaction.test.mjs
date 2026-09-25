@@ -258,6 +258,13 @@ test("compact writes only bounded unreviewed proposals after successful output",
 	assert.equal(notifications.length, 1);
 });
 
+test("successful compaction does not create an empty proposal inbox", async (t) => {
+	const { root, ctx, event } = await fixture(t);
+	const result = await compact(event, ctx, async () => response(memory()));
+	assert.ok(result);
+	await assert.rejects(readFile(join(root, "INBOX.md")), { code: "ENOENT" });
+});
+
 test("late abort or notification failure cannot discard a written continuation", async (t) => {
 	for (const late of ["abort", "notify"]) {
 		const { root, ctx, event } = await fixture(t);
@@ -297,6 +304,7 @@ test("model failure, cancellation, and non-stop completion do not write proposal
 test("snapshot excludes inbox and bounds canonical content", async (t) => {
 	const { root } = await fixture(t);
 	await writeFile(join(root, "TODO.md"), "todo\n".repeat(20_000));
+	await writeFile(join(root, "DECISIONS.md"), "");
 	const project = await resolveProject(root),
 		snapshot = await compactionSnapshot(project, await checkProjectStatus(root, project));
 	assert.ok(snapshot.files.every((file) => Buffer.byteLength(file.content) <= 16 * 1024));

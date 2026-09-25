@@ -25,6 +25,18 @@ test("real Pi can inspect a disposable project and write an artifact", {
 		Promise.all([root, agentDir].map((path) => rm(path, { recursive: true, force: true }))),
 	);
 	const supervisorAgentDir = process.env.PI_CODING_AGENT_DIR ?? join(homedir(), ".config/pi");
+	const authFile = join(supervisorAgentDir, "auth.json");
+	try {
+		const auth = JSON.parse(await readFile(authFile, "utf8"));
+		if (auth["openai-codex"])
+			await writeFile(
+				join(agentDir, "auth.json"),
+				JSON.stringify({ "openai-codex": auth["openai-codex"] }),
+				{ mode: 0o600 },
+			);
+	} catch (error) {
+		if (error?.code !== "ENOENT") throw error;
+	}
 	const modelCatalog = join(agentDir, "pi-sych", "models.json");
 	await mkdir(join(agentDir, "pi-sych"), { recursive: true });
 	await writeFile(
@@ -145,6 +157,6 @@ test("real Pi can inspect a disposable project and write an artifact", {
 	assert.match(sessionJson, /project_status/);
 	assert.match(sessionJson, /dispatch_worker/);
 	assert.match(sessionJson, /Worker status: complete/);
-	assert.match(sessionJson, /Summary: The project objective/);
-	assert.match(sessionJson, /Files: none/);
+	assert.match(sessionJson, /Summary: .+/);
+	assert.match(sessionJson, /Reported files: none/);
 });

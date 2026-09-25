@@ -24,7 +24,11 @@ No unreleased changes.
 - Add the `automation` umbrella skill and strengthen the seven-skill
   routing architecture, with shared methods and thin review prompts.
 - Add derived supervisor capability reporting and settled-turn
-  compaction with bounded observable context and native fallback.
+  compaction with bounded observable context and native fallback. Bound
+  source reads, message serialization, and project-status diagnostics
+  before model input; carry missing-core and dependency-cycle status
+  through the continuation. Create the proposal inbox only when valid
+  unreviewed proposals are actually returned.
 - Add writing defaults and strengthen review guidance for artifact
   self-containment, context leakage, prose flow, cumulative style
   patterns, and calibrated uncertainty.
