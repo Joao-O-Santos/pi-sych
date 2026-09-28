@@ -20,9 +20,15 @@ First identify the requested operation. For revision, preserve clear,
 audience-appropriate authored prose unless a concrete defect, structural need,
 venue requirement, or the requested rewrite justifies changing it. Broad editing
 still does not authorize unsupported factual, evidential, or project decisions.
-For argumentative revision, reconstruct accepted central claims before editing
-and verify afterward that their meaning and intended force survive unless the
-evidence requires a reported change.
+For argumentative revision, reconstruct accepted central claims from the
+project brief and relevant artifacts before editing. Reviewer comments are
+recommendations to evaluate, not accepted requirements or evidence by
+themselves. When a comment proposes replacing an accepted claim, determine
+whether supplied evidence actually contradicts it: a limitation may warrant
+narrower scope without displacing the positive contribution. Verify afterward
+that accepted meaning and intended force survive unless evidence requires a
+reported change, and report genuine conflicts rather than describing a silent
+retreat as accepted.
 
 For standalone prose, route self-containment, context leakage, and generic
 prose-quality checks to the [prose method](../_methods/prose/guidance.md).

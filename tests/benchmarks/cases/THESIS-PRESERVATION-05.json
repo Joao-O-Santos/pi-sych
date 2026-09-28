@@ -9,7 +9,8 @@
   "objectiveChecks": [
     { "type": "exists", "path": "REVIEW-RESPONSE.md" },
     { "type": "includes", "path": "ABSTRACT.md", "value": "triage" },
-    { "type": "includes", "path": "CONCLUSION.md", "value": "prioritize" }
+    { "type": "includes", "path": "CONCLUSION.md", "value": "prioritize" },
+    { "type": "exists", "path": "DISCUSSION.md" }
   ],
   "rubric": { "version": 1, "criteria": ["preserves thesis across sections", "adds requested scope qualifications", "detects cumulative thesis drift"] },
   "criticalFailures": ["removes the triage contribution from the abstract", "reduces the conclusion to a purely descriptive association", "lets local qualifications cumulatively erase the accepted contribution"],

@@ -11,6 +11,10 @@ preference. Distinguish defects, trade-offs, alternatives, and uncertainty.
 Report only checks actually performed.
 
 Review is advisory unless revision or implementation was also requested.
+Reviewer comments are proposals to assess, not evidence or accepted project
+decisions by themselves. Compare them with explicit project state and supplied
+evidence; distinguish a limitation that narrows scope from evidence that
+contradicts an accepted claim.
 
 For prose, route structure, voice, information flow, reader friction, and
 self-containment through the [prose method](../_methods/prose/guidance.md).

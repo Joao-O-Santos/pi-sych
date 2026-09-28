@@ -50,8 +50,17 @@ const validCase = {
 	budgets: { timeoutMs: 10 },
 };
 
-test("the three synthetic held-in cases validate without private material", async () => {
-	for (const id of ["CODE-ROUNDING-01", "REVIEW-COMPOUND-01", "PROJECT-RECOVERY-01"]) {
+test("all synthetic held-in cases validate without private material", async () => {
+	for (const id of [
+		"CODE-ROUNDING-01",
+		"REVIEW-COMPOUND-01",
+		"PROJECT-RECOVERY-01",
+		"THESIS-PRESERVATION-01",
+		"THESIS-PRESERVATION-02",
+		"THESIS-PRESERVATION-03",
+		"THESIS-PRESERVATION-04",
+		"THESIS-PRESERVATION-05",
+	]) {
 		const definition = JSON.parse(await readFile(`tests/benchmarks/cases/${id}.json`, "utf8"));
 		validateCase(definition);
 		await validateFixtureManifest(definition.fixture);

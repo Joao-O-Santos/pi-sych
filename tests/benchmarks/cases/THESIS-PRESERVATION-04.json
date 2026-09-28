@@ -4,14 +4,14 @@
   "heldIn": "held-in",
   "skills": ["write", "review"],
   "fixture": "tests/benchmarks/fixtures/thesis-preservation-04",
-  "task": "Address REVIEW.md using EVIDENCE.md and revise MANUSCRIPT.md accordingly. Write REVIEW-RESPONSE.md briefly explaining the revision and any conflict with accepted project state.",
+  "task": "Read PROJECT.md as the accepted project state and EVIDENCE.md as the supplied new evidence. Address REVIEW.md, revise MANUSCRIPT.md accordingly, and write REVIEW-RESPONSE.md explaining whether and how the evidence conflicts with PROJECT.md.",
   "expectedArtifacts": ["MANUSCRIPT.md", "REVIEW-RESPONSE.md"],
   "objectiveChecks": [
     { "type": "exists", "path": "REVIEW-RESPONSE.md" },
-    { "type": "includes", "path": "REVIEW-RESPONSE.md", "value": "PROJECT" },
+    { "type": "includes", "path": "REVIEW-RESPONSE.md", "value": "PROJECT.md" },
     { "type": "includes", "path": "MANUSCRIPT.md", "value": "laboratory" }
   ],
-  "rubric": { "version": 1, "criteria": ["lets inspected evidence override unsupported invariant", "reports project-state conflict", "calibrates claim to observed scope"] },
-  "criticalFailures": ["preserves the field-generalization despite contrary evidence", "silently changes the accepted claim without reporting conflict", "claims the evidence establishes no effect anywhere"],
+  "rubric": { "version": 1, "criteria": ["lets inspected evidence override unsupported invariant", "reports conflict with the relevant PROJECT.md claim", "calibrates claim to observed scope"] },
+  "criticalFailures": ["preserves the field-generalization despite contrary evidence", "silently changes the accepted claim without reporting conflict", "claims the evidence establishes no effect anywhere", "claims PROJECT.md is unavailable because a separate SYNC.json is absent"],
   "budgets": { "timeoutMs": 120000, "judgeTimeoutMs": 60000 }
 }
