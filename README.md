@@ -2,7 +2,7 @@
 
 ![Pi Sych logo: inspectable files, bounded tasks, durable state, and
 human
-decisions](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.0/docs/img/logo.png)
+decisions](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.1/docs/img/logo.png)
 
 [![pipeline
 status](https://gitlab.com/Joao-O-Santos/pi-sych/badges/main/pipeline.svg)](https://gitlab.com/Joao-O-Santos/pi-sych/-/commits/main)
@@ -39,7 +39,7 @@ inventing extra approval checkpoints.
 ![Pi Sych overview: a request can use task-specific skills and project
 files, optionally involve a focused worker, and return for human review
 and
-decision](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.0/docs/img/workflow.png)
+decision](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.1/docs/img/workflow.png)
 
 This is an orientation, not a required sequence or a complete runtime
 contract. Direct work need not use a worker, skills guide rather than
@@ -107,7 +107,7 @@ contexts.
 
 [![Detailed review and edit workflow: independent review, human
 decision, clean-context editing, fresh verification, and
-acknowledgement](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.0/docs/img/review_workflow.png)](docs/review-workflow.md)
+acknowledgement](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.1/docs/img/review_workflow.png)](docs/review-workflow.md)
 
 The separation between review and editing is deliberate. Rejected
 alternatives and the arguments used to evaluate them do not normally
@@ -325,13 +325,13 @@ customization.
 ## Architecture diagrams
 
 ![Pi Sych architecture: supervisor tools, workers, results, and project
-files](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.0/docs/img/architecture.png)
+files](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.1/docs/img/architecture.png)
 
 ![Supervisor compaction inputs, continuation, and separate worker
-context](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.0/docs/img/supervisors_context.png)
+context](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.1/docs/img/supervisors_context.png)
 
 ![Seven public skills and private module and method building
-blocks](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.0/docs/img/skills_architecture.png)
+blocks](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.1/docs/img/skills_architecture.png)
 
 These diagrams are orientation aids, not complete runtime contracts. See
 [architecture](docs/ARCHITECTURE.md) for behavior details.

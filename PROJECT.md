@@ -128,15 +128,15 @@ not verify source access.
 self-containment and reader-friction/context-leakage checks. Review
 lenses now explicitly trace prose flow in reading order and diagnose
 cumulative patterns such as semicolon/em-dash repetition, unmotivated
-"not X but Y" contrasts, stacked hedges, and thesis drift without turning
-them into quotas or bans. They distinguish calibrated uncertainty from
-defensive hedging, require findings to explain reader effect, and treat
-evidence calibration as bidirectional: supported accepted argumentative
-force should not be lost merely because a weaker formulation is safer.
-Standalone manuscripts should not retain revision-history,
-reviewer-response, prompt, or version language without an independent
-scholarly purpose; response-to-reviewers artifacts remain free to use it
-when genre requires it.
+"not X but Y" contrasts, stacked hedges, and thesis drift without
+turning them into quotas or bans. They distinguish calibrated
+uncertainty from defensive hedging, require findings to explain reader
+effect, and treat evidence calibration as bidirectional: supported
+accepted argumentative force should not be lost merely because a weaker
+formulation is safer. Standalone manuscripts should not retain
+revision-history, reviewer-response, prompt, or version language without
+an independent scholarly purpose; response-to-reviewers artifacts remain
+free to use it when genre requires it.
 
 {verified} Research guidance now instructs models to inspect available
 capability classes and use them for their native purpose. Local
@@ -167,19 +167,39 @@ for the current approximately 3,000-line runtime.
 
 {verified} Repository-native formatting, documentation, type, budget,
 and test checks are part of the maintained acceptance boundary. The
-working package version is 7.0.0. Check current publication status from
-the release commit, annotated tag, and npm registry metadata rather than
-this project brief.
+local release-preparation tree is version 7.0.1; npm still reports 7.0.0
+as the latest published package, and no v7.0.1 tag or publication
+exists.
+
+{verified} After revising reviewer-response guidance and repairing the
+benchmark fixtures, the five-case opt-in evaluation completed with
+OpenAI Codex Terra as candidate and Sol as judge: 5/5 cases complete,
+16/16 objective checks passed, mean judge score 4.0/4, and no critical
+failures. This is model- and run-specific evidence, not a deterministic
+guarantee or human review.
+
+{verified} `make verify` and `make site` pass locally on the prepared
+7.0.1 tree.
 
 ## Previous action
 
-{verified} Added bidirectional evidence calibration and thesis-drift
-protections to writing, claim-evidence, prose, and structural-review
-guidance, plus a benchmark fixture that requires correcting a real
-overclaim without weakening the accepted positive thesis.
+{verified} The initial thesis-preservation evaluation exposed a case-03
+regression: the revision accepted a reviewer's descriptive-only
+replacement for a supported practical screening claim. Writing and
+review guidance now distinguish reviewer recommendations from accepted
+project state and evidence; the benchmark suite also has valid manifests
+and checks for every expected artifact.
 
 ## Immediate next step
 
-{user-explicit} Evaluate the thesis-preservation change in practice. If
-it performs well, decide whether to release it as a patch or minor
-version rather than changing the runtime pre-emptively.
+{inference} Prepare this as a patch release, v7.0.1: the accepted change
+refines existing writing guidance and release verification without a
+runtime, API, or compatibility change.
+
+{user-explicit} The owner authorized atomic commits and push of the
+v7.0.1 patch-preparation changes. This does not authorize tagging or
+publishing.
+
+{unresolved} Any eventual release requires passing remote verify and
+Pages on the exact commit; tagging and publication remain separately
+gated by owner instruction.

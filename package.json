@@ -1,6 +1,6 @@
 {
   "name": "pi-sych",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "General project and artifact development workbench for Pi",
   "files": [
     "templates",
@@ -90,7 +90,7 @@
     "prompts": [
       "./prompts"
     ],
-    "image": "https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.0/docs/img/logo.png"
+    "image": "https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.1/docs/img/logo.png"
   },
   "optionalDependencies": {
     "@plannotator/pi-extension": "latest",

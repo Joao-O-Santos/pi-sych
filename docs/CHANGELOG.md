@@ -9,6 +9,21 @@ state.
 
 No unreleased changes.
 
+## v7.0.1
+
+### Changed
+
+- Clarify that reviewer recommendations are proposals to assess, not
+  accepted project decisions or evidence; preserve supported claims
+  while adding warranted scope limits, and surface genuine conflicts.
+
+### Fixed
+
+- Complete the thesis-preservation benchmark manifests and objective
+  checks.
+- Extend the bounded npm registry verification window to accommodate
+  publication propagation delays.
+
 ## v7.0.0
 
 ### Breaking

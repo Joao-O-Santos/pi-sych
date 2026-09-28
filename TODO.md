@@ -109,12 +109,14 @@ file records the implementation sequence and current verification state.
 
 ## Release completion
 
-- [ ] Create a signed release commit and push it to `main`; confirm verify and
-  Pages pass on that exact commit.
-- [ ] Create and push signed annotated tag `v7.0.0`; monitor the tag pipeline, which
-  publishes with npm provenance, and verify the exact registry version and
-  `latest` dist-tag.
+- [x] Signed v7.0.0 release commit was pushed; its `main` verify and Pages
+  pipeline passed.
+- [x] Signed annotated tag `v7.0.0` published with npm provenance; npm now
+  reports `7.0.0` as both the package version and `latest`.
+- [x] Extend the bounded npm registry-verification window after the v7.0.0
+  tag job timed out following successful publication.
 
-Authorization: the owner instructed “do whatever is needed for v7 to ship,”
-which authorizes this v7.0.0 release flow. Use the repository's CI publisher;
-do not publish from the local machine.
+Authorization for “do whatever is needed for v7 to ship” applied to v7.0.0
+only. The owner separately authorized atomic commits and pushing the v7.0.1
+patch preparation to `main`; that does not authorize tagging or publication.
+Use the CI publisher for any separately authorized release.
