@@ -191,9 +191,8 @@ guarantee or human review.
 
 {verified} `make verify`, `make site`, and packed-install variants
 passed locally. GitLab verify and Pages passed for the v8 implementation
-commit `dc32c879`; subsequent project-state-only commits require their
-own exact commit CI checks. Real-service native MCP checks remain
-unverified.
+commit `dc32c879` and state commit `8271d2ce`. Check exact HEAD again
+before a release. Real-service native MCP checks remain unverified.
 
 ## Previous action
 
@@ -214,5 +213,5 @@ publication is not separately authorized.
 {unresolved} Real Context7, OpenAlex and Scholar Gateway native MCP/auth
 checks require configuration in the worker agent and must not be
 reported as passed without live validation. CI/Pages passed on
-`dc32c879`; rerun them on the eventual final state commit. Pushing a tag
+`8271d2ce`; recheck the exact final commit before a tag. Pushing a tag
 would trigger npm publication and requires separate owner instruction.

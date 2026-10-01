@@ -41,10 +41,9 @@ not a claim that unrun external checks passed.
   loadable Pi resource; the v8 workbench currently owns the hook and policy,
   with `compaction.custom: false` leaving native compaction in control. A split
   is optional, not a prerequisite for the 150k semantics.
-- [ ] Confirm remote verify/Pages on the **final** main commit and repeat the
-  release/package-content review before any tag. The implementation commit
-  `dc32c879` passed both GitLab jobs; a project-state-only follow-up needs
-  its own pipeline. The repository's tag pipeline
+- [x] GitLab verify/Pages passed on the implementation commit `dc32c879`
+  and the subsequent project-state commit `8271d2ce`. Recheck the exact
+  final HEAD and package contents before any tag. The repository's tag pipeline
   automatically publishes to npm; conditional tag consideration does not
   separately authorize that publication. Obtain explicit release/publication
   instruction before pushing a v8.0.0 tag.

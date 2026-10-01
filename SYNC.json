@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-01T18:27:18.630Z",
+  "confirmedAt": "2026-10-01T18:34:28.849Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:1c666bd6d520d4c0c8cb83e25a393e43034a6f8a97a2782fe7051f6211fc83dc",
+      "fingerprint": "sha256:669856275786fa308a1db1ce699d25ea4797a4a7ab765f42d0945dde87ccb68e",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,8 +15,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T18:27:18.630Z",
-        "reason": "Recorded private v8 dogfooding without MCP secrets and observed GitLab verify/Pages success on dc32c879; real external MCP/auth and tag-triggered npm publication remain gated."
+        "at": "2026-10-01T18:34:28.849Z",
+        "reason": "Recorded successful GitLab verify/Pages on 8271d2ce while retaining live MCP/auth and tag-triggered npm publication gates."
       }
     },
     {
