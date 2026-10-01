@@ -4,10 +4,12 @@ This is a **pre-release implementation checklist**, not a commitment to a versio
 number. Do the compatibility-neutral cleanup first. Decide the release number
 from the final public delta, not from the size of the refactor.
 
-If the final change removes the documented MCPorter configuration/command,
-removes Pi Sych `config.json`, or raises the required Pi baseline to 0.99.2,
-the result is a v8 release under Pi Sych's own public-contract rules. If those
-public surfaces are preserved, reassess SemVer from the actual result.
+The native-MCP transition is expected to be a **v8** release. Use that breaking
+release to simplify aggressively, but do not delete user-facing configuration
+that expresses Pi-Sych-specific semantics. In particular, v8 must retain a
+small layered Pi Sych `config.json` for custom compaction policy and local
+literature paths; native Pi configuration should own only settings that Pi
+itself understands.
 
 The goal is not to add a Pi 0.99 abstraction layer. The goal is to delete code
 that Pi now owns, strengthen the few Pi Sych-specific capabilities that remain,
@@ -32,8 +34,12 @@ Let Pi own:
 - MCP server discovery, status and `/mcp`;
 - codemode execution and nested tool composition;
 - ordinary package/resource enable/disable controls;
-- ordinary compaction triggering and context-window thresholds;
+- its native context-window compaction machinery and fallback behavior; and
 - provider/model authentication.
+
+Pi Sych must continue to own its **absolute proactive compaction threshold** and
+its custom compaction semantics. Native Pi settings are not a substitute unless
+they can express those semantics directly without abusing unrelated settings.
 
 Let companion Bakery packages own their own tools. Pi Sych should reason about
 capabilities such as document handling, known-URL retrieval, or browser
@@ -69,48 +75,95 @@ interaction, not import or identify package implementations.
 - [ ] Delete exact-string tests for capability-summary prose when the summary is
   removed.
 
-### Reconsider Pi Sych configuration as a layer
+### Keep a small layered Pi Sych configuration
 
-The current `config.json` mostly selects paths or toggles behavior that can now
-be conventional or Pi-native:
+**v8 requirement: do not delete `config.json`.** Reduce it to settings Pi Sych
+genuinely owns and make global/project configuration layer predictably.
 
-```text
-workerAgentDir
-modelCatalog
-mcporterConfig
-literatureDatabase
-compaction.custom
-compaction.compactAt100k
-review.mode
+Native `pi config` should control whether separately packaged Pi resources are
+loaded. Pi Sych `config.json` should control Pi-Sych-specific behavior and
+paths that native Pi does not model.
+
+Required v8 behavior:
+
+- [ ] Load a global Pi Sych config from the normal Pi user configuration root,
+  e.g. `<pi-config-root>/pi-sych/config.json`.
+- [ ] Independently look for a project override at
+  `<projectRoot>/.pi/pi-sych/config.json`.
+- [ ] Merge **global first, project second**. The project file overrides only
+  the keys it supplies; its existence must not suppress unrelated global
+  settings.
+- [ ] Merge nested objects by field where appropriate. A project that overrides
+  only `literatureDatabase` must inherit the global compaction settings.
+- [ ] Keep configuration parsing strict enough to catch misspelled/unknown keys
+  rather than silently ignoring them.
+- [ ] Keep configuration files free of credentials and provider tokens.
+
+The intended minimal v8 surface is approximately:
+
+```json
+{
+  "version": 2,
+  "compaction": {
+    "custom": true,
+    "thresholdTokens": 150000
+  },
+  "literatureDatabase": "/path/to/library.sqlite"
+}
 ```
 
-Audit each field with deletion as the default:
+Exact naming may be refined during implementation, but the semantics are
+requirements:
 
-- [ ] `mcporterConfig`: remove with MCPorter.
-- [ ] `review.mode`: remove. Plannotator is already a separate Pi extension;
-  use `pi config`/package resource filtering to disable it.
-- [ ] `compaction.compactAt100k`: remove unless a held-out workflow shows that
-  the extra absolute threshold is materially better than Pi's native
-  context-aware compaction settings.
-- [ ] `compaction.custom`: avoid a bespoke boolean if custom compaction can be
-  a separately selectable package extension.
-- [ ] `workerAgentDir`: prefer one conventional
-  `<pi-sych-dir>/worker-agent` path.
-- [ ] `modelCatalog`: prefer one conventional role-catalog path.
-- [ ] Rename the Pi Sych role catalog to something unambiguous such as
-  `worker-models.json` if doing so prevents confusion with Pi's native
-  `<agent-dir>/models.json`.
-- [ ] `literatureDatabase`: prefer
-  `<projectRoot>/LITERATURE.sqlite` then
-  `<pi-sych-dir>/literature.sqlite`. Document a filesystem symlink as the
-  escape hatch for an external database rather than retaining a general path
-  configuration solely for this case.
-- [ ] If all fields disappear, delete `config.json`,
-  `templates/config.json`, `ensurePiSychConfig()`, the config parser, and
-  their schema tests instead of replacing them with config v2.
-- [ ] Keep only the small path-resolution helper still needed to locate the Pi
-  Sych directory and user skill directory.
-- [ ] Do not add production migration code merely to rewrite old config files.
+- [ ] `compaction.custom` remains user-configurable. When true, Pi Sych supplies
+  its custom task-centred compaction, including working-memory structure,
+  project-state reconciliation and visibly unreviewed memory-promotion
+  proposals. When false, do not replace native Pi compaction.
+- [ ] The default proactive Pi Sych threshold is **150,000 context tokens**.
+- [ ] `thresholdTokens` is a Pi Sych threshold, not an alias for Pi
+  `reserveTokens`. Do not emulate it by changing reserve/output-budget
+  settings.
+- [ ] Trigger proactive compaction only at a safe settled/idle boundary and
+  preserve cancellation/reentrancy protection.
+- [ ] Native Pi may still compact earlier when its own context-window safety
+  rules require it; when custom compaction is enabled, the Pi Sych
+  `session_before_compact` hook should provide the custom summary for those
+  compactions too.
+- [ ] If the active model cannot meaningfully reach 150k context, do not create
+  an impossible trigger or interfere with native safety compaction.
+- [ ] Keep `literatureDatabase` user-configurable.
+- [ ] Allow `literatureDatabase` to be either absolute or relative.
+- [ ] Resolve a relative global value relative to the global Pi Sych config
+  location; resolve a relative project override relative to the project root.
+- [ ] A project-specific `literatureDatabase` must cleanly override the global
+  library for that project.
+- [ ] If `literatureDatabase` is absent at both levels, retain a sensible
+  conventional default such as the existing Pi Sych local database path.
+- [ ] Preserve read-only database access regardless of where the configured
+  database lives.
+
+Settings to remove because another component owns them:
+
+- [ ] Remove `mcporterConfig` with MCPorter; native Pi owns `mcp.json`.
+- [ ] Remove `review.mode` if Plannotator enable/disable can be expressed by
+  native Pi package/resource selection.
+- [ ] Prefer a conventional worker-agent path instead of keeping
+  `workerAgentDir` configurable unless a concrete use case requires it.
+- [ ] Prefer a conventional Pi Sych worker-role catalogue path; rename it to
+  `worker-models.json` if that avoids confusion with Pi's native
+  `models.json`.
+
+Implementation constraints:
+
+- [ ] Refactor the current `piConfigRoot()` behavior: a project `.pi`
+  directory must no longer replace the global Pi Sych config root wholesale.
+  Global and project Pi Sych configs are separate inputs that are explicitly
+  layered.
+- [ ] Give config merging one implementation owner and test it directly.
+- [ ] Do not create a generic settings framework; this remains a very small
+  typed configuration object.
+- [ ] Do not add runtime migration machinery for v7 configuration. Document the
+  v7 -> v8 key changes instead.
 
 ### Use Pi-native resource selection
 
@@ -119,10 +172,13 @@ Audit each field with deletion as the default:
 - [ ] If split, the compaction extension should only register the
   `session_before_compact` behavior and reuse existing helpers; do not create
   a second orchestration layer.
-- [ ] Let `pi config` disable Plannotator or custom compaction instead of
-  maintaining Pi Sych-specific enable/disable flags.
-- [ ] Remove the `agent_settled` 100k trigger and its in-flight state if native
-  Pi triggering is sufficient.
+- [ ] Let `pi config` disable Plannotator (and other independently loadable
+  Pi Sych resources) instead of maintaining duplicate Pi Sych enable/disable
+  flags.
+- [ ] Do **not** delegate the 150k proactive compaction policy to `pi config`:
+  it is Pi-Sych-specific behavior and stays in the layered Pi Sych config.
+- [ ] Keep the settled/idle proactive trigger, updating its default from 100k to
+  150k and simplifying its implementation where Pi 0.99 lifecycle APIs permit.
 - [ ] Preserve native Pi fallback whenever custom compaction returns no result.
 
 ## Phase 2 — make custom compaction smaller and more host-native
@@ -148,7 +204,9 @@ project-state gaps, and unreviewed promotion proposals.
   actually removes code without weakening the no-hidden-reasoning or
   instruction/data boundaries.
 - [ ] Move compaction-specific tests out of worker-engine test files.
-- [ ] Remove tests for the deleted 100k settled trigger.
+- [ ] Replace 100k trigger tests with focused tests for the configurable 150k
+  default, project override, below/at/above threshold, pending-message guard,
+  reentrancy guard and native fallback.
 - [ ] Preserve failure-to-native fallback, bounded inputs, canonical-file
   rechecks before proposal persistence, and no mutation of accepted semantic
   files.
@@ -355,7 +413,9 @@ repeated concepts with one clear owner.
 - [ ] Delete one and move only genuinely unique assertions into the survivor.
 - [ ] Delete `mcporter.test.mjs` with MCPorter.
 - [ ] Delete `pew-pew.test.mjs` with the special-case pass-through.
-- [ ] Delete config-schema tests if `config.json` is removed.
+- [ ] Replace broad v7 config tests with focused v8 tests for strict parsing,
+  global/project layering, nested partial overrides, 150k compaction defaults,
+  and literature-path resolution.
 - [ ] Move the compaction-failure test currently living in
   `worker-engine-coverage.test.mjs` to the compaction suite.
 
@@ -378,8 +438,8 @@ repeated concepts with one clear owner.
   each important boundary.
 - [ ] Remove literature-search behavior already covered by the literature
   suite.
-- [ ] Remove compaction-threshold behavior when the custom 100k trigger is
-  deleted.
+- [ ] Keep only one representative registration-level compaction check; put
+  threshold semantics in the dedicated configuration/compaction suites.
 - [ ] Remove exact giant regex assertions for injected prose.
 - [ ] Remove fake-MCPorter and fake-PEW-PEW branches.
 - [ ] Keep the opt-in real-Pi workflow test as the end-to-end proof that the
@@ -404,9 +464,14 @@ repeated concepts with one clear owner.
 If the final public simplification is breaking:
 
 - [ ] Write one concise v7 -> v8 migration document.
-- [ ] Tell users which obsolete Pi Sych files/keys can simply be deleted.
-- [ ] Tell users where the conventional worker model catalogue and literature
-  database now live if those paths change.
+- [ ] Tell users which obsolete Pi Sych keys can simply be deleted while
+  retaining `config.json`.
+- [ ] Document the v8 global + project config layering rules and the 150k custom
+  compaction default.
+- [ ] Document `literatureDatabase` absolute/relative path semantics and how a
+  project override replaces the global library only for that project.
+- [ ] Tell users where the conventional worker model catalogue lives if that
+  path changes.
 - [ ] Tell users to configure remote research in the worker agent directory
   with native `pi mcp` commands.
 - [ ] Tell users to use `/mcp` or `pi mcp list` instead of
@@ -424,11 +489,12 @@ If the final public simplification is breaking:
 1. [ ] Record the v7.0.1 runtime/test baseline and current source count.
 2. [ ] Remove duplicate tests and isolate the behaviors that must survive.
 3. [ ] Remove PEW-PEW special-case inheritance/capability narration.
-4. [ ] Replace Pi Sych-specific toggles with Pi-native resource controls where
-   the behavior remains clear.
-5. [ ] Collapse or delete `config.json` if the field-by-field audit confirms
-   the conventional-path design.
-6. [ ] Simplify custom compaction against the current Pi host APIs.
+4. [ ] Replace only Pi-owned feature toggles with native Pi resource controls.
+5. [ ] Implement and test the reduced layered v8 `config.json`: global +
+   project override, 150k custom-compaction policy, and configurable literature
+   database.
+6. [ ] Simplify custom compaction against the current Pi host APIs without
+   losing its 150k proactive trigger or memory-promotion semantics.
 7. [ ] Improve `literature_search` structured/readable output and evaluate
    ranking.
 8. [ ] Add capability-level Bakery examples/guidance; no runtime dependencies.
@@ -480,7 +546,9 @@ The refactor is complete when:
 - [ ] `literature_search` is readable to models and structured for codemode.
 - [ ] The custom compactor contains only Pi-Sych-specific semantics plus the
   minimum host glue.
-- [ ] Configuration surface is smaller than v7, ideally convention-only.
+- [ ] Configuration surface is smaller than v7 but retains the layered settings
+  Pi Sych genuinely owns: custom compaction + 150k threshold and configurable,
+  project-overridable literature database.
 - [ ] Runtime source is smaller than v7.0.1.
 - [ ] The test suite has less duplication while preserving process, state,
   failure and public-contract coverage.
