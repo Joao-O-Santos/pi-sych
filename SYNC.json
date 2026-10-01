@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-01T20:05:21.061Z",
+  "confirmedAt": "2026-10-01T20:30:17.397Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:7b5df1ace74b034293ab60b0dbbc990b1750d3f644678bdb43ffe62e8bb46fd1",
+      "fingerprint": "sha256:8d467110d82fa1f065445b38d340beb4f16a050e9f330db8d5ab0657a1048a9a",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,26 +15,26 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T20:05:21.061Z",
-        "reason": "Recorded passing local 201-test/coverage/site/pack gates, GitLab verify and Pages on 2afd06d1, installed-package update to the same commit, and successful worktree plus installed read-only Context7 worker calls."
+        "at": "2026-10-01T20:30:17.397Z",
+        "reason": "Reviewed the new default-off lifecycle behavior and its configuration, compatibility, architecture, README, and changelog statements; README was checked as the declared architecture dependent."
       }
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:c2fe9050e701be1f99567f9e063c131fd4a1f73f527fc4c9b690e113d0839e9a",
+      "fingerprint": "sha256:bd8246cae15c1547edfee9cc63dbb58de495659961b029c7ded453c8fe7cbf70",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T20:00:11.098Z",
-        "reason": "Recorded the reproduced Pi --tools allowlist cause, confirmed the Pi Sych worker fix with local fixture and live Context7 call, and reviewed README's unchanged MCP setup contract."
+        "at": "2026-10-01T20:30:17.397Z",
+        "reason": "Reviewed the new default-off lifecycle behavior and its configuration, compatibility, architecture, README, and changelog statements; README was checked as the declared architecture dependent."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:33471bded52e875956db10f2048c6d31f7e5ab86c2dfc9305ff6adbe59d03ebf",
+      "fingerprint": "sha256:49b6f77c763c557380e75f7e3c4ee436e0f6cf1d82f62adf67bf9fded5ebafe4",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,8 +46,8 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T20:00:11.098Z",
-        "reason": "Recorded the reproduced Pi --tools allowlist cause, confirmed the Pi Sych worker fix with local fixture and live Context7 call, and reviewed README's unchanged MCP setup contract."
+        "at": "2026-10-01T20:30:17.397Z",
+        "reason": "Reviewed the new default-off lifecycle behavior and its configuration, compatibility, architecture, README, and changelog statements; README was checked as the declared architecture dependent."
       }
     },
     {
@@ -72,15 +72,15 @@
     },
     {
       "path": "docs/configuration.md",
-      "fingerprint": "sha256:a27bbbfd07ba8f15f88c1ee44f650dabc94135e627493fa379ff6a370dc9033a",
+      "fingerprint": "sha256:7c62ee37498acafb9631b02f8ce7e51078d56f1ffe2e14535149eee918d82f67",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T18:09:05.783Z",
-        "reason": "Reviewed final v8 preparation state and worker-specific native Pi MCP setup instructions after local deterministic gate; real external service/auth validation and model workflow remain unresolved."
+        "at": "2026-10-01T20:30:17.397Z",
+        "reason": "Reviewed the new default-off lifecycle behavior and its configuration, compatibility, architecture, README, and changelog statements; README was checked as the declared architecture dependent."
       }
     },
     {
@@ -98,15 +98,15 @@
     },
     {
       "path": "docs/public-contract.md",
-      "fingerprint": "sha256:9be45174efabfedc0859e4bb7501f680a81d7816a7eb4a2988d974e3b44e7bbe",
+      "fingerprint": "sha256:d6b44ae7a7089b9cbb23965432653439e4396842d89f316b6a39aa3d06d785d0",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "compatibility"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T18:07:20.003Z",
-        "reason": "Reviewed the v8 preparation's configuration, native MCP worker, compaction and literature contracts against implementation and local test results; local checks passed and external native MCP/auth and real-model workflow remain explicitly unverified."
+        "at": "2026-10-01T20:30:17.397Z",
+        "reason": "Reviewed the new default-off lifecycle behavior and its configuration, compatibility, architecture, README, and changelog statements; README was checked as the declared architecture dependent."
       }
     },
     {
@@ -124,15 +124,15 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:862e2ed9d4d91f72a5995e0fdfd4d089967e4adb7583f9a586af6b2df11cb128",
+      "fingerprint": "sha256:0064ecd7caf960820e058791a02762fdd53da06f6f8fa9b4e143d19a1b94348a",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T18:07:20.003Z",
-        "reason": "Reviewed the v8 preparation's configuration, native MCP worker, compaction and literature contracts against implementation and local test results; local checks passed and external native MCP/auth and real-model workflow remain explicitly unverified."
+        "at": "2026-10-01T20:30:17.397Z",
+        "reason": "Reviewed the new default-off lifecycle behavior and its configuration, compatibility, architecture, README, and changelog statements; README was checked as the declared architecture dependent."
       }
     },
     {

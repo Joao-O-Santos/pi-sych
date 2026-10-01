@@ -46,8 +46,12 @@ true. Pi Sych's proactive trigger runs at `agent_settled` at the
 configured context-token threshold, 150,000 by default, only when the
 model context can reach it, the agent is idle, no messages are pending,
 and no compaction is in flight. This is separate from native Pi
-reserve-token settings. The compaction module builds a bounded snapshot
-of selected project state and observable conversation, asks the active
+reserve-token settings. Independently, opt-in completion reassessment
+uses `agent_before_settle` to inject one hidden,
+authorization-preserving prompt when there are no pending messages and
+Pi can continue. The per-user-message re-entry guard prevents repeated
+continuation. The compaction module builds a bounded snapshot of
+selected project state and observable conversation, asks the active
 supervisor model for structured working memory, filters its file
 references, and appends a small number of visibly unreviewed proposals
 to the inbox. Returning no custom result leaves Pi's native compactor in
@@ -60,7 +64,8 @@ returns native fallback.
 `.pi/pi-sych/config.json`, with field-level overrides. It also resolves
 relative literature paths against the config directory globally or the
 project root for a project override. The small config retains custom
-compaction policy and the configurable local literature database.
+compaction policy, optional completion reassessment, and the
+configurable local literature database.
 
 ## Literature search and integrations
 

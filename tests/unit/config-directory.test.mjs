@@ -15,9 +15,10 @@ const exists =
 	(...paths) =>
 	(path) =>
 		paths.includes(path);
-const config = (compaction, literatureDatabase) => ({
+const config = (compaction, literatureDatabase, completionReassessment) => ({
 	version: 2,
 	...(compaction ? { compaction } : {}),
+	...(completionReassessment !== undefined ? { completionReassessment } : {}),
 	...(literatureDatabase !== undefined ? { literatureDatabase } : {}),
 });
 
@@ -50,6 +51,7 @@ test("writes v2 defaults once without overwriting", async (t) => {
 	assert.deepEqual(loadPiSychConfig({ configDirectory: directory }), {
 		version: 2,
 		compaction: { custom: false, thresholdTokens: 150_000 },
+		completionReassessment: false,
 	});
 	assert.equal(
 		piSychConfigPath("modelCatalog", { configDirectory: directory }),
@@ -65,15 +67,18 @@ test("project config partially overrides global and relative literature paths us
 	await mkdir(join(project, ".pi/pi-sych"), { recursive: true });
 	await writeFile(
 		join(global, "config.json"),
-		JSON.stringify(config({ custom: false, thresholdTokens: 180_000 }, "library/global.sqlite")),
+		JSON.stringify(
+			config({ custom: false, thresholdTokens: 180_000 }, "library/global.sqlite", true),
+		),
 	);
 	await writeFile(
 		join(project, ".pi/pi-sych/config.json"),
-		JSON.stringify(config(undefined, "library/project.sqlite")),
+		JSON.stringify(config(undefined, "library/project.sqlite", false)),
 	);
 	assert.deepEqual(loadPiSychConfig({ configDirectory: global, projectRoot: project }), {
 		version: 2,
 		compaction: { custom: false, thresholdTokens: 180_000 },
+		completionReassessment: false,
 		literatureDatabase: join(project, "library/project.sqlite"),
 	});
 	await writeFile(
@@ -83,6 +88,7 @@ test("project config partially overrides global and relative literature paths us
 	assert.deepEqual(loadPiSychConfig({ configDirectory: global, projectRoot: project }), {
 		version: 2,
 		compaction: { custom: false, thresholdTokens: 200_000 },
+		completionReassessment: true,
 		literatureDatabase: join(global, "library/global.sqlite"),
 	});
 });
@@ -98,6 +104,7 @@ test("strict v2 parser rejects unknown keys, invalid versions and malformed nest
 		config({ thresholdTokens: 0 }),
 		config({ custom: true, typo: 1 }),
 		config(undefined, " "),
+		config(undefined, undefined, "true"),
 	]) {
 		await writeFile(path, JSON.stringify(value));
 		assert.throws(load);
@@ -130,7 +137,11 @@ test("config parser rejects non-object roots and accepts omitted optional fields
 		assert.throws(load, /must be an object/);
 	}
 	await rm(path);
-	assert.deepEqual(load(), { version: 2, compaction: { custom: true, thresholdTokens: 150_000 } });
+	assert.deepEqual(load(), {
+		version: 2,
+		compaction: { custom: true, thresholdTokens: 150_000 },
+		completionReassessment: false,
+	});
 	await writeFile(path, JSON.stringify({ version: 2, compaction: {} }));
 	assert.deepEqual(load().compaction, { custom: true, thresholdTokens: 150_000 });
 });

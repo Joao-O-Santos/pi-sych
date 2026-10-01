@@ -11,6 +11,7 @@ import piSychWorkbench, {
 	configuredSupervisorInstructions,
 	formatDispatchWorkerOutcome,
 	SUPERVISOR_GUIDANCE,
+	shouldTriggerCompletionReassessment,
 	shouldTriggerSettledCompaction,
 } from "../../.test-build/workbench/index.js";
 import { DEFAULT_CONFIG } from "../../.test-build/workbench/src/config-directory.js";
@@ -280,6 +281,24 @@ test("settled compaction uses 150k and requires sufficient context at a safe bou
 	assert.equal(eligible(threshold, 200_000, false), false);
 	assert.equal(eligible(threshold, 200_000, true, true), false);
 	assert.equal(eligible(threshold, 200_000, true, false, true), false);
+});
+
+test("completion reassessment is opt-in and only eligible once at a safe completed boundary", () => {
+	const eligible = (
+		enabled = true,
+		outcome = "completed",
+		pending = 0,
+		canContinue = true,
+		used = false,
+	) => shouldTriggerCompletionReassessment(enabled, outcome, pending, canContinue, used);
+	assert.equal(DEFAULT_CONFIG.completionReassessment, false);
+	assert.equal(eligible(), true);
+	assert.equal(eligible(false), false);
+	assert.equal(eligible(true, "aborted"), false);
+	assert.equal(eligible(true, "error"), false);
+	assert.equal(eligible(true, "completed", 1), false);
+	assert.equal(eligible(true, "completed", 0, false), false);
+	assert.equal(eligible(true, "completed", 0, true, true), false);
 });
 
 test("workbench lifecycle and status commands cover configured branches", async (t) => {

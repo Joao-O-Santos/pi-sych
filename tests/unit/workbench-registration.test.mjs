@@ -10,7 +10,7 @@ import workbench, {
 } from "../../.test-build/workbench/index.js";
 import { DEFAULT_CONFIG } from "../../.test-build/workbench/src/config-directory.js";
 
-test("workbench registers its public surface and wires status, worker, and settled compaction", async (t) => {
+test("workbench wires status, worker, compaction, and one-shot completion reassessment", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-registration-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
 	await mkdir(join(root, ".pi/pi-sych"), { recursive: true });
@@ -21,7 +21,11 @@ test("workbench registers its public surface and wires status, worker, and settl
 	);
 	await writeFile(
 		join(root, ".pi/pi-sych/config.json"),
-		JSON.stringify({ ...DEFAULT_CONFIG, compaction: { custom: true, thresholdTokens: 150_000 } }),
+		JSON.stringify({
+			...DEFAULT_CONFIG,
+			completionReassessment: true,
+			compaction: { custom: true, thresholdTokens: 150_000 },
+		}),
 	);
 	const previous = process.cwd();
 	const previousAgentDir = process.env.PI_CODING_AGENT_DIR;
@@ -53,7 +57,14 @@ test("workbench registers its public surface and wires status, worker, and settl
 	assert.deepEqual([...commands.keys()], ["pi-sych-status"]);
 	assert.deepEqual(
 		[...events.keys()],
-		["before_agent_start", "session_start", "agent_settled", "session_before_compact"],
+		[
+			"before_agent_start",
+			"session_start",
+			"message_start",
+			"agent_before_settle",
+			"agent_settled",
+			"session_before_compact",
+		],
 	);
 	assert.equal(tools.find(({ name }) => name === "dispatch_worker").exposure, "model-only");
 	assert.equal(
@@ -95,7 +106,11 @@ test("workbench registers its public surface and wires status, worker, and settl
 	);
 	await writeFile(
 		join(root, ".pi/pi-sych/config.json"),
-		JSON.stringify({ ...DEFAULT_CONFIG, compaction: { custom: false, thresholdTokens: 150_000 } }),
+		JSON.stringify({
+			...DEFAULT_CONFIG,
+			completionReassessment: true,
+			compaction: { custom: false, thresholdTokens: 150_000 },
+		}),
 	);
 	const before = await events.get("session_before_compact")({ preparation: {} }, ctx);
 	assert.equal(before, undefined);
@@ -103,6 +118,39 @@ test("workbench registers its public surface and wires status, worker, and settl
 	const prompt = await events.get("before_agent_start")({ systemPrompt: "system" }, ctx);
 	assert.match(prompt.systemPrompt, /Pi Sych is a small mechanical substrate/);
 	await events.get("session_start")({}, ctx);
+	const beforeSettle = events.get("agent_before_settle");
+	await events.get("message_start")({ message: { role: "user" } });
+	const settledBoundary = {
+		outcome: "completed",
+		context: { pendingMessages: [], canContinue: true },
+	};
+	const reassessment = await beforeSettle(settledBoundary, ctx);
+	assert.equal(reassessment.continue, true);
+	assert.equal(reassessment.entries[0].display, false);
+	assert.match(
+		reassessment.entries[0].content,
+		/If actionable work remains within the existing request and authorization, continue; otherwise stop/,
+	);
+	assert.match(
+		reassessment.entries[0].content,
+		/Do not broaden scope, invent tasks, or infer new authorization/,
+	);
+	assert.match(
+		reassessment.entries[0].content,
+		/If genuinely blocked, stop and report the blocker/,
+	);
+	// A completed reassessment settles without requesting a second continuation.
+	assert.equal(await beforeSettle(settledBoundary, ctx), undefined);
+
+	await events.get("message_start")({ message: { role: "user" } });
+	assert.equal(
+		await beforeSettle(
+			{ ...settledBoundary, context: { pendingMessages: [{ role: "user" }], canContinue: true } },
+			ctx,
+		),
+		undefined,
+	);
+	assert.equal((await beforeSettle(settledBoundary, ctx)).continue, true);
 
 	const dispatch = tools.find(({ name }) => name === "dispatch_worker");
 	assert.match(
@@ -189,6 +237,13 @@ test("workbench dispatches through Pi and reports command status failures", asyn
 			events.set(name, handler);
 		},
 	});
+	assert.equal(
+		await events.get("agent_before_settle")(
+			{ outcome: "completed", context: { pendingMessages: [], canContinue: true } },
+			{ cwd: root },
+		),
+		undefined,
+	);
 	const sessionManager = SessionManager.create(root, join(root, "sessions"));
 	sessionManager.appendMessage({ role: "user", content: "Continue the task." });
 	sessionManager.appendMessage({

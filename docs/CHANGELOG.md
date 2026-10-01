@@ -18,6 +18,12 @@ state.
   request. Configure their own MCP servers and authentication with
   native Pi commands.
 
+### Added
+
+- Add an opt-in, one-shot hidden completion reassessment at Pi's safe
+  `agent_before_settle` boundary; it preserves existing authorization
+  and defaults off.
+
 ### Changed
 
 - Delegate transport and provider credentials to Pi 0.99.2, retain

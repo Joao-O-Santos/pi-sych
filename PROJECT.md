@@ -115,7 +115,7 @@ or published release.
 
 {verified} Against the v7.0.1 deterministic coverage baseline (97.48%
 lines, 90.23% branches, 95.31% functions), the v8 preparation coverage
-measures 97.55% lines, 91.62% branches, 96.73% functions. Runtime
+measures 97.58% lines, 91.75% branches, 96.76% functions. Runtime
 nonblank source remains below the v7.0.1 count and within the 3,200-line
 budget. The local native MCP fixture and live read-only Context7 worker
 call passed. The opt-in real-model workflow and an installed-package
@@ -203,21 +203,21 @@ a worker.
 
 ## Previous action
 
-{verified} Diagnosed the worker MCP discovery failure: Pi's CLI
-`--tools` allowlist filtered dynamic MCP tools out of codemode's
-callable registry. The worker now applies its selected Pi tools at
-session start without that allowlist. A local fixture and a live
-read-only Context7 resolution through the actual Pi Sych dispatch both
-passed from the worktree and installed package. No MCP API keys were
-read or copied.
+{verified} Reviewed the v8 workbench lifecycle: completion reassessment
+was not present. Added an optional, default-off one-shot hidden prompt
+at Pi's `agent_before_settle` boundary, with pending-message and
+continuation checks, a per-user-message re-entry guard, and explicit
+scope/blocker limits. This remains separate from the 150k compaction
+trigger. `make verify` passed 202 tests at 97.58/91.75/96.76%
+line/branch/function coverage; `make site` passed. Work is local on
+main; no push was authorized or performed.
 
 ## Immediate next step
 
-{user-explicit} The owner requested the TODO v8 integration, no coverage
-regression, atomic commits and pushes to main, and conditional
-consideration of tagging v8.0.0 after passing CI/CD and a tip-top
-review. The tag pipeline automatically publishes to npm; that
-publication is not separately authorized.
+{user-explicit} The owner asked to review v8 for its missing completion
+reassessment trigger, add a minimal opt-in mechanism with lifecycle
+guards and focused tests, and ensure this feature does not implicitly
+authorize a Git push. Tagging and npm publication remain unauthorized.
 
 {unresolved} OpenAlex, Exa, and Parallel tool calls through a Pi Sych
 worker remain to be checked. Scholar Gateway was removed after OAuth

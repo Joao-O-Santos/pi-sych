@@ -4,10 +4,12 @@ import { isAbsolute, resolve } from "node:path";
 export interface PiSychConfig {
 	version: 2;
 	literatureDatabase?: string;
+	completionReassessment: boolean;
 	compaction: { custom: boolean; thresholdTokens: number };
 }
 export const DEFAULT_CONFIG = {
 	version: 2,
+	completionReassessment: false,
 	compaction: { custom: true, thresholdTokens: 150_000 },
 } satisfies PiSychConfig;
 export interface ConfigDirectoryOptions {
@@ -55,7 +57,13 @@ function readConfig(path: string): Record<string, unknown> | undefined {
 	if (!value || typeof value !== "object" || Array.isArray(value))
 		throw new Error(`Pi Sych config must be an object at ${path}`);
 	const item = value as Record<string, unknown>;
-	rejectUnknown(item, ["version", "compaction", "literatureDatabase"], path);
+	rejectUnknown(
+		item,
+		["version", "compaction", "completionReassessment", "literatureDatabase"],
+		path,
+	);
+	if (item.completionReassessment !== undefined && typeof item.completionReassessment !== "boolean")
+		throw new Error(`Pi Sych config completionReassessment must be boolean at ${path}`);
 	if (item.version !== 2) throw new Error(`Pi Sych config version must be 2 at ${path}`);
 	if (item.compaction !== undefined) {
 		if (!item.compaction || typeof item.compaction !== "object" || Array.isArray(item.compaction))
@@ -91,6 +99,8 @@ export function loadPiSychConfig(options: ConfigDirectoryOptions = {}): PiSychCo
 		...(global?.compaction as object | undefined),
 		...(project?.compaction as object | undefined),
 	} as PiSychConfig["compaction"];
+	const completionReassessment = (project?.completionReassessment ??
+		global?.completionReassessment) as boolean | undefined;
 	const configured = project?.literatureDatabase ?? global?.literatureDatabase;
 	const literatureBase =
 		project?.literatureDatabase !== undefined && options.projectRoot
@@ -99,6 +109,7 @@ export function loadPiSychConfig(options: ConfigDirectoryOptions = {}): PiSychCo
 	return {
 		version: 2,
 		compaction,
+		completionReassessment: completionReassessment ?? DEFAULT_CONFIG.completionReassessment,
 		...(configured !== undefined
 			? {
 					literatureDatabase: isAbsolute(configured as string)

@@ -24,13 +24,18 @@ not a claim that unrun external checks passed.
   packed-install tests with and without optional Plannotator. Fixed the worker
   `--tools` allowlist interaction that hid native MCP tools from codemode; a
   live Pi Sych dispatches from both the worktree and installed `2afd06d`
-  package successfully resolved React through Context7.
+  package successfully resolved React through Context7. Added opt-in,
+  one-shot completion reassessment at Pi's `agent_before_settle` boundary;
+  it defaults off and is separate from compaction.
 - Baseline v7.0.1 runtime: 3170 nonblank lines; current v8 preparation: about
-  3100 (below baseline). Current coverage: 97.55% lines, 91.62% branches,
-  96.73% functions, all above the baseline of 97.48/90.23/95.31.
+  3150 (below baseline). Current coverage: 97.58% lines, 91.75% branches,
+  96.76% functions, all above the baseline of 97.48/90.23/95.31.
 
 ## Outstanding gates and limitations
 
+- [ ] A deterministic test cannot judge whether model prose correctly
+  identifies completion; tests cover the prompt contract and Pi's one-shot
+  continuation boundary, while semantic completion remains model judgment.
 - [ ] Exercise real OpenAlex, Exa, and Parallel tool calls through a Pi Sych
   worker. Pi reported Context7, OpenAlex, Exa, and Parallel connected;
   Context7 was live-tested end-to-end through a read-only worker. Scholar

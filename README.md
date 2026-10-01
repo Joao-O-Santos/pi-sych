@@ -283,6 +283,10 @@ orchestration system:
   append clearly marked, unreviewed proposals to `INBOX.md`, but never
   mutates canonical semantic files; omission or failure returns control
   to Pi's native compactor.
+- **Optional completion reassessment:** disabled by default; when
+  enabled, the workbench asks once at Pi's final actionable boundary
+  whether the current authorized request is complete. It continues
+  within scope if needed and stops if complete or genuinely blocked.
 - **Human review:** Plannotator provides annotation and code-review
   interfaces without becoming a workflow controller.
 

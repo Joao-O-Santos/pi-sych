@@ -109,8 +109,9 @@ Pi Sych configuration layers the global
 `<pi-config-root>/pi-sych/config.json` with the project
 `.pi/pi-sych/config.json`; project keys override matching global keys,
 including individual nested compaction fields. Unknown keys are
-rejected. The small v2 configuration owns custom compaction policy and
-the local literature database path, not native Pi settings.
+rejected. The small v2 configuration owns custom compaction policy, an
+optional completion reassessment, and the local literature database
+path, not native Pi settings.
 
 Custom compaction uses the active supervisor model and runs for
 configured manual/native compaction requests when enabled. Proactive
@@ -119,6 +120,16 @@ configured threshold (default 150,000 tokens), the context window can
 reach that threshold, the agent is idle, no messages are pending, and no
 compaction is already in flight. The threshold is independent of Pi's
 reserve-token settings.
+
+Optional completion reassessment defaults off. When enabled, the
+workbench uses Pi's final actionable `agent_before_settle` event after
+ordinary post-run handling. It injects one hidden message and requests
+one continuation only for a completed outcome, with no queued messages
+and `context.canContinue` true. A per-user-message guard prevents
+recursive reassessment; a new user message resets it. The instruction
+keeps work within existing authorization and directs the supervisor to
+stop when complete or genuinely blocked. This trigger is separate from
+compaction.
 
 The continuation is a bounded observable trajectory: objective,
 authorization, constraints, progress, decisions, inferences, failed or

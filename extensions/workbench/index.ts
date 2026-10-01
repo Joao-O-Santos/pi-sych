@@ -123,6 +123,17 @@ export const shouldTriggerSettledCompaction = (
 	idle &&
 	!pendingMessages &&
 	!inFlight;
+export const shouldTriggerCompletionReassessment = (
+	enabled: boolean,
+	outcome: "completed" | "aborted" | "error",
+	pendingMessages: number,
+	canContinue: boolean,
+	alreadyTriggered: boolean,
+) =>
+	enabled && outcome === "completed" && pendingMessages === 0 && canContinue && !alreadyTriggered;
+const COMPLETION_REASSESSMENT_TYPE = "pi-sych-completion-reassessment";
+const COMPLETION_REASSESSMENT_PROMPT =
+	"Reassess whether the current user-authorized request is fully complete. If actionable work remains within the existing request and authorization, continue; otherwise stop. Do not broaden scope, invent tasks, or infer new authorization. If genuinely blocked, stop and report the blocker. This reassessment grants no additional authorization.";
 export async function configuredSupervisorInstructions(cwd: string, existing = "") {
 	const project = await resolveProject(cwd),
 		instructions = await readFile(project.canonical.agents, "utf8").catch(
@@ -155,6 +166,7 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 	await ensurePiSychConfig(startupOptions);
 	let settledConfig = loadPiSychConfig(startupOptions);
 	let settledCompactionInFlight = false;
+	let completionReassessmentAttempted = false;
 	pi.on("before_agent_start", async (event, ctx) => {
 		const project = await resolveProject(ctx.cwd);
 		const sections = [event.systemPrompt, SUPERVISOR_GUIDANCE],
@@ -175,6 +187,34 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 	pi.on("session_start", async (_event, ctx) => {
 		const sessionProject = await resolveProject(ctx.cwd);
 		settledConfig = loadPiSychConfig({ projectRoot: sessionProject.projectRoot });
+		completionReassessmentAttempted = false;
+	});
+	pi.on("message_start", (event) => {
+		if (event.message.role === "user") completionReassessmentAttempted = false;
+	});
+	pi.on("agent_before_settle", (event) => {
+		if (
+			!shouldTriggerCompletionReassessment(
+				settledConfig.completionReassessment,
+				event.outcome,
+				event.context.pendingMessages.length,
+				event.context.canContinue,
+				completionReassessmentAttempted,
+			)
+		)
+			return;
+		completionReassessmentAttempted = true;
+		return {
+			entries: [
+				{
+					type: "custom_message",
+					customType: COMPLETION_REASSESSMENT_TYPE,
+					content: COMPLETION_REASSESSMENT_PROMPT,
+					display: false,
+				},
+			],
+			continue: true,
+		};
 	});
 	pi.on("agent_settled", (_event, ctx) => {
 		if (

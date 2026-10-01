@@ -3,7 +3,8 @@
 Pi Sych keeps credentials, provider choices, model identifiers, and
 personal examples outside the public package. Native Pi configuration
 owns provider authentication and MCP transport; Pi Sych configuration
-owns only its custom compaction policy and local literature path.
+owns custom compaction policy, an optional completion reassessment, and
+the local literature path.
 
 ## Layered Pi Sych settings
 
@@ -23,6 +24,7 @@ The version 2 shape is:
     "custom": true,
     "thresholdTokens": 150000
   },
+  "completionReassessment": false,
   "literatureDatabase": "library.sqlite"
 }
 ```
@@ -35,6 +37,15 @@ rules require it; when the Pi Sych resource is loaded, it supplies the
 custom summary for those requests as well. `thresholdTokens` is not an
 alias for Pi's `reserveTokens`. Set custom to `false` to leave
 compaction to Pi's native behavior.
+
+`completionReassessment` defaults to `false`. When enabled, the
+workbench adds one hidden reassessment at Pi's final actionable
+`agent_before_settle` boundary after a completed run, only when there
+are no pending messages and Pi can continue. If the reassessment finds
+authorized work, Pi makes one continuation; if complete or genuinely
+blocked, it stops. A guard prevents repeated reassessments for that user
+message. This is separate from the 150,000-token compaction trigger and
+does not expand the existing request's authorization.
 
 `literatureDatabase` may be an absolute path or relative path. A
 relative global value is resolved from the global Pi Sych config
