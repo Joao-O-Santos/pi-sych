@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-01T20:00:11.098Z",
+  "confirmedAt": "2026-10-01T20:05:21.061Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:ff8279ddd1a6fad63ba0310ac9515ea45235b94cb943a33fda4300a4835ddbd1",
+      "fingerprint": "sha256:7b5df1ace74b034293ab60b0dbbc990b1750d3f644678bdb43ffe62e8bb46fd1",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,8 +15,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T20:00:11.098Z",
-        "reason": "Recorded the reproduced Pi --tools allowlist cause, confirmed the Pi Sych worker fix with local fixture and live Context7 call, and reviewed README's unchanged MCP setup contract."
+        "at": "2026-10-01T20:05:21.061Z",
+        "reason": "Recorded passing local 201-test/coverage/site/pack gates, GitLab verify and Pages on 2afd06d1, installed-package update to the same commit, and successful worktree plus installed read-only Context7 worker calls."
       }
     },
     {

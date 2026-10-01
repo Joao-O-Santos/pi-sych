@@ -23,7 +23,8 @@ not a claim that unrun external checks passed.
   guide, local two-tool native MCP/codemode partial-failure integration, and
   packed-install tests with and without optional Plannotator. Fixed the worker
   `--tools` allowlist interaction that hid native MCP tools from codemode; a
-  live Pi Sych dispatch successfully resolved React through Context7.
+  live Pi Sych dispatches from both the worktree and installed `2afd06d`
+  package successfully resolved React through Context7.
 - Baseline v7.0.1 runtime: 3170 nonblank lines; current v8 preparation: about
   3100 (below baseline). Current coverage: 97.55% lines, 91.62% branches,
   96.73% functions, all above the baseline of 97.48/90.23/95.31.
@@ -42,9 +43,9 @@ not a claim that unrun external checks passed.
   loadable Pi resource; the v8 workbench currently owns the hook and policy,
   with `compaction.custom: false` leaving native compaction in control. A split
   is optional, not a prerequisite for the 150k semantics.
-- [ ] Check remote verify/Pages for the pushed worker MCP fix before any
-  release; earlier v8 preparation commits passed both jobs. Recheck exact
-  final HEAD and package contents before any tag. The repository's tag pipeline
+- [x] GitLab verify/Pages passed on final fix commit `2afd06d1`; `make verify`
+  includes package dry-run and passed locally. Recheck exact HEAD and packed
+  contents before any tag. The repository's tag pipeline
   automatically publishes to npm; conditional tag consideration does not
   separately authorize that publication. Obtain explicit release/publication
   instruction before pushing a v8.0.0 tag.

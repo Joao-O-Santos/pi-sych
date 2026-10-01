@@ -190,11 +190,13 @@ failures. This is model- and run-specific evidence, not a deterministic
 guarantee or human review.
 
 {verified} `make verify`, `make site`, and packed-install variants
-passed locally. GitLab verify and Pages passed for the v8 implementation
-commit `dc32c879` and state commit `8271d2ce`. Check exact HEAD again
-before a release. Native MCP server status was reported connected by Pi
-for Context7, OpenAlex, Exa, and Parallel. A live Context7 tool call
-also passed through a Pi Sych remote-research worker after fixing the
+passed locally. GitLab verify and Pages passed on the final worker-MCP
+fix commit `2afd06d1`. The installed Pi Sych package was updated to that
+same commit, and a read-only Context7 worker dispatch passed from both
+source and installed-package entry points. Recheck exact HEAD before a
+release. Native MCP server status was reported connected by Pi for
+Context7, OpenAlex, Exa, and Parallel. A live Context7 tool call also
+passed through a Pi Sych remote-research worker after fixing the
 worker's CLI allowlist interaction. Pi reported OpenAlex, Exa, and
 Parallel connected, but their tools have not yet been exercised through
 a worker.
@@ -206,7 +208,8 @@ a worker.
 callable registry. The worker now applies its selected Pi tools at
 session start without that allowlist. A local fixture and a live
 read-only Context7 resolution through the actual Pi Sych dispatch both
-passed. No MCP API keys were read or copied.
+passed from the worktree and installed package. No MCP API keys were
+read or copied.
 
 ## Immediate next step
 
