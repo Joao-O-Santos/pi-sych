@@ -12,9 +12,11 @@ their native job. Examples include:
 
 - a local literature index such as `literature_search` for discovery and
   provenance within an existing corpus;
-- a scholarly metadata/graph service such as OpenAlex or an equivalent for
-  candidate works, DOI and bibliographic identity, authorship, references,
-  citation relationships, and related-work expansion;
+- the OpenAlex MCP as a first-choice scholarly metadata/graph service when
+  available and useful, for candidate works, DOI and bibliographic identity,
+  authorship, references, citation relationships, and related-work expansion
+  (see [OpenAlex guidance](../openalex/guidance.md)); or an equivalent when it
+  is unavailable or another service better fits the task;
 - a peer-reviewed scholarly gateway such as Scholar Gateway or an equivalent
   for focused literature retrieval;
 - a PDF/full-text reader for inspecting methods, results, tables, quotations,

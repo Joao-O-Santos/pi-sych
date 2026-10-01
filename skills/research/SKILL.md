@@ -30,12 +30,15 @@ question or evidence boundary.
 | query design and stopping rule | [search](modules/search/guidance.md) |
 | supplied-source synthesis | [synthesis](modules/synthesis/guidance.md) |
 | literature retrieval | [search](modules/search/guidance.md) |
+| OpenAlex scholarly metadata and graph discovery | [OpenAlex](modules/openalex/guidance.md) |
 | source inspection | [sources](modules/sources/guidance.md) |
 | citation verification | [citations](modules/citations/guidance.md) |
 | compare explanations | [synthesis](modules/synthesis/guidance.md) |
 
 ### Optional overlays
 
+- Add [OpenAlex](modules/openalex/guidance.md) when using its MCP for
+  scholarly metadata, entity resolution, filtering, citation graphs, or trends.
 - Add [sources](modules/sources/guidance.md) when exact source content,
   methods, results, quotations, or corrections matter.
 - Add [claim and evidence](../_methods/claim-evidence/guidance.md) when

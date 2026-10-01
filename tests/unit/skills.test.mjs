@@ -31,7 +31,7 @@ const modules = {
 		"response",
 		"verification",
 	],
-	research: ["search", "sources", "synthesis", "citations"],
+	research: ["search", "sources", "synthesis", "citations", "openalex"],
 };
 const methods = ["argument-analysis", "claim-evidence", "hypothesis-generation", "prose"];
 const skillsRoot = resolve("skills");
