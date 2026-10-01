@@ -159,6 +159,40 @@ test("acknowledgement rejection matrix leaves SYNC bytes unchanged", async (t) =
 	}
 });
 
+test("overlapping acknowledgements reject contention without losing updates", async (t) => {
+	const { root } = await setup(t, [artifact("A.md", "old-a"), artifact("B.md", "old-b")], {
+		"A.md": "new-a",
+		"B.md": "new-b",
+	});
+	const files = ["A.md", "B.md"];
+	const results = await Promise.allSettled(
+		files.map((file) => acknowledgeProjectStatus(root, [file], "reviewed")),
+	);
+	assert.equal(results.filter((result) => result.status === "fulfilled").length, 1);
+	const rejected = results.findIndex((result) => result.status === "rejected");
+	assert.match(results[rejected].reason.message, /already in progress/);
+	await acknowledgeProjectStatus(root, [files[rejected]], "reviewed after retry");
+	const saved = JSON.parse(await readFile(join(root, "SYNC.json"), "utf8"));
+	assert.ok(saved.artifacts.every((item) => item.acknowledgement));
+	assert.equal(saved.artifacts[0].fingerprint, fingerprint("new-a"));
+	assert.equal(saved.artifacts[1].fingerprint, fingerprint("new-b"));
+});
+
+test("an existing acknowledgement lock is never stolen", async (t) => {
+	const { root, sync } = await setup(t, [artifact("A.md", "a")], { "A.md": "a" });
+	await writeFile(join(root, "SYNC.json.lock"), "owner");
+	await assert.rejects(acknowledgeProjectStatus(root, ["A.md"], "reviewed"), /already in progress/);
+	assert.equal(await readFile(join(root, "SYNC.json"), "utf8"), sync);
+	assert.equal(await readFile(join(root, "SYNC.json.lock"), "utf8"), "owner");
+});
+
+test("a failed acknowledgement releases its lock for a valid retry", async (t) => {
+	const { root } = await setup(t, [artifact("A.md", "a")], { "A.md": "a" });
+	await assert.rejects(acknowledgeProjectStatus(root, ["unknown.md"], "reviewed"), /not tracked/);
+	await acknowledgeProjectStatus(root, ["A.md"], "reviewed");
+	await assert.rejects(readFile(join(root, "SYNC.json.lock")), { code: "ENOENT" });
+});
+
 test("acknowledgement records fixed, trimmed metadata for multiple files and marks downstream review", async (t) => {
 	const { root } = await setup(
 		t,

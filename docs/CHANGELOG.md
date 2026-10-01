@@ -35,6 +35,16 @@ state.
   composition with separately installed tools. See
   [migration](migration-v7-to-v8.md).
 
+### Fixed
+
+- Clean up inherited worker output pipes after a ten-second drain grace,
+  preserve normal-exit success, and terminate POSIX worker process
+  groups on timeout/cancellation with a ten-second graceful shutdown
+  window.
+- Reject overlapping acknowledgement transactions with an exclusive lock
+  rather than silently overwriting another acknowledgement.
+- Enforce the Pi 0.99.2 minimum in the coding-agent peer dependency.
+
 ## v7.0.1
 
 ### Changed

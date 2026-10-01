@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-01T21:12:09.923Z",
+  "confirmedAt": "2026-10-01T21:44:20.157Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:8d467110d82fa1f065445b38d340beb4f16a050e9f330db8d5ab0657a1048a9a",
+      "fingerprint": "sha256:c7d286b43d46e5984c33214eb185a4b7ed90ec14a4949e6eed775aa44f6b87a8",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,21 +15,21 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T20:30:17.397Z",
-        "reason": "Reviewed the new default-off lifecycle behavior and its configuration, compatibility, architecture, README, and changelog statements; README was checked as the declared architecture dependent."
+        "at": "2026-10-01T21:44:20.157Z",
+        "reason": "Reviewed requested worker cleanup, acknowledgement concurrency, and Pi peer-minimum fixes against implementation and regression tests. make verify passed 210 tests and packaging; make site passed. README dependency statements remain consistent. Hardlink handling was explicitly left unchanged."
       }
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:bd8246cae15c1547edfee9cc63dbb58de495659961b029c7ded453c8fe7cbf70",
+      "fingerprint": "sha256:ea5c6586c1154f3c37be78cb3e3776bb77f34537f180bb37f8916f09325eb6d0",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T20:30:17.397Z",
-        "reason": "Reviewed the new default-off lifecycle behavior and its configuration, compatibility, architecture, README, and changelog statements; README was checked as the declared architecture dependent."
+        "at": "2026-10-01T21:44:20.157Z",
+        "reason": "Reviewed requested worker cleanup, acknowledgement concurrency, and Pi peer-minimum fixes against implementation and regression tests. make verify passed 210 tests and packaging; make site passed. README dependency statements remain consistent. Hardlink handling was explicitly left unchanged."
       }
     },
     {
@@ -46,13 +46,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T21:12:09.923Z",
-        "reason": "Pi 1.0.0 compatibility is now verified alongside 0.99.2. Updated the dev dependency range and lockfile to include Pi 1.0.0; reviewed and updated README and compatibility contract to record the 0.99.2+ target and actual verified versions. Full make verify and make site passed."
+        "at": "2026-10-01T21:44:20.157Z",
+        "reason": "Reviewed requested worker cleanup, acknowledgement concurrency, and Pi peer-minimum fixes against implementation and regression tests. make verify passed 210 tests and packaging; make site passed. README dependency statements remain consistent. Hardlink handling was explicitly left unchanged."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:7c3a2937ae8559d74362653a39bc3760f46ac439bd85669507f130bb36ae4a46",
+      "fingerprint": "sha256:61d9aa0fa7ea6ef90e51bf5bf11ccab22a2c241e804ab59411fb95395132f6f5",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -66,8 +66,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T21:12:09.923Z",
-        "reason": "Pi 1.0.0 compatibility is now verified alongside 0.99.2. Updated the dev dependency range and lockfile to include Pi 1.0.0; reviewed and updated README and compatibility contract to record the 0.99.2+ target and actual verified versions. Full make verify and make site passed."
+        "at": "2026-10-01T21:44:20.157Z",
+        "reason": "Reviewed requested worker cleanup, acknowledgement concurrency, and Pi peer-minimum fixes against implementation and regression tests. make verify passed 210 tests and packaging; make site passed. README dependency statements remain consistent. Hardlink handling was explicitly left unchanged."
       }
     },
     {
@@ -98,15 +98,15 @@
     },
     {
       "path": "docs/public-contract.md",
-      "fingerprint": "sha256:d5244d55cfe74ee2b0fba1942a056d376a1a293109bc44ea8bbf2a2c538e5b9e",
+      "fingerprint": "sha256:a4ea5afe7ab2b97cd0292ada25c89d73286fdd7a6975cb3cc43098247530af0c",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "compatibility"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T21:12:09.923Z",
-        "reason": "Pi 1.0.0 compatibility is now verified alongside 0.99.2. Updated the dev dependency range and lockfile to include Pi 1.0.0; reviewed and updated README and compatibility contract to record the 0.99.2+ target and actual verified versions. Full make verify and make site passed."
+        "at": "2026-10-01T21:44:20.157Z",
+        "reason": "Reviewed requested worker cleanup, acknowledgement concurrency, and Pi peer-minimum fixes against implementation and regression tests. make verify passed 210 tests and packaging; make site passed. README dependency statements remain consistent. Hardlink handling was explicitly left unchanged."
       }
     },
     {
@@ -124,15 +124,15 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:0064ecd7caf960820e058791a02762fdd53da06f6f8fa9b4e143d19a1b94348a",
+      "fingerprint": "sha256:30de0a3b80dc0f110fa98b7216844f22754201e7ade9f48bbf9e4c322102aafb",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T20:30:17.397Z",
-        "reason": "Reviewed the new default-off lifecycle behavior and its configuration, compatibility, architecture, README, and changelog statements; README was checked as the declared architecture dependent."
+        "at": "2026-10-01T21:44:20.157Z",
+        "reason": "Reviewed requested worker cleanup, acknowledgement concurrency, and Pi peer-minimum fixes against implementation and regression tests. make verify passed 210 tests and packaging; make site passed. README dependency statements remain consistent. Hardlink handling was explicitly left unchanged."
       }
     },
     {

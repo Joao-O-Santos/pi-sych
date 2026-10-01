@@ -94,6 +94,12 @@ result file. Before launch and after termination, Pi Sych snapshots
 project files and reports reported, observed, and unexpected changed
 paths independently of worker success. Observation does not undo
 changes. Temporary runtime/session state is removed after every outcome.
+On POSIX, workers have their own process group. Timeout or cancellation
+starts graceful group termination, with ten seconds before forced
+cleanup. A normally exited worker also gets ten seconds to drain
+inherited output pipes, without being reclassified as timed out. Windows
+signals the direct child; pipe cleanup still prevents descendants from
+holding dispatch open.
 
 ## Project state
 
@@ -101,7 +107,11 @@ changes. Temporary runtime/session state is removed after every outcome.
 `project_status` reports missing files, changed hashes, persisted
 status, project-brief problems, and dependency impact. A changed hash
 proves only changed content. Acknowledgement records reviewed state, not
-correctness or semantic authority.
+correctness or semantic authority. Acknowledgement holds an exclusive
+`SYNC.json.lock` across its read--modify--write transaction. Concurrent
+calls fail explicitly and can be retried; a lock left by a crash must be
+removed only after confirming no acknowledgement is running. This
+coordinates Pi Sych acknowledgements, not arbitrary external editors.
 
 ## Configuration and compaction
 

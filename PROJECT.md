@@ -115,12 +115,11 @@ or published release.
 
 {verified} Against the v7.0.1 deterministic coverage baseline (97.48%
 lines, 90.23% branches, 95.31% functions), the v8 preparation coverage
-measures 97.58% lines, 91.75% branches, 96.76% functions. Runtime
-nonblank source remains below the v7.0.1 count and within the 3,200-line
-budget. The local native MCP fixture and live read-only Context7 worker
-call passed. The opt-in real-model workflow and an installed-package
-`project_status` dogfood call passed after private local v8
-configuration migration.
+measures 97.58% lines, 91.84% branches, 96.82% functions. Runtime
+nonblank source is about 3,200 lines, within the 3,200-line budget. The
+local native MCP fixture and live read-only Context7 worker call passed.
+The opt-in real-model workflow and an installed-package `project_status`
+dogfood call passed after private local v8 configuration migration.
 
 {verified} The supervisor prompt, dispatch tool guidance, worker schema
 and assignment prompt, local literature tool guidance, seven umbrella
@@ -203,24 +202,22 @@ a worker.
 
 ## Previous action
 
-{verified} Reviewed the v8 workbench lifecycle: completion reassessment
-was not present. Added an optional, default-off one-shot hidden prompt
-at Pi's `agent_before_settle` boundary, with pending-message and
-continuation checks, a per-user-message re-entry guard, and explicit
-scope/blocker limits. This remains separate from the 150k compaction
-trigger. `make verify` passed 202 tests at 97.58/91.75/96.76%
-line/branch/function coverage; `make site` passed. Work is local on
-main; no push was authorized or performed.
+{verified} Fixed worker inherited-pipe cleanup with a ten-second grace
+period and POSIX process-group termination, rejected overlapping
+acknowledgements with an exclusive transaction lock, and enforced the Pi
+0.99.2 peer minimum. Real-process and contention regressions passed.
+`make verify` passed 210 tests at 97.58/91.84/96.82%
+line/branch/function coverage; `make site` passed. Independent worker
+review was unavailable because the local worker-model catalog was
+absent. Work remains local on main; no push was performed.
 
 ## Immediate next step
 
-{user-explicit} The owner asked to review v8 for its missing completion
-reassessment trigger, add a minimal opt-in mechanism with lifecycle
-guards and focused tests, and ensure this feature does not implicitly
-authorize a Git push. Tagging and npm publication remain unauthorized.
+{user-explicit} The requested review fixes are implemented. The owner
+preferred generous completion/shutdown timing and explicitly declined
+the hardlink-inbox change. Await further direction; no push, tag, or
+publication is authorized for this task.
 
 {unresolved} OpenAlex, Exa, and Parallel tool calls through a Pi Sych
 worker remain to be checked. Scholar Gateway was removed after OAuth
-sign-in failed with `Invalid scope`; no workaround was attempted. The
-user requested atomic commits and pushes for this implementation fix; no
-tag or publication is authorized.
+sign-in failed with `Invalid scope`; no workaround was attempted.

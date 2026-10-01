@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawn } from "node:child_process";
 import { EventEmitter } from "node:events";
 import { access, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -506,7 +506,7 @@ for (const [label, signal] of [
 		if (signal) controller.abort();
 		else t.mock.timers.tick(100);
 		fake.child.emit("error", new Error("SIGTERM failed while process is running"));
-		t.mock.timers.tick(2_000);
+		t.mock.timers.tick(10_000);
 		assert.deepEqual(fake.child.kills, ["SIGTERM", "SIGKILL"]);
 		fake.child.emit("error", new Error("SIGKILL also reported an error"));
 		let settled = false;
@@ -526,12 +526,123 @@ test("ignored SIGTERM reaches SIGKILL after the grace period", async (t) => {
 	const launched = launchPiWorker(launchSpec(root), fake.spawn);
 	t.mock.timers.tick(100);
 	assert.deepEqual(fake.child.kills, ["SIGTERM"]);
-	t.mock.timers.tick(1_999);
+	t.mock.timers.tick(9_999);
 	assert.deepEqual(fake.child.kills, ["SIGTERM"]);
 	t.mock.timers.tick(1);
 	assert.deepEqual(fake.child.kills, ["SIGTERM", "SIGKILL"]);
 	fake.child.emit("close", null, "SIGKILL");
 	assert.equal((await launched).classification, "timeout");
+});
+
+test("shutdown allows a slow graceful exit before escalating", async (t) => {
+	t.mock.timers.enable({ apis: ["setTimeout"] });
+	const fake = fakeSpawn();
+	const launched = launchPiWorker(launchSpec(tmpdir()), fake.spawn);
+	t.mock.timers.tick(100);
+	t.mock.timers.tick(9_000);
+	fake.child.emit("close", 0, null);
+	assert.equal((await launched).classification, "timeout");
+	t.mock.timers.tick(10_000);
+	assert.deepEqual(fake.child.kills, ["SIGTERM"]);
+});
+
+test("normal exit clears the deadline and grants inherited pipes a drain grace", async (t) => {
+	t.mock.timers.enable({ apis: ["setTimeout"] });
+	const fake = fakeSpawn();
+	const launched = launchPiWorker(launchSpec(tmpdir()), fake.spawn);
+	fake.child.emit("exit", 0, null);
+	t.mock.timers.tick(9_999);
+	assert.deepEqual(fake.child.kills, []);
+	fake.child.emit("close", 0, null);
+	assert.equal((await launched).exitCode, 0);
+	assert.equal((await launched).classification, undefined);
+});
+
+test("real inherited pipes cannot hold a completed worker open indefinitely", {
+	skip: process.platform === "win32",
+	timeout: 20_000,
+}, async (t) => {
+	let child;
+	t.after(() => {
+		try {
+			process.kill(-child.pid, "SIGKILL");
+		} catch {}
+	});
+	const started = Date.now();
+	const outcome = await launchPiWorker(
+		launchSpec(tmpdir(), { request: { ...request, timeoutMs: 2_000 } }),
+		(_command, _args, options) => {
+			child = spawn(
+				process.execPath,
+				[
+					"--input-type=module",
+					"-e",
+					`
+			import { spawn } from 'node:child_process';
+			const descendant = spawn(process.execPath, ['-e', 'setInterval(()=>{},1000)'], { stdio: ['ignore', process.stdout, process.stderr] });
+			descendant.unref();
+		`,
+				],
+				options,
+			);
+			return child;
+		},
+	);
+	assert.equal(outcome.exitCode, 0);
+	assert.equal(outcome.classification, undefined);
+	assert.ok(Date.now() - started < 15_000);
+});
+
+test("real timeout cleans up descendants that ignore graceful termination", {
+	skip: process.platform === "win32",
+	timeout: 20_000,
+}, async (t) => {
+	let child;
+	t.after(() => {
+		try {
+			process.kill(-child.pid, "SIGKILL");
+		} catch {}
+	});
+	const started = Date.now();
+	const outcome = await launchPiWorker(
+		launchSpec(tmpdir(), { request: { ...request, timeoutMs: 2_000 } }),
+		(_command, _args, options) => {
+			child = spawn(
+				process.execPath,
+				[
+					"--input-type=module",
+					"-e",
+					`
+			import { spawn } from 'node:child_process';
+			spawn(process.execPath, ['-e', "process.on('SIGTERM',()=>{}); setInterval(()=>{},1000)"], { stdio: ['ignore', process.stdout, process.stderr] });
+			setInterval(()=>{},1000);
+		`,
+				],
+				options,
+			);
+			return child;
+		},
+	);
+	assert.equal(outcome.classification, "timeout");
+	assert.ok(child.stdout.destroyed && child.stderr.destroyed);
+	assert.ok(Date.now() - started < 17_000);
+});
+
+test("group signalling falls back to the direct worker on failure", async (t) => {
+	t.mock.timers.enable({ apis: ["setTimeout"] });
+	const fake = fakeSpawn();
+	fake.child.pid = 12345;
+	const kill = t.mock.method(process, "kill", () => {
+		throw new Error("group unavailable");
+	});
+	const launched = launchPiWorker(launchSpec(tmpdir()), fake.spawn);
+	t.mock.timers.tick(100);
+	assert.deepEqual(fake.child.kills, ["SIGTERM"]);
+	if (process.platform !== "win32")
+		assert.deepEqual(kill.mock.calls[0].arguments, [-12345, "SIGTERM"]);
+	fake.child.emit("close", null, "SIGTERM");
+	assert.equal((await launched).classification, "timeout");
+	fake.child.emit("error", new Error("late process error"));
 });
 
 test("worker activity parses chunked JSONL, ignores malformed events, and stays bounded", async (t) => {

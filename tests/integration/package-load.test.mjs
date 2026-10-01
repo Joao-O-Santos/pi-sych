@@ -268,6 +268,8 @@ test("package metadata keeps attribution and release version consistent", async 
 	assert.equal((await stat("docs/attribution.md")).isFile(), true);
 	assert.equal(manifest.version, lockfile.version);
 	assert.equal(lockfile.packages[""].version, manifest.version);
+	assert.equal(manifest.peerDependencies["@earendil-works/pi-coding-agent"], ">=0.99.2");
+	assert.deepEqual(lockfile.packages[""].peerDependencies, manifest.peerDependencies);
 	assert.deepEqual(manifest.pi.extensions, [
 		"./extensions/workbench/index.ts",
 		"./extensions/plannotator/index.ts",

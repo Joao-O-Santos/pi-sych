@@ -1,5 +1,5 @@
 import { hash } from "node:crypto";
-import { readFile } from "node:fs/promises";
+import { open, readFile, realpath, rm } from "node:fs/promises";
 import { resolve } from "node:path";
 import {
 	formatSyncManifest,
@@ -342,6 +342,28 @@ export async function acknowledgeProjectStatus(
 	if (!files.length || !reason.trim())
 		throw new Error("Acknowledgement requires named files and a non-empty reason");
 	const selected = new Set(files.map((file) => path(file, "files[]")));
+	const project = await resolveProject(startPath);
+	const lockPath = `${await realpath(project.syncPath)}.lock`;
+	await using lock = await open(lockPath, "wx", 0o600).catch((error: NodeJS.ErrnoException) => {
+		if (error.code === "EEXIST")
+			throw new Error(
+				`Acknowledgement already in progress (${lockPath}); retry after it finishes. If the owner crashed, remove the stale lock only after confirming no acknowledgement is running.`,
+			);
+		throw error;
+	});
+	try {
+		return await acknowledgeLocked(startPath, selected, reason, now);
+	} finally {
+		await lock.close();
+		await rm(lockPath);
+	}
+}
+async function acknowledgeLocked(
+	startPath: string,
+	selected: Set<string>,
+	reason: string,
+	now: Date,
+) {
 	const state = await checkProjectStatus(startPath);
 	if (!state.manifest) throw new Error(state.syncError ?? "SYNC.json is unavailable");
 	for (const file of selected) checkedArtifact(state, file);

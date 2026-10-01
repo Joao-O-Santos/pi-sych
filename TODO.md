@@ -27,9 +27,13 @@ not a claim that unrun external checks passed.
   package successfully resolved React through Context7. Added opt-in,
   one-shot completion reassessment at Pi's `agent_before_settle` boundary;
   it defaults off and is separate from compaction.
+- Fixed inherited worker pipes with a ten-second cleanup grace and POSIX
+  group termination, added exclusive acknowledgement transaction locks,
+  and enforced the Pi 0.99.2 coding-agent peer minimum. Hardlink inbox
+  handling remains unchanged by owner choice.
 - Baseline v7.0.1 runtime: 3170 nonblank lines; current v8 preparation: about
-  3150 (below baseline). Current coverage: 97.58% lines, 91.75% branches,
-  96.76% functions, all above the baseline of 97.48/90.23/95.31.
+  3200 (within budget). Current coverage: 97.58% lines, 91.84% branches,
+  96.82% functions, all above the baseline of 97.48/90.23/95.31.
 
 ## Outstanding gates and limitations
 

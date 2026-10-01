@@ -437,12 +437,24 @@ export async function launchPiWorker(
 				PI_SYCH_RESULT_PATH: spec.resultPath,
 				PI_SYCH_ACTIVE_TOOLS: JSON.stringify(toolsForRequest(spec.request)),
 			},
+			detached: process.platform !== "win32",
 			stdio: ["ignore", "pipe", "pipe"],
 		},
 	);
 	forwardWorkerActivity(child.stdout, spec.onActivity);
 	child.stderr.setEncoding("utf8");
 	child.stderr.on("data", (chunk) => (stderr = (stderr + chunk).slice(-LOG_LIMIT)));
+	const signalWorker = (signal: NodeJS.Signals) => {
+		if (process.platform !== "win32" && child.pid) {
+			try {
+				process.kill(-child.pid, signal);
+				return;
+			} catch {
+				// Fall back to the direct child when group signalling is unavailable.
+			}
+		}
+		child.kill(signal);
+	};
 	let forcedKillTimer: ReturnType<typeof setTimeout> | undefined;
 	let timeout: ReturnType<typeof setTimeout> | undefined;
 	let stop = (_kind: "cancelled" | "timeout") => {};
@@ -456,20 +468,31 @@ export async function launchPiWorker(
 				if (timeout) clearTimeout(timeout);
 				if (forcedKillTimer) clearTimeout(forcedKillTimer);
 				spec.signal?.removeEventListener("abort", onAbort);
-				child.removeAllListeners("error");
 				done([code, signal]);
 			};
 			const onError = (error: Error) => {
 				spawnError = error;
 				if (!spawned) finish(null, null);
 			};
+			const cleanupAfterGrace = () => {
+				if (forcedKillTimer) return;
+				forcedKillTimer = setTimeout(() => {
+					signalWorker("SIGKILL");
+					child.stdout.destroy();
+					child.stderr.destroy();
+				}, 10_000);
+			};
 			child.on("error", onError);
 			child.once("spawn", () => (spawned = true));
+			child.once("exit", () => {
+				if (timeout) clearTimeout(timeout);
+				cleanupAfterGrace();
+			});
 			stop = (kind: "cancelled" | "timeout") => {
 				if (stopped) return;
 				stopped = kind;
-				child.kill("SIGTERM");
-				forcedKillTimer = setTimeout(() => child.kill("SIGKILL"), 2_000);
+				signalWorker("SIGTERM");
+				cleanupAfterGrace();
 			};
 			if (spec.signal?.aborted) stop("cancelled");
 			else spec.signal?.addEventListener("abort", onAbort, { once: true });
