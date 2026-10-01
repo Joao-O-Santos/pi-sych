@@ -98,13 +98,27 @@ prose, while allowing explicitly requested whole-artifact
 drafting/rewrite or review to run to completion without repeated
 permission prompts.
 
-{accepted} Runtime capability summaries, thin packaged review prompts,
-and settled-turn compaction are implemented. An optional user-maintained
-`STACK.md` may describe the user's durable computer/environment facts
-for computer-use work. Project software requirements and workflows
-remain in `AGENTS.md` and/or `PROJECT.md`.
+{accepted} Thin packaged review prompts and settled-turn compaction are
+implemented. Pi's active tool and MCP declarations supersede Pi Sych's
+startup capability summary. An optional user-maintained `STACK.md` may
+describe durable computer/environment facts. Project software
+requirements and workflows remain in `AGENTS.md` and/or `PROJECT.md`.
 
 ## Current state
+
+{verified} The local v8 preparation tree uses strict layered version 2
+configuration, Pi-native worker MCP/codemode, a 150k task-centred
+compaction threshold, and structured read-only literature discovery.
+MCPorter and the special-case companion web inheritance were removed;
+companion packages remain separately installed. This is not yet a tagged
+or published release.
+
+{verified} Against the v7.0.1 deterministic coverage baseline (97.48%
+lines, 90.23% branches, 95.31% functions), the v8 preparation coverage
+measures 97.52% lines, 91.61% branches, 96.69% functions. The local
+native MCP fixture also passed. Runtime nonblank source fell from 3170
+to 3041 lines. The real external native-MCP services and model-driven
+workflow remain unverified; worker-agent `mcp.json` is absent.
 
 {verified} The supervisor prompt, dispatch tool guidance, worker schema
 and assignment prompt, local literature tool guidance, seven umbrella
@@ -117,12 +131,10 @@ makes clean-versus-trajectory delegation depend on actual context need.
 
 {verified} `literature_search` frames results as discovery metadata and
 snippets rather than source verification or completeness evidence. It
-checks for required v7 columns before search and reports incompatible
-schemas with migration guidance. Worker terminal-result fields expose
-their semantic limits in schema descriptions. The supervisor-start
-capability summary is derived from active tools and local inspection and
-remains non-authorizing. Local literature and remote MCPorter state do
-not verify source access.
+checks required v7 columns before searching and provides validated
+structured and bounded readable results. Worker result fields expose
+semantic limits in schema descriptions. Pi declares active tools and
+native MCP servers; Pi Sych does not duplicate those summaries.
 
 {verified} Writing and review guidance includes artifact
 self-containment and reader-friction/context-leakage checks. Review
@@ -147,29 +159,26 @@ Metadata and snippets remain discovery evidence until the underlying
 source is inspected when exact claims, methods, results, quotations, or
 correction status matter.
 
-{verified} `PLAN.md` and `TODO.md` record v7 implementation and release
-hardening. Five packaged review prompts remain thin and defer to the
-`review` skill. Custom compaction retains bounded observable trajectory
-at the settled boundary, preserves recorded decision labels without
-verification, appends only bounded unreviewed inbox proposals, never
-mutates canonical semantic files, and falls back to the native compactor
-on omission or failure. Worker dispatch now reports claimed, observed,
-and unreported project changes even after failure; observation does not
-roll back changes. Plannotator absence does not prevent core startup.
+{verified} `PLAN.md` records prior v7 work; `TODO.md` tracks the
+remaining v8 verification gates. Five packaged review prompts remain
+thin and defer to the `review` skill. Custom compaction retains bounded
+observable trajectory at the settled boundary, preserves recorded
+decision labels without verification, appends only bounded unreviewed
+inbox proposals, never mutates canonical semantic files, and falls back
+to the native compactor on omission or failure. Worker dispatch now
+reports claimed, observed, and unreported project changes even after
+failure; observation does not roll back changes. Plannotator absence
+does not prevent core startup.
 
 {verified} Present-tense
 README/configuration/architecture/public-contract text describes seven
-skills, derived non-authorizing capability state, the
-persistence/scrutiny and clean/trajectory semantics, and implemented
-settled compaction. Prompt word-count accounting has been removed; the
-nonblank runtime source-code budget is 3,200 lines, providing headroom
-for the current approximately 3,000-line runtime.
+skills, Pi-native MCP worker selection, layered configuration,
+persistence/scrutiny and clean/trajectory semantics. The nonblank
+runtime source-code budget remains 3,200 lines.
 
 {verified} Repository-native formatting, documentation, type, budget,
-and test checks are part of the maintained acceptance boundary. The
-local release-preparation tree is version 7.0.1; npm still reports 7.0.0
-as the latest published package, and no v7.0.1 tag or publication
-exists.
+and test checks remain the acceptance boundary. The local package
+version is 8.0.0 preparation; publication is not authorized.
 
 {verified} After revising reviewer-response guidance and repairing the
 benchmark fixtures, the five-case opt-in evaluation completed with
@@ -178,28 +187,26 @@ OpenAI Codex Terra as candidate and Sol as judge: 5/5 cases complete,
 failures. This is model- and run-specific evidence, not a deterministic
 guarantee or human review.
 
-{verified} `make verify` and `make site` pass locally on the prepared
-7.0.1 tree.
+{verified} `make verify`, `make site`, and packed-install variants
+passed on the local v8 preparation tree. Real-service native MCP checks
+remain unverified.
 
 ## Previous action
 
-{verified} The initial thesis-preservation evaluation exposed a case-03
-regression: the revision accepted a reviewer's descriptive-only
-replacement for a supported practical screening claim. Writing and
-review guidance now distinguish reviewer recommendations from accepted
-project state and evidence; the benchmark suite also has valid manifests
-and checks for every expected artifact.
+{verified} Implemented and checked the local v8 mechanical transition,
+including layered configuration, native worker MCP/codemode and a
+deterministic local composition fixture. Real external service access
+remains unverified.
 
 ## Immediate next step
 
-{inference} Prepare this as a patch release, v7.0.1: the accepted change
-refines existing writing guidance and release verification without a
-runtime, API, or compatibility change.
+{user-explicit} The owner requested the TODO v8 integration, no coverage
+regression, atomic commits and pushes to main, and conditional
+consideration of tagging v8.0.0 after passing CI/CD and a tip-top
+review. Publication is not authorized.
 
-{user-explicit} The owner authorized atomic commits and push of the
-v7.0.1 patch-preparation changes. This does not authorize tagging or
-publishing.
-
-{unresolved} Any eventual release requires passing remote verify and
-Pages on the exact commit; tagging and publication remain separately
-gated by owner instruction.
+{unresolved} Real Context7, OpenAlex and Scholar Gateway native MCP/auth
+checks require configuration in the worker agent and must not be
+reported as passed without live validation. The opt-in model-driven
+workflow also remains outstanding. Publication is separately gated by
+owner instruction.

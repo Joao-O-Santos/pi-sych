@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-09-28T14:46:55.860Z",
+  "confirmedAt": "2026-10-01T18:09:05.783Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:9e028dfae7dbdcca4d7d5c0ba049e0dd795fe3dc5662d3b67ccab016f39549f0",
+      "fingerprint": "sha256:e0792a0adf927ed2ddd553c37e70c07bff292b4dc59fe5c0b146a562f53f994c",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,26 +15,26 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-09-28T14:46:55.860Z",
-        "reason": "Updated the project brief to reflect the owner's explicit authorization for atomic commits and push while keeping v7.0.1 tagging/publication gated; local checks and benchmark evidence remain accurate."
+        "at": "2026-10-01T18:09:05.783Z",
+        "reason": "Reviewed final v8 preparation state and worker-specific native Pi MCP setup instructions after local deterministic gate; real external service/auth validation and model workflow remain unresolved."
       }
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:b3c1be62f774a8da1cb6c567b2ed6f33293ed741ca04d8bc916872aef83d4af9",
+      "fingerprint": "sha256:c7c0509cee8376257115c4831d8306c86d133ca8ae8bbcce8c909998311be32a",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-09-25T10:22:52.007Z",
-        "reason": "Reviewed the v7 release-hardening implementation, reconciled tracked project and public documentation with current worker observation, optional Plannotator, literature migration, and promotion-scope behavior; reviewed README against architecture."
+        "at": "2026-10-01T18:07:20.003Z",
+        "reason": "Reviewed the v8 preparation's configuration, native MCP worker, compaction and literature contracts against implementation and local test results; local checks passed and external native MCP/auth and real-model workflow remain explicitly unverified."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:a40fd7ab6a4c802410e3f3de6645de0352fa3591b6f968b75d480382122856d4",
+      "fingerprint": "sha256:6e16c0b2a7ac99d618ca96fb0f4f5a060c3c193285357a260cd3023d5a14f9c8",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,13 +46,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-09-28T14:28:04.811Z",
-        "reason": "Reviewed the local 7.0.1 patch metadata and its declared README dependency: package/lock versions agree, README asset pins agree with the prepared version, and changelog notes match the guidance, benchmark, and registry-verification changes; publication remains unperformed."
+        "at": "2026-10-01T18:07:20.003Z",
+        "reason": "Reviewed the v8 preparation's configuration, native MCP worker, compaction and literature contracts against implementation and local test results; local checks passed and external native MCP/auth and real-model workflow remain explicitly unverified."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:8828ac6dddcea621478a9160bc29ecfaa1cd88fd7c1d68470d9d61f4bc5df18d",
+      "fingerprint": "sha256:2cbaa38d65113c86285f4961db6f0ed1525512131087981309f12168a005be2d",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -66,21 +66,21 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-09-28T14:28:04.811Z",
-        "reason": "Reviewed the local 7.0.1 patch metadata and its declared README dependency: package/lock versions agree, README asset pins agree with the prepared version, and changelog notes match the guidance, benchmark, and registry-verification changes; publication remains unperformed."
+        "at": "2026-10-01T18:07:20.003Z",
+        "reason": "Reviewed the v8 preparation's configuration, native MCP worker, compaction and literature contracts against implementation and local test results; local checks passed and external native MCP/auth and real-model workflow remain explicitly unverified."
       }
     },
     {
       "path": "docs/configuration.md",
-      "fingerprint": "sha256:e9ae672519b9e403bca4c7617c1c671a42aae7e62b600cd15a56b592569461e8",
+      "fingerprint": "sha256:a27bbbfd07ba8f15f88c1ee44f650dabc94135e627493fa379ff6a370dc9033a",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-09-25T10:22:52.007Z",
-        "reason": "Reviewed the v7 release-hardening implementation, reconciled tracked project and public documentation with current worker observation, optional Plannotator, literature migration, and promotion-scope behavior; reviewed README against architecture."
+        "at": "2026-10-01T18:09:05.783Z",
+        "reason": "Reviewed final v8 preparation state and worker-specific native Pi MCP setup instructions after local deterministic gate; real external service/auth validation and model workflow remain unresolved."
       }
     },
     {
@@ -98,41 +98,41 @@
     },
     {
       "path": "docs/public-contract.md",
-      "fingerprint": "sha256:84c15f27341b73e17aad5c9a6df12f395b2004bcabe3249da6d312dd20ff1b87",
+      "fingerprint": "sha256:9be45174efabfedc0859e4bb7501f680a81d7816a7eb4a2988d974e3b44e7bbe",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "compatibility"
       ],
       "acknowledgement": {
-        "at": "2026-09-25T10:22:52.007Z",
-        "reason": "Reviewed the v7 release-hardening implementation, reconciled tracked project and public documentation with current worker observation, optional Plannotator, literature migration, and promotion-scope behavior; reviewed README against architecture."
+        "at": "2026-10-01T18:07:20.003Z",
+        "reason": "Reviewed the v8 preparation's configuration, native MCP worker, compaction and literature contracts against implementation and local test results; local checks passed and external native MCP/auth and real-model workflow remain explicitly unverified."
       }
     },
     {
       "path": "docs/review-workflow.md",
-      "fingerprint": "sha256:94771bed96fd1b7572bf8e3cf8424fa348b7ad75dacf642f0e9da0d8fa15379a",
+      "fingerprint": "sha256:a7c5c2578973c306a4ac3c94d43f0e450f2675cfc44854944580887e7399fac1",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "review-workflow"
       ],
       "acknowledgement": {
-        "at": "2026-09-14T13:38:30.372Z",
-        "reason": "Reviewed current documentation and skill changes against the implementation and accepted project direction."
+        "at": "2026-10-01T18:07:20.003Z",
+        "reason": "Reviewed the v8 preparation's configuration, native MCP worker, compaction and literature contracts against implementation and local test results; local checks passed and external native MCP/auth and real-model workflow remain explicitly unverified."
       }
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:acce5c024117f7d35dd594eee005e93d9a10cbb13eeea884ed184fe277abd2d2",
+      "fingerprint": "sha256:862e2ed9d4d91f72a5995e0fdfd4d089967e4adb7583f9a586af6b2df11cb128",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-09-28T14:28:04.811Z",
-        "reason": "Reviewed the local 7.0.1 patch metadata and its declared README dependency: package/lock versions agree, README asset pins agree with the prepared version, and changelog notes match the guidance, benchmark, and registry-verification changes; publication remains unperformed."
+        "at": "2026-10-01T18:07:20.003Z",
+        "reason": "Reviewed the v8 preparation's configuration, native MCP worker, compaction and literature contracts against implementation and local test results; local checks passed and external native MCP/auth and real-model workflow remain explicitly unverified."
       }
     },
     {
