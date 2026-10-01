@@ -6,6 +6,14 @@ import {
 	writeImmutableResult,
 } from "../workbench/src/worker-engine.js";
 export default function piSychWorker(pi: ExtensionAPI): void {
+	pi.on("session_start", (_event, ctx) => {
+		try {
+			pi.setActiveTools(parseActiveTools(process.env.PI_SYCH_ACTIVE_TOOLS));
+		} catch (error) {
+			pi.setActiveTools([]);
+			ctx.ui.notify(error instanceof Error ? error.message : String(error), "error");
+		}
+	});
 	pi.registerTool({
 		name: "submit_artifact",
 		exposure: "model-only",
@@ -26,4 +34,23 @@ export default function piSychWorker(pi: ExtensionAPI): void {
 		},
 	});
 	registerLiteratureSearch(pi, process.env.PI_SYCH_CONFIG_DIRECTORY);
+}
+
+function parseActiveTools(serialized: string | undefined): string[] {
+	if (!serialized)
+		throw new Error("Worker active tool selection is missing; launch through Pi Sych dispatch");
+	let parsed: unknown;
+	try {
+		parsed = JSON.parse(serialized);
+	} catch {
+		throw new Error("Worker active tool selection is invalid JSON");
+	}
+	if (
+		!Array.isArray(parsed) ||
+		!parsed.every((name) => typeof name === "string" && name.length > 0) ||
+		new Set(parsed).size !== parsed.length ||
+		!parsed.includes("submit_artifact")
+	)
+		throw new Error("Worker active tool selection must be a unique list including submit_artifact");
+	return parsed;
 }

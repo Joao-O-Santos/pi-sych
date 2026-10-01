@@ -608,6 +608,15 @@ test("worker loads native MCP and codemode only for remote research", async (t) 
 		assert.equal(args.includes("builtin:codemode"), remoteResearch);
 		assert.equal(args.includes("--extension") && args.includes("/mcporter"), false);
 		assert.equal(fake.launch?.[2]?.env?.MCPORTER_CONFIG, undefined);
+		assert.ok(!args.includes("--tools"));
+		assert.deepEqual(JSON.parse(fake.launch?.[2]?.env?.PI_SYCH_ACTIVE_TOOLS ?? "[]"), [
+			"read",
+			"grep",
+			"find",
+			"ls",
+			"submit_artifact",
+			...(remoteResearch ? ["codemode"] : []),
+		]);
 		fake.child.emit("close", 0, null);
 		await launched;
 	}

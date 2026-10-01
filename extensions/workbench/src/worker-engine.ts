@@ -139,7 +139,7 @@ export const toolsForRequest = (
 ) => [
 	...MODE_TOOLS[request.mode],
 	...(request.skills?.includes("research") ? ["literature_search"] : []),
-	...(request.remoteResearch ? ["codemode", "mcp"] : []),
+	...(request.remoteResearch ? ["codemode"] : []),
 ];
 export function skillPaths(
 	selectors: string[] = [],
@@ -417,8 +417,6 @@ export async function launchPiWorker(
 			"--no-themes",
 			"--no-context-files",
 			"--no-approve",
-			"--tools",
-			toolsForRequest(spec.request).join(","),
 			"--model",
 			spec.model,
 			...(spec.request.thinkingLevel ? ["--thinking", spec.request.thinkingLevel] : []),
@@ -437,6 +435,7 @@ export async function launchPiWorker(
 					: {}),
 				PI_SYCH_TASK_ID: spec.id,
 				PI_SYCH_RESULT_PATH: spec.resultPath,
+				PI_SYCH_ACTIVE_TOOLS: JSON.stringify(toolsForRequest(spec.request)),
 			},
 			stdio: ["ignore", "pipe", "pipe"],
 		},

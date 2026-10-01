@@ -71,8 +71,13 @@ test("native stdio MCP tools compose in codemode without a model or provider", {
 		);
 		await new Promise((done) => setTimeout(done, 25));
 	}
+	// Pi's CLI --tools allowlist filters MCP tools out of codemode's nested tool set.
+	// Pi Sych instead sets the visible mode tools after session startup, preserving
+	// callable nested MCP tools without exposing them directly to the model.
+	session.setActiveToolsByName(["read", "codemode"]);
 	assert.ok(session.getActiveToolNames().includes("codemode"));
 	assert.ok(names.every((name) => !session.getActiveToolNames().includes(name)));
+	assert.ok(names.every((name) => session.getCallableToolNames().includes(name)));
 	for (const name of names)
 		assert.equal(
 			session.getAllTools().find((tool) => tool.name === name).annotations.readOnlyHint,

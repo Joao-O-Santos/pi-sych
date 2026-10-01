@@ -439,6 +439,8 @@ test("bootstrapped worker starts with only the worker extension", async (t) => {
 		registerTool(tool) {
 			tools.push(tool);
 		},
+		on() {},
+		setActiveTools() {},
 	});
 	assert.deepEqual(
 		tools.map((tool) => tool.name),

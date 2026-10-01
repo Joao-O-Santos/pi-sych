@@ -102,20 +102,19 @@ test("worker request and result retain the bounded protocol", () => {
 		"submit_artifact",
 	]);
 	const remoteTools = toolsForRequest({ mode: "edit", remoteResearch: true });
-	assert.deepEqual(remoteTools.slice(-2), ["codemode", "mcp"]);
+	assert.deepEqual(remoteTools.slice(-1), ["codemode"]);
 	assert.ok(!remoteTools.includes("literature_search"));
 	assert.deepEqual(
-		toolsForRequest({ mode: "read-only", remoteResearch: true, skills: ["research"] }).slice(-2),
-		["codemode", "mcp"],
+		toolsForRequest({ mode: "read-only", remoteResearch: true, skills: ["research"] }).slice(-1),
+		["codemode"],
 	);
 	assert.ok(
 		!toolsForRequest({ mode: "read-only", remoteResearch: false, skills: ["Research"] }).includes(
 			"literature_search",
 		),
 	);
-	assert.deepEqual(toolsForRequest({ mode: "edit", remoteResearch: true }, true).slice(-2), [
+	assert.deepEqual(toolsForRequest({ mode: "edit", remoteResearch: true }, true).slice(-1), [
 		"codemode",
-		"mcp",
 	]);
 	assert.ok(!toolsForRequest({ mode: "edit", remoteResearch: false }, true).includes("web"));
 	assert.deepEqual(toolsForRequest({ mode: "full-host", remoteResearch: false }), [
@@ -264,13 +263,41 @@ test("worker prompt carries assignment, context, persistence, and terminal-resul
 	assert.match(trajectory, /does not create extra tasks or approval/i);
 });
 
-test("worker extension writes and terminates a submitted artifact", async () => {
-	const tools = [];
-	piSychWorker({
-		registerTool(tool) {
-			tools.push(tool);
-		},
-	});
+test("worker extension selects the assigned tools and writes a submitted artifact", async () => {
+	const tools = [],
+		handlers = new Map();
+	let activeTools;
+	const previousTools = process.env.PI_SYCH_ACTIVE_TOOLS;
+	process.env.PI_SYCH_ACTIVE_TOOLS = JSON.stringify([
+		"read",
+		"grep",
+		"find",
+		"ls",
+		"submit_artifact",
+		"codemode",
+	]);
+	try {
+		piSychWorker({
+			registerTool(tool) {
+				tools.push(tool);
+			},
+			on(event, handler) {
+				handlers.set(event, handler);
+			},
+			setActiveTools(names) {
+				activeTools = names;
+			},
+		});
+		assert.deepEqual(
+			tools.map((tool) => tool.name),
+			["submit_artifact", "literature_search"],
+		);
+		handlers.get("session_start")();
+		assert.deepEqual(activeTools, ["read", "grep", "find", "ls", "submit_artifact", "codemode"]);
+	} finally {
+		if (previousTools === undefined) delete process.env.PI_SYCH_ACTIVE_TOOLS;
+		else process.env.PI_SYCH_ACTIVE_TOOLS = previousTools;
+	}
 	assert.deepEqual(
 		tools.map((tool) => tool.name),
 		["submit_artifact", "literature_search"],
@@ -290,6 +317,53 @@ test("worker extension writes and terminates a submitted artifact", async () => 
 	} finally {
 		if (previous === undefined) delete process.env.PI_SYCH_RESULT_PATH;
 		else process.env.PI_SYCH_RESULT_PATH = previous;
+	}
+});
+
+test("worker extension fails closed when active-tool selection is missing", () => {
+	const previousTools = process.env.PI_SYCH_ACTIVE_TOOLS;
+	delete process.env.PI_SYCH_ACTIVE_TOOLS;
+	let handler, activeTools, notification;
+	try {
+		piSychWorker({
+			registerTool() {},
+			on(event, callback) {
+				if (event === "session_start") handler = callback;
+			},
+			setActiveTools(names) {
+				activeTools = names;
+			},
+		});
+		handler(undefined, { ui: { notify: (message) => (notification = message) } });
+		assert.deepEqual(activeTools, []);
+		assert.match(notification, /selection is missing/i);
+	} finally {
+		if (previousTools !== undefined) process.env.PI_SYCH_ACTIVE_TOOLS = previousTools;
+	}
+});
+
+test("worker extension fails closed on malformed active-tool selections", () => {
+	const previousTools = process.env.PI_SYCH_ACTIVE_TOOLS;
+	try {
+		for (const serialized of ["not-json", "[]", '["read","read","submit_artifact"]', "[3]"]) {
+			process.env.PI_SYCH_ACTIVE_TOOLS = serialized;
+			let handler, activeTools, notification;
+			piSychWorker({
+				registerTool() {},
+				on(event, callback) {
+					if (event === "session_start") handler = callback;
+				},
+				setActiveTools(names) {
+					activeTools = names;
+				},
+			});
+			handler(undefined, { ui: { notify: (message) => (notification = message) } });
+			assert.deepEqual(activeTools, []);
+			assert.match(notification, /selection is (invalid|missing)|must be a unique list/i);
+		}
+	} finally {
+		if (previousTools === undefined) delete process.env.PI_SYCH_ACTIVE_TOOLS;
+		else process.env.PI_SYCH_ACTIVE_TOOLS = previousTools;
 	}
 });
 
