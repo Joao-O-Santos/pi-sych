@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-01T18:13:48.994Z",
+  "confirmedAt": "2026-10-01T18:27:18.630Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:e0792a0adf927ed2ddd553c37e70c07bff292b4dc59fe5c0b146a562f53f994c",
+      "fingerprint": "sha256:1c666bd6d520d4c0c8cb83e25a393e43034a6f8a97a2782fe7051f6211fc83dc",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,8 +15,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T18:09:05.783Z",
-        "reason": "Reviewed final v8 preparation state and worker-specific native Pi MCP setup instructions after local deterministic gate; real external service/auth validation and model workflow remain unresolved."
+        "at": "2026-10-01T18:27:18.630Z",
+        "reason": "Recorded private v8 dogfooding without MCP secrets and observed GitLab verify/Pages success on dc32c879; real external MCP/auth and tag-triggered npm publication remain gated."
       }
     },
     {

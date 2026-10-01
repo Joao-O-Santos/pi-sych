@@ -117,8 +117,10 @@ or published release.
 lines, 90.23% branches, 95.31% functions), the v8 preparation coverage
 measures 97.52% lines, 91.61% branches, 96.69% functions. The local
 native MCP fixture also passed. Runtime nonblank source fell from 3170
-to 3041 lines. The real external native-MCP services and model-driven
-workflow remain unverified; worker-agent `mcp.json` is absent.
+to 3041 lines. Real external native-MCP services remain unverified;
+worker-agent `mcp.json` is absent. The opt-in real-model workflow and an
+installed-package `project_status` dogfood call passed after private
+local v8 configuration migration.
 
 {verified} The supervisor prompt, dispatch tool guidance, worker schema
 and assignment prompt, local literature tool guidance, seven umbrella
@@ -188,25 +190,29 @@ failures. This is model- and run-specific evidence, not a deterministic
 guarantee or human review.
 
 {verified} `make verify`, `make site`, and packed-install variants
-passed on the local v8 preparation tree. Real-service native MCP checks
-remain unverified.
+passed locally. GitLab verify and Pages passed for the v8 implementation
+commit `dc32c879`; subsequent project-state-only commits require their
+own exact commit CI checks. Real-service native MCP checks remain
+unverified.
 
 ## Previous action
 
-{verified} Implemented and checked the local v8 mechanical transition,
-including layered configuration, native worker MCP/codemode and a
-deterministic local composition fixture. Real external service access
-remains unverified.
+{verified} Migrated this machine's non-secret Pi Sych settings to v2
+with a private v7 backup, updated the installed package to current main,
+repaired the worker agent extension path, and passed a model-driven
+workflow plus installed-package status call. No MCP server API keys were
+read or copied. Real external service access remains unverified.
 
 ## Immediate next step
 
 {user-explicit} The owner requested the TODO v8 integration, no coverage
 regression, atomic commits and pushes to main, and conditional
 consideration of tagging v8.0.0 after passing CI/CD and a tip-top
-review. Publication is not authorized.
+review. The tag pipeline automatically publishes to npm; that
+publication is not separately authorized.
 
 {unresolved} Real Context7, OpenAlex and Scholar Gateway native MCP/auth
 checks require configuration in the worker agent and must not be
-reported as passed without live validation. The opt-in model-driven
-workflow also remains outstanding. Publication is separately gated by
-owner instruction.
+reported as passed without live validation. CI/Pages passed on
+`dc32c879`; rerun them on the eventual final state commit. Pushing a tag
+would trigger npm publication and requires separate owner instruction.
