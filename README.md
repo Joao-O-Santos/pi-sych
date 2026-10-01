@@ -46,12 +46,13 @@ contract. Direct work need not use a worker, skills guide rather than
 decide, and important decisions remain yours. Pi declares active tools
 and their guidance; Pi Sych does not duplicate that capability list.
 
-Pi Sych requires Node 26 or newer and is installed as a package for
-[Pi](https://pi.dev/). In this README, the **supervisor** is the model
-in your main Pi session. A **worker** is a separate, short-lived model
-process created for one bounded task. A **skill** is reusable model
-guidance, not a persistent agent. `project_status` is the mechanical
-tool that checks or acknowledges project state.
+Pi Sych requires Node 26 or newer and targets Pi 0.99.2 or newer; the
+repository checks have passed against Pi 0.99.2 and 1.0.0. Install it as
+a package for [Pi](https://pi.dev/). In this README, the **supervisor**
+is the model in your main Pi session. A **worker** is a separate,
+short-lived model process created for one bounded task. A **skill** is
+reusable model guidance, not a persistent agent. `project_status` is the
+mechanical tool that checks or acknowledges project state.
 
 ## Quick start
 

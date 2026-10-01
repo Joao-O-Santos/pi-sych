@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-01T20:30:17.397Z",
+  "confirmedAt": "2026-10-01T21:12:09.923Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:49b6f77c763c557380e75f7e3c4ee436e0f6cf1d82f62adf67bf9fded5ebafe4",
+      "fingerprint": "sha256:5222fb58627b64f18eb4ce6377c3f9eea48119677bdd84c10f92fca323885eaa",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,13 +46,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T20:30:17.397Z",
-        "reason": "Reviewed the new default-off lifecycle behavior and its configuration, compatibility, architecture, README, and changelog statements; README was checked as the declared architecture dependent."
+        "at": "2026-10-01T21:12:09.923Z",
+        "reason": "Pi 1.0.0 compatibility is now verified alongside 0.99.2. Updated the dev dependency range and lockfile to include Pi 1.0.0; reviewed and updated README and compatibility contract to record the 0.99.2+ target and actual verified versions. Full make verify and make site passed."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:2cbaa38d65113c86285f4961db6f0ed1525512131087981309f12168a005be2d",
+      "fingerprint": "sha256:7c3a2937ae8559d74362653a39bc3760f46ac439bd85669507f130bb36ae4a46",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -66,8 +66,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T18:07:20.003Z",
-        "reason": "Reviewed the v8 preparation's configuration, native MCP worker, compaction and literature contracts against implementation and local test results; local checks passed and external native MCP/auth and real-model workflow remain explicitly unverified."
+        "at": "2026-10-01T21:12:09.923Z",
+        "reason": "Pi 1.0.0 compatibility is now verified alongside 0.99.2. Updated the dev dependency range and lockfile to include Pi 1.0.0; reviewed and updated README and compatibility contract to record the 0.99.2+ target and actual verified versions. Full make verify and make site passed."
       }
     },
     {
@@ -98,15 +98,15 @@
     },
     {
       "path": "docs/public-contract.md",
-      "fingerprint": "sha256:d6b44ae7a7089b9cbb23965432653439e4396842d89f316b6a39aa3d06d785d0",
+      "fingerprint": "sha256:d5244d55cfe74ee2b0fba1942a056d376a1a293109bc44ea8bbf2a2c538e5b9e",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "compatibility"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T20:30:17.397Z",
-        "reason": "Reviewed the new default-off lifecycle behavior and its configuration, compatibility, architecture, README, and changelog statements; README was checked as the declared architecture dependent."
+        "at": "2026-10-01T21:12:09.923Z",
+        "reason": "Pi 1.0.0 compatibility is now verified alongside 0.99.2. Updated the dev dependency range and lockfile to include Pi 1.0.0; reviewed and updated README and compatibility contract to record the 0.99.2+ target and actual verified versions. Full make verify and make site passed."
       }
     },
     {
