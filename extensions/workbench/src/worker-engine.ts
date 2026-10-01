@@ -501,7 +501,7 @@ export async function launchPiWorker(
 		},
 	);
 	if (stopped) return { exitCode: exitCode ?? null, stderr, classification: stopped };
-	if (exitCode === null) {
+	if (exitCode === null && !terminationSignal) {
 		const message = spawnError?.message ?? "spawn error";
 		return {
 			exitCode: null,
@@ -528,6 +528,7 @@ async function snapshotFile(root: string, relativePath: string): Promise<string>
 }
 
 async function projectSnapshot(root: string): Promise<Map<string, string>> {
+	let paths: string[] | undefined;
 	try {
 		const gitRoot = execFileSync("git", ["rev-parse", "--show-toplevel"], {
 			cwd: root,
@@ -556,9 +557,13 @@ async function projectSnapshot(root: string): Promise<Map<string, string>> {
 		const tracked = git(["ls-files", "--full-name", "-z", "--cached", "--", "."])
 			.split("\0")
 			.filter(Boolean);
-		const paths = [...new Set([...tracked, ...dirty])]
+		paths = [...new Set([...tracked, ...dirty])]
 			.filter((path) => !prefix || path.startsWith(`${prefix}/`))
 			.map((path) => (prefix ? path.slice(prefix.length + 1) : path));
+	} catch {
+		// Fall back only when Git cannot enumerate the project files.
+	}
+	if (paths)
 		return new Map(
 			await Promise.all(
 				paths.map(
@@ -566,9 +571,6 @@ async function projectSnapshot(root: string): Promise<Map<string, string>> {
 				),
 			),
 		);
-	} catch {
-		// Non-Git project roots still need observable file snapshots.
-	}
 	const snapshot = new Map<string, string>();
 	const visit = async (directory: string, prefix = ""): Promise<void> => {
 		for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -664,7 +666,10 @@ export async function dispatchWorker(options: {
 		unexpectedChanges: observedChangedFiles,
 		...(observationError ? { observationError } : {}),
 	};
-	if (launch.classification || launch.terminationSignal || launch.exitCode !== 0)
+	if (launch.classification || launch.terminationSignal || launch.exitCode !== 0) {
+		const failure = launch.terminationSignal
+			? `Worker terminated by ${launch.terminationSignal}`
+			: `Worker exited ${launch.exitCode ?? "without an exit code"}`;
 		return {
 			id,
 			model,
@@ -673,8 +678,9 @@ export async function dispatchWorker(options: {
 			...observed,
 			error: launch.classification
 				? `Worker ${launch.classification}`
-				: `Worker exited ${launch.exitCode ?? "without an exit code"}${launch.stderr ? `: ${launch.stderr}` : ""}`,
+				: `${failure}${launch.stderr ? `: ${launch.stderr}` : ""}`,
 		};
+	}
 	try {
 		const result = validateWorkerResult(JSON.parse(await readFile(resultPath, "utf8")));
 		for (const file of result.files)

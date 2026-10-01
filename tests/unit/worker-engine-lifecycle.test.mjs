@@ -195,6 +195,38 @@ test("dispatch observes tracked and untracked changes in Git projects", async (t
 	assert.deepEqual(outcome.observedChangedFiles, ["A.md", "notes.tmp"]);
 });
 
+test("Git snapshot hashing errors do not fall back to directory traversal", async (t) => {
+	const { root, agentDir, resolved } = await readyProject(t);
+	const nested = join(root, "nested");
+	await mkdir(nested);
+	await writeFile(join(nested, "A.md"), "baseline\n");
+	for (const args of [
+		["init", "-q"],
+		["config", "user.name", "Pi Sych test"],
+		["config", "user.email", "test@example.invalid"],
+		["add", "nested/A.md"],
+		["commit", "-qm", "baseline"],
+	])
+		execFileSync("git", args, { cwd: root, stdio: "ignore" });
+	await rm(nested, { recursive: true });
+	await writeFile(nested, "replaced directory\n");
+	let launched = false;
+	await assert.rejects(
+		dispatchWorker({
+			project: resolved,
+			workerAgentDir: agentDir,
+			request,
+			catalog,
+			launcher: async () => {
+				launched = true;
+				return { exitCode: 0, stderr: "" };
+			},
+		}),
+		/ENOTDIR|not a directory/i,
+	);
+	assert.equal(launched, false);
+});
+
 test("dispatch scopes Git changes to a nested canonical project root", async (t) => {
 	const { root, agentDir } = await readyProject(t);
 	const projectRoot = join(root, "subproject");
@@ -799,9 +831,9 @@ test("normal signal termination is reported", async (t) => {
 	t.after(() => rm(root, { recursive: true, force: true }));
 	const fake = fakeSpawn();
 	const launched = launchPiWorker(launchSpec(root), fake.spawn);
-	fake.child.emit("close", 0, "SIGUSR1");
+	fake.child.emit("close", null, "SIGUSR1");
 	assert.deepEqual(await launched, {
-		exitCode: 0,
+		exitCode: null,
 		stderr: "",
 		terminationSignal: "SIGUSR1",
 	});

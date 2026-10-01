@@ -94,9 +94,12 @@ result file. Before launch and after termination, Pi Sych snapshots
 project files and reports reported, observed, and unexpected changed
 paths independently of worker success. Observation does not undo
 changes. Temporary runtime/session state is removed after every outcome.
-On POSIX, workers have their own process group. Timeout or cancellation
-starts graceful group termination, with ten seconds before forced
-cleanup. A normally exited worker also gets ten seconds to drain
+Signal exits retain their terminating signal in the failure diagnostic.
+Git snapshot fallback covers file enumeration, not file-hashing errors;
+observation failures remain explicit instead of switching snapshot
+scope. On POSIX, workers have their own process group. Timeout or
+cancellation starts graceful group termination, with ten seconds before
+forced cleanup. A normally exited worker also gets ten seconds to drain
 inherited output pipes, without being reclassified as timed out. Windows
 signals the direct child; pipe cleanup still prevents descendants from
 holding dispatch open.

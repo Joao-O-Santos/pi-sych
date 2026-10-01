@@ -5,7 +5,6 @@ import { join, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import test from "node:test";
 import {
-	literatureCapabilityState,
 	registerLiteratureSearch,
 	searchLiterature,
 } from "../../.test-build/workbench/src/literature-search.js";
@@ -333,10 +332,6 @@ test("an incompatible papers schema reports the migration before the SQL query",
 		"CREATE VIRTUAL TABLE papers_fts USING fts5(filepath, title, abstract, content='papers', content_rowid='id')",
 	);
 	database.close();
-	assert.match(
-		literatureCapabilityState(root),
-		/degraded — incompatible v7 schema; missing required papers columns: item_type, creators_json; rebuild or migrate before search/i,
-	);
 	assert.throws(
 		() => searchLiterature(root, "paper"),
 		(error) => {

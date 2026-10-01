@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-01T21:44:20.157Z",
+  "confirmedAt": "2026-10-01T22:52:04.260Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:c7d286b43d46e5984c33214eb185a4b7ed90ec14a4949e6eed775aa44f6b87a8",
+      "fingerprint": "sha256:40508a433f6489a10c40eb705f8ce197a27fdb16b617e347bb40266219c62444",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,21 +15,21 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T21:44:20.157Z",
-        "reason": "Reviewed requested worker cleanup, acknowledgement concurrency, and Pi peer-minimum fixes against implementation and regression tests. make verify passed 210 tests and packaging; make site passed. README dependency statements remain consistent. Hardlink handling was explicitly left unchanged."
+        "at": "2026-10-01T22:52:04.260Z",
+        "reason": "Reviewed compaction hardening for malformed UTF-8 expansion, serialized prompt bounds, clipped manual focus, and manual failure-notification fallback; added boundary regressions. Updated v8 state and MCP verification record. Final make verify passed 216 tests at 97.85/92.27/96.80% line/branch/function coverage, make site passed, production npm audit reported zero vulnerabilities. No push or release."
       }
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:ea5c6586c1154f3c37be78cb3e3776bb77f34537f180bb37f8916f09325eb6d0",
+      "fingerprint": "sha256:ca3814b7825b5b5d5a542950298b9d641635b6caf7db79d1a530b56c39d8879c",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T21:44:20.157Z",
-        "reason": "Reviewed requested worker cleanup, acknowledgement concurrency, and Pi peer-minimum fixes against implementation and regression tests. make verify passed 210 tests and packaging; make site passed. README dependency statements remain consistent. Hardlink handling was explicitly left unchanged."
+        "at": "2026-10-01T22:39:28.103Z",
+        "reason": "Reviewed six bounded audit fixes and regressions, preserved shutdown and failure precedence, confirmed README/package consistency with architecture. Final make verify passed 213 tests, make site passed, production audit found zero vulnerabilities; clean-context review found no material issues. No push or release authorized."
       }
     },
     {
@@ -46,8 +46,8 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T21:44:20.157Z",
-        "reason": "Reviewed requested worker cleanup, acknowledgement concurrency, and Pi peer-minimum fixes against implementation and regression tests. make verify passed 210 tests and packaging; make site passed. README dependency statements remain consistent. Hardlink handling was explicitly left unchanged."
+        "at": "2026-10-01T22:39:28.103Z",
+        "reason": "Reviewed six bounded audit fixes and regressions, preserved shutdown and failure precedence, confirmed README/package consistency with architecture. Final make verify passed 213 tests, make site passed, production audit found zero vulnerabilities; clean-context review found no material issues. No push or release authorized."
       }
     },
     {
@@ -66,8 +66,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T21:44:20.157Z",
-        "reason": "Reviewed requested worker cleanup, acknowledgement concurrency, and Pi peer-minimum fixes against implementation and regression tests. make verify passed 210 tests and packaging; make site passed. README dependency statements remain consistent. Hardlink handling was explicitly left unchanged."
+        "at": "2026-10-01T22:39:28.103Z",
+        "reason": "Reviewed six bounded audit fixes and regressions, preserved shutdown and failure precedence, confirmed README/package consistency with architecture. Final make verify passed 213 tests, make site passed, production audit found zero vulnerabilities; clean-context review found no material issues. No push or release authorized."
       }
     },
     {
@@ -123,16 +123,46 @@
       }
     },
     {
+      "path": "TODO.md",
+      "fingerprint": "sha256:89e1179f8ff090ac13a6caadeadb6efb244ced1d1c1c02ea3f4d3424d4157569",
+      "status": "current",
+      "role": "remaining-work",
+      "authoritativeFor": [
+        "verification-gates-and-limitations"
+      ],
+      "acknowledgement": {
+        "at": "2026-10-01T22:52:04.260Z",
+        "reason": "Reviewed compaction hardening for malformed UTF-8 expansion, serialized prompt bounds, clipped manual focus, and manual failure-notification fallback; added boundary regressions. Updated v8 state and MCP verification record. Final make verify passed 216 tests at 97.85/92.27/96.80% line/branch/function coverage, make site passed, production npm audit reported zero vulnerabilities. No push or release."
+      }
+    },
+    {
+      "path": "docs/compaction-design.md",
+      "fingerprint": "sha256:0ed1cd18158092e4b970e4247f32b3ad95f293a2d89b1f5d1a6c5893f28c511f",
+      "status": "current",
+      "role": "architecture",
+      "authoritativeFor": [
+        "custom-compaction-invariants"
+      ],
+      "updateFrom": [
+        "extensions/workbench/src/compaction.ts",
+        "tests/unit/compaction-boundaries.test.mjs"
+      ],
+      "acknowledgement": {
+        "at": "2026-10-01T22:52:04.260Z",
+        "reason": "Reviewed compaction hardening for malformed UTF-8 expansion, serialized prompt bounds, clipped manual focus, and manual failure-notification fallback; added boundary regressions. Updated v8 state and MCP verification record. Final make verify passed 216 tests at 97.85/92.27/96.80% line/branch/function coverage, make site passed, production npm audit reported zero vulnerabilities. No push or release."
+      }
+    },
+    {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:30de0a3b80dc0f110fa98b7216844f22754201e7ade9f48bbf9e4c322102aafb",
+      "fingerprint": "sha256:39763973ed9504a5eee568892a3fad446fc2fed900243c968e9e64faa14da418",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T21:44:20.157Z",
-        "reason": "Reviewed requested worker cleanup, acknowledgement concurrency, and Pi peer-minimum fixes against implementation and regression tests. make verify passed 210 tests and packaging; make site passed. README dependency statements remain consistent. Hardlink handling was explicitly left unchanged."
+        "at": "2026-10-01T22:52:04.260Z",
+        "reason": "Reviewed compaction hardening for malformed UTF-8 expansion, serialized prompt bounds, clipped manual focus, and manual failure-notification fallback; added boundary regressions. Updated v8 state and MCP verification record. Final make verify passed 216 tests at 97.85/92.27/96.80% line/branch/function coverage, make site passed, production npm audit reported zero vulnerabilities. No push or release."
       }
     },
     {
@@ -146,6 +176,69 @@
       "acknowledgement": {
         "at": "2026-09-25T10:22:52.007Z",
         "reason": "Reviewed the v7 release-hardening implementation, reconciled tracked project and public documentation with current worker observation, optional Plannotator, literature migration, and promotion-scope behavior; reviewed README against architecture."
+      }
+    },
+    {
+      "path": "skills/research/SKILL.md",
+      "fingerprint": "sha256:d1667daca4709fcefea0e414024e9f65b15a92430cff03dea554342e36cb4313",
+      "status": "current",
+      "role": "skill",
+      "authoritativeFor": [
+        "research-routing"
+      ],
+      "updateFrom": [
+        "skills/research/modules/openalex/guidance.md",
+        "skills/research/modules/search/guidance.md"
+      ],
+      "acknowledgement": {
+        "at": "2026-10-01T22:13:18Z",
+        "reason": "Reviewed the OpenAlex module routing and capability-first research search guidance against the active MCP tool descriptions and current project research principles."
+      }
+    },
+    {
+      "path": "skills/research/modules/search/guidance.md",
+      "fingerprint": "sha256:3c5b98f7abe50b18c6e33adb13a3ebfff42072dad5f9ef8de25567e3a3045168",
+      "status": "current",
+      "role": "research-module",
+      "authoritativeFor": [
+        "research-search-capability-selection"
+      ],
+      "acknowledgement": {
+        "at": "2026-10-01T22:13:18Z",
+        "reason": "Reviewed the first-choice OpenAlex recommendation as conditional on availability and task usefulness, with the non-mechanical retrieval rule preserved."
+      }
+    },
+    {
+      "path": "skills/research/modules/openalex/guidance.md",
+      "fingerprint": "sha256:3f3e4a7a02bbde1455ca146225406e0177f7345131c97af059371fef89eb3fb7",
+      "status": "current",
+      "role": "research-module",
+      "authoritativeFor": [
+        "openalex-MCP-and-REST-discovery-guidance"
+      ],
+      "updateFrom": [
+        "OpenAlex MCP tool descriptions",
+        "OpenAlex official API documentation"
+      ],
+      "acknowledgement": {
+        "at": "2026-10-01T22:13:18Z",
+        "reason": "Reviewed query examples and MCP-specific behavior against the active OpenAlex MCP schemas, Context7 documentation, and Exa-cached official OpenAlex API guide; distinguished REST syntax and discovery metadata limits."
+      }
+    },
+    {
+      "path": "skills/research/modules/openalex/examples.md",
+      "fingerprint": "sha256:fdd5222f0c6b532cadfcf87cabf0bdea7372f6d1252c5f309d45744893df539b",
+      "status": "current",
+      "role": "research-module-examples",
+      "authoritativeFor": [
+        "openalex-query-examples"
+      ],
+      "updateFrom": [
+        "skills/research/modules/openalex/guidance.md"
+      ],
+      "acknowledgement": {
+        "at": "2026-10-01T22:13:18Z",
+        "reason": "Reviewed query examples for resolvable entity filters, MCP argument names, pagination distinction, and discovery-versus-evidence calibration."
       }
     },
     {

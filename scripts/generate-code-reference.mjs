@@ -184,6 +184,7 @@ export function validateRequiredReferences(files) {
 export async function generateCodeReference(outputPath) {
 	const files = await runtimeFiles();
 	const api = new API();
+	using _apiLifetime = { [Symbol.dispose]: () => api.close() };
 	using snapshot = api.updateSnapshot({ openProjects: [resolve(root, "tsconfig.json")] });
 	const project = snapshot.getProject(resolve(root, "tsconfig.json"));
 	if (!project) throw new Error("TypeScript could not load tsconfig.json");
@@ -235,7 +236,6 @@ export async function generateCodeReference(outputPath) {
 	}
 	await mkdir(dirname(outputPath), { recursive: true });
 	await writeFile(outputPath, `${lines.join("\n")}\n`);
-	api.close();
 }
 
 async function main() {

@@ -6,6 +6,8 @@ import test from "node:test";
 import {
 	buildCompactionPrompt,
 	COMPACTION_CONVERSATION_BYTE_LIMIT,
+	COMPACTION_FOCUS_BYTE_LIMIT,
+	COMPACTION_SNAPSHOT_PROMPT_BYTE_LIMIT,
 	COMPACTION_SUMMARY_BYTE_LIMIT,
 	compact,
 	compactionSnapshot,
@@ -162,6 +164,38 @@ test("prompt bounds history and summary while prioritizing retained messages", (
 	);
 });
 
+test("focus and serialized snapshots have explicit UTF-8 prompt bounds", () => {
+	const prompt = buildCompactionPrompt(
+		{
+			customInstructions: "🧭".repeat(10_000),
+			preparation: {
+				messagesToSummarize: [],
+				turnPrefixMessages: [],
+				firstKeptEntryId: "keep",
+			},
+		},
+		{
+			files: [{ path: "PROJECT.md", content: String.fromCharCode(1).repeat(10_000) }],
+			paths: ["PROJECT.md"],
+		},
+		{ changed: [], missing: [], impacted: [], errors: [], projectErrors: [] },
+		"INBOX.md",
+	);
+	const focusStart = prompt.indexOf("Focus: ") + "Focus: ".length,
+		focusEnd = prompt.indexOf(`${String.fromCharCode(10)}Previous summary`, focusStart),
+		focus = prompt.slice(focusStart, focusEnd);
+	assert.ok(Buffer.byteLength(focus) <= COMPACTION_FOCUS_BYTE_LIMIT);
+	assert.match(focus, /truncated after/);
+	const newline = String.fromCharCode(10),
+		snapshotMarker = `${newline}Canonical snapshots (inbox excluded; clipping proves nothing):${newline}`,
+		artifactMarker = `${newline}Artifact paths:${newline}`,
+		snapshotStart = prompt.indexOf(snapshotMarker) + snapshotMarker.length,
+		snapshotEnd = prompt.indexOf(artifactMarker, snapshotStart),
+		snapshotText = prompt.slice(snapshotStart, snapshotEnd);
+	assert.ok(Buffer.byteLength(snapshotText) <= COMPACTION_SNAPSHOT_PROMPT_BYTE_LIMIT);
+	assert.match(snapshotText, /truncated after/);
+});
+
 test("compaction input treats embedded directives and authority claims as data", () => {
 	const prompt = buildCompactionPrompt(
 		{
@@ -299,6 +333,28 @@ test("late abort or notification failure cannot discard a written continuation",
 		assert.ok(result);
 		assert.equal(await readFile(join(root, "INBOX.md"), "utf8"), "\n- {todo} Check\n");
 	}
+});
+
+test("manual model failure remains a fallback if error notification also fails", async (t) => {
+	const { root, ctx, event } = await fixture(t);
+	ctx.ui.notify = () => {
+		throw new Error("UI unavailable");
+	};
+	const errors = [];
+	const original = console.error;
+	console.error = (message) => errors.push(String(message));
+	try {
+		assert.equal(
+			await compact(event, ctx, async () => {
+				throw new Error("model unavailable");
+			}),
+			undefined,
+		);
+	} finally {
+		console.error = original;
+	}
+	assert.match(errors.join("\\n"), /model unavailable.*UI unavailable/);
+	await assert.rejects(readFile(join(root, "INBOX.md")), { code: "ENOENT" });
 });
 
 test("model failure, cancellation, and non-stop completion do not write proposals", async (t) => {

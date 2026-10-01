@@ -32,18 +32,20 @@ not a claim that unrun external checks passed.
   and enforced the Pi 0.99.2 coding-agent peer minimum. Hardlink inbox
   handling remains unchanged by owner choice.
 - Baseline v7.0.1 runtime: 3170 nonblank lines; current v8 preparation: about
-  3200 (within budget). Current coverage: 97.58% lines, 91.84% branches,
-  96.82% functions, all above the baseline of 97.48/90.23/95.31.
+  3200 (within budget). Current coverage: 97.85% lines, 92.27% branches,
+  96.80% functions, all above the baseline of 97.48/90.23/95.31.
 
 ## Outstanding gates and limitations
 
 - [ ] A deterministic test cannot judge whether model prose correctly
   identifies completion; tests cover the prompt contract and Pi's one-shot
   continuation boundary, while semantic completion remains model judgment.
-- [ ] Exercise real OpenAlex, Exa, and Parallel tool calls through a Pi Sych
-  worker. Pi reported Context7, OpenAlex, Exa, and Parallel connected;
-  Context7 was live-tested end-to-end through a read-only worker. Scholar
-  Gateway was removed after its OAuth invalid-scope failure.
+- [x] Directly exercise, then independently repeat through a workhorse
+  worker, each MCP configured in both agent directories: Context7, OpenAlex,
+  Parallel, and Scholar Gateway. All calls succeeded in the tested sessions;
+  Scholar Gateway's usage endpoint reported access. This does not establish
+  persistent credentials or general query access. Exa was not configured as
+  an MCP; its cache was used separately for one documentation fetch.
 - [x] Run the opt-in real-model Pi workflow (passed on a disposable project).
   Also checked the installed v8 package with a live `project_status` call.
   The deterministic native MCP fixture tests transport/composition without

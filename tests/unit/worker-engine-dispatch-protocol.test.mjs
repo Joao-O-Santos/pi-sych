@@ -191,7 +191,11 @@ const processFailures = [
 	["nonzero exit", { exitCode: 7, stderr: "worker stderr" }, "Worker exited 7: worker stderr"],
 	["timeout", { exitCode: null, stderr: "", classification: "timeout" }, "Worker timeout"],
 	["cancellation", { exitCode: null, stderr: "", classification: "cancelled" }, "Worker cancelled"],
-	["signal", { exitCode: 0, stderr: "", terminationSignal: "SIGTERM" }, "Worker exited 0"],
+	[
+		"signal",
+		{ exitCode: null, stderr: "", terminationSignal: "SIGTERM" },
+		"Worker terminated by SIGTERM",
+	],
 ];
 
 for (const [name, launch, expectedError] of processFailures) {

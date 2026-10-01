@@ -31,12 +31,24 @@ state.
   model-only exposure for dispatch and submission tools.
 - Provide validated structured and readable local literature results
   with bounded snippets, while preserving read-only discovery semantics.
+- Add routed OpenAlex MCP guidance for entity resolution, query/filter
+  composition, pagination, citation graphs, and discovery limits;
+  recommend it as a first-choice metadata/graph capability when
+  available and useful.
 - Reduce duplicated runtime and test code and document capability-first
   composition with separately installed tools. See
   [migration](migration-v7-to-v8.md).
 
 ### Fixed
 
+- Keep compaction snapshot decoding and prompt serialization within
+  UTF-8 byte bounds, clip manual focus instructions, and preserve native
+  fallback when manual failure notifications also fail.
+- Preserve signal-exit diagnostics and prevent snapshot hashing errors
+  from silently switching to non-Git traversal. Simplify bounded
+  serialization, remove unused literature capability reporting,
+  guarantee code-reference compiler cleanup, and reuse parsed site
+  fragment IDs.
 - Clean up inherited worker output pipes after a ten-second drain grace,
   preserve normal-exit success, and terminate POSIX worker process
   groups on timeout/cancellation with a ten-second graceful shutdown

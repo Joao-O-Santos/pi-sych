@@ -5,6 +5,7 @@ import { join } from "node:path";
 import test from "node:test";
 import {
 	COMPACTION_FILE_BYTE_LIMIT,
+	COMPACTION_TOTAL_BYTE_LIMIT,
 	compact,
 	compactionSnapshot,
 	parseCompactionModelOutput,
@@ -80,6 +81,43 @@ test("compact preserves model limit and signal", async (t) => {
 	assert.equal(options[0].maxTokens, 2048);
 	assert.equal(options[0].signal, controller.signal);
 	assert.equal(result.compaction.firstKeptEntryId, "kept");
+});
+
+test("snapshot byte limits include replacement characters from invalid UTF-8", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-invalid-utf8-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const project = join(root, "PROJECT.md"),
+		todo = join(root, "TODO.md"),
+		decisions = join(root, "DECISIONS.md"),
+		inbox = join(root, "INBOX.md");
+	await writeFile(project, Buffer.alloc(COMPACTION_FILE_BYTE_LIMIT, 0xff));
+	await writeFile(
+		todo,
+		Buffer.concat([
+			Buffer.from("before"),
+			Buffer.from([0xff]),
+			Buffer.alloc(COMPACTION_FILE_BYTE_LIMIT, 0x78),
+		]),
+	);
+	await writeFile(decisions, Buffer.alloc(COMPACTION_FILE_BYTE_LIMIT, 0xfe));
+	const snapshot = await compactionSnapshot(
+		{
+			projectRoot: root,
+			canonical: { project, todo, decisions, inbox },
+			syncPath: join(root, "SYNC.json"),
+		},
+		{},
+	);
+	assert.ok(
+		snapshot.files.every((file) => Buffer.byteLength(file.content) <= COMPACTION_FILE_BYTE_LIMIT),
+	);
+	assert.ok(
+		snapshot.files.reduce((size, file) => size + Buffer.byteLength(file.content), 0) <=
+			COMPACTION_TOTAL_BYTE_LIMIT,
+	);
+	assert.ok(snapshot.files.find((file) => file.path === "PROJECT.md").content.includes("�"));
+	assert.ok(snapshot.files.find((file) => file.path === "TODO.md").content.includes("before�"));
+	assert.ok(snapshot.files.find((file) => file.path === "TODO.md").content.includes("xxxx"));
 });
 
 test("snapshot clips unicode and rejects inbox aliases", async (t) => {

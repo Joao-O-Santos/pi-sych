@@ -193,31 +193,36 @@ passed locally. GitLab verify and Pages passed on the final worker-MCP
 fix commit `2afd06d1`. The installed Pi Sych package was updated to that
 same commit, and a read-only Context7 worker dispatch passed from both
 source and installed-package entry points. Recheck exact HEAD before a
-release. Native MCP server status was reported connected by Pi for
-Context7, OpenAlex, Exa, and Parallel. A live Context7 tool call also
-passed through a Pi Sych remote-research worker after fixing the
-worker's CLI allowlist interaction. Pi reported OpenAlex, Exa, and
-Parallel connected, but their tools have not yet been exercised through
-a worker.
+release. In a later session, direct supervisor and workhorse-worker
+calls succeeded for all four configured MCPs: Context7, OpenAlex,
+Parallel, and Scholar Gateway. Scholar Gateway's read-only usage
+endpoint reported access; this does not prove persistent credentials or
+general retrieval. Exa was not configured as an MCP in either agent
+directory; Exa's cache was used for a documentation fetch, not a worker
+MCP call.
 
 ## Previous action
 
-{verified} Fixed worker inherited-pipe cleanup with a ten-second grace
-period and POSIX process-group termination, rejected overlapping
-acknowledgements with an exclusive transaction lock, and enforced the Pi
-0.99.2 peer minimum. Real-process and contention regressions passed.
-`make verify` passed 210 tests at 97.58/91.84/96.82%
-line/branch/function coverage; `make site` passed. Independent worker
-review was unavailable because the local worker-model catalog was
-absent. Work remains local on main; no push was performed.
+{verified} Implemented six bounded DRY/readability fixes: signal-exit
+reporting, narrow Git snapshot fallback, explicit serializer steps,
+guaranteed compiler API cleanup, cached fragment IDs, and removal of
+unused literature capability reporting. Shutdown timing and failure
+precedence remain unchanged. Compaction was then hardened against
+malformed UTF-8 expansion, oversized manual focus, escaped snapshot
+expansion, and failure-notification errors that could prevent native
+fallback. Added boundary regressions; independent review found no
+material issues. `make verify` passed 216 tests at 97.85/92.27/96.80%
+line/branch/function coverage; `make site` and `npm audit --omit=dev`
+passed. Work remains local on main; no push was performed.
 
 ## Immediate next step
 
-{user-explicit} The requested review fixes are implemented. The owner
-preferred generous completion/shutdown timing and explicitly declined
-the hardlink-inbox change. Await further direction; no push, tag, or
-publication is authorized for this task.
+{user-explicit} Compaction robustness fixes are implemented and
+verified. The owner preferred generous completion/shutdown timing and
+explicitly declined the hardlink-inbox change. Await further direction;
+no push, tag, or publication is authorized.
 
-{unresolved} OpenAlex, Exa, and Parallel tool calls through a Pi Sych
-worker remain to be checked. Scholar Gateway was removed after OAuth
-sign-in failed with `Invalid scope`; no workaround was attempted.
+{unresolved} Semantic model performance at recognizing every unfinished
+authorized task is not deterministically testable. Exa remains untested
+as a worker MCP because it is not configured there; its Exa-cache docs
+fetch was a separate capability.

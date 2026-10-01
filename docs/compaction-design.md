@@ -76,7 +76,8 @@ created only when a valid compaction result contains one or more
 proposals; successful compaction without proposals does not create an
 empty `INBOX.md`. If custom output is omitted, invalid, cancelled, or
 fails, the handler returns no custom result so Pi's native fallback
-remains in control.
+remains in control. Manual failure notifications are best-effort and do
+not prevent native fallback if the UI itself fails.
 
 ## Suggested continuation shape
 
@@ -100,8 +101,10 @@ projectStateGaps:
 `objective` and `nextAction` must be non-empty strings; omitted array
 fields normalize to empty arrays. Boundedness comes from bounded source
 reads, item, message, status, retained-tail, snapshot, and proposal limits
-rather than prompt word-count budgets. Observable messages and the
-retained tail exclude hidden thinking. Recorded label attributions are
+rather than prompt word-count budgets. UTF-8 snapshots are decoded and
+then byte-bounded, including malformed source text; serialized snapshots
+and optional focus instructions also have explicit prompt-byte limits.
+Observable messages and the retained tail exclude hidden thinking. Recorded label attributions are
 carried forward without verification; inferences remain distinct.
 
 ## Required regressions

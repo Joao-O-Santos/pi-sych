@@ -42,12 +42,17 @@ export function rewriteMarkdownLinks(markdown, sourcePath) {
 }
 
 export function validateHtmlLinks(files, availablePaths = new Set(files.map((file) => file.path))) {
-	const pages = new Map(files.map((file) => [file.path, file.html]));
+	const pageIds = new Map(
+		files.map(({ path, html }) => [
+			path,
+			new Set(
+				[...html.matchAll(/\bid=(?:"([^"]+)"|'([^']+)')/g)].map((match) => match[1] ?? match[2]),
+			),
+		]),
+	);
 	const failures = [];
 	for (const { path, html } of files) {
-		const ids = new Set(
-			[...html.matchAll(/\bid=(?:"([^"]+)"|'([^']+)')/g)].map((match) => match[1] ?? match[2]),
-		);
+		const ids = pageIds.get(path);
 		for (const match of html.matchAll(/\b(?:href|src)=(?:"([^"]+)"|'([^']+)')/g)) {
 			const target = match[1] ?? match[2];
 			if (isExternal(target)) {
@@ -64,16 +69,11 @@ export function validateHtmlLinks(files, availablePaths = new Set(files.map((fil
 				continue;
 			}
 			if (rawFragment !== undefined) {
-				const targetHtml = pages.get(targetPath);
-				if (targetHtml === undefined) {
+				const targetIds = pageIds.get(targetPath);
+				if (targetIds === undefined) {
 					failures.push(`${path}: fragment target is not an HTML page ${target}`);
 					continue;
 				}
-				const targetIds = new Set(
-					[...targetHtml.matchAll(/\bid=(?:"([^"]+)"|'([^']+)')/g)].map(
-						(item) => item[1] ?? item[2],
-					),
-				);
 				if (!targetIds.has(decodeURIComponent(rawFragment)))
 					failures.push(`${path}: missing fragment ${target}`);
 			}

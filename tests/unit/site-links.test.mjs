@@ -32,6 +32,30 @@ test("site links rewrite canonical Markdown pages and images", () => {
 	);
 });
 
+test("site link validation reuses each page's parsed fragment IDs", () => {
+	const idPattern = /\bid=(?:"([^"]+)"|'([^']+)')/g;
+	let targetIdScans = 0;
+	class CountedHtml extends String {
+		matchAll(pattern) {
+			if (pattern.source === idPattern.source && this.toString().includes('id="start"'))
+				targetIdScans++;
+			return super.matchAll(pattern);
+		}
+	}
+	const files = [
+		{
+			path: "index.html",
+			html: '<a href="guide.html#start">One</a><a href="guide.html#details">Two</a>',
+		},
+		{
+			path: "guide.html",
+			html: new CountedHtml('<h1 id="start">Start</h1><p id="details">Details</p>'),
+		},
+	];
+	validateHtmlLinks(files);
+	assert.equal(targetIdScans, 1);
+});
+
 test("site link validation accepts pages, images, and fragments and rejects broken links", () => {
 	const files = [
 		{

@@ -60,25 +60,6 @@ export function literatureDatabasePath(projectRoot: string, configDirectory?: st
 	if (existsSync(projectDatabase)) return projectDatabase;
 	return resolve(directory, "literature.sqlite");
 }
-export function literatureCapabilityState(projectRoot: string): string {
-	try {
-		const path = literatureDatabasePath(projectRoot);
-		if (!existsSync(path)) return "unavailable — no database at the resolved path";
-		using database = new DatabaseSync(path, { readOnly: true });
-		const rows = database
-			.prepare("SELECT name FROM sqlite_master WHERE name IN ('papers', 'papers_fts')")
-			.all() as Array<{ name?: unknown }>;
-		const names = new Set(rows.map((row) => row.name));
-		if (!names.has("papers") || !names.has("papers_fts"))
-			return "degraded — database is present but the supported schema is incomplete";
-		const missingColumns = missingV7PapersColumns(database);
-		return missingColumns.length
-			? `degraded — incompatible v7 schema; missing required papers columns: ${missingColumns.join(", ")}; rebuild or migrate before search`
-			: "present — required v7 columns present; database opens read-only";
-	} catch (error) {
-		return `degraded — inspection failed: ${error instanceof Error ? error.message : String(error)}`;
-	}
-}
 export function searchLiterature(
 	projectRoot: string,
 	queryText: string,
