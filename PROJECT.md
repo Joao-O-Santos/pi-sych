@@ -115,12 +115,12 @@ or published release.
 
 {verified} Against the v7.0.1 deterministic coverage baseline (97.48%
 lines, 90.23% branches, 95.31% functions), the v8 preparation coverage
-measures 97.52% lines, 91.61% branches, 96.69% functions. The local
-native MCP fixture also passed. Runtime nonblank source fell from 3170
-to 3041 lines. Real external native-MCP services remain unverified;
-worker-agent `mcp.json` is absent. The opt-in real-model workflow and an
-installed-package `project_status` dogfood call passed after private
-local v8 configuration migration.
+measures 97.55% lines, 91.62% branches, 96.73% functions. Runtime
+nonblank source remains below the v7.0.1 count and within the 3,200-line
+budget. The local native MCP fixture and live read-only Context7 worker
+call passed. The opt-in real-model workflow and an installed-package
+`project_status` dogfood call passed after private local v8
+configuration migration.
 
 {verified} The supervisor prompt, dispatch tool guidance, worker schema
 and assignment prompt, local literature tool guidance, seven umbrella
@@ -192,15 +192,21 @@ guarantee or human review.
 {verified} `make verify`, `make site`, and packed-install variants
 passed locally. GitLab verify and Pages passed for the v8 implementation
 commit `dc32c879` and state commit `8271d2ce`. Check exact HEAD again
-before a release. Real-service native MCP checks remain unverified.
+before a release. Native MCP server status was reported connected by Pi
+for Context7, OpenAlex, Exa, and Parallel. A live Context7 tool call
+also passed through a Pi Sych remote-research worker after fixing the
+worker's CLI allowlist interaction. Pi reported OpenAlex, Exa, and
+Parallel connected, but their tools have not yet been exercised through
+a worker.
 
 ## Previous action
 
-{verified} Migrated this machine's non-secret Pi Sych settings to v2
-with a private v7 backup, updated the installed package to current main,
-repaired the worker agent extension path, and passed a model-driven
-workflow plus installed-package status call. No MCP server API keys were
-read or copied. Real external service access remains unverified.
+{verified} Diagnosed the worker MCP discovery failure: Pi's CLI
+`--tools` allowlist filtered dynamic MCP tools out of codemode's
+callable registry. The worker now applies its selected Pi tools at
+session start without that allowlist. A local fixture and a live
+read-only Context7 resolution through the actual Pi Sych dispatch both
+passed. No MCP API keys were read or copied.
 
 ## Immediate next step
 
@@ -210,8 +216,8 @@ consideration of tagging v8.0.0 after passing CI/CD and a tip-top
 review. The tag pipeline automatically publishes to npm; that
 publication is not separately authorized.
 
-{unresolved} Real Context7, OpenAlex and Scholar Gateway native MCP/auth
-checks require configuration in the worker agent and must not be
-reported as passed without live validation. CI/Pages passed on
-`8271d2ce`; recheck the exact final commit before a tag. Pushing a tag
-would trigger npm publication and requires separate owner instruction.
+{unresolved} OpenAlex, Exa, and Parallel tool calls through a Pi Sych
+worker remain to be checked. Scholar Gateway was removed after OAuth
+sign-in failed with `Invalid scope`; no workaround was attempted. The
+user requested atomic commits and pushes for this implementation fix; no
+tag or publication is authorized.

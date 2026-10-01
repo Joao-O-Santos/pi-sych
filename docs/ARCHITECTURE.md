@@ -79,7 +79,12 @@ explicitly loads Pi's `builtin:mcp` and `builtin:codemode` extensions;
 the worker reads its own `mcp.json` from its agent directory. Users
 configure and authenticate that file with native Pi MCP commands. The
 supervisor's MCP configuration and companion extensions are not copied
-to workers. Tool availability does not guarantee credentials or access.
+to workers. Pi's CLI `--tools` allowlist filters dynamically discovered
+MCP tools out of codemode's nested tool set, so the worker extension
+applies the task's selected Pi tool set at session start instead. Pi's
+per-server and per-tool MCP exposure still follows the worker's native
+`mcp.json` (codemode is the default). Tool availability does not
+guarantee credentials or access.
 
 The worker reports `complete`, `partial`, or `failed`, a non-empty
 summary, existing project-relative output files, and limitations. A

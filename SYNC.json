@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-01T18:34:28.849Z",
+  "confirmedAt": "2026-10-01T20:00:11.098Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:669856275786fa308a1db1ce699d25ea4797a4a7ab765f42d0945dde87ccb68e",
+      "fingerprint": "sha256:ff8279ddd1a6fad63ba0310ac9515ea45235b94cb943a33fda4300a4835ddbd1",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,21 +15,21 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T18:34:28.849Z",
-        "reason": "Recorded successful GitLab verify/Pages on 8271d2ce while retaining live MCP/auth and tag-triggered npm publication gates."
+        "at": "2026-10-01T20:00:11.098Z",
+        "reason": "Recorded the reproduced Pi --tools allowlist cause, confirmed the Pi Sych worker fix with local fixture and live Context7 call, and reviewed README's unchanged MCP setup contract."
       }
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:c7c0509cee8376257115c4831d8306c86d133ca8ae8bbcce8c909998311be32a",
+      "fingerprint": "sha256:c2fe9050e701be1f99567f9e063c131fd4a1f73f527fc4c9b690e113d0839e9a",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T18:07:20.003Z",
-        "reason": "Reviewed the v8 preparation's configuration, native MCP worker, compaction and literature contracts against implementation and local test results; local checks passed and external native MCP/auth and real-model workflow remain explicitly unverified."
+        "at": "2026-10-01T20:00:11.098Z",
+        "reason": "Recorded the reproduced Pi --tools allowlist cause, confirmed the Pi Sych worker fix with local fixture and live Context7 call, and reviewed README's unchanged MCP setup contract."
       }
     },
     {
@@ -46,8 +46,8 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T18:13:48.994Z",
-        "reason": "Corrected the compaction resource description to match the implemented workbench hook and reviewed the nested-Git committed-change regression with passing local gate."
+        "at": "2026-10-01T20:00:11.098Z",
+        "reason": "Recorded the reproduced Pi --tools allowlist cause, confirmed the Pi Sych worker fix with local fixture and live Context7 call, and reviewed README's unchanged MCP setup contract."
       }
     },
     {

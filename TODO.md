@@ -21,18 +21,19 @@ not a claim that unrun external checks passed.
   FTS5 ranking; the weighted title match beats the unweighted first result.
 - Added capability-first document/web guidance, codemode examples, migration
   guide, local two-tool native MCP/codemode partial-failure integration, and
-  packed-install tests with and without optional Plannotator.
-- Baseline v7.0.1 runtime: 3170 nonblank lines; current v8 preparation: 3041
-  (below baseline). Baseline coverage:
-  97.48% lines, 90.23% branches, 95.31% functions. The most recent v8 full
-  coverage check exceeded all three; recheck after final changes.
+  packed-install tests with and without optional Plannotator. Fixed the worker
+  `--tools` allowlist interaction that hid native MCP tools from codemode; a
+  live Pi Sych dispatch successfully resolved React through Context7.
+- Baseline v7.0.1 runtime: 3170 nonblank lines; current v8 preparation: about
+  3100 (below baseline). Current coverage: 97.55% lines, 91.62% branches,
+  96.73% functions, all above the baseline of 97.48/90.23/95.31.
 
 ## Outstanding gates and limitations
 
-- [ ] Validate **real** Context7, OpenAlex, and Scholar Gateway over Pi native
-  MCP, including authentication. The worker-agent currently has no `mcp.json`;
-  do not synthesize/copy supervisor MCP configuration or claim connectivity.
-  A legacy-SSE-only blocker, if found, needs concrete evidence.
+- [ ] Exercise real OpenAlex, Exa, and Parallel tool calls through a Pi Sych
+  worker. Pi reported Context7, OpenAlex, Exa, and Parallel connected;
+  Context7 was live-tested end-to-end through a read-only worker. Scholar
+  Gateway was removed after its OAuth invalid-scope failure.
 - [x] Run the opt-in real-model Pi workflow (passed on a disposable project).
   Also checked the installed v8 package with a live `project_status` call.
   The deterministic native MCP fixture tests transport/composition without
@@ -41,8 +42,8 @@ not a claim that unrun external checks passed.
   loadable Pi resource; the v8 workbench currently owns the hook and policy,
   with `compaction.custom: false` leaving native compaction in control. A split
   is optional, not a prerequisite for the 150k semantics.
-- [x] GitLab verify/Pages passed on the implementation commit `dc32c879`
-  and the subsequent project-state commit `8271d2ce`. Recheck the exact
+- [ ] Check remote verify/Pages for the pushed worker MCP fix before any
+  release; earlier v8 preparation commits passed both jobs. Recheck exact
   final HEAD and package contents before any tag. The repository's tag pipeline
   automatically publishes to npm; conditional tag consideration does not
   separately authorize that publication. Obtain explicit release/publication
