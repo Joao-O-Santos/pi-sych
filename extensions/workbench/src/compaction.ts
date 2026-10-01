@@ -2,8 +2,6 @@ import { isUtf8 } from "node:buffer";
 import { appendFile, mkdir, open, readFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
-import { uuidv7 } from "@earendil-works/pi-ai";
-import { complete } from "@earendil-works/pi-ai/compat";
 import type { ExtensionContext, SessionBeforeCompactEvent } from "@earendil-works/pi-coding-agent";
 import {
 	type ResolvedProject,
@@ -386,6 +384,8 @@ const observable = (message: AgentMessage, limit = OBSERVABLE_MESSAGE_BYTE_LIMIT
 				message.summary,
 				limit,
 			);
+		default:
+			return undefined;
 	}
 };
 export const previousRecordedDecisionAttributions = (summary: string) => {
@@ -537,16 +537,15 @@ export function buildCompactionPrompt(
 export async function compact(
 	event: SessionBeforeCompactEvent,
 	ctx: ExtensionContext,
-	completeModel = complete,
+	completeModel = ctx.modelRegistry.complete.bind(ctx.modelRegistry),
 ) {
 	const signal = event.signal ?? new AbortController().signal;
 	try {
 		if (!ctx.model || signal.aborted) return undefined;
 		const project = await resolveProject(ctx.cwd),
 			status = await checkProjectStatus(ctx.cwd, project),
-			snapshot = await compactionSnapshot(project, status),
-			auth = await ctx.modelRegistry.getApiKeyAndHeaders(ctx.model);
-		if (!auth.ok || !auth.apiKey || signal.aborted) return undefined;
+			snapshot = await compactionSnapshot(project, status);
+		if (signal.aborted) return undefined;
 		const response = await completeModel(
 			ctx.model,
 			{
@@ -569,13 +568,8 @@ export async function compact(
 				],
 			},
 			{
-				apiKey: auth.apiKey,
-				...(auth.headers ? { headers: auth.headers } : {}),
-				...(auth.env ? { env: auth.env } : {}),
 				maxTokens: Math.min(4096, ctx.model.maxTokens),
 				signal,
-				cacheRetention: "none",
-				sessionId: uuidv7(),
 			},
 		);
 		if (signal.aborted) return undefined;
@@ -605,6 +599,7 @@ export async function compact(
 				usage: response.usage,
 			},
 		};
+		if (signal.aborted) return undefined;
 		if (output.promotions.length)
 			await appendFile(
 				project.canonical.inbox,

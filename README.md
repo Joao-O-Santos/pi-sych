@@ -2,7 +2,7 @@
 
 ![Pi Sych logo: inspectable files, bounded tasks, durable state, and
 human
-decisions](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.1/docs/img/logo.png)
+decisions](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v8.0.0/docs/img/logo.png)
 
 [![pipeline
 status](https://gitlab.com/Joao-O-Santos/pi-sych/badges/main/pipeline.svg)](https://gitlab.com/Joao-O-Santos/pi-sych/-/commits/main)
@@ -39,14 +39,12 @@ inventing extra approval checkpoints.
 ![Pi Sych overview: a request can use task-specific skills and project
 files, optionally involve a focused worker, and return for human review
 and
-decision](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.1/docs/img/workflow.png)
+decision](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v8.0.0/docs/img/workflow.png)
 
 This is an orientation, not a required sequence or a complete runtime
 contract. Direct work need not use a worker, skills guide rather than
-decide, and important decisions remain yours. At supervisor start, Pi
-Sych injects a compact summary derived from the session's active tools
-and local integration inspection. The summary helps routing but does not
-authorize work.
+decide, and important decisions remain yours. Pi declares active tools
+and their guidance; Pi Sych does not duplicate that capability list.
 
 Pi Sych requires Node 26 or newer and is installed as a package for
 [Pi](https://pi.dev/). In this README, the **supervisor** is the model
@@ -107,7 +105,7 @@ contexts.
 
 [![Detailed review and edit workflow: independent review, human
 decision, clean-context editing, fresh verification, and
-acknowledgement](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.1/docs/img/review_workflow.png)](docs/review-workflow.md)
+acknowledgement](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v8.0.0/docs/img/review_workflow.png)](docs/review-workflow.md)
 
 The separation between review and editing is deliberate. Rejected
 alternatives and the arguments used to evaluate them do not normally
@@ -194,8 +192,7 @@ system, or workflow controller.
 Human-facing commands:
 
 - `/pi-sych-status` --- show mechanical project state;
-- `/pi-sych-mcp` --- inspect optional MCPorter configuration without
-  printing credentials;
+- `/mcp` --- inspect native Pi MCP server state;
 - `/plannotator-annotate <project-local-markdown-file>` --- annotate a
   project-local `.md` or `.mdx` file and save feedback beside it;
 - `/plannotator-last` --- annotate the last assistant response and
@@ -237,12 +234,13 @@ helps.
 
 The supervisor can call `literature_search` directly. Local literature
 state is inspected for the supported v7 schema, but an available
-database does not verify source access or collection completeness.
-Incompatible v6 databases report a migration error; see the [literature
-database v7 migration guide](docs/literature-database-v7.md). Remote
-MCPorter state is likewise inspected/configured for explicitly requested
-workers; configured servers do not prove credentials, reachability, or
-retrieval access.
+database does not verify source access or collection completeness. See
+the [literature database v7 migration
+guide](docs/literature-database-v7.md). Native Pi MCP and codemode are
+available to explicitly requested remote research workers; configure and
+authenticate their server access in the worker agent directory with
+native `pi mcp` commands. Pi Sych does not inspect or copy the
+supervisor's MCP configuration.
 
 A worker selected with the exact `research` skill also receives the same
 read-only tool. The index is a discovery surface: returned metadata and
@@ -278,12 +276,13 @@ orchestration system:
   files, skills, model role, tool mode, and timeout. Dispatch reports
   worker-reported files separately from observed project changes,
   including residual changes after failure; it does not roll them back.
-- **Small working memory:** custom compaction handles configured manual
-  and native requests; optional 100,000-token admission runs at the
-  settled `agent_settled` boundary. It retains bounded observable
-  continuation state. It can append clearly marked, unreviewed proposals
-  to `INBOX.md`, but never mutates canonical semantic files; omission or
-  failure returns control to Pi's native compactor.
+- **Small working memory:** when its separately loadable compaction
+  resource is enabled, custom compaction handles native requests and
+  proactive admission defaults to 150,000 context tokens at a safe
+  settled boundary. It retains bounded observable continuation state. It
+  can append clearly marked, unreviewed proposals to `INBOX.md`, but
+  never mutates canonical semantic files; omission or failure returns
+  control to Pi's native compactor.
 - **Human review:** Plannotator provides annotation and code-review
   interfaces without becoming a workflow controller.
 
@@ -319,19 +318,20 @@ When working in a Pi Sych project:
   actually occurred.
 
 See [architecture](docs/ARCHITECTURE.md) for the complete runtime
-contract and [configuration](docs/configuration.md) for setup and skill
-customization.
+contract, [configuration](docs/configuration.md) for setup, and the
+[v7-to-v8 migration guide](docs/migration-v7-to-v8.md) for configuration
+and native MCP changes.
 
 ## Architecture diagrams
 
 ![Pi Sych architecture: supervisor tools, workers, results, and project
-files](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.1/docs/img/architecture.png)
+files](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v8.0.0/docs/img/architecture.png)
 
 ![Supervisor compaction inputs, continuation, and separate worker
-context](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.1/docs/img/supervisors_context.png)
+context](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v8.0.0/docs/img/supervisors_context.png)
 
 ![Seven public skills and private module and method building
-blocks](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.1/docs/img/skills_architecture.png)
+blocks](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v8.0.0/docs/img/skills_architecture.png)
 
 These diagrams are orientation aids, not complete runtime contracts. See
 [architecture](docs/ARCHITECTURE.md) for behavior details.

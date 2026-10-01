@@ -8,6 +8,7 @@ const pagePaths = new Map([
 	["docs/ARCHITECTURE.md", "architecture.html"],
 	["docs/CONTRIBUTING.md", "contributing.html"],
 	["docs/configuration.md", "configuration.html"],
+	["docs/migration-v7-to-v8.md", "migration-v7-to-v8.html"],
 	["docs/literature-database-v7.md", "literature-database-v7.html"],
 	["docs/code-tour.md", "code-tour.html"],
 	["docs/development.md", "development.html"],

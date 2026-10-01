@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { hash } from "node:crypto";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { registerHooks } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -9,9 +11,25 @@ import piSychWorkbench, {
 	configuredSupervisorInstructions,
 	formatDispatchWorkerOutcome,
 	SUPERVISOR_GUIDANCE,
-	shouldCompactAt100k,
+	shouldTriggerSettledCompaction,
 } from "../../.test-build/workbench/index.js";
 import { DEFAULT_CONFIG } from "../../.test-build/workbench/src/config-directory.js";
+
+let optionalRuntimeSource;
+registerHooks({
+	resolve(specifier, context, nextResolve) {
+		if (
+			optionalRuntimeSource &&
+			specifier === "./runtime.js" &&
+			context.parentURL?.includes("/.test-build/plannotator/index.js?optional-")
+		)
+			return {
+				url: `data:text/javascript,${encodeURIComponent(optionalRuntimeSource)}`,
+				shortCircuit: true,
+			};
+		return nextResolve(specifier, context);
+	},
+});
 
 async function readFeedback(path) {
 	for (let attempt = 0; attempt < 100; attempt++) {
@@ -68,7 +86,7 @@ test("core and Plannotator extensions register separate public surfaces", async 
 		core.tools.map((tool) => tool.name),
 		["dispatch_worker", "project_status", "literature_search"],
 	);
-	assert.deepEqual(core.commands, ["pi-sych-status", "pi-sych-mcp"]);
+	assert.deepEqual(core.commands, ["pi-sych-status"]);
 
 	const commands = [];
 	await piSychPlannotator({
@@ -98,6 +116,34 @@ test("core and Plannotator extensions register separate public surfaces", async 
 	);
 	assert.deepEqual(failedCommands, []);
 	assert.doesNotMatch(SUPERVISOR_GUIDANCE, /submit_plan/);
+});
+
+test("Plannotator public adapter tolerates absent optional dependencies", async () => {
+	const commands = [];
+	optionalRuntimeSource =
+		'throw Object.assign(new Error("Cannot find package jiti"), { code: "ERR_MODULE_NOT_FOUND" });';
+	const { default: withoutJiti } = await import(
+		`../../.test-build/plannotator/index.js?optional-jiti-${Date.now()}`
+	);
+	await withoutJiti({
+		registerCommand(name) {
+			commands.push(name);
+		},
+	});
+	assert.deepEqual(commands, []);
+
+	optionalRuntimeSource =
+		'export class PlannotatorUnavailableError extends Error {} export async function registerPlannotator() { throw new PlannotatorUnavailableError("adapter unavailable"); }';
+	const { default: unavailableAdapter } = await import(
+		`../../.test-build/plannotator/index.js?optional-unavailable-${Date.now()}`
+	);
+	await unavailableAdapter({
+		registerCommand(name) {
+			commands.push(name);
+		},
+	});
+	assert.deepEqual(commands, []);
+	optionalRuntimeSource = undefined;
 });
 
 test("Plannotator handlers report results and recover from invalid input", async (t) => {
@@ -148,6 +194,42 @@ test("Plannotator handlers report results and recover from invalid input", async
 	await commands.get("plannotator-review").handler("", ctx);
 	await new Promise((done) => setImmediate(done));
 	assert.match(notices.at(-1).message, /review failed/);
+	const closedSession = {
+		url: "https://review",
+		waitForDecision: async () => ({ exit: true }),
+	};
+	runtime.last = async () => closedSession;
+	await commands.get("plannotator-last").handler("", ctx);
+	await new Promise((done) => setImmediate(done));
+	assert.deepEqual(notices.at(-1), { message: "Annotation closed.", type: "info" });
+	runtime.last = async () => ({
+		url: "https://review",
+		waitForDecision: async () => ({}),
+	});
+	await commands.get("plannotator-last").handler("", ctx);
+	await new Promise((done) => setImmediate(done));
+	runtime.last = async () => {
+		throw "adapter failed";
+	};
+	await commands.get("plannotator-last").handler("", ctx);
+	assert.deepEqual(notices.at(-1), { message: "adapter failed", type: "error" });
+});
+
+test("Plannotator public helpers validate adapter shape and classify load failures", async () => {
+	const {
+		loadPlannotator,
+		plannotatorUnavailable,
+		PlannotatorUnavailableError,
+		startFileAnnotation,
+		startLastMessageAnnotation,
+		startCodeReview,
+	} = await import("../../.test-build/workbench/src/plannotator.js");
+	assert.ok(plannotatorUnavailable() instanceof PlannotatorUnavailableError);
+	assert.match(plannotatorUnavailable("bad version").message, /bad version/);
+	assert.equal(typeof loadPlannotator, "function");
+	assert.equal(typeof startFileAnnotation, "function");
+	assert.equal(typeof startLastMessageAnnotation, "function");
+	assert.equal(typeof startCodeReview, "function");
 });
 
 test("code-review arguments omit absent optional keys and preserve the small condition matrix", async () => {
@@ -184,11 +266,20 @@ test("configured project instructions are available to the supervisor without a 
 	assert.match(instructions ?? "", /Prefer direct evidence/);
 	assert.equal(await configuredSupervisorInstructions(root, "Prefer direct evidence."), undefined);
 });
-test("100k compaction threshold covers disabled, below, boundary, and above cases", () => {
-	assert.equal(shouldCompactAt100k(false, 100_000), false);
-	assert.equal(shouldCompactAt100k(true, 99_999), false);
-	assert.equal(shouldCompactAt100k(true, 100_000), true);
-	assert.equal(shouldCompactAt100k(true, 100_001), true);
+test("settled compaction uses 150k and requires sufficient context at a safe boundary", () => {
+	const threshold = DEFAULT_CONFIG.compaction.thresholdTokens;
+	assert.equal(threshold, 150_000);
+	const eligible = (tokens, window = 200_000, idle = true, pending = false, inFlight = false) =>
+		shouldTriggerSettledCompaction(threshold, tokens, window, idle, pending, inFlight);
+	assert.equal(eligible(threshold - 1), false);
+	assert.equal(eligible(null), false);
+	assert.equal(eligible(undefined, null), false);
+	assert.equal(eligible(threshold), true);
+	assert.equal(eligible(threshold + 1), true);
+	assert.equal(eligible(threshold, threshold - 1), false);
+	assert.equal(eligible(threshold, 200_000, false), false);
+	assert.equal(eligible(threshold, 200_000, true, true), false);
+	assert.equal(eligible(threshold, 200_000, true, false, true), false);
 });
 
 test("workbench lifecycle and status commands cover configured branches", async (t) => {
@@ -200,17 +291,32 @@ test("workbench lifecycle and status commands cover configured branches", async 
 		JSON.stringify({ version: 2, confirmedAt: "now", artifacts: [] }),
 	);
 	await writeFile(join(cwd, "PROJECT.md"), "# Project\n\n## Objective\n\nTest\n");
+	await writeFile(join(cwd, "reviewed.md"), "reviewed content\n");
+	await writeFile(
+		join(cwd, "SYNC.json"),
+		JSON.stringify({
+			version: 2,
+			confirmedAt: "now",
+			artifacts: [
+				{
+					path: "reviewed.md",
+					fingerprint: `sha256:${hash("sha256", "reviewed content\n", "hex")}`,
+					status: "current",
+				},
+			],
+		}),
+	);
 	await writeFile(
 		join(cwd, ".pi/pi-sych/config.json"),
-		JSON.stringify({ ...DEFAULT_CONFIG, compaction: { custom: true, compactAt100k: true } }),
+		JSON.stringify({ ...DEFAULT_CONFIG, compaction: { custom: true, thresholdTokens: 150_000 } }),
 	);
 	const notifications = [],
 		compacted = [];
 	const extension = await capturedExtension(piSychWorkbench, t);
 	const ctx = {
 		cwd,
-		model: undefined,
-		getContextUsage: () => ({ tokens: 100_000 }),
+		model: { contextWindow: 200_000 },
+		getContextUsage: () => ({ tokens: 150_000 }),
 		isIdle: () => true,
 		hasPendingMessages: () => false,
 		compact: () => compacted.push(true),
@@ -222,20 +328,23 @@ test("workbench lifecycle and status commands cover configured branches", async 
 	);
 	assert.match(before.systemPrompt, /Pi Sych/);
 	await writeFile(join(cwd, "AGENTS.md"), "Local rule\n");
-	await writeFile(
-		join(cwd, ".pi/pi-sych/models.json"),
-		JSON.stringify({ default: "x", models: { x: { model: "x/y" } } }),
-	);
-	const withCatalog = await extension.events.get("before_agent_start")(
+	const withInstructions = await extension.events.get("before_agent_start")(
 		{ systemPrompt: "system", systemPromptOptions: { selectedTools: [] } },
 		{ ...ctx, getContextUsage: () => ({ tokens: null }) },
 	);
-	assert.match(withCatalog.systemPrompt, /x: cost unspecified; no notes/);
+	assert.match(withInstructions.systemPrompt, /Local rule/);
 	await extension.events.get("session_start")({}, ctx);
 	await extension.events.get("agent_settled")({}, ctx);
+	// In-flight guard prevents duplicate compact requests until the callback settles.
+	await extension.events.get("agent_settled")({}, ctx);
+	assert.equal(compacted.length, 1);
 	const withExisting = await configuredSupervisorInstructions(cwd, "Local rule");
 	assert.equal(withExisting, undefined);
 	assert.equal(compacted.length, 1);
+	await writeFile(
+		join(cwd, ".pi/pi-sych/config.json"),
+		JSON.stringify({ ...DEFAULT_CONFIG, compaction: { custom: false, thresholdTokens: 150_000 } }),
+	);
 	await extension.events.get("session_before_compact")(
 		{ preparation: { messagesToSummarize: [], turnPrefixMessages: [] } },
 		ctx,
@@ -246,12 +355,22 @@ test("workbench lifecycle and status commands cover configured branches", async 
 		status.execute("id", { action: "acknowledge" }, undefined, undefined, ctx),
 		/requires named files/,
 	);
+	const acknowledgement = await status.execute(
+		"id",
+		{ action: "acknowledge", files: ["reviewed.md"], reason: "Reviewed content" },
+		undefined,
+		undefined,
+		ctx,
+	);
+	assert.equal(acknowledgement.content[0].text, "Acknowledged:\n- reviewed.md");
+	assert.equal(acknowledgement.details.acknowledged[0].acknowledgement.reason, "Reviewed content");
+	assert.deepEqual(acknowledgement.details.needsReview, []);
 	await extension.commandHandlers.get("pi-sych-status").handler("", ctx);
-	await extension.commandHandlers.get("pi-sych-mcp").handler("", ctx);
-	assert.ok(notifications.length >= 2);
+	assert.equal(notifications.length, 1);
+	assert.equal(notifications[0].type, "info");
 	await writeFile(
 		join(cwd, ".pi/pi-sych/config.json"),
-		JSON.stringify({ ...DEFAULT_CONFIG, compaction: { custom: false, compactAt100k: false } }),
+		JSON.stringify({ ...DEFAULT_CONFIG, compaction: { custom: false, thresholdTokens: 150_000 } }),
 	);
 	const disabledCtx = { ...ctx, getContextUsage: () => ({ tokens: 1 }) };
 	assert.equal(

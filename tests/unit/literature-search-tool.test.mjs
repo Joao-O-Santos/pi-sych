@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
@@ -10,6 +10,10 @@ import {
 	searchLiterature,
 } from "../../.test-build/workbench/src/literature-search.js";
 import { createLiteratureSchema, rebuildLiteratureIndex } from "../helpers/literature-database.mjs";
+
+const globalConfigRoot = await mkdtemp(join(tmpdir(), "pi-sych-literature-tool-global-"));
+process.env.PI_CODING_AGENT_DIR = globalConfigRoot;
+test.after(() => rm(globalConfigRoot, { recursive: true, force: true }));
 
 async function project(t) {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-literature-tool-"));
@@ -55,7 +59,7 @@ function assertWrappedFailure(path, callback, cause) {
 	});
 }
 
-test("registered literature tool exposes the v7 result and exact text/details equality", async (t) => {
+test("registered literature tool exposes schema, annotations, structured results, and readable text", async (t) => {
 	const root = await project(t);
 	const rows = Array.from({ length: 12 }, (_, index) => ({
 		filepath: `papers/paper-${index}.pdf`,
@@ -73,6 +77,18 @@ test("registered literature tool exposes the v7 result and exact text/details eq
 	assert.equal(
 		tool.description,
 		"Search the configured local read-only FTS5 literature index. Results are discovery metadata and snippets, not verification of the underlying source or completeness of the collection.",
+	);
+	assert.deepEqual(tool.annotations, {
+		readOnlyHint: true,
+		destructiveHint: false,
+		idempotentHint: true,
+		openWorldHint: false,
+	});
+	assert.equal(tool.outputSchema.type, "object");
+	assert.equal(tool.outputSchema.properties.results.type, "array");
+	assert.equal(
+		tool.outputSchema.properties.results.items.properties.metadata.properties.creators.anyOf.length,
+		2,
 	);
 	assert.equal(tool.parameters.type, "object");
 	assert.deepEqual(tool.parameters.required, ["query"]);
@@ -110,7 +126,11 @@ test("registered literature tool exposes the v7 result and exact text/details eq
 		assert.equal(typeof result.snippet, "string");
 		assert.equal(typeof result.score, "number");
 	}
-	assert.deepEqual(JSON.parse(explicit.content[0].text), explicit.details.results);
+	assert.deepEqual(explicit.structuredContent, { results: explicit.details.results });
+	assert.match(explicit.content[0].text, /1\. Boundary paper 0/);
+	assert.match(explicit.content[0].text, /Zero Author/);
+	assert.match(explicit.content[0].text, /Source: /);
+	assert.doesNotMatch(explicit.content[0].text, /"score"/);
 
 	const nullResult = await tool.execute(
 		"call-null",
@@ -122,12 +142,57 @@ test("registered literature tool exposes the v7 result and exact text/details eq
 		},
 	);
 	assert.deepEqual(nullResult.details.results[0].metadata.creators, null);
-	assert.deepEqual(JSON.parse(nullResult.content[0].text), nullResult.details.results);
+	assert.deepEqual(nullResult.structuredContent, { results: nullResult.details.results });
+	assert.match(nullResult.content[0].text, /Boundary paper 1/);
 
 	const defaults = await tool.execute("call-2", { query: "sharedterm" }, undefined, undefined, {
 		cwd: root,
 	});
 	assert.equal(defaults.details.results.length, 10);
+
+	const noMatch = await tool.execute(
+		"call-empty",
+		{ query: "definitelyabsent" },
+		undefined,
+		undefined,
+		{ cwd: root },
+	);
+	assert.deepEqual(noMatch.details.results, []);
+	assert.deepEqual(noMatch.structuredContent, { results: [] });
+	assert.equal(noMatch.content[0].text, "No matching literature found.");
+});
+
+test("tool formats empty results and preserves query validation errors", async (t) => {
+	const root = await project(t);
+	await literatureDatabase(join(root, "LITERATURE.sqlite"), []);
+	const tool = registeredTool();
+	await assert.rejects(
+		() => tool.execute("call-invalid", { query: " " }, undefined, undefined, { cwd: root }),
+		/non-empty string/,
+	);
+	const result = await tool.execute("call-no-results", { query: "absent" }, undefined, undefined, {
+		cwd: root,
+	});
+	assert.deepEqual(result.details.results, []);
+	assert.equal(result.content[0].text, "No matching literature found.");
+});
+
+test("explicit configured database takes precedence over conventional project database", async (t) => {
+	const root = await project(t);
+	const configDirectory = join(root, "global", "pi-sych");
+	const configured = join(root, "chosen.sqlite");
+	await mkdir(configDirectory, { recursive: true });
+	await writeFile(
+		join(configDirectory, "config.json"),
+		JSON.stringify({ version: 2, literatureDatabase: configured }),
+	);
+	await literatureDatabase(join(root, "LITERATURE.sqlite"), [
+		{ filepath: "default.pdf", year: null, title: "Default", abstract: "needle", doi: null },
+	]);
+	await literatureDatabase(configured, [
+		{ filepath: "chosen.pdf", year: null, title: "Chosen", abstract: "needle", doi: null },
+	]);
+	assert.equal(searchLiterature(root, "needle", 10, configDirectory)[0].metadata.title, "Chosen");
 });
 
 test("valid v7 schemas support no-match searches and ignore legacy authors", async (t) => {

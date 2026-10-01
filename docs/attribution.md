@@ -149,9 +149,10 @@ of Mario Zechner's Pi coding agent. The project also grew out of the
 author's move from [OpenCode](https://opencode.ai/) to Pi; that is
 experiential lineage, not a code or API dependency.
 
-[pi-mcporter](https://github.com/mavam/pi-mcporter) and its
-[MCPorter](https://github.com/openclaw/mcporter) runtime provide the
-optional remote-research bridge.
+Pi's native MCP and codemode extensions provide the optional
+remote-research transport and composition surface. Earlier Pi Sych
+releases used MCPorter; this is historical attribution, not a current
+dependency.
 
 [Plannotator](https://github.com/backnotprop/plannotator) provides
 browser annotation and code-review interfaces. These are dependencies or

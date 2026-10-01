@@ -1,10 +1,10 @@
 # Code tour
 
-Pi Sych starts in `extensions/workbench/index.ts`. The workbench adds a
-derived, non-authorizing capability summary and guidance at the
-beginning of a supervisor turn, loads project-scoped configuration, and
-registers the tools and commands that connect Pi to the focused runtime
-modules.
+Pi Sych starts in `extensions/workbench/index.ts`. The workbench adds
+concise supervisor guidance and configured project instructions, loads
+layered Pi Sych configuration, and registers the tools and commands that
+connect Pi to focused runtime modules. Pi itself describes active tools
+and native MCP servers; Pi Sych adds no capability-startup inventory.
 
 ## Dispatch and worker lifecycle
 
@@ -23,6 +23,14 @@ and verifies that reported project files still exist. Cancellation,
 timeout, spawn failure, a signal exit, and a non-zero exit take
 precedence over a result file; none is a successful result.
 
+Ordinary workers do not load MCP or codemode. `remoteResearch: true`
+adds Pi's `builtin:mcp` and `builtin:codemode` extensions explicitly.
+Native Pi reads `mcp.json` from that worker's `PI_CODING_AGENT_DIR`; the
+supervisor's MCP configuration and tools are not inherited. Configure
+worker servers and authentication using native Pi MCP commands. Tool
+availability does not guarantee working credentials or successful
+retrieval.
+
 ## Project state and SYNC
 
 `project_status` is the mechanical view of project state. It reads
@@ -33,43 +41,45 @@ not decide whether that change is correct or conceptually important.
 
 ## Compaction and configuration
 
-The workbench invokes custom compaction when configuration enables it.
-Optional 100k admission occurs at `agent_settled` only when idle, with
-no pending messages and no in-flight compaction. The compaction module
-builds a bounded snapshot of selected project state and the
-conversation, asks the active supervisor model for structured working
-memory, filters its file references, and appends a small number of
-unreviewed proposals to the inbox. Returning no custom result leaves
-Pi's standard compactor in control. Canonical semantic files are never
-mutated; recorded label attributions are preserved without verification,
-and omission or failure returns native fallback. Defaults are custom
-true and compactAt100k false. Configuration is resolved through the
-config-directory module so the workbench, worker setup, model catalog,
-and optional local resources agree on where private settings live.
+The workbench invokes custom compaction when `compaction.custom` is
+true. Pi Sych's proactive trigger runs at `agent_settled` at the
+configured context-token threshold, 150,000 by default, only when the
+model context can reach it, the agent is idle, no messages are pending,
+and no compaction is in flight. This is separate from native Pi
+reserve-token settings. The compaction module builds a bounded snapshot
+of selected project state and observable conversation, asks the active
+supervisor model for structured working memory, filters its file
+references, and appends a small number of visibly unreviewed proposals
+to the inbox. Returning no custom result leaves Pi's native compactor in
+control. Canonical semantic files are never mutated; recorded label
+attributions are preserved without verification, and omission or failure
+returns native fallback.
 
-## Optional integrations
+`config-directory.ts` owns strict parsing and layering: global
+`<pi-config-root>/pi-sych/config.json`, then project
+`.pi/pi-sych/config.json`, with field-level overrides. It also resolves
+relative literature paths against the config directory globally or the
+project root for a project override. The small config retains custom
+compaction policy and the configurable local literature database.
 
-MCPorter is an explicit remote-research adapter. It is only added to a
-worker that requested remote research, and its diagnostics describe
-configuration without exposing credentials or verifying server access.
-Such a worker also receives PEW-PEW when the supervisor's active `web`
-tool has validated `pi-pew-pew` package provenance; disabled or excluded
-PEW-PEW remains absent. A separately installed active `web` tool remains
-directly usable by the supervisor. Plannotator is separate from the
-workbench: it is a narrow human-review adapter that brings feedback from
-a message or file back into the review flow rather than controlling
-plans or project state.
+## Literature search and integrations
 
 Literature search is a direct supervisor tool and a gated worker tool.
 The workbench registers `literature_search` for supervisor lookup. The
 worker extension also registers it, while the worker engine exposes it
-only when the selected skills include exact `research`. A query flows to
-the resolved local SQLite FTS5 database and comes back as metadata,
-snippets, scores, and source paths. The supported `papers` plus
-external-content `papers_fts` schema stores canonical metadata
-separately and indexes filepath, title, abstract, tags, and DOI; its
-full FTS5 contract and database-resolution order are in
-[configuration](configuration.md#local-literature-search).
+only when selected skills include exact `research`. A query flows to the
+resolved local SQLite FTS5 database and returns compact readable text,
+structured result data, metadata, snippets, scores, and source paths.
+Results are discovery and provenance, not source verification; the
+source path is the handoff to an available document/PDF capability.
+
+Pi owns MCP transport, server discovery, authentication and `/mcp`. Use
+native `/mcp` or `pi mcp` commands rather than a Pi Sych wrapper.
+Plannotator is separate from the workbench: it is a narrow human-review
+adapter that brings feedback from a message or file back into the review
+flow rather than controlling plans or project state. Independently
+installed document, web and browser tools can satisfy capability needs
+without package-specific runtime coupling.
 
 For declarations and source links generated from the current runtime
 source, see the [live generated code

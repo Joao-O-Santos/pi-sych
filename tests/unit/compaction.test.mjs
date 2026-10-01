@@ -247,6 +247,24 @@ async function fixture(t) {
 	};
 }
 
+test("compact delegates authentication and completion to the host model registry", async (t) => {
+	const { ctx, event } = await fixture(t);
+	let call;
+	ctx.modelRegistry.getApiKeyAndHeaders = async () => {
+		throw new Error("extension must not resolve provider credentials");
+	};
+	ctx.modelRegistry.complete = async (...args) => {
+		call = args;
+		return response(memory());
+	};
+	const result = await compact(event, ctx);
+	assert.ok(result);
+	assert.equal(call[0], ctx.model);
+	assert.equal(call[2].maxTokens, 2048);
+	assert.equal(call[2].signal, event.signal);
+	assert.equal("apiKey" in call[2], false);
+});
+
 test("compact writes only bounded unreviewed proposals after successful output", async (t) => {
 	const { root, ctx, event, notifications } = await fixture(t);
 	const output = memory({ files: ["PROJECT.md", "missing.md"] });

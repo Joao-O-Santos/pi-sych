@@ -8,18 +8,9 @@ import {
 	ensurePiSychConfig,
 	loadPiSychConfig,
 	piSychConfigDirectory,
-	piSychConfigPath,
 } from "./src/config-directory.js";
 import { registerLiteratureSearch } from "./src/literature-search.js";
-import {
-	capabilitySummary,
-	formatMcporterDiagnostic,
-	inspectMcporter,
-	mcporterConfigPath,
-	remoteResearchExtensionPaths,
-} from "./src/mcporter.js";
 import { loadModelCatalog, loadOptionalModelCatalog } from "./src/model-catalog.js";
-import { enabledPewPewExtension } from "./src/pew-pew.js";
 import { resolveProject, showPath } from "./src/project-files.js";
 import {
 	acknowledgeProjectStatus,
@@ -37,7 +28,6 @@ import {
 export const PACKAGE_ROOT = resolve(
 	process.env.PI_PACKAGE_DIR ?? resolve(import.meta.dirname, "../.."),
 );
-const WORKBENCH_SOURCE_PATH = resolve(PACKAGE_ROOT, "extensions/workbench/index.ts");
 export const SUPERVISOR_GUIDANCE = [
 	"Pi Sych is a small mechanical substrate; skills and humans own semantic judgment. Follow a tool's own guidance only when that tool is active.",
 	"Infer task posture from the user's request and accepted project state. Persistence and scrutiny are independent: when outcome and authorization are clear, continue until complete or genuinely blocked; increase checking for consequential or authored work without inventing user checkpoints.",
@@ -66,7 +56,7 @@ const formatTimeout = (timeoutMs: number) => {
 const formatRequestedResearch = (args: Pick<DispatchRequest, "skills" | "remoteResearch">) => {
 	const capabilities = [
 		...(args.skills?.includes("research") ? ["literature_search"] : []),
-		...(args.remoteResearch ? ["MCPorter; web if active"] : []),
+		...(args.remoteResearch ? ["native MCP/codemode"] : []),
 	];
 	return capabilities.join("; ") || "none";
 };
@@ -120,15 +110,19 @@ export function formatDispatchWorkerOutcome(outcome: DispatchOutcome) {
 }
 const notifyError = (ctx: ExtensionCommandContext, error: unknown) =>
 	ctx.ui.notify(error instanceof Error ? error.message : String(error), "error");
-export const shouldCompactAt100k = (enabled: boolean, tokens?: number | null) =>
-	enabled && (tokens ?? 0) >= 100_000;
 export const shouldTriggerSettledCompaction = (
-	enabled: boolean,
+	threshold: number,
 	tokens: number | null | undefined,
+	contextWindow: number | null | undefined,
 	idle: boolean,
 	pendingMessages: boolean,
 	inFlight: boolean,
-) => shouldCompactAt100k(enabled, tokens) && idle && !pendingMessages && !inFlight;
+) =>
+	(contextWindow ?? 0) >= threshold &&
+	(tokens ?? 0) >= threshold &&
+	idle &&
+	!pendingMessages &&
+	!inFlight;
 export async function configuredSupervisorInstructions(cwd: string, existing = "") {
 	const project = await resolveProject(cwd),
 		instructions = await readFile(project.canonical.agents, "utf8").catch(
@@ -163,13 +157,7 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 	let settledCompactionInFlight = false;
 	pi.on("before_agent_start", async (event, ctx) => {
 		const project = await resolveProject(ctx.cwd);
-		const capabilities = capabilitySummary(
-			pi.getAllTools(),
-			event.systemPromptOptions.selectedTools ?? pi.getActiveTools(),
-			project.projectRoot,
-			WORKBENCH_SOURCE_PATH,
-		);
-		const sections = [event.systemPrompt, SUPERVISOR_GUIDANCE, capabilities],
+		const sections = [event.systemPrompt, SUPERVISOR_GUIDANCE],
 			instructions = await configuredSupervisorInstructions(ctx.cwd, event.systemPrompt);
 		if (instructions) sections.push(instructions);
 		const catalog = loadOptionalModelCatalog(project.projectRoot);
@@ -190,9 +178,11 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 	});
 	pi.on("agent_settled", (_event, ctx) => {
 		if (
+			!settledConfig.compaction.custom ||
 			!shouldTriggerSettledCompaction(
-				settledConfig.compaction.compactAt100k,
+				settledConfig.compaction.thresholdTokens,
 				ctx.getContextUsage()?.tokens,
+				ctx.model?.contextWindow,
 				ctx.isIdle(),
 				ctx.hasPendingMessages(),
 				settledCompactionInFlight,
@@ -217,6 +207,7 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 	});
 	pi.registerTool({
 		name: "dispatch_worker",
+		exposure: "model-only",
 		label: "Dispatch worker",
 		description:
 			"Delegate one bounded task to a short-lived worker and return its structurally validated terminal report; completion is not correctness or approval.",
@@ -227,7 +218,7 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 			"Choose direct work versus delegation by task and context, not a fixed default. Use clean context when the explicit packet is sufficient; use trajectory only when prior supervisor conversation materially improves the assignment.",
 			"A prepared plan, TODO, or brief can make clean delegation sufficient after supervisor pre-work; needing conversation context does not force the supervisor to execute the task itself.",
 			"Give the worker one explicit outcome and authorization boundary and expect completion within it. Context mode does not change worker tools, permissions, model, skills, files, or research access.",
-			"Set remoteResearch: true only when remote retrieval is part of the assigned task. It adds MCPorter and may reuse an already active, validated PEW-PEW web tool; selecting research alone adds only local literature_search.",
+			"Set remoteResearch: true only when remote retrieval is part of the assigned task. It loads native MCP and codemode in the worker; selecting research alone adds only local literature_search.",
 		],
 		parameters: dispatchSchema,
 		renderCall(args, theme, { expanded }) {
@@ -239,23 +230,16 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 		},
 		async execute(id, params, signal, onUpdate, ctx) {
 			const project = await resolveProject(ctx.cwd);
-			const pewPewPath = params.remoteResearch
-				? await enabledPewPewExtension(pi.getAllTools(), pi.getActiveTools())
-				: undefined;
 			const outcome = await dispatchWorker({
 				project,
-				workerAgentDir: piSychConfigPath("workerAgentDir", {
-					projectRoot: project.projectRoot,
-				}),
+				workerAgentDir: resolve(
+					piSychConfigDirectory({ projectRoot: project.projectRoot }),
+					"worker-agent",
+				),
 				piSychConfigDirectory: piSychConfigDirectory({ projectRoot: project.projectRoot }),
 				request: params,
 				catalog: loadModelCatalog(project.projectRoot),
 				packageRoot: PACKAGE_ROOT,
-				extraExtensionPaths: [
-					...remoteResearchExtensionPaths(params.remoteResearch === true),
-					...(pewPewPath ? [pewPewPath] : []),
-				],
-				...(pewPewPath ? { webExtensionPath: pewPewPath } : {}),
 				...(params.contextMode === "trajectory"
 					? { trajectory: { manager: ctx.sessionManager, toolCallId: id } }
 					: {}),
@@ -320,16 +304,6 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 			} catch (error) {
 				notifyError(ctx, error);
 			}
-		},
-	});
-	pi.registerCommand("pi-sych-mcp", {
-		description: "Show MCPorter configuration diagnostics",
-		handler: async (_args, ctx) => {
-			const project = await resolveProject(ctx.cwd);
-			ctx.ui.notify(
-				formatMcporterDiagnostic(inspectMcporter(mcporterConfigPath(project.projectRoot))),
-				"info",
-			);
 		},
 	});
 }

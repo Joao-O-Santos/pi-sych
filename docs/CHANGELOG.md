@@ -5,9 +5,29 @@ npm registry metadata establish publication status and dates; headings
 below record versioned changes without duplicating that live release
 state.
 
-## Unreleased
+## Unreleased (v8 preparation; not tagged or published)
 
-No unreleased changes.
+### Breaking
+
+- Replace v7 Pi Sych config keys with strict version 2 global/project
+  layered settings for custom compaction and local literature. The
+  default proactive threshold is 150,000 tokens; the worker catalogue is
+  `worker-models.json`.
+- Remove MCPorter integration, `/pi-sych-mcp`, and PEW-PEW inheritance.
+  Remote workers load Pi-native MCP and codemode only on explicit
+  request. Configure their own MCP servers and authentication with
+  native Pi commands.
+
+### Changed
+
+- Delegate transport and provider credentials to Pi 0.99.2, retain
+  bounded task-centred compaction with native fallback, and use
+  model-only exposure for dispatch and submission tools.
+- Provide validated structured and readable local literature results
+  with bounded snippets, while preserving read-only discovery semantics.
+- Reduce duplicated runtime and test code and document capability-first
+  composition with separately installed tools. See
+  [migration](migration-v7-to-v8.md).
 
 ## v7.0.1
 

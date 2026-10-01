@@ -432,6 +432,48 @@ test("snapshots skip duplicate and inbox-aliased roles but surface other errors"
 	);
 });
 
+test("non-manual compaction failures log instead of notifying", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-auto-fail-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	await writeFile(
+		join(root, "PROJECT.md"),
+		"# Project\n## Objective\nTest\n## Current direction\nTest\n## Definition of done\nTest\n## Previous action\nTest\n## Immediate next step\nTest\n",
+	);
+	await writeFile(
+		join(root, "SYNC.json"),
+		JSON.stringify({ version: 2, confirmedAt: "now", artifacts: [] }),
+	);
+	const errors = [];
+	const original = console.error;
+	console.error = (message) => errors.push(String(message));
+	try {
+		const result = await compact(
+			{
+				reason: "auto",
+				signal: new AbortController().signal,
+				preparation: { messagesToSummarize: [], turnPrefixMessages: [], firstKeptEntryId: "x" },
+			},
+			{
+				cwd: root,
+				model: { maxTokens: 512 },
+				modelRegistry: { getApiKeyAndHeaders: async () => ({ ok: true, apiKey: "key" }) },
+				ui: {
+					notify() {
+						throw new Error("must not notify");
+					},
+				},
+			},
+			async () => {
+				throw new Error("model unavailable");
+			},
+		);
+		assert.equal(result, undefined);
+	} finally {
+		console.error = original;
+	}
+	assert.match(errors.join("\n"), /model unavailable/);
+});
+
 test("compact refuses an inbox that aliases SYNC.json", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-alias-"));
 	t.after(() => rm(root, { recursive: true, force: true }));

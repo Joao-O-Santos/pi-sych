@@ -18,7 +18,6 @@ import { StringEnum } from "@earendil-works/pi-ai";
 import { type SessionEntry, SessionManager } from "@earendil-works/pi-coding-agent";
 import { type Static, Type } from "typebox";
 import { piSkillDirectory } from "./config-directory.js";
-import { mcporterConfigPath, remoteResearchExtensionPaths } from "./mcporter.js";
 import type { ModelCatalog } from "./model-catalog.js";
 import {
 	type ResolvedProject,
@@ -62,7 +61,6 @@ export interface WorkerLaunchSpec {
 	prompt: string;
 	packageRoot: string;
 	extraExtensionPaths: string[];
-	webExtensionPath?: string;
 	sessionPath?: string;
 	onActivity?: (activity: readonly string[]) => void;
 	signal?: AbortSignal;
@@ -138,12 +136,10 @@ export const dispatchSchema = Type.Object({
 });
 export const toolsForRequest = (
 	request: Pick<DispatchRequest, "mode" | "remoteResearch" | "skills">,
-	webEnabled = false,
 ) => [
 	...MODE_TOOLS[request.mode],
 	...(request.skills?.includes("research") ? ["literature_search"] : []),
-	...(request.remoteResearch ? ["mcporter"] : []),
-	...(request.remoteResearch && webEnabled ? ["web"] : []),
+	...(request.remoteResearch ? ["codemode", "mcp"] : []),
 ];
 export function skillPaths(
 	selectors: string[] = [],
@@ -412,6 +408,9 @@ export async function launchPiWorker(
 			"--no-extensions",
 			"--extension",
 			resolve(spec.packageRoot, "extensions/worker/index.ts"),
+			...(spec.request.remoteResearch
+				? ["--extension", "builtin:mcp", "--extension", "builtin:codemode"]
+				: []),
 			...spec.extraExtensionPaths.flatMap((path) => ["--extension", path]),
 			"--no-skills",
 			"--no-prompt-templates",
@@ -419,7 +418,7 @@ export async function launchPiWorker(
 			"--no-context-files",
 			"--no-approve",
 			"--tools",
-			toolsForRequest(spec.request, spec.webExtensionPath !== undefined).join(","),
+			toolsForRequest(spec.request).join(","),
 			"--model",
 			spec.model,
 			...(spec.request.thinkingLevel ? ["--thinking", spec.request.thinkingLevel] : []),
@@ -438,9 +437,6 @@ export async function launchPiWorker(
 					: {}),
 				PI_SYCH_TASK_ID: spec.id,
 				PI_SYCH_RESULT_PATH: spec.resultPath,
-				...(spec.request.remoteResearch
-					? { MCPORTER_CONFIG: mcporterConfigPath(spec.projectRoot) }
-					: {}),
 			},
 			stdio: ["ignore", "pipe", "pipe"],
 		},
@@ -517,14 +513,26 @@ async function projectSnapshot(root: string): Promise<Map<string, string>> {
 			stdio: ["ignore", "pipe", "ignore"],
 		}).trim();
 		const prefix = relative(gitRoot, resolve(root)).split(sep).join("/");
-		const paths = execFileSync(
-			"git",
-			["status", "--porcelain=v1", "-z", "--untracked-files=all", "--no-renames", "--", "."],
-			{ cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
-		)
-			.split(String.fromCharCode(0))
+		const git = (args: string[]) =>
+			execFileSync("git", args, {
+				cwd: root,
+				encoding: "utf8",
+				stdio: ["ignore", "pipe", "ignore"],
+			});
+		const dirty = git([
+			"status",
+			"--porcelain=v1",
+			"-z",
+			"--untracked-files=all",
+			"--no-renames",
+			"--",
+			".",
+		])
+			.split("\0")
 			.filter(Boolean)
-			.map((entry) => entry.slice(3))
+			.map((entry) => entry.slice(3));
+		const tracked = git(["ls-files", "-z", "--cached", "--", "."]).split("\0").filter(Boolean);
+		const paths = [...new Set([...tracked, ...dirty])]
 			.filter((path) => !prefix || path.startsWith(`${prefix}/`))
 			.map((path) => (prefix ? path.slice(prefix.length + 1) : path));
 		return new Map(
@@ -565,7 +573,6 @@ export async function dispatchWorker(options: {
 	catalog: ModelCatalog;
 	packageRoot?: string;
 	extraExtensionPaths?: string[];
-	webExtensionPath?: string;
 	trajectory?: { manager: SupervisorSession; toolCallId: string };
 	launcher?: WorkerLauncher;
 	onActivity?: (activity: readonly string[]) => void;
@@ -609,9 +616,7 @@ export async function dispatchWorker(options: {
 		model,
 		prompt: "",
 		packageRoot,
-		extraExtensionPaths:
-			options.extraExtensionPaths ?? remoteResearchExtensionPaths(request.remoteResearch === true),
-		...(options.webExtensionPath ? { webExtensionPath: options.webExtensionPath } : {}),
+		extraExtensionPaths: options.extraExtensionPaths ?? [],
 		...(sessionPath ? { sessionPath } : {}),
 		...(options.onActivity ? { onActivity: options.onActivity } : {}),
 		...(options.signal ? { signal: options.signal } : {}),

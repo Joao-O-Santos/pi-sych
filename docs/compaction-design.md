@@ -1,9 +1,11 @@
 # Settled-turn compaction design
 
-This document records the implemented v7 continuity behavior. Custom
-compaction is admitted at a settled `agent_settled` boundary when
-optional 100,000-token admission is enabled, the agent is idle, no
-messages are pending, and no compaction is already in flight.
+This document records the implemented v8 continuity behavior. Custom
+compaction is supplied for configured manual/native compaction requests
+when enabled. Proactive admission occurs at `agent_settled` when context
+usage reaches the configured threshold (150,000 tokens by default), the
+context window can reach it, the agent is idle, no messages are pending,
+and no compaction is already in flight.
 
 Compaction is continuity maintenance, not project governance. It may
 summarize observable conversation, material tool outcomes, and bounded
@@ -15,18 +17,24 @@ state.
 
 The settled-turn boundary prevents omission of an in-flight tool result,
 racing a queued user follow-up, or concurrent compaction. Reentrancy is
-blocked until completion or error resets the in-flight guard.
-Manual/native compaction requests still use the configured custom path
-independently of the optional 100,000-token admission.
+blocked until completion or error resets the in-flight guard. Native Pi
+may compact earlier under its own context safety rules; when custom
+compaction is enabled, the `session_before_compact` hook supplies Pi Sych's
+summary for those requests too. If custom compaction is disabled or
+returns no usable result, native behavior remains in control.
+
+The proactive threshold is a Pi Sych context-token threshold, independent
+of Pi reserve-token settings. If the model context window is below it,
+Pi Sych does not create an impossible trigger or interfere with native
+safety compaction.
 
 The implementation must inspect Pi's actual lifecycle and answer:
 
-1.  What event proves assistant/tool activity for the turn is settled?
-2.  Can a user message arrive while compaction is starting or running?
-3.  What state must be captured atomically to preserve queued
-    follow-ups?
-4.  How is reentrancy prevented?
-5.  What deterministic fallback is used if custom compaction fails?
+1. What event proves assistant/tool activity for the turn is settled?
+2. Can a user message arrive while compaction is starting or running?
+3. What state must be captured atomically to preserve queued follow-ups?
+4. How is reentrancy prevented?
+5. What deterministic fallback is used if custom compaction fails?
 
 ## Observable trajectory
 
@@ -62,18 +70,19 @@ Missing durable state is a finding, not automatic permission to edit
 canonical semantic files. The implementation never mutates canonical
 semantic files. Status input is capped at 8 KiB and retains bounded
 diagnostics for missing core files and dependency cycles even when other
-status fields must be omitted. It may append only bounded, one-line, visibly
-unreviewed proposals to the configured inbox. The inbox is created only
-when a valid compaction result contains one or more proposals; successful
-compaction without proposals does not create an empty `INBOX.md`. If custom output is
-omitted, invalid, cancelled, or fails, the handler returns no custom
-result so Pi's native fallback remains in control.
+status fields must be omitted. It may append only bounded, one-line,
+visibly unreviewed proposals to the configured inbox. The inbox is
+created only when a valid compaction result contains one or more
+proposals; successful compaction without proposals does not create an
+empty `INBOX.md`. If custom output is omitted, invalid, cancelled, or
+fails, the handler returns no custom result so Pi's native fallback
+remains in control.
 
 ## Suggested continuation shape
 
 The implemented serialization contains the following bounded fields:
 
-``` text
+```text
 objective:
 authorization:
 constraints:
@@ -92,8 +101,8 @@ projectStateGaps:
 fields normalize to empty arrays. Boundedness comes from bounded source
 reads, item, message, status, retained-tail, snapshot, and proposal limits
 rather than prompt word-count budgets. Observable messages and the
-retained tail exclude hidden thinking. Recorded label attributions are carried forward without
-verification; inferences remain distinct.
+retained tail exclude hidden thinking. Recorded label attributions are
+carried forward without verification; inferences remain distinct.
 
 ## Required regressions
 

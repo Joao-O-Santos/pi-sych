@@ -8,6 +8,7 @@ import {
 export default function piSychWorker(pi: ExtensionAPI): void {
 	pi.registerTool({
 		name: "submit_artifact",
+		exposure: "model-only",
 		label: "Submit worker result",
 		description:
 			"Submit the worker's one immutable terminal result. Use only after the assigned work is complete, partial, or genuinely failed; report limitations and only existing project-relative files.",

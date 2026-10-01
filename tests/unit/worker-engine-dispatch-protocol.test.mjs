@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -132,6 +133,28 @@ for (const [name, contents, expectedError] of invalidResults) {
 		assert.match(outcome.error ?? "", expectedError);
 	});
 }
+
+test("dispatch observes a tracked edit committed during worker launch", async (t) => {
+	const setup = await fixture(t);
+	const git = (args) => execFileSync("git", args, { cwd: setup.root, stdio: "ignore" });
+	git(["init"]);
+	git(["config", "user.email", "worker-test@example.invalid"]);
+	git(["config", "user.name", "Worker Test"]);
+	git(["add", "A.md"]);
+	git(["commit", "-m", "initial"]);
+	const outcome = await dispatch(setup, async (spec) => {
+		await writeFile(join(setup.root, "A.md"), "edited and committed during launch\n");
+		git(["add", "A.md"]);
+		git(["commit", "-m", "worker edit"]);
+		await writeFile(
+			spec.resultPath,
+			JSON.stringify({ status: "complete", summary: "edited", files: ["A.md"], limitations: [] }),
+		);
+		return { exitCode: 0, stderr: "" };
+	});
+	assert.deepEqual(outcome.observedChangedFiles, ["A.md"]);
+	assert.deepEqual(outcome.unexpectedChanges, []);
+});
 
 const processFailures = [
 	["nonzero exit", { exitCode: 7, stderr: "worker stderr" }, "Worker exited 7: worker stderr"],

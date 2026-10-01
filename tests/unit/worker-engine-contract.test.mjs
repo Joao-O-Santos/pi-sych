@@ -102,11 +102,11 @@ test("worker request and result retain the bounded protocol", () => {
 		"submit_artifact",
 	]);
 	const remoteTools = toolsForRequest({ mode: "edit", remoteResearch: true });
-	assert.ok(remoteTools.includes("mcporter"));
+	assert.deepEqual(remoteTools.slice(-2), ["codemode", "mcp"]);
 	assert.ok(!remoteTools.includes("literature_search"));
 	assert.deepEqual(
 		toolsForRequest({ mode: "read-only", remoteResearch: true, skills: ["research"] }).slice(-2),
-		["literature_search", "mcporter"],
+		["codemode", "mcp"],
 	);
 	assert.ok(
 		!toolsForRequest({ mode: "read-only", remoteResearch: false, skills: ["Research"] }).includes(
@@ -114,8 +114,8 @@ test("worker request and result retain the bounded protocol", () => {
 		),
 	);
 	assert.deepEqual(toolsForRequest({ mode: "edit", remoteResearch: true }, true).slice(-2), [
-		"mcporter",
-		"web",
+		"codemode",
+		"mcp",
 	]);
 	assert.ok(!toolsForRequest({ mode: "edit", remoteResearch: false }, true).includes("web"));
 	assert.deepEqual(toolsForRequest({ mode: "full-host", remoteResearch: false }), [
@@ -149,11 +149,43 @@ test("named skills retain project, user, and package precedence", async (t) => {
 	assert.equal(skillPaths(["write"], projectRoot, packageRoot, userRoot)[0], paths[1]);
 	await rm(dirname(paths[1]), { recursive: true });
 	assert.equal(skillPaths(["write"], projectRoot, packageRoot, userRoot)[0], paths[0]);
+	const directorySkill = join(projectRoot, ".pi", "skills", "directory-skill");
+	await mkdir(directorySkill, { recursive: true });
+	await writeFile(join(directorySkill, "SKILL.md"), "directory skill\n");
+	assert.equal(
+		skillPaths(["directory-skill"], projectRoot, packageRoot, userRoot)[0],
+		join(directorySkill, "SKILL.md"),
+	);
 	const direct = join(projectRoot, "direct.md");
 	await writeFile(direct, "direct\n");
 	assert.equal(skillPaths([direct], projectRoot, packageRoot, userRoot)[0], direct);
+	assert.equal(skillPaths(["direct.md"], projectRoot, packageRoot, userRoot)[0], direct);
 	assert.throws(() => skillPaths(["missing"], projectRoot, packageRoot, userRoot), /unavailable/);
 	assert.equal(skillPaths(["write"], projectRoot, packageRoot)[0], paths[0]);
+});
+
+test("skill lookup falls back to package skills when the optional user configuration is unavailable", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-skill-fallback-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const packageSkill = join(root, "package", "skills", "write", "SKILL.md");
+	await mkdir(dirname(packageSkill), { recursive: true });
+	await writeFile(packageSkill, "package skill\n");
+	const saved = Object.fromEntries(
+		["HOME", "XDG_CONFIG_HOME", "PI_CODING_AGENT_DIR"].map((key) => [key, process.env[key]]),
+	);
+	t.after(() => {
+		for (const [key, value] of Object.entries(saved)) {
+			if (value === undefined) delete process.env[key];
+			else process.env[key] = value;
+		}
+	});
+	process.env.HOME = root;
+	delete process.env.XDG_CONFIG_HOME;
+	delete process.env.PI_CODING_AGENT_DIR;
+	assert.equal(
+		skillPaths(["write"], join(root, "project"), join(root, "package"))[0],
+		packageSkill,
+	);
 });
 
 test("worker prompt carries assignment, context, persistence, and terminal-result boundaries", () => {

@@ -4,7 +4,7 @@
 
 include config.mk
 
-.PHONY: all site format typecheck style dependencies budget test coverage pack verify benchmark clean
+.PHONY: all site format typecheck style budget test coverage pack verify benchmark clean
 
 all: site
 
@@ -18,9 +18,6 @@ typecheck:
 style:
 	npm run style
 
-dependencies:
-	npm run test:deps
-
 budget:
 	npm run source:budget
 
@@ -33,7 +30,7 @@ coverage:
 pack:
 	npm pack --dry-run
 
-verify: typecheck style dependencies budget coverage pack
+verify: typecheck style budget coverage pack
 	git diff --check
 
 .NOTPARALLEL: verify

@@ -1,6 +1,6 @@
 {
   "name": "pi-sych",
-  "version": "7.0.1",
+  "version": "8.0.0",
   "description": "General project and artifact development workbench for Pi",
   "files": [
     "templates",
@@ -12,7 +12,6 @@
     "tests/benchmarks",
     "scripts/benchmark.mjs",
     "scripts/bootstrap-worker-agent-dir.mjs",
-    "scripts/check-mcporter-dependencies.mjs",
     "scripts/check-source-budget.mjs",
     "scripts/format-markdown.mjs",
     "scripts/generate-code-reference.mjs",
@@ -62,8 +61,7 @@
     "test:usage": "node --test tests/usage/*.test.mjs",
     "benchmark": "node scripts/benchmark.mjs",
     "test:coverage": "npm run build:test && node --experimental-test-coverage --test-coverage-include='.test-build/**/*.js' --test-coverage-lines=90 --test-coverage-branches=90 --test-coverage-functions=90 --test tests/unit/*.test.mjs tests/integration/*.test.mjs",
-    "test:deps": "node scripts/check-mcporter-dependencies.mjs",
-    "deps:latest": "npm update pi-mcporter && npm run test:deps && npm test"
+    "deps:latest": "npm update && npm test"
   },
   "peerDependencies": {
     "@earendil-works/pi-agent-core": "*",
@@ -74,7 +72,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "latest",
-    "@earendil-works/pi-coding-agent": "latest",
+    "@earendil-works/pi-coding-agent": "^0.99.2",
     "@types/node": "latest",
     "typebox": "latest",
     "typescript": "latest"
@@ -90,11 +88,10 @@
     "prompts": [
       "./prompts"
     ],
-    "image": "https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v7.0.1/docs/img/logo.png"
+    "image": "https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v8.0.0/docs/img/logo.png"
   },
   "optionalDependencies": {
     "@plannotator/pi-extension": "latest",
-    "jiti": "latest",
-    "pi-mcporter": "latest"
+    "jiti": "latest"
   }
 }

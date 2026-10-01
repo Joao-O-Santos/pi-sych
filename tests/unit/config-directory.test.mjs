@@ -3,7 +3,6 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-
 import {
 	DEFAULT_CONFIG,
 	ensurePiSychConfig,
@@ -16,116 +15,126 @@ const exists =
 	(...paths) =>
 	(path) =>
 		paths.includes(path);
-
-test("explicit Pi Sych configuration directory wins", () => {
-	assert.equal(
-		piSychConfigDirectory({ configDirectory: "/supervisor/pi-sych", env: {}, exists: exists() }),
-		"/supervisor/pi-sych",
-	);
+const config = (compaction, literatureDatabase) => ({
+	version: 2,
+	...(compaction ? { compaction } : {}),
+	...(literatureDatabase !== undefined ? { literatureDatabase } : {}),
 });
 
-test("Pi Sych configuration follows project, Pi, XDG, and home precedence", () => {
-	const home = "/home/test";
+test("global config root remains independent from project .pi", () => {
 	assert.equal(
 		piSychConfigDirectory({
 			projectRoot: "/project",
 			env: { PI_CODING_AGENT_DIR: "/agent" },
-			home,
 			exists: exists("/project/.pi"),
 		}),
-		"/project/.pi/pi-sych",
-	);
-	assert.equal(
-		piSychConfigDirectory({ env: { PI_CODING_AGENT_DIR: "/agent" }, home, exists: exists() }),
 		"/agent/pi-sych",
 	);
 	assert.equal(
-		piSychConfigDirectory({ env: { XDG_CONFIG_HOME: "/xdg" }, home, exists: exists() }),
+		piSychConfigDirectory({
+			env: { XDG_CONFIG_HOME: "/xdg" },
+			home: "/home/test",
+			exists: exists(),
+		}),
 		"/xdg/pi/pi-sych",
 	);
-	assert.equal(
-		piSychConfigDirectory({ env: {}, home, exists: exists("/home/test/.config/pi") }),
-		"/home/test/.config/pi/pi-sych",
-	);
-	assert.equal(
-		piSychConfigDirectory({ env: {}, home, exists: exists("/home/test/.pi") }),
-		"/home/test/.pi/pi-sych",
-	);
-	assert.throws(() => piSychConfigDirectory({ env: {}, home, exists: exists() }), /unavailable/);
 });
-
-test("Pi Sych writes visible defaults once without overwriting configuration", async (t) => {
+test("writes v2 defaults once without overwriting", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-config-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
-	await mkdir(join(root, ".pi"));
-	const directory = await ensurePiSychConfig({ projectRoot: root });
-	const path = join(directory, "config.json");
+	const directory = await ensurePiSychConfig({ configDirectory: join(root, "pi-sych") }),
+		path = join(directory, "config.json");
 	assert.deepEqual(JSON.parse(await readFile(path, "utf8")), DEFAULT_CONFIG);
-	const custom = {
-		...DEFAULT_CONFIG,
-		workerAgentDir: "workers/runtime",
-		compaction: { custom: false, compactAt100k: true },
-		review: { mode: "manual" },
-	};
-	await writeFile(path, JSON.stringify(custom));
-	await ensurePiSychConfig({ projectRoot: root });
-	assert.deepEqual(loadPiSychConfig({ projectRoot: root }), custom);
+	await writeFile(path, JSON.stringify(config({ custom: false })));
+	await ensurePiSychConfig({ configDirectory: directory });
+	assert.deepEqual(loadPiSychConfig({ configDirectory: directory }), {
+		version: 2,
+		compaction: { custom: false, thresholdTokens: 150_000 },
+	});
 	assert.equal(
-		piSychConfigPath("workerAgentDir", { projectRoot: root }),
-		join(directory, "workers/runtime"),
+		piSychConfigPath("modelCatalog", { configDirectory: directory }),
+		join(directory, "worker-models.json"),
 	);
-	assert.deepEqual(JSON.parse(await readFile("templates/config.json", "utf8")), DEFAULT_CONFIG);
 });
-
-test("Pi Sych config accepts a dedicated relative or absolute literature database path", async (t) => {
-	const root = await mkdtemp(join(tmpdir(), "pi-sych-literature-config-"));
+test("project config partially overrides global and relative literature paths use their source root", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-layered-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
-	await mkdir(join(root, ".pi/pi-sych"), { recursive: true });
-	const path = join(root, ".pi/pi-sych/config.json");
-	for (const literatureDatabase of ["indexes/papers.sqlite", join(root, "papers.sqlite")]) {
-		await writeFile(path, JSON.stringify({ ...DEFAULT_CONFIG, literatureDatabase }));
-		assert.equal(loadPiSychConfig({ projectRoot: root }).literatureDatabase, literatureDatabase);
-	}
+	const global = join(root, "global/pi-sych"),
+		project = join(root, "project");
+	await mkdir(global, { recursive: true });
+	await mkdir(join(project, ".pi/pi-sych"), { recursive: true });
+	await writeFile(
+		join(global, "config.json"),
+		JSON.stringify(config({ custom: false, thresholdTokens: 180_000 }, "library/global.sqlite")),
+	);
+	await writeFile(
+		join(project, ".pi/pi-sych/config.json"),
+		JSON.stringify(config(undefined, "library/project.sqlite")),
+	);
+	assert.deepEqual(loadPiSychConfig({ configDirectory: global, projectRoot: project }), {
+		version: 2,
+		compaction: { custom: false, thresholdTokens: 180_000 },
+		literatureDatabase: join(project, "library/project.sqlite"),
+	});
+	await writeFile(
+		join(project, ".pi/pi-sych/config.json"),
+		JSON.stringify(config({ thresholdTokens: 200_000 })),
+	);
+	assert.deepEqual(loadPiSychConfig({ configDirectory: global, projectRoot: project }), {
+		version: 2,
+		compaction: { custom: false, thresholdTokens: 200_000 },
+		literatureDatabase: join(global, "library/global.sqlite"),
+	});
 });
-
-test("Pi Sych config rejects malformed, unknown, and mistyped values", async (t) => {
-	const root = await mkdtemp(join(tmpdir(), "pi-sych-config-invalid-"));
+test("strict v2 parser rejects unknown keys, invalid versions and malformed nested values", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-invalid-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
-	await mkdir(join(root, ".pi/pi-sych"), { recursive: true });
-	const path = join(root, ".pi/pi-sych/config.json"),
-		load = () => loadPiSychConfig({ projectRoot: root });
-	for (const [value, pattern] of [
-		["{", /unavailable or invalid/],
-		[[], /must be an object/],
-		[{ ...DEFAULT_CONFIG, typo: true }, /Unknown/],
-		[{ ...DEFAULT_CONFIG, workerAgentDir: "" }, /workerAgentDir/],
-		[{ ...DEFAULT_CONFIG, workerAgentDir: "   " }, /workerAgentDir/],
-		[{ ...DEFAULT_CONFIG, workerAgentDir: "/tmp/worker" }, /relative path/],
-		[{ ...DEFAULT_CONFIG, workerAgentDir: "C:\\worker" }, /relative path/],
-		[{ ...DEFAULT_CONFIG, workerAgentDir: "\\\\server\\share" }, /relative path/],
-		[{ ...DEFAULT_CONFIG, modelCatalog: "foo\\..\\models.json" }, /relative path/],
-		[{ ...DEFAULT_CONFIG, modelCatalog: "../models.json" }, /relative path/],
-		[{ ...DEFAULT_CONFIG, modelCatalog: "\t" }, /modelCatalog/],
-		[{ ...DEFAULT_CONFIG, mcporterConfig: "\n" }, /mcporterConfig/],
-		[{ ...DEFAULT_CONFIG, literatureDatabase: "" }, /literatureDatabase/],
-		[{ ...DEFAULT_CONFIG, literatureDatabase: "   " }, /literatureDatabase/],
-		[{ ...DEFAULT_CONFIG, literatureDatabase: 7 }, /literatureDatabase/],
-		[{ ...DEFAULT_CONFIG, literatureDatabase: "../papers.sqlite" }, /parent traversal/],
-		[{ ...DEFAULT_CONFIG, workerAgentDir: "\\worker" }, /relative path/],
-		[{ ...DEFAULT_CONFIG, modelCatalog: "\\models.json" }, /relative path/],
-		[{ ...DEFAULT_CONFIG, compaction: null }, /compaction must be an object/],
-		[
-			{ ...DEFAULT_CONFIG, compaction: { custom: false, compactAt100k: false, typo: true } },
-			/Unknown/,
-		],
-		[{ ...DEFAULT_CONFIG, compaction: { custom: "yes", compactAt100k: false } }, /invalid/],
-		[{ ...DEFAULT_CONFIG, review: { mode: "automatic" } }, /invalid/],
-		[{ ...DEFAULT_CONFIG, review: { mode: "manual", typo: true } }, /Unknown/],
+	const path = join(root, "config.json"),
+		load = () => loadPiSychConfig({ configDirectory: root });
+	for (const value of [
+		{ version: 1 },
+		{ version: 2, typo: true },
+		config({ custom: 1 }),
+		config({ thresholdTokens: 0 }),
+		config({ custom: true, typo: 1 }),
+		config(undefined, " "),
 	]) {
-		await writeFile(path, typeof value === "string" ? value : JSON.stringify(value));
-		assert.throws(load, pattern);
+		await writeFile(path, JSON.stringify(value));
+		assert.throws(load);
 	}
-	const { review: _review, ...legacy } = DEFAULT_CONFIG;
-	await writeFile(path, JSON.stringify(legacy));
-	assert.equal(load().review.mode, "plannotator");
+	await writeFile(path, "{");
+	assert.throws(load, /unavailable or invalid/);
+});
+test("config root uses home fallbacks and reports unavailable roots", () => {
+	const home = "/home/test";
+	assert.equal(
+		piSychConfigDirectory({ env: {}, home, exists: exists(join(home, ".config/pi")) }),
+		join(home, ".config/pi/pi-sych"),
+	);
+	assert.equal(
+		piSychConfigDirectory({ env: {}, home, exists: exists(join(home, ".pi")) }),
+		join(home, ".pi/pi-sych"),
+	);
+	assert.throws(
+		() => piSychConfigDirectory({ env: {}, home, exists: exists() }),
+		/configuration directory is unavailable/,
+	);
+});
+test("config parser rejects non-object roots and accepts omitted optional fields", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-config-shape-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const path = join(root, "config.json"),
+		load = () => loadPiSychConfig({ configDirectory: root });
+	for (const value of [null, [], "config"]) {
+		await writeFile(path, JSON.stringify(value));
+		assert.throws(load, /must be an object/);
+	}
+	await rm(path);
+	assert.deepEqual(load(), { version: 2, compaction: { custom: true, thresholdTokens: 150_000 } });
+	await writeFile(path, JSON.stringify({ version: 2, compaction: {} }));
+	assert.deepEqual(load().compaction, { custom: true, thresholdTokens: 150_000 });
+});
+test("default compaction threshold is 150k", () => {
+	assert.equal(DEFAULT_CONFIG.compaction.thresholdTokens, 150_000);
+	assert.equal(DEFAULT_CONFIG.compaction.custom, true);
 });

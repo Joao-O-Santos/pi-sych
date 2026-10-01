@@ -7,9 +7,14 @@ import test from "node:test";
 import { DEFAULT_CONFIG } from "../../.test-build/workbench/src/config-directory.js";
 import {
 	literatureDatabasePath,
+	registerLiteratureSearch,
 	searchLiterature,
 } from "../../.test-build/workbench/src/literature-search.js";
 import { createLiteratureSchema, rebuildLiteratureIndex } from "../helpers/literature-database.mjs";
+
+const globalConfigRoot = await mkdtemp(join(tmpdir(), "pi-sych-literature-global-"));
+process.env.PI_CODING_AGENT_DIR = globalConfigRoot;
+test.after(() => rm(globalConfigRoot, { recursive: true, force: true }));
 
 async function database(path, rows = [], { constrained = true } = {}) {
 	const db = await createLiteratureSchema(path, { constrained });
@@ -65,23 +70,24 @@ test("worker-style explicit config resolves an external literature database", as
 
 test("literature database resolution honors project, explicit, and config defaults", async (t) => {
 	const root = await project(t),
-		configDefault = join(root, ".pi/pi-sych/literature.sqlite");
+		configDirectory = join(root, ".pi/pi-sych"),
+		configDefault = join(configDirectory, "literature.sqlite");
 	await database(configDefault);
-	assert.equal(literatureDatabasePath(root), configDefault);
-	const explicit = join(root, ".pi/pi-sych/indexes/papers.sqlite");
+	assert.equal(literatureDatabasePath(root, configDirectory), configDefault);
+	const explicit = join(root, "indexes/papers.sqlite");
 	await database(explicit);
 	await configure(root, "indexes/papers.sqlite");
-	assert.equal(literatureDatabasePath(root), explicit);
+	assert.equal(literatureDatabasePath(root, configDirectory), explicit);
 	await configure(root, explicit);
-	assert.equal(literatureDatabasePath(root), explicit);
+	assert.equal(literatureDatabasePath(root, configDirectory), explicit);
 	const projectDatabase = join(root, "LITERATURE.sqlite");
 	await database(projectDatabase);
-	assert.equal(literatureDatabasePath(root), projectDatabase);
+	assert.equal(literatureDatabasePath(root, configDirectory), explicit);
 });
 
 test("literature search returns ranked metadata, snippets, and resolved artifact paths", async (t) => {
 	const root = await project(t),
-		path = join(root, ".pi/pi-sych/indexes/papers.sqlite"),
+		path = join(root, "indexes/papers.sqlite"),
 		absoluteArtifact = join(root, "absolute.pdf"),
 		creators = {
 			author: [
@@ -115,6 +121,39 @@ test("literature search returns ranked metadata, snippets, and resolved artifact
 	assert.equal(searchLiterature(root, "papers").length, 1);
 });
 
+test("graded FTS fixture gives title matches priority over weaker metadata matches", async (t) => {
+	const root = await project(t),
+		path = join(root, "LITERATURE.sqlite"),
+		db = await createLiteratureSchema(path);
+	const insert = db.prepare(
+		"INSERT INTO papers (filepath, title, abstract, topic_tags, doi, year, item_type, creators_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+	);
+	for (const row of [
+		["path-retrieval.pdf", "Generic", "none", "none", "none"],
+		["title.pdf", "retrieval retrieval", "none", "none", "none"],
+		["abstract.pdf", "Generic", "retrieval retrieval retrieval", "none", "none"],
+		["tags.pdf", "Generic", "none", "retrieval retrieval retrieval", "none"],
+		["doi.pdf", "Generic", "none", "none", "retrieval retrieval"],
+	])
+		insert.run(...row, 2024, "article-journal", null);
+	rebuildLiteratureIndex(db);
+	const baseline = db
+		.prepare(
+			"SELECT p.filepath, bm25(papers_fts) AS score FROM papers_fts JOIN papers p ON p.id = papers_fts.rowid WHERE papers_fts MATCH 'retrieval' ORDER BY score",
+		)
+		.all();
+	const weighted = db
+		.prepare(
+			"SELECT p.filepath, bm25(papers_fts, 1, 5, 1, 2, 1) AS score FROM papers_fts JOIN papers p ON p.id = papers_fts.rowid WHERE papers_fts MATCH 'retrieval' ORDER BY score",
+		)
+		.all();
+	assert.notEqual(baseline[0].filepath, weighted[0].filepath);
+	assert.equal(weighted[0].filepath, "title.pdf");
+	db.close();
+	const results = searchLiterature(root, "retrieval");
+	assert.equal(results[0].metadata.title, "retrieval retrieval");
+});
+
 test("explicit missing literature database fails without default fallback", async (t) => {
 	const root = await project(t);
 	await database(join(root, ".pi/pi-sych/literature.sqlite"));
@@ -135,6 +174,26 @@ test("literature search reports missing databases, invalid limits, FTS queries, 
 	db.exec("CREATE TABLE literature(path TEXT, text TEXT)");
 	db.close();
 	assert.throws(() => searchLiterature(root, "alpha"), /Literature search failed.*LITERATURE/);
+});
+
+test("literature snippets stay bounded for one giant Unicode FTS token", async (t) => {
+	const root = await project(t),
+		path = join(root, "LITERATURE.sqlite"),
+		token = "漢🙂é".repeat(1_000);
+	await database(path, [["paper.pdf", "Unicode", null, 2024, null, token]]);
+	const directSnippet = searchLiterature(root, token)[0].snippet;
+	assert.ok(Array.from(directSnippet).length <= 501);
+	assert.ok(directSnippet.includes("漢🙂é"));
+	assert.ok(directSnippet.endsWith("…"));
+	let tool;
+	registerLiteratureSearch({ registerTool: (definition) => (tool = definition) });
+	const result = await tool.execute("giant-token", { query: token }, undefined, undefined, {
+		cwd: root,
+	});
+	const structuredSnippet = result.structuredContent.results[0].snippet;
+	assert.equal(structuredSnippet, directSnippet);
+	assert.ok(Array.from(structuredSnippet).length <= 501);
+	assert.ok(result.content[0].text.includes(structuredSnippet));
 });
 
 test("literature search opens a real read-only SQLite database", async (t) => {
@@ -214,6 +273,36 @@ test("literature search rejects invalid creator structures at the wrapped row bo
 			},
 			`Expected failure for ${String(value)}`,
 		);
+	}
+});
+
+test("literature search rejects invalid mapped scalar fields at the row boundary", async (t) => {
+	const root = await project(t),
+		path = join(root, "LITERATURE.sqlite");
+	await database(path, [["paper.pdf", "Paper", null, 2024, null, "needle"]], {
+		constrained: false,
+	});
+	for (const [column, value, message] of [
+		["title", Buffer.from("title"), /title must be text or null/],
+		["year", "not-a-year", /year must be an integer or null/],
+		["doi", Buffer.from("doi"), /DOI must be text or null/],
+	]) {
+		const db = new DatabaseSync(path);
+		db.prepare(`UPDATE papers SET ${column} = ?`).run(value);
+		db.close();
+		assert.throws(
+			() => searchLiterature(root, "needle"),
+			(error) => {
+				assert.match(error.message, /^Literature search failed for /);
+				assert.match(error.message, message);
+				return true;
+			},
+		);
+		const reset = new DatabaseSync(path);
+		reset
+			.prepare(`UPDATE papers SET ${column} = ?`)
+			.run(column === "year" ? 2024 : column === "title" ? "Paper" : null);
+		reset.close();
 	}
 });
 

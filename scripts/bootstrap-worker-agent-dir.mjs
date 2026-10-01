@@ -33,9 +33,7 @@ export async function bootstrapWorkerAgentDir({
 	supervisorAgentDir = process.env.PI_CODING_AGENT_DIR ?? resolve(homedir(), ".pi/agent"),
 } = {}) {
 	if (!agentDir)
-		throw new Error(
-			"--agent-dir is required; use the workerAgentDir resolved from Pi Sych config.json",
-		);
+		throw new Error("--agent-dir is required; use <Pi config root>/pi-sych/worker-agent");
 	const resolvedAgentDir = expandHome(agentDir);
 	const resolvedPackageRoot = resolve(packageRoot);
 	const resolvedSupervisorDir = expandHome(supervisorAgentDir);
@@ -72,7 +70,7 @@ export async function bootstrapWorkerAgentDir({
 		"",
 		"Generated runtime configuration. It loads only the Pi Sych worker extension from the selected package.",
 		"Credential and model files are symlinked when present; they are never copied.",
-		"For remote research, configure MCPorter at ../mcp/mcporter.json relative to this worker-agent directory.",
+		"For remote research, configure native Pi MCP at mcp.json in this worker-agent directory using pi mcp commands with PI_CODING_AGENT_DIR set to this directory.",
 		"",
 	].join("\n");
 	await writeFile(resolve(resolvedAgentDir, "README.md"), readme, {

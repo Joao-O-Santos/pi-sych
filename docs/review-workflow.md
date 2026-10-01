@@ -188,9 +188,9 @@ task:
 - `edit` adds focused file editing and writing tools;
 - `full-host` exposes Bash for tasks that must run project commands or
   inspect the wider host environment; and
-- `remoteResearch: true` adds MCPorter for an explicitly assigned
-  remote-research task and also reuses an active, provenance-validated
-  PEW-PEW `web` tool when one is enabled in the supervisor.
+- `remoteResearch: true` loads native Pi MCP and codemode for an
+  explicitly assigned remote-research task. A worker does not inherit a
+  supervisor's companion `web` tool.
 
 These names describe visible Pi tools, not security boundaries. Tool
 modes do not remove the worker process's underlying host permissions.

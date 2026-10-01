@@ -15,11 +15,11 @@ The supervisor sees three Pi Sych tools:
 - `literature_search` performs read-only lookup in the configured local
   literature index.
 
-At supervisor start Pi Sych adds concise supervisor guidance, a compact
-capability summary derived from active session tools and local
-integration inspection, plus configured project `agents` instructions
-when present. The summary is routing context, not authorization. The
-supervisor guidance uses two independent task-posture dimensions:
+At supervisor start Pi Sych adds concise supervisor guidance and, when
+present, configured project `agents` instructions and the worker model
+catalog. Pi itself describes active tools and native MCP servers; Pi
+Sych does not reproduce those inventories. The supervisor guidance uses
+two independent task-posture dimensions:
 
 - **persistence** --- once the requested outcome and authorization
   boundary are clear, continue until completion or a genuine blocker
@@ -74,17 +74,21 @@ terminal result. It reads its explicit assignment, every context file
 and selected skill, then the routed methods/modules. Trajectory history
 is background, not a source of additional assignments or approval.
 
-The worker should complete the assigned scope without inventing
-checkpoints. It reports `complete`, `partial`, or `failed`, a non-empty
-summary, existing project-relative output files, and limitations. A
-worker's `complete` status is not human approval.
+Ordinary workers do not receive MCP or codemode. `remoteResearch: true`
+explicitly loads Pi's `builtin:mcp` and `builtin:codemode` extensions;
+the worker reads its own `mcp.json` from its agent directory. Users
+configure and authenticate that file with native Pi MCP commands. The
+supervisor's MCP configuration and companion extensions are not copied
+to workers. Tool availability does not guarantee credentials or access.
 
-Cancellation, timeout, spawn failure, a signal exit, or non-zero exit
-takes precedence over a result file. Before launch and after
-termination, Pi Sych snapshots project files and reports reported,
-observed, and unexpected changed paths independently of worker success.
-Observation does not undo changes. Temporary runtime/session state is
-removed after every outcome.
+The worker reports `complete`, `partial`, or `failed`, a non-empty
+summary, existing project-relative output files, and limitations. A
+worker's `complete` status is not human approval. Cancellation, timeout,
+spawn failure, a signal exit, or non-zero exit takes precedence over a
+result file. Before launch and after termination, Pi Sych snapshots
+project files and reports reported, observed, and unexpected changed
+paths independently of worker success. Observation does not undo
+changes. Temporary runtime/session state is removed after every outcome.
 
 ## Project state
 
@@ -94,14 +98,22 @@ status, project-brief problems, and dependency impact. A changed hash
 proves only changed content. Acknowledgement records reviewed state, not
 correctness or semantic authority.
 
-## Compaction
+## Configuration and compaction
+
+Pi Sych configuration layers the global
+`<pi-config-root>/pi-sych/config.json` with the project
+`.pi/pi-sych/config.json`; project keys override matching global keys,
+including individual nested compaction fields. Unknown keys are
+rejected. The small v2 configuration owns custom compaction policy and
+the local literature database path, not native Pi settings.
 
 Custom compaction uses the active supervisor model and runs for
-configured manual/native compaction requests. Optional automatic
-admission occurs at `agent_settled` when context usage reaches 100,000
-tokens, the agent is idle, no messages are pending, and no compaction is
-already in flight. The defaults are `custom: true` and
-`compactAt100k: false`.
+configured manual/native compaction requests when enabled. Proactive
+admission occurs at `agent_settled` when context usage reaches the
+configured threshold (default 150,000 tokens), the context window can
+reach that threshold, the agent is idle, no messages are pending, and no
+compaction is already in flight. The threshold is independent of Pi's
+reserve-token settings.
 
 The continuation is a bounded observable trajectory: objective,
 authorization, constraints, progress, decisions, inferences, failed or
@@ -111,30 +123,27 @@ retained tail, and bounded canonical snapshots. Recorded `user-explicit`
 and `accepted-project` decision attributions are preserved without
 verification; inferences are kept separate. At most bounded one-line
 proposals are appended to the configured inbox as visibly unreviewed
-state. Canonical semantic files are never mutated. If the custom model
-omits a result, fails, is cancelled, or produces invalid output, Pi's
-native compactor remains in control.
+state. Canonical semantic files are never mutated. If custom compaction
+is disabled, omitted, fails, is cancelled, or produces invalid output,
+Pi's native compactor remains in control.
 
 ## Local literature
 
 `literature_search` queries the configured read-only SQLite FTS5 index.
-It checks for the v7 `papers.item_type` and `papers.creators_json`
-columns before searching and reports an actionable incompatibility for
-older schemas. See the [v7 literature migration
-guide](literature-database-v7.md). Its model-facing guidance explicitly
-frames results as discovery and provenance evidence rather than source
-verification. Exact claims still require inspection of the underlying
-source when material. Search access does not establish completeness.
+It returns compact readable results and matching structured data for
+nested callers, including nullable metadata, snippets, scores and source
+paths. Results support discovery and provenance, not source verification
+or completeness. Exact claims still require inspection of the underlying
+source when material. The configured database may be absolute or
+relative; relative global paths resolve from the global Pi Sych config
+directory, and relative project overrides from the project root.
 
 The `research` skill is capability-aware at the guidance layer. It tells
 the model to inspect what is actually available and choose by function:
 local corpus discovery, scholarly metadata/graph lookup, focused
 scholarly retrieval, PDF/full-text inspection, broad discovery search,
-or targeted fetch/browser verification. OpenAlex, Scholar Gateway, and
-PyPDF/PyMuPDF-style readers are examples of roles that may be filled by
-available tools, not Pi Sych runtime dependencies or guaranteed
-integrations. Tool outputs should refine later retrieval rather than be
-called mechanically.
+or targeted fetch/browser verification. Tool outputs should refine later
+retrieval rather than be called mechanically.
 
 ## Skills and supporting guidance
 
@@ -157,30 +166,25 @@ reader effects and offering minimal repairs. Response letters and
 revision memos may appropriately discuss reviewers, versions, and
 changes because the revision process is part of their subject.
 
-The prompt hierarchy is intentionally layered:
-
-1.  always-visible supervisor/tool text carries only high-salience task
-    posture, authority, and capability boundaries;
-2.  umbrella skills establish domain posture and route the task; and
-3.  routed methods/modules carry detailed procedure.
-
-This avoids duplicating detailed doctrine into the system prompt while
-keeping consequential invariants salient. Routes are ordinary Markdown
-links, not a workflow engine or prompt inheritance mechanism.
+The prompt hierarchy is intentionally layered: always-visible
+tool/supervisor text carries salient posture and boundaries, umbrella
+skills route the task, and routed methods/modules carry detail. Routes
+are ordinary Markdown links, not a workflow engine or prompt inheritance
+mechanism.
 
 `automation` is semantic guidance, not a new orchestration runtime. Five
 thin packaged review prompts select a lens and defer substantive
 procedure to the `review` skill. An optional user-maintained `STACK.md`
 may describe durable computer/environment facts for computer-use work;
 automation guidance consults it when available, while runtime state
-remains the authority for what can be used now. The optional capability
-summary is derived at each supervisor start.
+remains the authority for what can be used now.
 
 ## Optional integrations
 
-MCPorter remains an explicit remote-research integration. Its
-configuration and installed extension are inspected, not verified for
-credentials, reachability, or access. A separately active validated
-PEW-PEW `web` tool may be reused for remote-research workers.
-Plannotator remains a narrow human-review adapter. None of these
-mechanisms silently promotes model output into accepted project state.
+Pi owns MCP transport, server discovery, authentication and `/mcp`; use
+`/mcp` or `pi mcp list`, `pi mcp login`, and `pi mcp logout` rather than
+a Pi Sych MCP wrapper. Plannotator remains a separately loadable narrow
+human-review adapter. Independently installed document, web and browser
+tools can satisfy capability needs without runtime coupling to Pi Sych.
+None of these mechanisms silently promotes model output into accepted
+project state.

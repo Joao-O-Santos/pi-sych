@@ -121,10 +121,7 @@ test("core workbench extension loads without optional integrations", async (t) =
 
 	assert.equal(stderr, "");
 	const names = commands.map((command) => command.name);
-	assert.deepEqual(names.filter((name) => name.startsWith("pi-sych-")).sort(), [
-		"pi-sych-mcp",
-		"pi-sych-status",
-	]);
+	assert.deepEqual(names.filter((name) => name.startsWith("pi-sych-")).sort(), ["pi-sych-status"]);
 	assert.equal(
 		names.some((name) => name.startsWith("plannotator-")),
 		false,
@@ -186,13 +183,10 @@ test("Plannotator extension registers only its three commands", async (t) => {
 	);
 });
 
-test("manual review mode omits Plannotator commands", async (t) => {
+test("Pi Sych config does not control Plannotator resource loading", async (t) => {
 	const agentDir = await tempRoot(t, "pi-sych-manual-review-");
-	await mkdir(join(agentDir, "pi-sych"));
-	await writeFile(
-		join(agentDir, "pi-sych", "config.json"),
-		JSON.stringify({ ...DEFAULT_CONFIG, review: { mode: "manual" } }),
-	);
+	await mkdir(join(agentDir, "pi-sych"), { recursive: true });
+	await writeFile(join(agentDir, "pi-sych", "config.json"), JSON.stringify(DEFAULT_CONFIG));
 	const { commands, stderr } = await getCommands(
 		[
 			"--mode",
@@ -209,9 +203,12 @@ test("manual review mode omits Plannotator commands", async (t) => {
 		{ PI_CODING_AGENT_DIR: agentDir },
 	);
 	assert.equal(stderr, "");
-	assert.equal(
-		commands.some((command) => command.name.startsWith("plannotator-")),
-		false,
+	assert.deepEqual(
+		commands
+			.map((command) => command.name)
+			.filter((name) => name.startsWith("plannotator-"))
+			.sort(),
+		["plannotator-annotate", "plannotator-last", "plannotator-review"],
 	);
 });
 
@@ -266,10 +263,7 @@ test("package metadata keeps attribution and release version consistent", async 
 	);
 	for (const retired of ["config", "benchmarks", "static", "LICENSES", "ARCHITECTURE.md"])
 		assert.equal(manifest.files.includes(retired), false);
-	for (const script of [
-		"scripts/check-mcporter-dependencies.mjs",
-		"scripts/check-source-budget.mjs",
-	])
+	for (const script of ["scripts/check-source-budget.mjs"])
 		assert.equal(manifest.files.includes(script), true);
 	assert.equal((await stat("docs/attribution.md")).isFile(), true);
 	assert.equal(manifest.version, lockfile.version);
@@ -295,7 +289,6 @@ test("package metadata keeps attribution and release version consistent", async 
 	assert.deepEqual(Object.keys(manifest.optionalDependencies).sort(), [
 		"@plannotator/pi-extension",
 		"jiti",
-		"pi-mcporter",
 	]);
 	assert.equal(manifest.dependencies, undefined);
 	assert.deepEqual(lockfile.packages[""].optionalDependencies, manifest.optionalDependencies);
@@ -340,7 +333,6 @@ test("packed install omitting optional dependencies retains the core package", a
 		"prompts/review-verification.md",
 		"site/page.html",
 		"site/static/styles.css",
-		"scripts/check-mcporter-dependencies.mjs",
 		"scripts/check-source-budget.mjs",
 		"tests/benchmarks/cases/CODE-ROUNDING-01.json",
 	])
@@ -349,6 +341,8 @@ test("packed install omitting optional dependencies retains the core package", a
 		await assert.rejects(stat(join(packageRoot, retired)));
 	await assert.rejects(stat(join(install, "node_modules/@plannotator/pi-extension")));
 	await assert.rejects(stat(join(install, "node_modules/pi-mcporter")));
+	await assert.rejects(stat(join(packageRoot, "extensions/workbench/src/mcporter.ts")));
+	await assert.rejects(stat(join(packageRoot, "scripts/check-mcporter-dependencies.mjs")));
 	const { commands, stderr } = await getCommands(
 		[
 			"--mode",

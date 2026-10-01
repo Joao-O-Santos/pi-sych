@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { EventEmitter } from "node:events";
-import { access, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { access, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { PassThrough } from "node:stream";
 import test from "node:test";
+import { SessionManager } from "@earendil-works/pi-coding-agent";
 import {
 	dispatchWorker,
 	launchPiWorker,
@@ -130,6 +131,46 @@ test("dispatch compares reported files with observed changes and retains failed-
 	assert.deepEqual(failed.unexpectedChanges, ["residual.md"]);
 });
 
+test("dispatch reports an observation error when the project disappears after launch", async (t) => {
+	const { root, agentDir, resolved } = await readyProject(t);
+	const outcome = await dispatchWorker({
+		project: resolved,
+		workerAgentDir: agentDir,
+		request,
+		catalog,
+		launcher: async (spec) => {
+			await writeImmutableResult(spec.resultPath, {
+				status: "complete",
+				summary: "done",
+				files: [],
+				limitations: [],
+			});
+			await rm(root, { recursive: true, force: true });
+			return { exitCode: 0, stderr: "" };
+		},
+	});
+	assert.deepEqual(outcome.observedChangedFiles, []);
+	assert.match(outcome.observationError ?? "", /ENOENT/);
+	assert.equal(outcome.result?.summary, "done");
+});
+
+test("dispatch snapshots symlink state in a non-Git project", async (t) => {
+	const { root, agentDir, resolved } = await readyProject(t);
+	await symlink("A.md", join(root, "alias.md"));
+	const outcome = await dispatchWorker({
+		project: resolved,
+		workerAgentDir: agentDir,
+		request,
+		catalog,
+		launcher: async () => {
+			await rm(join(root, "alias.md"));
+			await symlink("missing.md", join(root, "alias.md"));
+			return { exitCode: 0, stderr: "" };
+		},
+	});
+	assert.deepEqual(outcome.observedChangedFiles, ["alias.md"]);
+});
+
 test("dispatch observes tracked and untracked changes in Git projects", async (t) => {
 	const { root, agentDir, resolved } = await readyProject(t);
 	for (const args of [
@@ -180,6 +221,196 @@ test("dispatch scopes Git changes to a nested canonical project root", async (t)
 	assert.deepEqual(outcome.observedChangedFiles, ["A.md"]);
 });
 
+test("dispatch omits optional writing context when project and package defaults are absent", async (t) => {
+	const { root, agentDir, resolved } = await readyProject(t);
+	const packageRoot = join(root, "empty-package");
+	await mkdir(packageRoot);
+	let captured;
+	const outcome = await dispatchWorker({
+		project: resolved,
+		workerAgentDir: agentDir,
+		packageRoot,
+		request: { ...request, skills: ["write"] },
+		catalog,
+		launcher: async (spec) => {
+			captured = spec;
+			return { exitCode: 1, stderr: "stop" };
+		},
+	});
+	assert.match(outcome.error, /stop/);
+	assert.deepEqual(captured.request.contextFiles, []);
+});
+
+test("trajectory dispatch fails before launching when no persisted trajectory is supplied", async (t) => {
+	const { agentDir, resolved } = await readyProject(t);
+	await assert.rejects(
+		dispatchWorker({
+			project: resolved,
+			workerAgentDir: agentDir,
+			request: { ...request, contextMode: "trajectory" },
+			catalog,
+		}),
+		/Trajectory context is unavailable/,
+	);
+});
+
+async function trajectory(_t, root) {
+	const manager = SessionManager.create(root, join(root, "sessions"));
+	manager.appendMessage({ role: "user", content: "Continue." });
+	manager.appendMessage({
+		role: "assistant",
+		content: [{ type: "toolCall", id: "trajectory-call", name: "dispatch_worker", arguments: {} }],
+	});
+	const selected = manager
+		.getEntries()
+		.find((entry) => entry.type === "message" && entry.message.role === "assistant");
+	assert.ok(selected, "trajectory fixture needs a dispatching assistant entry");
+	return { manager, selected };
+}
+
+test("trajectory dispatch creates an isolated session and detects a changed supervisor", async (t) => {
+	const { root, agentDir, resolved } = await readyProject(t);
+	const { manager } = await trajectory(t, root);
+	let sessionPath;
+	const outcome = await dispatchWorker({
+		project: resolved,
+		workerAgentDir: agentDir,
+		request: { ...request, contextMode: "trajectory" },
+		catalog,
+		trajectory: { manager, toolCallId: "trajectory-call" },
+		launcher: async (spec) => {
+			sessionPath = spec.sessionPath;
+			await writeImmutableResult(spec.resultPath, {
+				status: "complete",
+				summary: "done",
+				files: [],
+				limitations: [],
+			});
+			return { exitCode: 0, stderr: "" };
+		},
+	});
+	assert.equal(outcome.result?.summary, "done");
+	assert.ok(sessionPath);
+	assert.notEqual(sessionPath, manager.getSessionFile());
+
+	let leafReads = 0;
+	const changedSupervisor = {
+		getSessionFile: () => manager.getSessionFile(),
+		getEntries: () => manager.getEntries(),
+		getLeafId: () => (leafReads++ ? "changed-leaf" : manager.getLeafId()),
+	};
+	let launched = false;
+	await assert.rejects(
+		dispatchWorker({
+			project: resolved,
+			workerAgentDir: agentDir,
+			request: { ...request, contextMode: "trajectory" },
+			catalog,
+			trajectory: { manager: changedSupervisor, toolCallId: "trajectory-call" },
+			launcher: async () => {
+				launched = true;
+				return { exitCode: 0, stderr: "" };
+			},
+		}),
+		/Supervisor session changed while preparing trajectory context/,
+	);
+	assert.equal(launched, false);
+});
+
+test("trajectory dispatch materializes a missing branched-session file", async (t) => {
+	const { root, agentDir, resolved } = await readyProject(t);
+	const { manager } = await trajectory(t, root);
+	const branchPath = join(root, "worker-branch.jsonl");
+	const createBranch = SessionManager.prototype.createBranchedSession;
+	t.after(() => {
+		SessionManager.prototype.createBranchedSession = createBranch;
+	});
+	SessionManager.prototype.createBranchedSession = () => branchPath;
+	let captured;
+	const outcome = await dispatchWorker({
+		project: resolved,
+		workerAgentDir: agentDir,
+		request: { ...request, contextMode: "trajectory" },
+		catalog,
+		trajectory: { manager, toolCallId: "trajectory-call" },
+		launcher: async (spec) => {
+			captured = spec.sessionPath;
+			await writeImmutableResult(spec.resultPath, {
+				status: "complete",
+				summary: "done",
+				files: [],
+				limitations: [],
+			});
+			return { exitCode: 0, stderr: "" };
+		},
+	});
+	assert.equal(outcome.result?.summary, "done");
+	assert.equal(captured, branchPath);
+	assert.match(await readFile(branchPath, "utf8"), /trajectory-call/);
+});
+
+test("trajectory dispatch rejects cyclic persisted ancestry before launching", async (t) => {
+	const { root, agentDir, resolved } = await readyProject(t);
+	const { manager, selected } = await trajectory(t, root);
+	const sourcePath = manager.getSessionFile();
+	const records = (await readFile(sourcePath, "utf8"))
+		.trim()
+		.split("\n")
+		.map((line) => JSON.parse(line));
+	const record = records.find((entry) => entry.id === selected.id);
+	assert.ok(record, "trajectory fixture needs the selected persisted entry");
+	record.parentId = selected.id;
+	await writeFile(sourcePath, `${records.map((entry) => JSON.stringify(entry)).join("\n")}\n`);
+	const cyclicSelected = { ...selected, parentId: selected.id };
+	const cyclicManager = {
+		getSessionFile: () => sourcePath,
+		getEntries: () =>
+			manager.getEntries().map((entry) => (entry.id === selected.id ? cyclicSelected : entry)),
+		getLeafId: () => manager.getLeafId(),
+	};
+	let launched = false;
+	await assert.rejects(
+		dispatchWorker({
+			project: resolved,
+			workerAgentDir: agentDir,
+			request: { ...request, contextMode: "trajectory" },
+			catalog,
+			trajectory: { manager: cyclicManager, toolCallId: "trajectory-call" },
+			launcher: async () => {
+				launched = true;
+				return { exitCode: 0, stderr: "" };
+			},
+		}),
+		/Trajectory ancestry contains a cycle/,
+	);
+	assert.equal(launched, false);
+});
+
+test("dispatch uses the requested role and timeout and exposes discovered paths", async (t) => {
+	const { root, agentDir, resolved } = await readyProject(t);
+	await writeFile(join(root, "context.md"), "context\n");
+	const captured = [];
+	const outcome = await dispatchWorker({
+		project: resolved,
+		workerAgentDir: agentDir,
+		request: {
+			...request,
+			modelRole: "reviewer",
+			timeoutMs: 250,
+			contextFiles: [{ path: "context.md", purpose: "review" }],
+		},
+		catalog: { default: "worker", models: { reviewer: { model: "provider/reviewer" } } },
+		launcher: async (spec) => {
+			captured.push(spec);
+			return { exitCode: 1, stderr: "expected test failure" };
+		},
+	});
+	assert.equal(outcome.model, "provider/reviewer");
+	assert.equal(outcome.timeoutMs, 250);
+	assert.match(outcome.error, /expected test failure/);
+	assert.equal(captured[0].request.contextFiles[0].path, "context.md");
+});
+
 test("dispatch explains how to initialize a missing worker directory", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-worker-missing-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
@@ -216,7 +447,17 @@ function fakeSpawn() {
 		child.kills.push(signal);
 		return true;
 	};
-	return { child, spawn: () => child };
+	let launch;
+	return {
+		child,
+		spawn: (...args) => {
+			launch = args;
+			return child;
+		},
+		get launch() {
+			return launch;
+		},
+	};
 }
 
 test("abort then timeout then close stays cancelled and sends one SIGTERM", async (t) => {
@@ -350,6 +591,45 @@ test("worker activity callback failures do not alter process success", async (t)
 	fake.child.stdout.write('{"type":"tool_execution_start","toolName":"read","args":{}}\n');
 	fake.child.emit("close", 0, null);
 	assert.deepEqual(await launched, { exitCode: 0, stderr: "" });
+});
+
+test("worker loads native MCP and codemode only for remote research", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-launcher-native-mcp-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	for (const remoteResearch of [false, true]) {
+		const fake = fakeSpawn();
+		const spec = launchSpec(root, {
+			request: { mode: "read-only", remoteResearch },
+			extraExtensionPaths: [],
+		});
+		const launched = launchPiWorker(spec, fake.spawn);
+		const args = fake.launch?.[1] ?? [];
+		assert.equal(args.includes("builtin:mcp"), remoteResearch);
+		assert.equal(args.includes("builtin:codemode"), remoteResearch);
+		assert.equal(args.includes("--extension") && args.includes("/mcporter"), false);
+		assert.equal(fake.launch?.[2]?.env?.MCPORTER_CONFIG, undefined);
+		fake.child.emit("close", 0, null);
+		await launched;
+	}
+});
+
+test("launcher uses an existing session and honors an already-aborted signal", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-launcher-session-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const controller = new AbortController();
+	controller.abort();
+	const fake = fakeSpawn();
+	const launched = launchPiWorker(
+		launchSpec(root, { sessionPath: join(root, "trajectory.jsonl"), signal: controller.signal }),
+		fake.spawn,
+	);
+	const args = fake.launch[1];
+	assert.ok(args.includes("--session"));
+	assert.ok(args.includes(join(root, "trajectory.jsonl")));
+	assert.ok(!args.includes("--no-session"));
+	assert.deepEqual(fake.child.kills, ["SIGTERM"]);
+	fake.child.emit("close", null, "SIGTERM");
+	assert.equal((await launched).classification, "cancelled");
 });
 
 test("normal close before timeout preserves stderr and exit code", async (t) => {

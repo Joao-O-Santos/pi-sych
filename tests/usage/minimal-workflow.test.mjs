@@ -37,7 +37,7 @@ test("real Pi can inspect a disposable project and write an artifact", {
 	} catch (error) {
 		if (error?.code !== "ENOENT") throw error;
 	}
-	const modelCatalog = join(agentDir, "pi-sych", "models.json");
+	const modelCatalog = join(agentDir, "pi-sych", "worker-models.json");
 	await mkdir(join(agentDir, "pi-sych"), { recursive: true });
 	await writeFile(
 		modelCatalog,

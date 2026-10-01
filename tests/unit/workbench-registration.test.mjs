@@ -1,555 +1,274 @@
 import assert from "node:assert/strict";
-import { hash } from "node:crypto";
 import { chmod, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { delimiter, join, resolve } from "node:path";
+import { join } from "node:path";
 import test from "node:test";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
-import piSychWorkbench, {
-	PACKAGE_ROOT,
-	SUPERVISOR_GUIDANCE,
+import workbench, {
+	formatDispatchWorkerCallSummary,
+	formatDispatchWorkerOutcome,
 } from "../../.test-build/workbench/index.js";
 import { DEFAULT_CONFIG } from "../../.test-build/workbench/src/config-directory.js";
-import { capabilitySummary } from "../../.test-build/workbench/src/mcporter.js";
-import { createLiteratureSchema, rebuildLiteratureIndex } from "../helpers/literature-database.mjs";
 
-const projectMarkdown = `# Test project
-
-## Objective
-Test the workbench.
-
-## Current direction
-Tests.
-
-## Definition of done
-Handlers pass.
-
-## Previous action
-Created fixture.
-
-## Immediate next step
-Run tests.
-`;
-
-async function workbenchFixture() {
-	const root = await mkdtemp(join(tmpdir(), "pi-sych-real-workbench-"));
-	const configDir = join(root, ".pi", "pi-sych");
-	await mkdir(join(configDir, "worker-agent"), { recursive: true });
-	await mkdir(join(configDir, "mcp"), { recursive: true });
-	await writeFile(join(root, "PROJECT.md"), projectMarkdown);
-	await writeFile(join(root, "AGENTS.md"), "Prefer fixture-local evidence.\n");
-	await writeFile(join(root, "A.md"), "tracked\n");
-	const manifest = {
-		version: 2,
-		confirmedAt: "2025-01-01T00:00:00.000Z",
-		artifacts: [
-			{
-				path: "A.md",
-				fingerprint: `sha256:${hash("sha256", "tracked\n", "hex")}`,
-				status: "current",
-			},
-		],
-	};
-	await writeFile(join(root, "SYNC.json"), `${JSON.stringify(manifest, null, 2)}\n`);
+test("workbench registers its public surface and wires status, worker, and settled compaction", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-registration-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	await mkdir(join(root, ".pi/pi-sych"), { recursive: true });
+	await writeFile(join(root, "PROJECT.md"), "# Project\n\n## Objective\n\nTest\n");
 	await writeFile(
-		join(configDir, "config.json"),
-		`${JSON.stringify(
-			{
-				...DEFAULT_CONFIG,
-				compaction: { custom: false, compactAt100k: true },
-			},
-			null,
-			2,
-		)}\n`,
-	);
-	await writeFile(join(configDir, "worker-agent", "settings.json"), "{}\n");
-	await writeFile(
-		join(configDir, "models.json"),
-		`${JSON.stringify({
-			default: "fixture",
-			models: {
-				fixture: { model: "provider/model", cost: "low", notes: "deterministic" },
-			},
-		})}\n`,
+		join(root, "SYNC.json"),
+		JSON.stringify({ version: 2, confirmedAt: "now", artifacts: [] }),
 	);
 	await writeFile(
-		join(configDir, "mcp", "mcporter.json"),
-		`${JSON.stringify({ servers: { fixture: { command: "unused" } } })}\n`,
+		join(root, ".pi/pi-sych/config.json"),
+		JSON.stringify({ ...DEFAULT_CONFIG, compaction: { custom: true, thresholdTokens: 150_000 } }),
 	);
-	const literature = await createLiteratureSchema(join(root, "LITERATURE.sqlite"));
-	literature
-		.prepare(
-			"INSERT INTO papers (filepath, title, item_type, creators_json, year, abstract, topic_tags, doi) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-		)
-		.run(
-			"papers/supervisor.pdf",
-			"Supervisor source",
-			"article-journal",
-			'{"author":[{"family":"Test"}]}',
-			2026,
-			"direct supervisor retrieval",
-			"",
-			"10.example/supervisor",
-		);
-	rebuildLiteratureIndex(literature);
-	literature.close();
-	const nested = join(root, "nested");
-	await mkdir(nested);
-	await writeFile(
-		join(nested, "SYNC.json"),
-		`${JSON.stringify({ ...manifest, projectRoot: ".." }, null, 2)}\n`,
-	);
-	const bin = join(root, "bin");
-	await mkdir(bin);
-	const fakePi = join(bin, "pi");
-	await writeFile(
-		fakePi,
-		`#!/usr/bin/env node
-const { readFileSync, writeFileSync } = require("node:fs");
-process.stdout.write(JSON.stringify({
-  type: "tool_execution_start",
-  toolName: "read",
-  args: { path: "A.md" }
-}) + "\\n");
-const remote = process.argv.some((arg) => /pi-mcporter[\\/]dist[\\/]index\\.js$/.test(arg))
-  && process.env.MCPORTER_CONFIG?.endsWith("mcp/mcporter.json");
-const sessionIndex = process.argv.indexOf("--session");
-const trajectory = sessionIndex >= 0
-  && readFileSync(process.argv[sessionIndex + 1], "utf8").includes("trajectory sentinel")
-  && !readFileSync(process.argv[sessionIndex + 1], "utf8").includes("trajectory-dispatch");
-const toolsIndex = process.argv.indexOf("--tools");
-const web = toolsIndex >= 0 && process.argv[toolsIndex + 1].split(",").includes("web");
-writeFileSync(process.env.PI_SYCH_RESULT_PATH, JSON.stringify({
-  status: "partial",
-  summary: trajectory ? "trajectory fixture worker" : web ? "pew fixture worker" : remote ? "remote fixture worker" : "fixture worker",
-  files: ["A.md"],
-  limitations: ["fake launcher"]
-}) + "\\n");
-`,
-	);
-	await chmod(fakePi, 0o755);
-	return { root, nested, configDir, bin };
-}
-
-test("real workbench registers and runs its supervisor surface", async (t) => {
-	assert.match(SUPERVISOR_GUIDANCE, /read-only retrieval/);
-	assert.match(
-		SUPERVISOR_GUIDANCE,
-		/independent context, breadth, specialization, or substantial execution/,
-	);
-	const fixture = await workbenchFixture();
-	const previousCwd = process.cwd();
-	const previousPath = process.env.PATH;
-	process.chdir(fixture.root);
-	process.env.PATH = `${fixture.bin}${delimiter}${previousPath ?? ""}`;
-	t.after(async () => {
-		process.chdir(previousCwd);
-		if (previousPath === undefined) delete process.env.PATH;
-		else process.env.PATH = previousPath;
-		await rm(fixture.root, { recursive: true, force: true });
+	const previous = process.cwd();
+	const previousAgentDir = process.env.PI_CODING_AGENT_DIR;
+	process.env.PI_CODING_AGENT_DIR = join(root, "agent");
+	process.chdir(root);
+	t.after(() => {
+		process.chdir(previous);
+		if (previousAgentDir === undefined) delete process.env.PI_CODING_AGENT_DIR;
+		else process.env.PI_CODING_AGENT_DIR = previousAgentDir;
 	});
-
-	const tools = [];
-	const commands = new Map();
-	const events = new Map();
-	let configuredTools = [];
-	let activeTools = [];
-	await piSychWorkbench({
-		getAllTools() {
-			return configuredTools;
-		},
-		getActiveTools() {
-			return activeTools;
-		},
-		on(name, handler) {
-			events.set(name, handler);
-		},
+	const tools = [],
+		commands = new Map(),
+		events = new Map();
+	await workbench({
 		registerTool(tool) {
 			tools.push(tool);
 		},
 		registerCommand(name, command) {
 			commands.set(name, command);
 		},
+		on(name, handler) {
+			events.set(name, handler);
+		},
 	});
 	assert.deepEqual(
-		tools.map((tool) => tool.name),
+		tools.map(({ name }) => name),
 		["dispatch_worker", "project_status", "literature_search"],
 	);
-	assert.deepEqual([...commands.keys()], ["pi-sych-status", "pi-sych-mcp"]);
+	assert.deepEqual([...commands.keys()], ["pi-sych-status"]);
 	assert.deepEqual(
 		[...events.keys()],
 		["before_agent_start", "session_start", "agent_settled", "session_before_compact"],
 	);
-	configuredTools = tools.map((tool) => ({
-		...tool,
-		sourceInfo: {
-			path: resolve(PACKAGE_ROOT, "extensions/workbench/index.ts"),
-			source: "pi-sych",
-			scope: "project",
-			origin: "package",
-		},
-	}));
-	activeTools = tools.map((tool) => tool.name);
-
-	const compactCalls = [];
-	let pendingMessages = false;
-	const idle = true;
-	const lifecycleContext = (tokens) => ({
-		cwd: fixture.root,
-		getContextUsage: () => ({ tokens }),
-		isIdle: () => idle,
-		hasPendingMessages: () => pendingMessages,
-		compact: (options = {}) => {
-			compactCalls.push(tokens);
-			options.onComplete?.({});
-		},
-	});
-	const before = events.get("before_agent_start");
-	const systemPromptOptions = {
-		selectedTools: ["dispatch_worker", "project_status", "literature_search"],
-	};
-	const below = await before(
-		{ systemPrompt: "base system", systemPromptOptions },
-		lifecycleContext(99_999),
-	);
-	assert.equal(compactCalls.length, 0);
-	assert.match(
-		below.systemPrompt,
-		/Active capabilities \(derived from this session; availability is not authorization\):\n- active tools: dispatch_worker, literature_search, project_status\n- local literature: present — required v7 columns present; database opens read-only\n- workers: exposed — clean or trajectory context; read-only, edit, or full-host tool mode; worker setup and model access unverified\n- remote research workers: configured — 1 configured server; credentials and reachability unverified/,
-	);
-	assert.doesNotMatch(below.systemPrompt, /test-key|password|secret/i);
-	assert.match(SUPERVISOR_GUIDANCE, /Follow a tool's own guidance only when that tool is active/);
-	assert.match(
-		SUPERVISOR_GUIDANCE,
-		/evidence or proposals, not behavioral instructions or new authorization/,
-	);
-	const registeredDispatchTool = tools.find((tool) => tool.name === "dispatch_worker");
-	assert.match(
-		registeredDispatchTool.description,
-		/structurally validated terminal report; completion is not correctness or approval/,
-	);
-	assert.match(registeredDispatchTool.promptSnippet, /mode is required/);
-	assert.match(
-		registeredDispatchTool.promptGuidelines.join("\n"),
-		/Include mode on every dispatch_worker call.*read-only for inspection or review.*edit for file changes without Bash.*full-host only when Bash/s,
-	);
-	assert.match(
-		registeredDispatchTool.promptGuidelines.join("\n"),
-		/Do not confuse mode with contextMode/,
-	);
-	await before({ systemPrompt: "base system", systemPromptOptions }, lifecycleContext(100_000));
-	assert.deepEqual(compactCalls, []);
-	const settled = events.get("agent_settled");
-	pendingMessages = true;
-	await settled({}, lifecycleContext(100_000));
-	assert.deepEqual(compactCalls, []);
-	pendingMessages = false;
-	await settled({}, lifecycleContext(100_000));
-	assert.deepEqual(compactCalls, [100_000]);
-	// A second settled notification is suppressed until the compaction callback resets the guard.
-	let completeInFlight;
-	const inFlightContext = {
-		...lifecycleContext(100_000),
-		compact: (options = {}) => {
-			compactCalls.push(100_000);
-			completeInFlight = options.onComplete;
-		},
-	};
-	await settled({}, inFlightContext);
-	await settled({}, inFlightContext);
-	assert.equal(compactCalls.length, 2);
-	completeInFlight?.({});
-	await settled({}, inFlightContext);
-	assert.equal(compactCalls.length, 3);
-	const deduplicated = await before(
-		{ systemPrompt: "base system\nPrefer fixture-local evidence.", systemPromptOptions },
-		lifecycleContext(null),
-	);
-	assert.equal(deduplicated.systemPrompt.match(/Prefer fixture-local evidence\./g)?.length, 1);
-	assert.doesNotMatch(deduplicated.systemPrompt, /Configured project instructions/);
-
-	const modelCatalogPath = join(fixture.configDir, "models.json");
-	await rm(modelCatalogPath);
-	const withoutCatalog = await before(
-		{ systemPrompt: "base system", systemPromptOptions },
-		lifecycleContext(0),
-	);
-	assert.doesNotMatch(withoutCatalog.systemPrompt, /Worker model catalog/);
+	assert.equal(tools.find(({ name }) => name === "dispatch_worker").exposure, "model-only");
 	assert.equal(
-		await events.get("session_before_compact")({ preparation: {} }, lifecycleContext(0)),
+		tools.find(({ name }) => name === "project_status").parameters.properties.action.type,
 		undefined,
+	);
+	const requests = [];
+	const ctx = {
+		cwd: root,
+		getContextUsage: () => ({ tokens: 150_000 }),
+		model: { contextWindow: 200_000 },
+		isIdle: () => true,
+		hasPendingMessages: () => false,
+		compact: (request) => requests.push(request),
+	};
+	await events.get("agent_settled")({}, ctx);
+	await events.get("agent_settled")({}, ctx);
+	assert.equal(requests.length, 1);
+	requests[0].onComplete();
+	await events.get("agent_settled")({}, ctx);
+	assert.equal(requests.length, 2);
+	requests[1].onError(new Error("native compaction failed"));
+	await events.get("agent_settled")({}, ctx);
+	assert.equal(requests.length, 3);
+	const statusTool = tools.find(({ name }) => name === "project_status");
+	const status = await statusTool.execute("id", { action: "check" }, undefined, undefined, ctx);
+	assert.match(status.content[0].text, /Project status/);
+	assert.deepEqual(status.details.changed, []);
+	const dispatchTool = tools.find(({ name }) => name === "dispatch_worker");
+	await assert.rejects(
+		dispatchTool.execute(
+			"id",
+			{ task: "run", expectedOutput: "report", mode: "read-only", contextFiles: [] },
+			undefined,
+			undefined,
+			ctx,
+		),
+		/Worker model catalog is unavailable or invalid/,
 	);
 	await writeFile(
-		modelCatalogPath,
-		`${JSON.stringify({ default: "fixture", models: { fixture: { model: "provider/model" } } })}\n`,
+		join(root, ".pi/pi-sych/config.json"),
+		JSON.stringify({ ...DEFAULT_CONFIG, compaction: { custom: false, thresholdTokens: 150_000 } }),
 	);
+	const before = await events.get("session_before_compact")({ preparation: {} }, ctx);
+	assert.equal(before, undefined);
 
-	const notifications = [];
-	const handlerContext = {
-		cwd: fixture.nested,
-		ui: { notify: (message, type) => notifications.push({ message, type }) },
-	};
-	const statusTool = tools.find((tool) => tool.name === "project_status");
-	const checked = await statusTool.execute(
-		"status-check",
-		{ action: "check" },
-		undefined,
-		undefined,
-		handlerContext,
-	);
-	const expectedStatus = `Project status
+	const prompt = await events.get("before_agent_start")({ systemPrompt: "system" }, ctx);
+	assert.match(prompt.systemPrompt, /Pi Sych is a small mechanical substrate/);
+	await events.get("session_start")({}, ctx);
 
-Root: ${fixture.root}
-
-All tracked files match their recorded hashes.
-
-A changed hash establishes changed content, not conceptual drift or authority.`;
-	assert.equal(checked.content[0].text, expectedStatus);
-	assert.deepEqual(checked.details.changed, []);
-	assert.equal(checked.details.pendingPromotions, 0);
-
-	const acknowledged = await statusTool.execute(
-		"status-acknowledge",
-		{ action: "acknowledge", files: ["A.md"], reason: "reviewed fixture" },
-		undefined,
-		undefined,
-		handlerContext,
-	);
-	assert.equal(acknowledged.content[0].text, "Acknowledged:\n- A.md");
-	assert.equal(acknowledged.details.acknowledged[0].acknowledgement.reason, "reviewed fixture");
-	assert.deepEqual(acknowledged.details.needsReview, []);
-
-	const literatureTool = tools.find((tool) => tool.name === "literature_search");
-	const literatureResult = await literatureTool.execute(
-		"literature",
-		{ query: "supervisor", limit: 1 },
-		undefined,
-		undefined,
-		handlerContext,
-	);
-	assert.equal(literatureResult.details.results[0].metadata.title, "Supervisor source");
-	assert.match(literatureResult.content[0].text, /Supervisor source/);
-
-	await commands.get("pi-sych-status").handler("", handlerContext);
-	assert.deepEqual(notifications.at(-1), { message: expectedStatus, type: "info" });
-	await commands.get("pi-sych-mcp").handler("", handlerContext);
-	assert.equal(notifications.at(-1).type, "info");
+	const dispatch = tools.find(({ name }) => name === "dispatch_worker");
 	assert.match(
-		notifications.at(-1).message,
-		new RegExp(
-			`^Pi Sych MCPorter diagnostics\\nextension: (?:available|unavailable)\\nconfig: ${join(fixture.configDir, "mcp", "mcporter.json").replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} \\(present\\)\\nservers: fixture$`,
-		),
+		formatDispatchWorkerCallSummary({
+			task: "  do\n this  ",
+			mode: "read-only",
+			timeoutMs: 90_000,
+		}),
+		/task-summary: do this[\s\S]*context: clean[\s\S]*research: none[\s\S]*timeout: 90s/,
 	);
-
-	await mkdir(join(fixture.root, "INBOX.md"));
-	await commands.get("pi-sych-status").handler("", handlerContext);
-	assert.equal(notifications.at(-1).type, "error");
-	assert.match(notifications.at(-1).message, /EISDIR|directory/);
-
-	const dispatchTool = tools.find((tool) => tool.name === "dispatch_worker");
-	const dispatchArgs = {
-		task: "run fixture worker",
-		mode: "read-only",
-		expectedOutput: "fixture result",
-		contextFiles: [],
-	};
-	const theme = { bold: (text) => text, fg: (_color, text) => text };
-	assert.deepEqual(
-		dispatchTool
-			.renderCall(dispatchArgs, theme, { expanded: false })
-			.render(200)
-			.map((line) => line.trimEnd()),
-		[
-			"Dispatch worker",
-			"task-summary: run fixture worker",
-			"context: clean",
-			"model: catalog default",
-			"thinking: default",
-			"mode: read-only",
-			"research: none",
-			"timeout: 90s",
-		],
+	const rendered = dispatch.renderCall(
+		{ task: "short", mode: "read-only", timeoutMs: 1 },
+		{ fg: (_name, text) => text, bold: (text) => text },
+		{ expanded: false },
 	);
-	assert.deepEqual(
-		dispatchTool
-			.renderCall(
-				{
-					...dispatchArgs,
-					task: "first line with enough content to exceed the compact task summary limit on the tool row",
-					modelRole: "workhorse",
-					timeoutMs: 120_500,
-				},
-				theme,
-				{ expanded: false },
-			)
-			.render(200)
-			.map((line) => line.trimEnd()),
-		[
-			"Dispatch worker",
-			"task-summary: first line with enough content to exceed the compact task...",
-			"context: clean",
-			"model: workhorse",
-			"thinking: default",
-			"mode: read-only",
-			"research: none",
-			"timeout: 120500ms",
-		],
+	assert.ok(rendered);
+	const expanded = dispatch.renderCall(
+		{ task: "short", mode: "read-only", timeoutMs: 1 },
+		{ fg: (_name, text) => text, bold: (text) => text },
+		{ expanded: true },
 	);
-	assert.match(
-		dispatchTool
-			.renderCall({ ...dispatchArgs, contextMode: "trajectory" }, theme, { expanded: false })
-			.render(200)
-			.join("\n"),
-		/context: trajectory/,
-	);
-	assert.equal(
-		dispatchTool
-			.renderCall(dispatchArgs, theme, { expanded: true })
-			.render(200)
-			.map((line) => line.trimEnd())
-			.join("\n"),
-		`Dispatch worker\n${JSON.stringify(dispatchArgs, null, 2)}`,
-	);
-	const updates = [];
-	const dispatched = await dispatchTool.execute(
-		"dispatch",
-		dispatchArgs,
-		undefined,
-		(update) => updates.push(update),
-		handlerContext,
-	);
-	assert.equal(
-		dispatched.content[0].text,
-		"Worker status: partial\nSummary: fixture worker\n\nReported files:\n- A.md\n\nObserved project changes: none\n\nUnexpected changes: none\n\nLimitations:\n- fake launcher",
-	);
-	assert.equal(dispatched.details.result.status, "partial");
-	assert.equal(dispatched.details.launch.exitCode, 0);
-	assert.deepEqual(updates, [
-		{
-			content: [{ type: "text", text: "Worker activity:\n- read A.md" }],
-			details: { activity: ["read A.md"] },
-		},
-	]);
-	const remote = await dispatchTool.execute(
-		"remote-dispatch",
-		{ ...dispatchArgs, remoteResearch: true },
-		undefined,
-		undefined,
-		handlerContext,
-	);
-	assert.equal(remote.details.result.summary, "remote fixture worker");
-	const pewPath = join(fixture.root, "enabled-web/src/index.ts");
-	await mkdir(join(fixture.root, "enabled-web/src"), { recursive: true });
-	await writeFile(join(fixture.root, "enabled-web/package.json"), '{"name":"pi-pew-pew"}\n');
-	await writeFile(pewPath, "export default () => {};\n");
-	configuredTools = [
-		{
-			name: "web",
-			sourceInfo: {
-				path: pewPath,
-				source: "local:enabled-web",
-				scope: "project",
-				origin: "package",
-			},
-		},
-	];
-	activeTools = ["web"];
-	const pew = await dispatchTool.execute(
-		"pew-dispatch",
-		{ ...dispatchArgs, remoteResearch: true },
-		undefined,
-		undefined,
-		handlerContext,
-	);
-	assert.equal(pew.details.result.summary, "pew fixture worker");
-	activeTools = [];
-	const excludedPew = await dispatchTool.execute(
-		"excluded-pew-dispatch",
-		{ ...dispatchArgs, remoteResearch: true },
-		undefined,
-		undefined,
-		handlerContext,
-	);
-	assert.equal(excludedPew.details.result.summary, "remote fixture worker");
-
-	const manager = SessionManager.create(fixture.root, join(fixture.root, "sessions"));
-	manager.appendMessage({ role: "user", content: "trajectory sentinel", timestamp: Date.now() });
-	manager.appendMessage({
-		role: "assistant",
-		content: [{ type: "text", text: "earlier response" }],
-		api: "openai-responses",
-		provider: "fixture",
-		model: "fixture",
-		usage: {
-			input: 0,
-			output: 0,
-			cacheRead: 0,
-			cacheWrite: 0,
-			totalTokens: 0,
-			cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
-		},
-		stopReason: "stop",
-		timestamp: Date.now(),
-	});
-	manager.appendMessage({ role: "user", content: "dispatch now", timestamp: Date.now() });
-	manager.appendMessage({
-		role: "assistant",
-		content: [
-			{ type: "toolCall", id: "trajectory-dispatch", name: "dispatch_worker", arguments: {} },
-		],
-		api: "openai-responses",
-		provider: "fixture",
-		model: "fixture",
-		usage: {
-			input: 0,
-			output: 0,
-			cacheRead: 0,
-			cacheWrite: 0,
-			totalTokens: 0,
-			cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
-		},
-		stopReason: "toolUse",
-		timestamp: Date.now(),
-	});
-	const trajectory = await dispatchTool.execute(
-		"trajectory-dispatch",
-		{ ...dispatchArgs, contextMode: "trajectory" },
-		undefined,
-		undefined,
-		{ ...handlerContext, sessionManager: manager },
-	);
-	assert.equal(trajectory.details.result.summary, "trajectory fixture worker");
+	assert.ok(expanded);
 });
 
-test("capability details require owned active tool metadata", async (t) => {
-	const fixture = await workbenchFixture();
-	t.after(() => rm(fixture.root, { recursive: true, force: true }));
-	const ownPath = resolve(PACKAGE_ROOT, "extensions/workbench/index.ts");
-	const info = (name, path = ownPath) => ({
-		name,
-		sourceInfo: { path, source: "pi-sych", scope: "project", origin: "package" },
+test("workbench dispatches through Pi and reports command status failures", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-workbench-boundaries-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	await mkdir(join(root, ".pi/pi-sych"), { recursive: true });
+	await writeFile(join(root, "PROJECT.md"), "# Project\n\n## Objective\n\nTest\n");
+	await writeFile(
+		join(root, "SYNC.json"),
+		JSON.stringify({ version: 2, confirmedAt: "now", artifacts: [] }),
+	);
+	await writeFile(
+		join(root, ".pi/pi-sych/config.json"),
+		JSON.stringify({ ...DEFAULT_CONFIG, compaction: { custom: false, thresholdTokens: 150_000 } }),
+	);
+	const agentDir = join(root, "agent");
+	await mkdir(join(agentDir, "pi-sych/worker-agent"), { recursive: true });
+	await writeFile(join(agentDir, "pi-sych/worker-agent/settings.json"), "{}\n");
+	await writeFile(
+		join(agentDir, "pi-sych/worker-models.json"),
+		JSON.stringify({
+			default: "worker",
+			models: { worker: { model: "test/fake", cost: "free", notes: "test model" } },
+		}),
+	);
+	const bin = join(root, "bin");
+	await mkdir(bin);
+	const fakePi = join(bin, "pi");
+	await writeFile(
+		fakePi,
+		'#!/usr/bin/env node\nconst args = process.argv.slice(2);\nconst nativeResearch = args.includes("builtin:mcp") && args.includes("builtin:codemode");\nif (!nativeResearch || !args.includes("--thinking")) process.exit(1);\nrequire("node:fs").writeFileSync(process.env.PI_SYCH_RESULT_PATH, JSON.stringify({ status: "complete", summary: "fake worker completed", files: [], limitations: ["fake limitation"] }));\nconsole.log(JSON.stringify({ type: "tool_execution_start", toolName: "read", args: { path: "PROJECT.md" } }));\n',
+	);
+	await chmod(fakePi, 0o755);
+	const previous = {
+		cwd: process.cwd(),
+		agentDir: process.env.PI_CODING_AGENT_DIR,
+		path: process.env.PATH,
+	};
+	process.env.PI_CODING_AGENT_DIR = agentDir;
+	process.env.PATH = `${bin}:${previous.path}`;
+	process.chdir(root);
+	t.after(() => {
+		process.chdir(previous.cwd);
+		if (previous.agentDir === undefined) delete process.env.PI_CODING_AGENT_DIR;
+		else process.env.PI_CODING_AGENT_DIR = previous.agentDir;
+		if (previous.path === undefined) delete process.env.PATH;
+		else process.env.PATH = previous.path;
 	});
-	const own = capabilitySummary(
-		[info("dispatch_worker"), info("literature_search")],
-		["dispatch_worker", "literature_search"],
-		fixture.root,
-		ownPath,
+	const tools = [],
+		commands = new Map(),
+		events = new Map(),
+		updates = [],
+		notices = [];
+	await workbench({
+		registerTool(tool) {
+			tools.push(tool);
+		},
+		registerCommand(name, command) {
+			commands.set(name, command);
+		},
+		on(name, handler) {
+			events.set(name, handler);
+		},
+	});
+	const sessionManager = SessionManager.create(root, join(root, "sessions"));
+	sessionManager.appendMessage({ role: "user", content: "Continue the task." });
+	sessionManager.appendMessage({
+		role: "assistant",
+		content: [{ type: "toolCall", id: "dispatch-id", name: "dispatch_worker", arguments: {} }],
+	});
+	const ctx = {
+		cwd: root,
+		sessionManager,
+		ui: { notify: (message, type) => notices.push({ message, type }) },
+	};
+	const dispatch = tools.find(({ name }) => name === "dispatch_worker");
+	const outcome = await dispatch.execute(
+		"dispatch-id",
+		{
+			task: "inspect",
+			expectedOutput: "report",
+			mode: "full-host",
+			contextFiles: [],
+			skills: ["code"],
+			remoteResearch: true,
+			thinkingLevel: "low",
+		},
+		new AbortController().signal,
+		(update) => updates.push(update),
+		ctx,
 	);
-	assert.match(own, /local literature: present/);
-	assert.match(own, /workers: exposed/);
-	const foreign = capabilitySummary(
-		[info("dispatch_worker", "/foreign/index.ts"), info("literature_search", "/foreign/index.ts")],
-		["dispatch_worker", "literature_search"],
-		fixture.root,
-		ownPath,
+	assert.match(outcome.content[0].text, /Worker status: complete/);
+	assert.equal(outcome.details.result.summary, "fake worker completed");
+	assert.match(outcome.content[0].text, /- fake limitation/);
+	assert.deepEqual(updates.at(-1).details.activity, ["read PROJECT.md"]);
+	const trajectory = await dispatch.execute(
+		"dispatch-id",
+		{
+			task: "continue",
+			expectedOutput: "report",
+			mode: "full-host",
+			contextMode: "trajectory",
+			contextFiles: [],
+			skills: ["code"],
+			remoteResearch: true,
+			thinkingLevel: "low",
+		},
+		undefined,
+		undefined,
+		ctx,
 	);
-	assert.doesNotMatch(foreign, /local literature:/);
-	assert.doesNotMatch(foreign, /workers: exposed/);
-	const ambiguous = capabilitySummary(
-		[info("literature_search"), info("literature_search", "/foreign/index.ts")],
-		["literature_search"],
-		fixture.root,
-		ownPath,
+	assert.equal(trajectory.details.result.summary, "fake worker completed");
+	assert.match(
+		formatDispatchWorkerCallSummary({
+			task: "research",
+			mode: "full-host",
+			skills: ["research"],
+			remoteResearch: true,
+		}),
+		/literature_search; native MCP\/codemode/,
 	);
-	assert.doesNotMatch(ambiguous, /local literature:/);
+	assert.match(
+		formatDispatchWorkerOutcome({
+			launch: { exitCode: 0, stderr: "" },
+			reportedFiles: [],
+			observedChangedFiles: ["scratch.md"],
+			unexpectedChanges: ["scratch.md"],
+		}),
+		/Unexpected changes:\n- scratch.md/,
+	);
+	const literature = tools.find(({ name }) => name === "literature_search");
+	await assert.rejects(
+		literature.execute("literature-id", { query: "test" }, undefined, undefined, ctx),
+		/Literature database is unavailable/,
+	);
+	const prompt = await events.get("before_agent_start")({ systemPrompt: "system" }, ctx);
+	assert.match(prompt.systemPrompt, /test model/);
+	await mkdir(join(root, "AGENTS.md"));
+	await assert.rejects(
+		events.get("before_agent_start")({ systemPrompt: "system" }, ctx),
+		/illegal operation|EISDIR/i,
+	);
+
+	await mkdir(join(root, "INBOX.md"));
+	await commands.get("pi-sych-status").handler("", ctx);
+	assert.equal(notices.at(-1).type, "error");
 });

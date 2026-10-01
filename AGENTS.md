@@ -20,8 +20,8 @@ bounded delegation, and human-owned judgment.
   supervisor/user conversation.
 - A hash mismatch proves only that content changed after
   acknowledgement.
-- Preserve MCPorter for explicit remote research and Plannotator as a
-  narrow review adapter.
+- Use Pi-native MCP/codemode only for explicit worker remote research;
+  retain Plannotator as a narrow review adapter.
 - Prefer Pi's built-in tools and project-native checks over wrapper
   infrastructure.
 - Do not describe worker tool modes as sandboxes.

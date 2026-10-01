@@ -32,7 +32,7 @@ test("optional model catalog distinguishes absence from invalid content", async 
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-model-catalog-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
 	const configDirectory = join(root, "pi-sych"),
-		path = join(configDirectory, "models.json"),
+		path = join(configDirectory, "worker-models.json"),
 		env = { PI_CODING_AGENT_DIR: root };
 	await mkdir(configDirectory);
 	assert.equal(loadOptionalModelCatalog(undefined, env), undefined);
