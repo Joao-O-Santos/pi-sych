@@ -114,12 +114,13 @@ companion packages remain separately installed. This is not yet a tagged
 or published release.
 
 {verified} Against the v7.0.1 deterministic coverage baseline (97.48%
-lines, 90.23% branches, 95.31% functions), the v8 preparation coverage
-measures 97.58% lines, 91.84% branches, 96.82% functions. Runtime
-nonblank source is about 3,200 lines, within the 3,200-line budget. The
-local native MCP fixture and live read-only Context7 worker call passed.
-The opt-in real-model workflow and an installed-package `project_status`
-dogfood call passed after private local v8 configuration migration.
+lines, 90.23% branches, 95.31% functions), the current v8 preparation
+coverage measures 97.85% lines, 92.27% branches, and 96.80% functions.
+Runtime nonblank source is about 3,200 lines, within the 3,200-line
+budget. The local native MCP fixture and live read-only Context7 worker
+call passed. The opt-in real-model workflow and an installed-package
+`project_status` dogfood call passed after private local v8
+configuration migration.
 
 {verified} The supervisor prompt, dispatch tool guidance, worker schema
 and assignment prompt, local literature tool guidance, seven umbrella
@@ -188,41 +189,38 @@ OpenAI Codex Terra as candidate and Sol as judge: 5/5 cases complete,
 failures. This is model- and run-specific evidence, not a deterministic
 guarantee or human review.
 
-{verified} `make verify`, `make site`, and packed-install variants
-passed locally. GitLab verify and Pages passed on the final worker-MCP
-fix commit `2afd06d1`. The installed Pi Sych package was updated to that
-same commit, and a read-only Context7 worker dispatch passed from both
-source and installed-package entry points. Recheck exact HEAD before a
-release. In a later session, direct supervisor and workhorse-worker
-calls succeeded for all four configured MCPs: Context7, OpenAlex,
-Parallel, and Scholar Gateway. Scholar Gateway's read-only usage
-endpoint reported access; this does not prove persistent credentials or
-general retrieval. Exa was not configured as an MCP in either agent
-directory; Exa's cache was used for a documentation fetch, not a worker
-MCP call.
+{verified} At `53251ee7502760cfde8bdaa1bbda3294e3667452`, local
+`make verify` passed 216 tests and package dry-run; `make site` passed;
+`npm audit --omit=dev` reported zero vulnerabilities. GitLab pipeline
+`2904692244` passed both `verify` and `pages` on that exact revision
+(coverage 97.85%). The installed Pi Sych package was previously checked
+with a live `project_status` call, and a read-only Context7 worker
+dispatch passed from both source and installed-package entry points. In
+a later session, direct supervisor and workhorse-worker calls succeeded
+for all four configured MCPs: Context7, OpenAlex, Parallel, and Scholar
+Gateway. Scholar Gateway's read-only usage endpoint reported access;
+this does not prove persistent credentials or general retrieval. Exa was
+not configured as an MCP in either agent directory; Exa's cache was used
+for a documentation fetch, not a worker MCP call.
 
 ## Previous action
 
-{verified} Implemented six bounded DRY/readability fixes: signal-exit
-reporting, narrow Git snapshot fallback, explicit serializer steps,
-guaranteed compiler API cleanup, cached fragment IDs, and removal of
-unused literature capability reporting. Shutdown timing and failure
-precedence remain unchanged. Compaction was then hardened against
-malformed UTF-8 expansion, oversized manual focus, escaped snapshot
-expansion, and failure-notification errors that could prevent native
-fallback. Added boundary regressions; independent review found no
-material issues. `make verify` passed 216 tests at 97.85/92.27/96.80%
-line/branch/function coverage; `make site` and `npm audit --omit=dev`
-passed. Work remains local on main; no push was performed.
+{verified} Added a paste-ready correction prompt for the only known
+stale explanatory image, `docs/img/architecture.png`; visually checked
+the other four explanatory diagrams. Added `completionReassessment`
+migration instructions and updated release-state notes to the actual
+pushed commit and successful exact-HEAD pipeline. Changes are
+documentation and release preparation; the architecture PNG itself is
+not yet regenerated.
 
 ## Immediate next step
 
-{user-explicit} Compaction robustness fixes are implemented and
-verified. The owner preferred generous completion/shutdown timing and
-explicitly declined the hardlink-inbox change. Await further direction;
-no push, tag, or publication is authorized.
+{user-explicit} Apply and inspect the documented image correction, then
+rerun the final package/content checks. The owner has not authorized a
+v8.0.0 tag or npm publication. The GitLab tag pipeline publishes the
+matching package to npm, so obtain explicit authorization before
+creating that tag.
 
-{unresolved} Semantic model performance at recognizing every unfinished
-authorized task is not deterministically testable. Exa remains untested
-as a worker MCP because it is not configured there; its Exa-cache docs
-fetch was a separate capability.
+{unresolved} Model recognition of unfinished authorized work remains
+semantic, not mechanically guaranteed. Exa was not configured as a
+worker MCP; its cache documentation fetch was a separate capability.

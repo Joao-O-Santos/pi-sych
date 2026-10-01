@@ -21,6 +21,7 @@ The v8 configuration shape is:
     "custom": true,
     "thresholdTokens": 150000
   },
+  "completionReassessment": false,
   "literatureDatabase": "library.sqlite"
 }
 ```
@@ -32,10 +33,20 @@ and runs only at a safe settled/idle boundary. Pi may still compact earlier
 under its own context-window safety rules. The threshold is not Pi's
 `reserveTokens` setting.
 
-`literatureDatabase` may be absolute or relative. A relative global value is
-resolved from the global Pi Sych config directory; a relative project value is
-resolved from the project root. A project value replaces the global library
-only for that project. If neither file sets it, Pi Sych uses its conventional
+`completionReassessment` defaults to `false`. When enabled, after a
+completed run Pi Sych may add one hidden reassessment at Pi's final actionable
+`agent_before_settle` boundary, provided there are no pending messages and Pi
+can continue. The model is asked to continue only with unfinished work already
+authorized by the current request, and otherwise to stop or report a genuine
+blocker. A guard prevents repeating the reassessment for the same user message.
+It does not create new authorization and is independent of the compaction
+threshold. This is a prompt-level aid, not a deterministic guarantee that the
+model will recognize every incomplete task.
+
+`literatureDatabase` may be an absolute or relative path. A relative global
+value is resolved from the global Pi Sych config directory; a relative project
+value is resolved from the project root and replaces the global library only
+for that project. If neither file sets it, Pi Sych uses its conventional
 local literature database default.
 
 ## Remove obsolete v7 keys

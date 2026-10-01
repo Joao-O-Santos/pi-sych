@@ -1,9 +1,9 @@
-# v8 integration — remaining work
+# v8.0.0 release readiness
 
-The original implementation checklist was applied to the local v8 preparation
-(see `docs/migration-v7-to-v8.md`, `docs/ARCHITECTURE.md`, and
-`docs/CHANGELOG.md`). This file tracks **remaining verification and decisions**,
-not a claim that unrun external checks passed.
+The v8 implementation is on `main`; this file tracks the remaining release
+preparation, exact-revision checks, and limitations. The migration, public
+contract, architecture, and changelog documents describe the implemented
+behavior. This is not authorization to tag or publish.
 
 ## Implemented locally
 
@@ -35,31 +35,43 @@ not a claim that unrun external checks passed.
   3200 (within budget). Current coverage: 97.85% lines, 92.27% branches,
   96.80% functions, all above the baseline of 97.48/90.23/95.31.
 
-## Outstanding gates and limitations
+## Release gates
 
-- [ ] A deterministic test cannot judge whether model prose correctly
-  identifies completion; tests cover the prompt contract and Pi's one-shot
-  continuation boundary, while semantic completion remains model judgment.
+- [ ] Apply the documented image-edit prompt in `docs/img/readme.md` to
+  `docs/img/architecture.png`; inspect the rendered labels and commit the
+  reviewed asset. The other explanatory images were checked and have no
+  known v8-specific correction pending.
+- [ ] On the final documentation/image revision, rerun `make verify` and
+  `make site`, confirm the exact-HEAD GitLab pipeline passes, and inspect
+  `npm pack --dry-run --json` contents plus a packed-install check.
+- [ ] After those gates, obtain explicit authorization for a signed release
+  commit/tag. The matching GitLab tag pipeline publishes `v8.0.0` to npm;
+  tag creation therefore has that external publication effect.
+
+## Verified on current main
+
+- [x] At `53251ee7502760cfde8bdaa1bbda3294e3667452`, local `make verify`
+  passed 216 tests and package dry-run; `make site` passed; production audit
+  reported zero vulnerabilities. GitLab pipeline `2904692244` passed both
+  `verify` and `pages` for that exact revision (coverage 97.85%).
 - [x] Directly exercise, then independently repeat through a workhorse
   worker, each MCP configured in both agent directories: Context7, OpenAlex,
   Parallel, and Scholar Gateway. All calls succeeded in the tested sessions;
   Scholar Gateway's usage endpoint reported access. This does not establish
   persistent credentials or general query access. Exa was not configured as
   an MCP; its cache was used separately for one documentation fetch.
-- [x] Run the opt-in real-model Pi workflow (passed on a disposable project).
-  Also checked the installed v8 package with a live `project_status` call.
-  The deterministic native MCP fixture tests transport/composition without
-  a model, not live external access.
-- [ ] Decide whether to split custom compaction into its own independently
-  loadable Pi resource; the v8 workbench currently owns the hook and policy,
-  with `compaction.custom: false` leaving native compaction in control. A split
-  is optional, not a prerequisite for the 150k semantics.
-- [x] GitLab verify/Pages passed on final fix commit `2afd06d1`; `make verify`
-  includes package dry-run and passed locally. Recheck exact HEAD and packed
-  contents before any tag. The repository's tag pipeline
-  automatically publishes to npm; conditional tag consideration does not
-  separately authorize that publication. Obtain explicit release/publication
-  instruction before pushing a v8.0.0 tag.
+- [x] Run the opt-in real-model Pi workflow on a disposable project and check
+  the installed v8 package with a live `project_status` call. The deterministic
+  MCP fixture tests transport/composition without a model.
+
+## Nonblocking limitations and design options
+
+- Model recognition of every unfinished authorized task is semantic behavior;
+  neither the prompt test nor the opt-in model run guarantees it.
+- Exa worker-MCP behavior was not tested because Exa is not configured as a
+  worker MCP; this is not a configured-service failure.
+- Custom compaction remains in the workbench. Splitting it into a separately
+  loadable resource is an optional architectural change, not a v8 release gate.
 
 ## Local deterministic gate
 

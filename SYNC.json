@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-01T22:52:04.260Z",
+  "confirmedAt": "2026-10-01T23:12:03.590Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:40508a433f6489a10c40eb705f8ce197a27fdb16b617e347bb40266219c62444",
+      "fingerprint": "sha256:0460162eba0a8d19595e423524cd36b9fee3bfb2a887a14eb7e5c8c245273b73",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,8 +15,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T22:52:04.260Z",
-        "reason": "Reviewed compaction hardening for malformed UTF-8 expansion, serialized prompt bounds, clipped manual focus, and manual failure-notification fallback; added boundary regressions. Updated v8 state and MCP verification record. Final make verify passed 216 tests at 97.85/92.27/96.80% line/branch/function coverage, make site passed, production npm audit reported zero vulnerabilities. No push or release."
+        "at": "2026-10-01T23:07:53.045Z",
+        "reason": "Documented the architecture-only stale image corrections and paste-ready prompt, added completionReassessment to the v7-to-v8 migration guide with one-shot/auth-boundary limits, and refreshed release gates to current main 53251ee7 and successful exact-HEAD pipeline 2904692244. Image asset remains pending; no tag or npm publication authorized."
       }
     },
     {
@@ -124,15 +124,51 @@
     },
     {
       "path": "TODO.md",
-      "fingerprint": "sha256:89e1179f8ff090ac13a6caadeadb6efb244ced1d1c1c02ea3f4d3424d4157569",
+      "fingerprint": "sha256:d23378315d8bfc3fe12633b4645cc99bda71f05f40d9551e85a4bf8de1f80f89",
       "status": "current",
       "role": "remaining-work",
       "authoritativeFor": [
         "verification-gates-and-limitations"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T22:52:04.260Z",
-        "reason": "Reviewed compaction hardening for malformed UTF-8 expansion, serialized prompt bounds, clipped manual focus, and manual failure-notification fallback; added boundary regressions. Updated v8 state and MCP verification record. Final make verify passed 216 tests at 97.85/92.27/96.80% line/branch/function coverage, make site passed, production npm audit reported zero vulnerabilities. No push or release."
+        "at": "2026-10-01T23:07:53.045Z",
+        "reason": "Documented the architecture-only stale image corrections and paste-ready prompt, added completionReassessment to the v7-to-v8 migration guide with one-shot/auth-boundary limits, and refreshed release gates to current main 53251ee7 and successful exact-HEAD pipeline 2904692244. Image asset remains pending; no tag or npm publication authorized."
+      }
+    },
+    {
+      "path": "docs/migration-v7-to-v8.md",
+      "fingerprint": "sha256:c2b10bcabf2f25f62c638a9f5d1579a6fdc76ec1a9a6a84a42320f20200816fd",
+      "status": "current",
+      "role": "migration-guide",
+      "authoritativeFor": [
+        "v7-to-v8-user-configuration-migration"
+      ],
+      "updateFrom": [
+        "docs/configuration.md",
+        "docs/CHANGELOG.md",
+        "extensions/workbench/src/config-directory.ts"
+      ],
+      "acknowledgement": {
+        "at": "2026-10-01T23:07:53.045Z",
+        "reason": "Documented the architecture-only stale image corrections and paste-ready prompt, added completionReassessment to the v7-to-v8 migration guide with one-shot/auth-boundary limits, and refreshed release gates to current main 53251ee7 and successful exact-HEAD pipeline 2904692244. Image asset remains pending; no tag or npm publication authorized."
+      }
+    },
+    {
+      "path": "docs/img/readme.md",
+      "fingerprint": "sha256:bb616da0cca03ea576f3b6dabf4340a67a1dabba1e5e8cd706dd7d3517dbb6a9",
+      "status": "current",
+      "role": "image-update-guidance",
+      "authoritativeFor": [
+        "diagram-asset-status-and-edit-instructions"
+      ],
+      "updateFrom": [
+        "docs/ARCHITECTURE.md",
+        "docs/public-contract.md",
+        "docs/img/architecture.png"
+      ],
+      "acknowledgement": {
+        "at": "2026-10-01T23:12:03.590Z",
+        "reason": "Added the missing project_status card correction after independent review: show its mechanical check/acknowledge operations rather than only project-brief fields. Image prompt preserves accurate contracts."
       }
     },
     {
