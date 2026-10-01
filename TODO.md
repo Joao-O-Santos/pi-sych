@@ -1,434 +1,489 @@
-# Pi Sych v8 native MCP and codemode migration
+# Pi Sych simplification and Pi 0.99 integration
 
-This checklist defines the migration from Pi Sych 7.x's MCPorter-based remote
-research integration to Pi 0.99.2+ native MCP and selective codemode use.
+This is a **pre-release implementation checklist**, not a commitment to a version
+number. Do the compatibility-neutral cleanup first. Decide the release number
+from the final public delta, not from the size of the refactor.
 
-The implementation should remain subtractive. Pi Sych owns project state,
-bounded worker dispatch, context selection, skills, local literature lookup,
-and human-owned review. Pi should own MCP transport, authentication, server
-lifecycle, tool discovery, and generic tool composition.
+If the final change removes the documented MCPorter configuration/command,
+removes Pi Sych `config.json`, or raises the required Pi baseline to 0.99.2,
+the result is a v8 release under Pi Sych's own public-contract rules. If those
+public surfaces are preserved, reassess SemVer from the actual result.
 
-## Release Decision
+The goal is not to add a Pi 0.99 abstraction layer. The goal is to delete code
+that Pi now owns, strengthen the few Pi Sych-specific capabilities that remain,
+and make the Bakery packages compose naturally without runtime coupling.
 
-- [x] Treat this work as **v8.0.0**, not a 7.x patch or minor release.
-- [x] Reason: the current public contract documents `mcporterConfig`,
-  `/pi-sych-mcp`, and `remoteResearch` as MCPorter-backed userland. Removing
-  the MCPorter configuration/dependency and changing remote-research setup
-  requires user migration.
-- [x] Keep the public `dispatch_worker.remoteResearch` field if practical. Its
-  meaning remains "this worker needs remote retrieval"; only the implementation
-  and configuration backend change.
-- [x] Preserve `/pi-sych-mcp` if a thin native-Pi diagnostic can retain a useful
-  user-facing command. Do not remove a public command merely because the
-  implementation underneath it changed.
-- [ ] Record the affected public-contract rows and the migration requirement in
-  the v8 changelog before release.
-- [ ] Do not tag or publish v8 as part of implementation unless separately
-  authorized.
+## Architectural target
 
-## Runtime Baseline
+Keep Pi Sych responsible for:
 
-- [ ] Set the documented Pi runtime baseline to **Pi 0.99.2 or newer** for v8.
-  Use 0.99.2 rather than 0.99.0 because the 0.99.2 MCP behavior is the target:
-  MCP servers with default codemode exposure stay out of the codemode
-  declaration, are represented by short server summaries, connect lazily, and
-  expose namespace/tool discovery through codemode.
-- [ ] Decide whether the npm peer dependency ranges should encode the minimum
-  Pi version or whether compatibility should remain documented/runtime-checked.
-  Do not leave a misleading `*` compatibility promise if v8 actually requires
-  APIs introduced in 0.99.
-- [ ] Add one early, actionable compatibility failure for a Pi runtime that
-  lacks the required native extension/tool APIs. Avoid a parallel version
-  registry when capability detection is sufficient.
-- [ ] Verify the exact built-in extension names and CLI loading behavior against
-  the installed Pi version during implementation, especially because
-  `--no-extensions` also disables built-in extensions in Pi 0.99.
+- project resolution and explicit durable state;
+- mechanical project status and acknowledgement;
+- short-lived clean/trajectory worker dispatch;
+- the small worker result protocol;
+- local literature discovery;
+- Pi Sych skills and writing/research/analysis guidance;
+- task-centred custom compaction if it still adds enough value over native Pi;
+- optional human review through the separate Plannotator extension.
 
-## Target Architecture
+Let Pi own:
 
-Remote research should become:
+- MCP transport, connection lifecycle, OAuth and provider-token auth;
+- MCP server discovery, status and `/mcp`;
+- codemode execution and nested tool composition;
+- ordinary package/resource enable/disable controls;
+- ordinary compaction triggering and context-window thresholds;
+- provider/model authentication.
+
+Let companion Bakery packages own their own tools. Pi Sych should reason about
+capabilities such as document handling, known-URL retrieval, or browser
+interaction, not import or identify package implementations.
+
+## Phase 1 — simplify before adding anything
+
+### Remove package-specific capability machinery
+
+- [ ] Delete `extensions/workbench/src/pew-pew.ts`.
+- [ ] Delete the automatic PEW-PEW extension-path inheritance from
+  `dispatch_worker`.
+- [ ] Delete `tests/unit/pew-pew.test.mjs`.
+- [ ] Do not replace it with a generic package registry or source-provenance
+  scanner.
+- [ ] Treat an active `web` tool in the supervisor as an ordinary capability.
+  Its own schema/guidance explains how to use it.
+- [ ] Do not automatically copy supervisor companion extensions into workers.
+  A separate worker process should continue to have an explicit, inspectable
+  tool surface.
+
+### Remove redundant capability narration
+
+- [ ] Reassess `capabilitySummary()` from first principles.
+- [ ] Remove the generic list of active tools from the injected system prompt:
+  Pi already declares active tools and their guidance to the model.
+- [ ] Do not reproduce native MCP server summaries: Pi 0.99.2 now supplies a
+  short `mcp_servers` section itself.
+- [ ] Do not reproduce companion-package descriptions in Pi Sych.
+- [ ] Retain only Pi-Sych-specific hidden state if the model genuinely cannot
+  learn it from the tool surface when needed.
+- [ ] Prefer no startup capability summary over a new replacement abstraction.
+- [ ] Delete exact-string tests for capability-summary prose when the summary is
+  removed.
+
+### Reconsider Pi Sych configuration as a layer
+
+The current `config.json` mostly selects paths or toggles behavior that can now
+be conventional or Pi-native:
 
 ```text
-dispatch_worker(remoteResearch: false)
-  -> Pi Sych worker extension only
-  -> ordinary worker tool mode
-  -> no native MCP
-  -> no codemode added by Pi Sych
-
-dispatch_worker(remoteResearch: true)
-  -> Pi Sych worker extension
-  -> builtin:mcp
-  -> builtin:codemode
-  -> ordinary worker tool mode + codemode
-  -> native Pi mcp.json under the worker agent directory
-  -> MCP tools remain default codemode exposure unless explicitly configured
+workerAgentDir
+modelCatalog
+mcporterConfig
+literatureDatabase
+compaction.custom
+compaction.compactAt100k
+review.mode
 ```
 
-- [ ] Keep MCP and codemode **per-dispatch opt-in**. Do not make either a normal
-  dependency of ordinary editing, coding, analysis, or review workers.
-- [ ] Keep `remoteResearch` independent of worker mode and context mode.
-  `read-only | edit | full-host` still controls ordinary visible Pi tools;
-  `clean | trajectory` still controls conversation context.
-- [ ] Do not interpret codemode as an operating-system permission boundary.
-  A full-host worker already has Bash and host access. Codemode is being added
-  for tool orchestration and context efficiency, not additional authority.
-- [ ] Preserve the current rule that selected research skill adds local
-  `literature_search`; remote research separately enables external retrieval.
-- [ ] Preserve optional reuse of an already active, provenance-validated
-  PEW-PEW `web` tool unless native MCP makes a specific use redundant. Do not
-  silently discover or activate disabled packages.
+Audit each field with deletion as the default:
 
-## Remove MCPorter
+- [ ] `mcporterConfig`: remove with MCPorter.
+- [ ] `review.mode`: remove. Plannotator is already a separate Pi extension;
+  use `pi config`/package resource filtering to disable it.
+- [ ] `compaction.compactAt100k`: remove unless a held-out workflow shows that
+  the extra absolute threshold is materially better than Pi's native
+  context-aware compaction settings.
+- [ ] `compaction.custom`: avoid a bespoke boolean if custom compaction can be
+  a separately selectable package extension.
+- [ ] `workerAgentDir`: prefer one conventional
+  `<pi-sych-dir>/worker-agent` path.
+- [ ] `modelCatalog`: prefer one conventional role-catalog path.
+- [ ] Rename the Pi Sych role catalog to something unambiguous such as
+  `worker-models.json` if doing so prevents confusion with Pi's native
+  `<agent-dir>/models.json`.
+- [ ] `literatureDatabase`: prefer
+  `<projectRoot>/LITERATURE.sqlite` then
+  `<pi-sych-dir>/literature.sqlite`. Document a filesystem symlink as the
+  escape hatch for an external database rather than retaining a general path
+  configuration solely for this case.
+- [ ] If all fields disappear, delete `config.json`,
+  `templates/config.json`, `ensurePiSychConfig()`, the config parser, and
+  their schema tests instead of replacing them with config v2.
+- [ ] Keep only the small path-resolution helper still needed to locate the Pi
+  Sych directory and user skill directory.
+- [ ] Do not add production migration code merely to rewrite old config files.
 
-- [ ] Remove `pi-mcporter` from `optionalDependencies`.
-- [ ] Remove `scripts/check-mcporter-dependencies.mjs`.
-- [ ] Remove the `test:deps` script and rewrite/remove `deps:latest` so it no
-  longer updates MCPorter.
-- [ ] Remove `remoteResearchExtensionPaths()` and all
-  `pi-mcporter/dist/index.js` resolution.
-- [ ] Remove `MCPORTER_CONFIG` environment-variable plumbing.
-- [ ] Remove MCPorter-specific configuration parsing, availability inspection,
-  server counting, and error messages.
-- [ ] Remove the `mcporterConfig` field from newly generated Pi Sych
-  `config.json`.
-- [ ] Detect an existing v7 `mcporterConfig` field and return one concise
-  migration message rather than silently pretending that it still controls
-  remote research.
-- [ ] Remove tests and fixtures whose only purpose is MCPorter dependency-tree
-  validation.
-- [ ] Search the entire package, site, tests, diagrams, prompts, and docs for
-  `MCPorter`, `mcporter`, and `MCPORTER_CONFIG`; retain the term only in
-  migration/history material where it describes v7 or earlier behavior.
-- [ ] Confirm `npm pack --dry-run` contains no MCPorter package, helper, or
-  stale setup documentation.
+### Use Pi-native resource selection
 
-## Native MCP Configuration
+- [ ] Consider making custom compaction a third explicit package extension:
+  `workbench`, `compaction`, `plannotator`.
+- [ ] If split, the compaction extension should only register the
+  `session_before_compact` behavior and reuse existing helpers; do not create
+  a second orchestration layer.
+- [ ] Let `pi config` disable Plannotator or custom compaction instead of
+  maintaining Pi Sych-specific enable/disable flags.
+- [ ] Remove the `agent_settled` 100k trigger and its in-flight state if native
+  Pi triggering is sufficient.
+- [ ] Preserve native Pi fallback whenever custom compaction returns no result.
 
-- [ ] Use Pi's native `mcp.json` as the only MCP server configuration for
-  remote-research workers.
-- [ ] Resolve native MCP configuration through the worker's existing
-  `PI_CODING_AGENT_DIR`. The intended location is therefore the Pi Sych
-  worker agent directory, not a separate Pi Sych MCP configuration tree.
-- [ ] Keep worker MCP configuration deliberately separate from the supervisor's
-  general MCP configuration. Do not automatically expose every supervisor MCP
-  server to a research worker.
-- [ ] Do not copy usernames, passwords, cookies, OAuth tokens, or MCP auth state
-  into project files.
-- [ ] Allow native Pi authentication to own its normal state. The worker
-  directory may contain Pi's native MCP auth state where Pi requires it.
-- [ ] Preserve the existing symlink behavior for ordinary Pi provider/model
-  authentication only where it remains valid; do not invent a second auth
-  mechanism for MCP.
-- [ ] Document the native setup using Pi's own MCP CLI under the worker agent
-  directory. Prefer native `pi mcp add|list|login|logout` workflows over a
-  Pi Sych wrapper.
-- [ ] Document that native Pi supports stdio and Streamable HTTP MCP transports
-  but not legacy SSE. Treat an SSE-only server as a real compatibility blocker,
-  not something Pi Sych should reimplement.
-- [ ] Configure concise MCP server descriptions. Pi 0.99.2 uses those summaries
-  for model-facing server context and tool discovery, so descriptions should
-  identify capability rather than repeat server marketing text.
+## Phase 2 — make custom compaction smaller and more host-native
 
-## Preserve And Repurpose `/pi-sych-mcp`
+Custom compaction is worth retaining only for the behavior Pi Sych actually
+adds: task-centred continuation, canonical project context, explicit provenance,
+project-state gaps, and unreviewed promotion proposals.
 
-- [ ] Keep `/pi-sych-mcp` as a small human diagnostic if this can be done
-  without reimplementing Pi's MCP registry.
-- [ ] Change its meaning from "inspect MCPorter configuration" to "inspect the
-  worker's native Pi MCP setup".
-- [ ] Prefer delegating diagnostics to Pi's native MCP CLI/state rather than
-  parsing and interpreting the full `mcp.json` schema inside Pi Sych.
-- [ ] Report only actionable non-secret information: resolved worker agent
-  directory, presence of native MCP configuration, configured server names or
-  native list output, and native-command failures.
-- [ ] Never print OAuth tokens, provider tokens, headers, environment secrets,
-  command-line secrets, or raw auth state.
-- [ ] If retaining the command would require substantial duplicate MCP logic,
-  remove it in v8 and document the exact native `pi mcp list` replacement.
-  Prefer deletion over a second MCP client.
+- [ ] Keep those Pi-Sych-specific semantics; delete lifecycle/auth/transport
+  code now supplied by Pi.
+- [ ] Replace manual `getApiKeyAndHeaders()` +
+  `@earendil-works/pi-ai/compat complete()` plumbing with the host-owned
+  `ctx.modelRegistry.complete()`/current public equivalent when the installed
+  0.99.2 API can preserve the required cancellation, output budget and usage
+  accounting.
+- [ ] Remove direct API-key/header/env handling from Pi Sych compaction.
+- [ ] Keep the custom observable-message serialization only where it has a
+  semantic reason. In particular, do not switch blindly to Pi's stock
+  `serializeConversation()` if that would reintroduce assistant thinking into
+  the summarization input.
+- [ ] Compare Pi's current bounded tool-result/file-operation helpers with the
+  Pi Sych equivalents and reuse exported host helpers only when doing so
+  actually removes code without weakening the no-hidden-reasoning or
+  instruction/data boundaries.
+- [ ] Move compaction-specific tests out of worker-engine test files.
+- [ ] Remove tests for the deleted 100k settled trigger.
+- [ ] Preserve failure-to-native fallback, bounded inputs, canonical-file
+  rechecks before proposal persistence, and no mutation of accepted semantic
+  files.
 
-## Worker Launcher
+## Phase 3 — native MCP, no Pi Sych MCP client
 
-- [ ] Keep `--no-extensions` so workers remain explicit and isolated.
-- [ ] For ordinary workers, continue loading only the Pi Sych worker extension
-  plus explicitly selected optional extensions such as an already-approved web
+### Delete MCPorter
+
+- [ ] Validate the required real services first: Context7, OpenAlex and
+  Wiley/Scholar Gateway.
+- [ ] Confirm each required service works through Pi 0.99.2 native stdio or
+  Streamable HTTP, including its real authentication path.
+- [ ] If a required service is legacy-SSE-only, record that concrete blocker
+  before retaining any fallback.
+- [ ] Once the real services pass, remove `pi-mcporter` from
+  `optionalDependencies`.
+- [ ] Delete `extensions/workbench/src/mcporter.ts`.
+- [ ] Delete `scripts/check-mcporter-dependencies.mjs`.
+- [ ] Delete `tests/unit/mcporter.test.mjs`.
+- [ ] Remove `MCPORTER_CONFIG`, `mcporter` from worker tools, dependency
+  checks, fixtures, setup prose and generated docs.
+
+### Do not replace `/pi-sych-mcp`
+
+- [ ] Remove `/pi-sych-mcp`.
+- [ ] Do not implement a Pi Sych wrapper around native MCP status/configuration.
+- [ ] Document Pi's own `/mcp`, `pi mcp list`, `pi mcp login`, and
+  `pi mcp logout` instead.
+- [ ] Do not parse native `mcp.json` in Pi Sych merely to reproduce information
+  Pi already reports.
+
+### Worker-native MCP
+
+- [ ] Keep `remoteResearch` as the simple public worker intent flag if it
+  remains useful: it means the assigned worker needs external retrieval, not
+  "use a particular MCP adapter".
+- [ ] Keep ordinary workers free of MCP/codemode.
+- [ ] For `remoteResearch: true`, explicitly load `builtin:mcp` and
+  `builtin:codemode` because workers launch with explicit extension control.
+- [ ] Use the worker's existing `PI_CODING_AGENT_DIR`; native Pi will then read
+  `<worker-agent>/mcp.json`.
+- [ ] Let the user configure/authenticate that file with native Pi commands.
+- [ ] Do not synthesize, copy or merge the supervisor's MCP configuration.
+- [ ] Keep MCP default exposure as `codemode` unless a concrete server needs a
+  different exposure.
+- [ ] Do not add `tool_search` to Pi Sych at this stage.
+- [ ] Keep `codemode.mode: "on"`; direct worker tools remain directly usable.
+
+## Phase 4 — use codemode for composition, not power
+
+A full-host worker already has Bash. Codemode should earn its place by reducing
+round trips and model-context pollution.
+
+- [ ] Enable codemode initially only for remote-research workers.
+- [ ] Teach three patterns in Markdown examples rather than production wrappers:
+  1. parallel independent retrieval with `Promise.allSettled()`;
+  2. `searchTools()` / `describeNamespace()` followed by one targeted MCP
+     call when the exact remote tool is not known;
+  3. filter/join/deduplicate large structured results and emit only the evidence
+     needed by the model.
+- [ ] Include one explicit anti-pattern: do not wrap a single simple call in
+  codemode merely because codemode exists.
+- [ ] Make examples show partial-failure handling and retain source/provenance
+  identifiers.
+- [ ] Keep snippets/search hits classified as discovery, not source
+  verification.
+- [ ] Put the examples under the existing research/automation guidance tree;
+  do not register another skill, command or tool for them.
+
+## Phase 5 — strengthen `literature_search`
+
+Keep it a small local discovery tool, but make the interface excellent.
+
+### Structured and readable results
+
+- [ ] Add a truthful `outputSchema`.
+- [ ] Return matching `structuredContent` for codemode and nested callers.
+- [ ] Keep concise model-facing `content`, but replace raw pretty-printed JSON
+  with a compact readable result list.
+- [ ] Include only fields that help discovery/provenance in the visible form:
+  title, creators when available, year, item type, DOI, source path and a
+  bounded snippet.
+- [ ] Keep ranking score in structured/details output unless showing it to the
+  model demonstrably improves retrieval decisions.
+- [ ] Avoid maintaining three independently constructed result
+  representations; derive readable content from the validated result object.
+- [ ] Add tool annotations reflecting reality:
+  `readOnlyHint: true`, `destructiveHint: false`,
+  `idempotentHint: true`, `openWorldHint: false`.
+
+### Result validation
+
+- [ ] Define the actual result contract before adding `outputSchema`.
+- [ ] Validate every selected SQLite field needed by that contract rather than
+  leaving most metadata typed as `unknown`.
+- [ ] Preserve legitimate SQL nulls explicitly.
+- [ ] Keep malformed matched rows fail-closed rather than fabricating metadata.
+- [ ] Preserve read-only database access.
+
+### Search quality
+
+- [ ] Build a small deterministic graded fixture with title, abstract,
+  topic-tag, DOI and path matches.
+- [ ] Test current unweighted BM25 against sensible explicit FTS5 weights.
+- [ ] Change weights only if the fixture shows materially better ranking; do not
+  add ranking machinery for aesthetics.
+- [ ] Return `topicTags` only if it helps explain/use tag-only matches and the
+  added public field earns its cost.
+- [ ] Prefer documenting useful FTS5 examples (phrases, AND/OR, `title:`,
+  `doi:`, etc.) over adding many filter parameters.
+- [ ] Consider one simple literal-query option only if malformed/raw FTS syntax
+  is a recurring user/model failure; otherwise keep the current native FTS
+  query surface.
+- [ ] Do not add provider-specific remote search behavior to
+  `literature_search`.
+- [ ] Do not make it a source-verification tool. The returned `sourcePath`
+  remains the handoff to whatever file/PDF/document capability is available.
+
+## Phase 6 — make Bakery composition natural without dependencies
+
+Pi Sych should know **capability roles**, not Bakery package identities.
+
+### `pi-filler`
+
+- [ ] Add a compact automation/data example showing that when a deterministic
+  document tool such as `filler` is active, it is preferable for supported
+  DOCX/PDF/PPTX/XLSX inspection or transformation to ad-hoc model-visible data
+  handling.
+- [ ] In research source-inspection guidance, note that a returned local
+  `sourcePath` can be inspected with an available PDF/document tool rather
+  than dumping the complete source into the model.
+- [ ] Do not import `pi-filler`, inspect its package name, duplicate its
+  operation matrix, or add it to Pi Sych dependencies.
+
+### `pi-pew-pew`
+
+- [ ] Treat `web` as a known-URL retrieval capability when active.
+- [ ] Keep research guidance provider-agnostic: known URL -> targeted fetch or
+  browser tool; unknown source -> discovery/search capability.
+- [ ] Delete Pi Sych's current special-case PEW-PEW provenance code instead of
+  generalizing it.
+- [ ] Do not promise that a supervisor `web` tool is inherited by workers.
+
+### Interactive browser and other Bakery packages
+
+- [ ] Keep browser/UI automation in the automation skill as a capability class;
+  Pi-lease/pi-chrome-use can satisfy it when the user has chosen that stack.
+- [ ] Do not integrate pi-auch at runtime; quota display is orthogonal.
+- [ ] Do not integrate pi-tin at runtime; it remains a repository scaffold.
+- [ ] Add one short "works well with" section to documentation only if it helps
+  discovery. Make clear that each package is separately installed and usable
+  without Pi Sych.
+- [ ] Keep the same capability-first wording in J's Pi Bakery documentation so
+  the packages look composable without implying hidden coupling.
+
+## Phase 7 — tool-surface cleanup for Pi 0.99
+
+- [ ] Set `dispatch_worker` to `exposure: "model-only"`.
+- [ ] Set `submit_artifact` to `exposure: "model-only"`.
+- [ ] Keep `literature_search` direct/callable so codemode can use its
+  structured output.
+- [ ] Verify model-only tools are still normal visible model calls; the purpose
+  is only to prevent nested/codemode invocation.
+- [ ] Keep the public model-facing workbench surface at three tools:
+  `dispatch_worker`, `project_status`, `literature_search`.
+- [ ] After removing `/pi-sych-mcp`, keep `/pi-sych-status` as the only
+  workbench command. Plannotator commands remain owned by its separate
   extension.
-- [ ] For `remoteResearch: true`, explicitly load Pi's native MCP and codemode
-  built-ins because `--no-extensions` disables built-ins in Pi 0.99.
-- [ ] Prefer explicit launcher arguments such as
-  `-e builtin:mcp -e builtin:codemode` over depending on ambient user settings.
-- [ ] Add `codemode` to the worker's allowed tool set only for remote-research
-  dispatches.
-- [ ] Do **not** add individual MCP tool names to `--tools`. Native MCP default
-  codemode exposure should keep their schemas out of the worker's ordinary
-  model-facing tool declaration.
-- [ ] Verify that native MCP can discover and call configured server tools from
-  codemode when the worker is launched with Pi Sych's current
-  `--no-context-files`, `--no-skills`, and explicit-resource model.
-- [ ] Preserve timeout, cancellation, process-exit, immutable-result, change
-  observation, and temporary-session behavior unchanged.
-- [ ] Preserve the current worker result protocol. Native MCP/codemode results
-  are retrieval internals, not new terminal result fields.
-- [ ] Keep remote-research failure truthful: configured servers do not prove
-  credentials, reachability, source access, or successful retrieval.
 
-## Codemode Scope
+## Phase 8 — DRY the implementation
 
-Codemode is not being adopted because a full-host worker needs more host
-capability. Bash already supplies that. The intended benefits are:
+Do not introduce abstractions merely to reduce line count. Consolidate only
+repeated concepts with one clear owner.
 
-- parallel calls to independent tools/MCP servers;
-- filtering, joining, and reducing structured tool results before they enter
-  model context;
-- using large tool outputs inside one script without injecting every
-  intermediate result into the worker conversation; and
-- programmatic MCP tool discovery without permanently declaring every remote
-  tool schema to the model.
+- [ ] After removing config/MCP/PEW-PEW code, re-read every workbench module
+  before creating new helpers; many apparent abstractions may disappear on
+  their own.
+- [ ] Keep project resolution in `project-files` and pass `ResolvedProject`
+  where already available instead of rediscovering roots unnecessarily.
+- [ ] Review the two-stage SYNC parsing
+  (`parseSyncManifest` then `parseProjectStatusManifest`). Keep two stages
+  only if the shallow manifest is genuinely needed independently; otherwise
+  give artifact validation one owner.
+- [ ] Keep one atomic-write helper and one project-path vocabulary.
+- [ ] Keep one worker tool-mode mapping.
+- [ ] Keep one worker result schema shared by supervisor and worker extension.
+- [ ] Keep model-role parsing/loading in one module.
+- [ ] Do not split `worker-engine.ts` simply because it is large. Split only
+  if process launch and request/result semantics can become independently
+  clearer with fewer cross-imports.
+- [ ] Remove exports that exist only to let tests reach implementation details;
+  test public/pure boundaries instead where possible.
+- [ ] Require the final runtime to be smaller than v7.0.1 unless every net new
+  line has a concrete capability or robustness justification. Record the
+  before/after nonblank runtime count rather than raising the source cap.
 
-Implementation rules:
+## Phase 9 — test-suite cleanup
 
-- [ ] Enable codemode only for `remoteResearch: true` workers initially.
-- [ ] Do not enable codemode for ordinary full-host/edit/read-only workers just
-  because it exists.
-- [ ] Keep `codemode.mode` at Pi's normal mixed/direct behavior unless testing
-  demonstrates a concrete reason to use `only`.
-- [ ] Do not add Pi's separate model-facing `tool_search` to Pi Sych at this
-  stage. The expected MCP server set is small, server descriptions are
-  deliberate, and codemode already has `searchTools()` and
-  `describeNamespace()`.
-- [ ] Add worker guidance explaining the useful pattern: discover the required
-  MCP tools, call independent retrievals concurrently when appropriate,
-  normalize/filter results inside codemode, and return only material evidence
-  to the model.
-- [ ] Also tell the worker not to use codemode ceremonially. A single simple
-  retrieval should remain a single simple tool call.
-- [ ] Preserve source-verification discipline. Filtering results before context
-  does not turn snippets, metadata, or search hits into verified evidence.
+### Delete duplication first
 
-## Tool Exposure
+- [ ] Compare `tests/unit/worker-engine.test.mjs` with
+  `worker-engine-contract.test.mjs`; they currently duplicate almost the same
+  five contract/skill/prompt/submission/immutability tests.
+- [ ] Delete one and move only genuinely unique assertions into the survivor.
+- [ ] Delete `mcporter.test.mjs` with MCPorter.
+- [ ] Delete `pew-pew.test.mjs` with the special-case pass-through.
+- [ ] Delete config-schema tests if `config.json` is removed.
+- [ ] Move the compaction-failure test currently living in
+  `worker-engine-coverage.test.mjs` to the compaction suite.
 
-- [ ] Set supervisor `dispatch_worker` to `exposure: "model-only"`.
-  The model may call it directly, but codemode/other nested tools must not
-  launch hidden worker fan-out through `ctx.executeTool()`.
-- [ ] Set worker `submit_artifact` to `exposure: "model-only"`.
-  Submission remains the worker model's explicit, visible, terminal act and
-  must not be buried inside a codemode script.
-- [ ] Keep `literature_search` directly model-callable. It is ordinary
-  retrieval, not an orchestration or approval boundary.
-- [ ] Add regression tests proving `dispatch_worker` and `submit_artifact`
-  remain model-visible while unavailable to codemode/nested tool execution.
-- [ ] Do not change the user-visible meaning, parameter schemas, or terminal
-  semantics of those two tools merely to adopt the new exposure API.
+### Make test files describe behavior
 
-## Structured `literature_search`
+- [ ] Replace vague `*-additional.test.mjs` / `*-coverage.test.mjs` names
+  where practical with the behavior they own; do not create extra files only
+  for naming purity.
+- [ ] Share a small resolved-project/worker fixture helper if at least three
+  worker suites continue to construct the same object after cleanup.
+- [ ] Keep lifecycle/process tests separate from worker contract tests.
+- [ ] Keep result-protocol precedence tests table-driven.
+- [ ] Keep package-load/packed-install tests: they verify real resource
+  discovery rather than implementation details.
 
-- [ ] Add an `outputSchema` matching the existing documented public result:
-  an array of records containing `metadata`, `snippet`, `score`, and
-  `sourcePath`.
-- [ ] Preserve the current nullable/unknown realities of SQLite metadata rather
-  than tightening the schema beyond the v7 public contract accidentally.
-- [ ] Return the same useful model-facing `content` as today.
-- [ ] Also return the results as `structuredContent` so codemode can receive
-  actual objects/arrays without reparsing JSON text.
-- [ ] Keep `details.results` only if it still serves Pi UI/tests; avoid
-  maintaining three divergent representations of the same data.
-- [ ] Add truthful annotations:
-  - `readOnlyHint: true`;
-  - `destructiveHint: false`;
-  - `idempotentHint: true`; and
-  - `openWorldHint: false`.
-- [ ] Treat annotations as metadata, not policy or a security boundary.
-- [ ] Add tests that direct model calls retain readable output and codemode/nested
-  calls receive schema-valid structured data.
-- [ ] Add a regression case for nullable `itemType`, nullable creators, and
-  non-string SQLite-derived fields already permitted by the public result.
+### Thin the oversized wiring test
 
-## Capability Summary And Guidance
+- [ ] Reduce `workbench-registration.test.mjs` to wiring:
+  registered public tools/commands/events plus one representative call through
+  each important boundary.
+- [ ] Remove literature-search behavior already covered by the literature
+  suite.
+- [ ] Remove compaction-threshold behavior when the custom 100k trigger is
+  deleted.
+- [ ] Remove exact giant regex assertions for injected prose.
+- [ ] Remove fake-MCPorter and fake-PEW-PEW branches.
+- [ ] Keep the opt-in real-Pi workflow test as the end-to-end proof that the
+  assembled package still works.
 
-- [ ] Replace "remote MCPorter" capability language with native Pi MCP language.
-- [ ] Distinguish:
-  - native MCP extension available;
-  - worker-native MCP configuration present;
-  - configured server names/descriptions;
-  - actual authenticated/reachable retrieval, which remains unverified until a
-    call succeeds.
-- [ ] Do not advertise codemode as additional host access.
-- [ ] Describe codemode's role briefly as remote-tool composition and
-  pre-context filtering.
-- [ ] Do not add tool-count-heavy or server-schema-heavy supervisor text. Pi
-  0.99.2 already keeps default MCP servers out of the codemode declaration and
-  supplies short server summaries.
-- [ ] Keep the supervisor's normal startup context free of remote MCP tool
-  schemas when no remote-research worker is being dispatched.
+### Add only high-value new tests
 
-## Authentication
+- [ ] Native remote-research worker: no MCP/codemode when false; explicit native
+  MCP/codemode when true.
+- [ ] One local deterministic MCP fixture with two read-only tools to prove
+  codemode parallel composition and partial-failure behavior.
+- [ ] `model-only` exposure for dispatch/submission.
+- [ ] `literature_search` output schema, structured content, readable content
+  and annotations.
+- [ ] Literature relevance fixture if BM25 weighting changes.
+- [ ] Packed install contains no MCPorter remnants and still starts with no MCP
+  configuration.
+- [ ] Keep real external MCP service checks opt-in and out of ordinary CI.
 
-- [ ] Do not add a Pi Sych-specific ChatGPT/OpenAI authentication feature.
-  Subscription-backed OpenAI access already existed through Pi's OAuth/Codex
-  path before this migration; Pi 0.99's OpenAI-provider login is a Pi concern.
-- [ ] Do not change the worker model catalogue solely because Pi 0.99 added
-  provider login changes.
-- [ ] Verify that the existing worker `auth.json` symlink strategy still works
-  for the configured worker model providers under Pi 0.99.2.
-- [ ] For MCP-specific OAuth, rely on native Pi MCP authentication and document
-  where the worker-scoped auth state lives.
-- [ ] Where native MCP can authenticate from an existing provider login, use the
-  native Pi mechanism rather than copying tokens into MCP configuration.
+## Migration should be documentation, not runtime
 
-## Explicit Non-Goals
+If the final public simplification is breaking:
 
-- [ ] Do not add `tool_search` unless future MCP/tool scale makes direct
-  descriptions plus codemode discovery materially inadequate.
-- [ ] Do not adopt virtual models in the v8 core.
-- [ ] Do not adopt classifier models in the v8 core.
-- [ ] Do not replace explicit `modelRole` worker selection with hidden
-  per-request routing.
-- [ ] Do not change clean/trajectory worker semantics.
-- [ ] Do not replace separate worker processes with codemode or
-  `ctx.executeTool()`; those mechanisms do not provide clean model context.
-- [ ] Do not build a Pi Sych MCP transport, OAuth client, server registry, or
-  tool-search subsystem.
-- [ ] Do not turn tool annotations into an authorization engine.
-- [ ] Do not expose all supervisor MCP servers automatically to workers.
-- [ ] Do not broaden the worker tool surface for tasks that did not request
-  remote research.
+- [ ] Write one concise v7 -> v8 migration document.
+- [ ] Tell users which obsolete Pi Sych files/keys can simply be deleted.
+- [ ] Tell users where the conventional worker model catalogue and literature
+  database now live if those paths change.
+- [ ] Tell users to configure remote research in the worker agent directory
+  with native `pi mcp` commands.
+- [ ] Tell users to use `/mcp` or `pi mcp list` instead of
+  `/pi-sych-mcp`.
+- [ ] Tell users how to disable optional Pi Sych resources with `pi config`
+  rather than Pi Sych flags if the compaction/Plannotator toggles disappear.
+- [ ] Do not add runtime migration detection, compatibility shims, hidden
+  rewrites, or an automatic config migrator unless a real stored-state problem
+  turns out to require one.
+- [ ] A standalone migration/helper script is acceptable only if it deletes more
+  manual complexity than it adds and is not imported by production runtime.
 
-## Deterministic Tests
+## Recommended implementation order
 
-- [ ] Update exact worker-launch argument tests for Pi 0.99 built-ins.
-- [ ] Assert ordinary workers do not load native MCP or codemode.
-- [ ] Assert `remoteResearch: true` workers explicitly load native MCP and
-  codemode and receive `codemode` in the allowed tool surface.
-- [ ] Assert no `mcporter` tool or `MCPORTER_CONFIG` environment variable is
-  present.
-- [ ] Assert `dispatch_worker` and `submit_artifact` register as
-  `model-only`.
-- [ ] Assert `literature_search` publishes the intended output schema,
-  structured content, and annotations.
-- [ ] Add a local deterministic MCP fixture server. Prefer stdio for the basic
-  suite; add Streamable HTTP coverage if it remains small and stable.
-- [ ] Give the fixture at least two independent read-only tools so an integration
-  test can demonstrate parallel codemode calls without external network access.
-- [ ] Include one large fixture result and assert codemode can reduce it before
-  returning model-facing text.
-- [ ] Include one MCP failure result and ensure it remains a retrieval failure,
-  not a successful evidence claim.
-- [ ] Test absent `mcp.json`, malformed native MCP configuration, unavailable
-  server, and successful server cases with actionable failure boundaries.
-- [ ] If `/pi-sych-mcp` remains, test that it does not expose secrets.
-- [ ] Add migration coverage for a v7 config containing `mcporterConfig`.
-- [ ] Update packed-install tests to verify v8 works without `pi-mcporter`.
+1. [ ] Record the v7.0.1 runtime/test baseline and current source count.
+2. [ ] Remove duplicate tests and isolate the behaviors that must survive.
+3. [ ] Remove PEW-PEW special-case inheritance/capability narration.
+4. [ ] Replace Pi Sych-specific toggles with Pi-native resource controls where
+   the behavior remains clear.
+5. [ ] Collapse or delete `config.json` if the field-by-field audit confirms
+   the conventional-path design.
+6. [ ] Simplify custom compaction against the current Pi host APIs.
+7. [ ] Improve `literature_search` structured/readable output and evaluate
+   ranking.
+8. [ ] Add capability-level Bakery examples/guidance; no runtime dependencies.
+9. [ ] Validate Context7, OpenAlex and Scholar Gateway on native MCP.
+10. [ ] Remove MCPorter and wire native MCP/codemode for remote workers.
+11. [ ] Apply the Pi 0.99 tool-exposure changes.
+12. [ ] Re-run the deletion/DRY pass after the architecture has settled.
+13. [ ] Update public contract, README, architecture, configuration/migration
+    docs, code tour, generated Pages and only the diagrams actually affected.
+14. [ ] Decide the final SemVer level from the completed public delta.
+15. [ ] Do not tag or publish without separate owner authorization.
 
-## Real Acceptance Checks
+## Verification gate
 
-These checks are opt-in and should not enter ordinary cloud CI when they require
-credentials or network services.
-
-- [ ] Run a real Pi 0.99.2+ worker with `remoteResearch: true`.
-- [ ] Confirm native MCP starts from the worker agent directory rather than the
-  supervisor's general MCP configuration.
-- [ ] Confirm codemode can discover configured MCP namespaces without all tool
-  schemas appearing permanently in the worker prompt.
-- [ ] Confirm one worker can query at least two independent MCP tools in
-  parallel and emit a reduced synthesis.
-- [ ] Validate the current Context7 setup through native MCP.
-- [ ] Validate the current OpenAlex setup through native MCP.
-- [ ] Validate Wiley/Scholar Gateway through native MCP, including its actual
-  authentication path.
-- [ ] If any required service is legacy-SSE-only, record that exact blocker
-  before deleting the last fallback. Do not retain MCPorter speculatively.
-- [ ] Verify PEW-PEW reuse still behaves as documented when active.
-- [ ] Verify a normal non-research worker starts and completes with no MCP or
-  codemode dependency.
-- [ ] Verify a full-host remote-research worker still has the same Bash/file
-  capability as before; codemode should add composition efficiency, not change
-  its authorization boundary.
-
-## Documentation And Migration
-
-- [ ] Update `README.md` remote-research sections to describe native Pi MCP.
-- [ ] Update `docs/configuration.md` with worker-scoped `mcp.json` setup and
-  native Pi MCP commands.
-- [ ] Update `docs/ARCHITECTURE.md` so Pi owns MCP transport/auth/discovery and
-  Pi Sych owns only when a worker receives that capability.
-- [ ] Update `docs/public-contract.md`:
-  - remove MCPorter as a v8 runtime requirement;
-  - remove `mcporterConfig` from supported configuration;
-  - retain or explicitly migrate `/pi-sych-mcp`;
-  - preserve `remoteResearch` as the public opt-in field;
-  - state the Pi 0.99.2+ baseline.
-- [ ] Add a concise v7 -> v8 migration section or dedicated migration document:
-  remove `mcporterConfig`, configure worker-native `mcp.json`, authenticate
-  native servers, and rerun remote-research acceptance.
-- [ ] Update `docs/CHANGELOG.md` with an explicit **Breaking** section and
-  SemVer justification.
-- [ ] Update development/code-tour documentation for built-in MCP/codemode
-  loading and structured tool output.
-- [ ] Update diagrams only where they currently name MCPorter or imply a
-  separate MCP adapter. Do not redraw unaffected diagrams.
-- [ ] Update generated Pages/site material and verify internal links.
-- [ ] Preserve historical changelog references to MCPorter for old releases.
-
-## Cleanup And Source Budget
-
-- [ ] Delete dead MCPorter adapter code before adding replacement helpers.
-- [ ] Prefer one small native-MCP helper, if any, over multiple wrappers.
-- [ ] Reuse the existing worker agent directory and launcher abstractions.
-- [ ] Do not add a new configuration registry merely to point at Pi's
-  `mcp.json`.
-- [ ] Recalculate the runtime source budget after the migration. The net runtime
-  should ideally shrink: MCP transport/configuration belongs to Pi now.
-- [ ] Review whether `capabilitySummary` can become simpler once MCPorter
-  inspection disappears.
-- [ ] Run a duplication pass for MCP/native-extension path handling after tests
-  pass.
-
-## Verification Gate
-
-Run the complete repository gate on the final implementation:
+Run the ordinary deterministic gate on the final tree:
 
 ```sh
 npm run typecheck
 npm run style
 npm run source:budget
 npm test
-npm run test:usage
-npm run benchmark
 make verify
 make site
 npm pack --dry-run --json
 git diff --check
 ```
 
-- [ ] Keep network/model-backed usage and MCP service checks opt-in.
-- [ ] Run packed-install tests with optional Plannotator dependencies present
-  and absent.
-- [ ] Verify the packed package starts without MCP configuration.
-- [ ] Verify ordinary Pi Sych work remains usable when native MCP servers are
-  absent.
-- [ ] Verify v8 migration errors are specific and actionable rather than generic
-  extension-load failures.
-- [ ] Inspect the final package contents for stale MCPorter files/references.
-- [ ] Review `docs/public-contract.md`, changelog, README, configuration, and
-  architecture together before release.
+Then run separately:
 
-## Release Acceptance
+- [ ] opt-in real Pi workflow;
+- [ ] local deterministic MCP/codemode integration;
+- [ ] real Context7 native-MCP check;
+- [ ] real OpenAlex native-MCP check;
+- [ ] real Scholar Gateway native-MCP/authentication check;
+- [ ] packed install with optional Plannotator present;
+- [ ] packed install without optional Plannotator;
+- [ ] manual review of the final package contents for obsolete config,
+  MCPorter, PEW-PEW-pass-through, duplicate docs and stale tests.
 
-v8 is ready for release only when all of the following are true:
+## Definition of done
 
-- [ ] No production/runtime dependency on MCPorter remains.
-- [ ] `remoteResearch: true` uses Pi's native MCP and codemode deliberately.
-- [ ] Ordinary workers remain free of MCP/codemode unless requested.
-- [ ] `dispatch_worker` and `submit_artifact` cannot be nested through
-  codemode.
-- [ ] `literature_search` has schema-valid structured output without breaking
-  its documented direct result.
-- [ ] The worker-native MCP configuration and authentication path is documented
-  and tested.
-- [ ] Context7, OpenAlex, and Scholar Gateway have been checked against the
-  native path, or any unsupported service is explicitly documented.
-- [ ] The public contract describes the new behavior exactly.
-- [ ] The v7 -> v8 migration is short, deterministic, and requires no hidden
-  state conversion.
-- [ ] Full deterministic verification passes.
-- [ ] Real Pi remote-research acceptance passes on the release candidate.
-- [ ] The owner separately authorizes tagging/publication.
+The refactor is complete when:
+
+- [ ] Pi Sych contains no MCP client or MCP status/configuration wrapper.
+- [ ] Remote-research workers use native Pi MCP/codemode only when requested.
+- [ ] Companion Bakery tools remain independently installed and self-owned.
+- [ ] Pi Sych guidance composes naturally with available document, web and
+  browser capabilities without package-name coupling in runtime code.
+- [ ] `literature_search` is readable to models and structured for codemode.
+- [ ] The custom compactor contains only Pi-Sych-specific semantics plus the
+  minimum host glue.
+- [ ] Configuration surface is smaller than v7, ideally convention-only.
+- [ ] Runtime source is smaller than v7.0.1.
+- [ ] The test suite has less duplication while preserving process, state,
+  failure and public-contract coverage.
+- [ ] Migration is documented rather than implemented as permanent production
+  compatibility machinery.
+- [ ] The public contract and release notes match what actually shipped.
