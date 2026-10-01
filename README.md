@@ -276,13 +276,13 @@ orchestration system:
   files, skills, model role, tool mode, and timeout. Dispatch reports
   worker-reported files separately from observed project changes,
   including residual changes after failure; it does not roll them back.
-- **Small working memory:** when its separately loadable compaction
-  resource is enabled, custom compaction handles native requests and
-  proactive admission defaults to 150,000 context tokens at a safe
-  settled boundary. It retains bounded observable continuation state. It
-  can append clearly marked, unreviewed proposals to `INBOX.md`, but
-  never mutates canonical semantic files; omission or failure returns
-  control to Pi's native compactor.
+- **Small working memory:** when custom compaction is enabled in Pi Sych
+  config, the workbench handles native compaction requests and proactive
+  admission defaults to 150,000 context tokens at a safe settled
+  boundary. It retains bounded observable continuation state. It can
+  append clearly marked, unreviewed proposals to `INBOX.md`, but never
+  mutates canonical semantic files; omission or failure returns control
+  to Pi's native compactor.
 - **Human review:** Plannotator provides annotation and code-review
   interfaces without becoming a workflow controller.
 

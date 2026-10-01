@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-01T18:09:05.783Z",
+  "confirmedAt": "2026-10-01T18:13:48.994Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:6e16c0b2a7ac99d618ca96fb0f4f5a060c3c193285357a260cd3023d5a14f9c8",
+      "fingerprint": "sha256:33471bded52e875956db10f2048c6d31f7e5ab86c2dfc9305ff6adbe59d03ebf",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,8 +46,8 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T18:07:20.003Z",
-        "reason": "Reviewed the v8 preparation's configuration, native MCP worker, compaction and literature contracts against implementation and local test results; local checks passed and external native MCP/auth and real-model workflow remain explicitly unverified."
+        "at": "2026-10-01T18:13:48.994Z",
+        "reason": "Corrected the compaction resource description to match the implemented workbench hook and reviewed the nested-Git committed-change regression with passing local gate."
       }
     },
     {

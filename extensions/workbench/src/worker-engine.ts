@@ -531,7 +531,9 @@ async function projectSnapshot(root: string): Promise<Map<string, string>> {
 			.split("\0")
 			.filter(Boolean)
 			.map((entry) => entry.slice(3));
-		const tracked = git(["ls-files", "-z", "--cached", "--", "."]).split("\0").filter(Boolean);
+		const tracked = git(["ls-files", "--full-name", "-z", "--cached", "--", "."])
+			.split("\0")
+			.filter(Boolean);
 		const paths = [...new Set([...tracked, ...dirty])]
 			.filter((path) => !prefix || path.startsWith(`${prefix}/`))
 			.map((path) => (prefix ? path.slice(prefix.length + 1) : path));

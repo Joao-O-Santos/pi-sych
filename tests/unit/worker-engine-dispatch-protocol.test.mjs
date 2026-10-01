@@ -156,6 +156,37 @@ test("dispatch observes a tracked edit committed during worker launch", async (t
 	assert.deepEqual(outcome.unexpectedChanges, []);
 });
 
+test("dispatch observes nested tracked edits and newly committed files", async (t) => {
+	const parent = await mkdtemp(join(tmpdir(), "pi-sych-nested-commit-"));
+	t.after(() => rm(parent, { recursive: true, force: true }));
+	const root = join(parent, "project"),
+		workerAgentDir = join(parent, "agent");
+	await mkdir(root);
+	await mkdir(workerAgentDir);
+	await writeFile(join(workerAgentDir, "settings.json"), "{}\n");
+	await writeFile(join(root, "A.md"), "initial\n");
+	const git = (args) => execFileSync("git", args, { cwd: parent, stdio: "ignore" });
+	git(["init"]);
+	git(["config", "user.email", "worker-test@example.invalid"]);
+	git(["config", "user.name", "Worker Test"]);
+	git(["add", "project/A.md"]);
+	git(["commit", "-m", "initial"]);
+	const setup = { root, workerAgentDir, project: resolvedProject(root) };
+	const outcome = await dispatch(setup, async (spec) => {
+		await writeFile(join(root, "A.md"), "committed edit\n");
+		await writeFile(join(root, "B.md"), "new committed file\n");
+		git(["add", "project/A.md", "project/B.md"]);
+		git(["commit", "-m", "worker edit"]);
+		await writeFile(
+			spec.resultPath,
+			JSON.stringify({ status: "complete", summary: "done", files: ["A.md"], limitations: [] }),
+		);
+		return { exitCode: 0, stderr: "" };
+	});
+	assert.deepEqual(outcome.observedChangedFiles, ["A.md", "B.md"]);
+	assert.deepEqual(outcome.unexpectedChanges, ["B.md"]);
+});
+
 const processFailures = [
 	["nonzero exit", { exitCode: 7, stderr: "worker stderr" }, "Worker exited 7: worker stderr"],
 	["timeout", { exitCode: null, stderr: "", classification: "timeout" }, "Worker timeout"],
