@@ -160,16 +160,16 @@ Metadata and snippets remain discovery evidence until the underlying
 source is inspected when exact claims, methods, results, quotations, or
 correction status matter.
 
-{verified} `PLAN.md` records prior v7 work. The completed v8 release
-checklist was removed after publication verification. Five packaged
-review prompts remain thin and defer to the `review` skill. Custom
-compaction retains bounded observable trajectory at the settled
-boundary, preserves recorded decision labels without verification,
-appends only bounded unreviewed inbox proposals, never mutates canonical
-semantic files, and falls back to the native compactor on omission or
-failure. Worker dispatch now reports claimed, observed, and unreported
-project changes even after failure; observation does not roll back
-changes. Plannotator absence does not prevent core startup.
+{verified} The completed v7 plan and v8 release checklist were removed
+after release completion. Historical changes remain in Git and the
+changelog. Five packaged review prompts remain thin and defer to the
+`review` skill. Custom compaction retains bounded observable trajectory
+at the settled boundary, preserves recorded decision labels without
+verification, appends only bounded unreviewed inbox proposals, never
+mutates canonical semantic files, and falls back to the native compactor
+on omission or failure. Worker dispatch now reports claimed, observed,
+and unreported project changes even after failure; observation does not
+roll back changes. Plannotator absence does not prevent core startup.
 
 {verified} Present-tense
 README/configuration/architecture/public-contract text describes seven

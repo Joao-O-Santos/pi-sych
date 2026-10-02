@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-02T00:18:27.573Z",
+  "confirmedAt": "2026-10-02T00:23:45.853Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:24b740bf06ec184673a8687880d953580ef87e26cc265ea86842df5cfc348441",
+      "fingerprint": "sha256:331c20a631e37eb567eb2f4610f7cff448bb4064c30b0fbc467a02d5d71ef8db",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,8 +15,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-10-02T00:18:27.573Z",
-        "reason": "Recorded completed owner-authorized v8.0.0 release: verified signed commit/tag, successful exact-revision main and publication pipelines, npm 8.0.0/latest and matching gitHead, downloaded checksum and 212-file comparison, and matching provenance record (no independent cryptographic provenance validation). Removed completed TODO.md and its SYNC entry; retained ongoing PROJECT.md constraints."
+        "at": "2026-10-02T00:23:45.853Z",
+        "reason": "Owner-requested removal of completed historical v7 PLAN.md; updated project state to point historical changes to Git/changelog. No active plan or SYNC entry depended on the deleted file. Markdown check and git diff --check passed."
       }
     },
     {
