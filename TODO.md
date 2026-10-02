@@ -3,7 +3,8 @@
 The v8 implementation is on `main`; this file tracks the remaining release
 preparation, exact-revision checks, and limitations. The migration, public
 contract, architecture, and changelog documents describe the implemented
-behavior. This is not authorization to tag or publish.
+behavior. The owner has now authorized completing the release, including its
+signed tag and npm publication.
 
 ## Implemented locally
 
@@ -37,16 +38,16 @@ behavior. This is not authorization to tag or publish.
 
 ## Release gates
 
-- [ ] Apply the documented image-edit prompt in `docs/img/readme.md` to
-  `docs/img/architecture.png`; inspect the rendered labels and commit the
-  reviewed asset. The other explanatory images were checked and have no
-  known v8-specific correction pending.
-- [ ] On the final documentation/image revision, rerun `make verify` and
-  `make site`, confirm the exact-HEAD GitLab pipeline passes, and inspect
-  `npm pack --dry-run --json` contents plus a packed-install check.
-- [ ] After those gates, obtain explicit authorization for a signed release
-  commit/tag. The matching GitLab tag pipeline publishes `v8.0.0` to npm;
-  tag creation therefore has that external publication effect.
+- [x] Correct and visually inspect `docs/img/architecture.png` and obtain
+  independent read-only diagram/package-content review: no blockers.
+- [ ] Commit final documentation/image state, rerun `make verify` and
+  `make site`, and confirm the exact-HEAD GitLab pipeline passes. Local
+  checks already passed on the corrected image, including 216 tests,
+  packed installs, dry-run inventory inspection, and zero production
+  audit vulnerabilities.
+- [ ] Create the authorized signed `v8.0.0` tag, verify the publication
+  pipeline and exact npm version, then delete this completed task file.
+  Keep `PROJECT.md`: it owns ongoing accepted project constraints.
 
 ## Verified on current main
 

@@ -161,16 +161,16 @@ Metadata and snippets remain discovery evidence until the underlying
 source is inspected when exact claims, methods, results, quotations, or
 correction status matter.
 
-{verified} `PLAN.md` records prior v7 work; `TODO.md` tracks the
-remaining v8 verification gates. Five packaged review prompts remain
-thin and defer to the `review` skill. Custom compaction retains bounded
-observable trajectory at the settled boundary, preserves recorded
-decision labels without verification, appends only bounded unreviewed
-inbox proposals, never mutates canonical semantic files, and falls back
-to the native compactor on omission or failure. Worker dispatch now
-reports claimed, observed, and unreported project changes even after
-failure; observation does not roll back changes. Plannotator absence
-does not prevent core startup.
+{verified} `PLAN.md` records prior v7 work; `TODO.md` tracks v8 release
+execution until publication is verified. Five packaged review prompts
+remain thin and defer to the `review` skill. Custom compaction retains
+bounded observable trajectory at the settled boundary, preserves
+recorded decision labels without verification, appends only bounded
+unreviewed inbox proposals, never mutates canonical semantic files, and
+falls back to the native compactor on omission or failure. Worker
+dispatch now reports claimed, observed, and unreported project changes
+even after failure; observation does not roll back changes. Plannotator
+absence does not prevent core startup.
 
 {verified} Present-tense
 README/configuration/architecture/public-contract text describes seven
@@ -180,7 +180,7 @@ runtime source-code budget remains 3,200 lines.
 
 {verified} Repository-native formatting, documentation, type, budget,
 and test checks remain the acceptance boundary. The local package
-version is 8.0.0 preparation; publication is not authorized.
+version is 8.0.0; the owner has authorized completing its release.
 
 {verified} After revising reviewer-response guidance and repairing the
 benchmark fixtures, the five-case opt-in evaluation completed with
@@ -205,21 +205,22 @@ for a documentation fetch, not a worker MCP call.
 
 ## Previous action
 
-{verified} Added a paste-ready correction prompt for the only known
-stale explanatory image, `docs/img/architecture.png`; visually checked
-the other four explanatory diagrams. Added `completionReassessment`
-migration instructions and updated release-state notes to the actual
-pushed commit and successful exact-HEAD pipeline. Changes are
-documentation and release preparation; the architecture PNG itself is
-not yet regenerated.
+{verified} Corrected and visually reviewed `docs/img/architecture.png`;
+independent read-only review found no consequential diagram or package-
+content blockers. Local `make verify` passed 216 tests, including packed
+installs with and without optional dependencies; coverage was
+97.85/92.27/96.80% for lines/branches/functions. `make site`, package
+inventory inspection, and production audit passed (zero
+vulnerabilities). These checks must also pass on the final committed
+release revision.
 
 ## Immediate next step
 
-{user-explicit} Apply and inspect the documented image correction, then
-rerun the final package/content checks. The owner has not authorized a
-v8.0.0 tag or npm publication. The GitLab tag pipeline publishes the
-matching package to npm, so obtain explicit authorization before
-creating that tag.
+{user-explicit} Complete the v8.0.0 release, including the signed tag
+and its npm publication pipeline after exact-revision verification.
+Delete completed task state, but retain this ongoing project brief and
+its accepted constraints. Verify the published version and tagged
+revision before marking release execution complete.
 
 {unresolved} Model recognition of unfinished authorized work remains
 semantic, not mechanically guaranteed. Exa was not configured as a
