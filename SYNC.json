@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-02T00:05:31.728Z",
+  "confirmedAt": "2026-10-02T00:18:27.573Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:500fe7522d8e6436f77f5976c84a65c9a11bfafe2f0d88470a3b38e4fcb1f694",
+      "fingerprint": "sha256:24b740bf06ec184673a8687880d953580ef87e26cc265ea86842df5cfc348441",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,8 +15,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-10-02T00:05:31.728Z",
-        "reason": "Reviewed final corrected v8 architecture image and independent package/diagram review (no blockers); updated canonical release state to owner authorization and actual local verification. Local make verify passed 216 tests with packed installs, make site passed, production audit zero vulnerabilities. Exact final main pipeline and publication remain pending."
+        "at": "2026-10-02T00:18:27.573Z",
+        "reason": "Recorded completed owner-authorized v8.0.0 release: verified signed commit/tag, successful exact-revision main and publication pipelines, npm 8.0.0/latest and matching gitHead, downloaded checksum and 212-file comparison, and matching provenance record (no independent cryptographic provenance validation). Removed completed TODO.md and its SYNC entry; retained ongoing PROJECT.md constraints."
       }
     },
     {
@@ -120,19 +120,6 @@
       "acknowledgement": {
         "at": "2026-10-01T18:07:20.003Z",
         "reason": "Reviewed the v8 preparation's configuration, native MCP worker, compaction and literature contracts against implementation and local test results; local checks passed and external native MCP/auth and real-model workflow remain explicitly unverified."
-      }
-    },
-    {
-      "path": "TODO.md",
-      "fingerprint": "sha256:3abb6cf407af4bae4e31177938ea645a0770ebf00f0f9997690dc10650b3b2f7",
-      "status": "current",
-      "role": "remaining-work",
-      "authoritativeFor": [
-        "verification-gates-and-limitations"
-      ],
-      "acknowledgement": {
-        "at": "2026-10-02T00:05:31.728Z",
-        "reason": "Reviewed final corrected v8 architecture image and independent package/diagram review (no blockers); updated canonical release state to owner authorization and actual local verification. Local make verify passed 216 tests with packed installs, make site passed, production audit zero vulnerabilities. Exact final main pipeline and publication remain pending."
       }
     },
     {
