@@ -84,10 +84,20 @@ export function formatDispatchWorkerCallSummary(
 	].join("\n");
 }
 export function formatDispatchWorkerOutcome(outcome: DispatchOutcome) {
-	const result = outcome.result;
+	const interrupted = outcome.interruptedReport;
+	const result = outcome.result ?? interrupted?.report;
 	const lines = [
-		`Worker status: ${result?.status ?? "unavailable"}`,
-		`Summary: ${result?.summary ?? outcome.error ?? "no result"}`,
+		`Worker status: ${outcome.result?.status ?? (interrupted ? "interrupted" : "unavailable")}`,
+		`Summary: ${outcome.result?.summary ?? outcome.error ?? "no result"}`,
+		...(interrupted
+			? [
+					"",
+					"Interrupted worker report (provisional):",
+					interrupted.warning,
+					`Claimed status: ${interrupted.report.status}`,
+					`Reported summary: ${interrupted.report.summary}`,
+				]
+			: []),
 		"",
 		outcome.reportedFiles.length ? "Reported files:" : "Reported files: none",
 		...outcome.reportedFiles.map((file) => `- ${file}`),

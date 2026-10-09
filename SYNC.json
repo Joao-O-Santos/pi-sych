@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-09T10:22:01.674Z",
+  "confirmedAt": "2026-10-09T10:38:58.603Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:42330ac9ac05f827b124d8e5f2ce87718c19ae5a020894629092c8e250cd178a",
+      "fingerprint": "sha256:ff258b0e38b426eab22947520cf26fb067229d660f7f8ab3ddba6680e2515101",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,21 +15,21 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-10-09T10:22:01.674Z",
-        "reason": "Reviewed authorized unreleased worker JSON cancellation patch and independent review: explicit aborted true on normal exit rejects submitted results, retains observed changes, preserves parent/process failure precedence and legacy events. README remains consistent as architecture dependent. make verify passed 230 tests at 97.85/92.44/96.80 coverage; site/budget passed and production audit zero vulnerabilities. No new release/push authorization."
+        "at": "2026-10-09T10:38:58.603Z",
+        "reason": "Reviewed authorized interrupted-report recovery and independent review: preserve structurally valid provisional claims separately from successful result, keep interruption/process failure primary and warn of incomplete/inaccurate work and nonexistent claimed files. Malformed/absent reports retain original error and observations. README and migration/image guidance remain consistent; no configuration or diagram revision needed. make verify passed 239 tests at 97.86/92.50/96.80 coverage; site/budget passed, audit zero vulnerabilities. No push or release authorized."
       }
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:ca14d38e7b2d8573c71a1c6282591a5686aad64c3830b049a509a6805a3d160a",
+      "fingerprint": "sha256:7a2e1490a41f2486b4a3a85b4bf8da50a2c6d66d4858c29ce27bf8c6b156e771",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-10-09T10:22:01.674Z",
-        "reason": "Reviewed authorized unreleased worker JSON cancellation patch and independent review: explicit aborted true on normal exit rejects submitted results, retains observed changes, preserves parent/process failure precedence and legacy events. README remains consistent as architecture dependent. make verify passed 230 tests at 97.85/92.44/96.80 coverage; site/budget passed and production audit zero vulnerabilities. No new release/push authorization."
+        "at": "2026-10-09T10:38:58.603Z",
+        "reason": "Reviewed authorized interrupted-report recovery and independent review: preserve structurally valid provisional claims separately from successful result, keep interruption/process failure primary and warn of incomplete/inaccurate work and nonexistent claimed files. Malformed/absent reports retain original error and observations. README and migration/image guidance remain consistent; no configuration or diagram revision needed. make verify passed 239 tests at 97.86/92.50/96.80 coverage; site/budget passed, audit zero vulnerabilities. No push or release authorized."
       }
     },
     {
@@ -46,8 +46,8 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-10-09T10:22:01.674Z",
-        "reason": "Reviewed authorized unreleased worker JSON cancellation patch and independent review: explicit aborted true on normal exit rejects submitted results, retains observed changes, preserves parent/process failure precedence and legacy events. README remains consistent as architecture dependent. make verify passed 230 tests at 97.85/92.44/96.80 coverage; site/budget passed and production audit zero vulnerabilities. No new release/push authorization."
+        "at": "2026-10-09T10:38:58.603Z",
+        "reason": "Reviewed authorized interrupted-report recovery and independent review: preserve structurally valid provisional claims separately from successful result, keep interruption/process failure primary and warn of incomplete/inaccurate work and nonexistent claimed files. Malformed/absent reports retain original error and observations. README and migration/image guidance remain consistent; no configuration or diagram revision needed. make verify passed 239 tests at 97.86/92.50/96.80 coverage; site/budget passed, audit zero vulnerabilities. No push or release authorized."
       }
     },
     {
@@ -98,15 +98,15 @@
     },
     {
       "path": "docs/public-contract.md",
-      "fingerprint": "sha256:a4ea5afe7ab2b97cd0292ada25c89d73286fdd7a6975cb3cc43098247530af0c",
+      "fingerprint": "sha256:4d2e6c5ae98f1c6f1b554f0e55c4cd3617a92d40ca3b620cc79f98b4ee7252c1",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "compatibility"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T21:44:20.157Z",
-        "reason": "Reviewed requested worker cleanup, acknowledgement concurrency, and Pi peer-minimum fixes against implementation and regression tests. make verify passed 210 tests and packaging; make site passed. README dependency statements remain consistent. Hardlink handling was explicitly left unchanged."
+        "at": "2026-10-09T10:38:58.603Z",
+        "reason": "Reviewed authorized interrupted-report recovery and independent review: preserve structurally valid provisional claims separately from successful result, keep interruption/process failure primary and warn of incomplete/inaccurate work and nonexistent claimed files. Malformed/absent reports retain original error and observations. README and migration/image guidance remain consistent; no configuration or diagram revision needed. make verify passed 239 tests at 97.86/92.50/96.80 coverage; site/budget passed, audit zero vulnerabilities. No push or release authorized."
       }
     },
     {
@@ -125,7 +125,7 @@
     {
       "path": "docs/migration-v7-to-v8.md",
       "fingerprint": "sha256:c2b10bcabf2f25f62c638a9f5d1579a6fdc76ec1a9a6a84a42320f20200816fd",
-      "status": "needs-review",
+      "status": "current",
       "role": "migration-guide",
       "authoritativeFor": [
         "v7-to-v8-user-configuration-migration"
@@ -136,14 +136,14 @@
         "extensions/workbench/src/config-directory.ts"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T23:07:53.045Z",
-        "reason": "Documented the architecture-only stale image corrections and paste-ready prompt, added completionReassessment to the v7-to-v8 migration guide with one-shot/auth-boundary limits, and refreshed release gates to current main 53251ee7 and successful exact-HEAD pipeline 2904692244. Image asset remains pending; no tag or npm publication authorized."
+        "at": "2026-10-09T10:38:58.603Z",
+        "reason": "Reviewed authorized interrupted-report recovery and independent review: preserve structurally valid provisional claims separately from successful result, keep interruption/process failure primary and warn of incomplete/inaccurate work and nonexistent claimed files. Malformed/absent reports retain original error and observations. README and migration/image guidance remain consistent; no configuration or diagram revision needed. make verify passed 239 tests at 97.86/92.50/96.80 coverage; site/budget passed, audit zero vulnerabilities. No push or release authorized."
       }
     },
     {
       "path": "docs/img/readme.md",
       "fingerprint": "sha256:77e27652e26a3c7852c25e2d0ce7483e056b7029157a6d459e480b3114cf93c0",
-      "status": "needs-review",
+      "status": "current",
       "role": "image-update-guidance",
       "authoritativeFor": [
         "diagram-asset-status-and-edit-instructions"
@@ -154,8 +154,8 @@
         "docs/img/architecture.png"
       ],
       "acknowledgement": {
-        "at": "2026-10-02T00:05:31.728Z",
-        "reason": "Reviewed final corrected v8 architecture image and independent package/diagram review (no blockers); updated canonical release state to owner authorization and actual local verification. Local make verify passed 216 tests with packed installs, make site passed, production audit zero vulnerabilities. Exact final main pipeline and publication remain pending."
+        "at": "2026-10-09T10:38:58.603Z",
+        "reason": "Reviewed authorized interrupted-report recovery and independent review: preserve structurally valid provisional claims separately from successful result, keep interruption/process failure primary and warn of incomplete/inaccurate work and nonexistent claimed files. Malformed/absent reports retain original error and observations. README and migration/image guidance remain consistent; no configuration or diagram revision needed. make verify passed 239 tests at 97.86/92.50/96.80 coverage; site/budget passed, audit zero vulnerabilities. No push or release authorized."
       }
     },
     {
@@ -177,15 +177,15 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:32b7c39add32015c74558720587681074e4ff3d778fe54f48d51f0fd57a903bb",
+      "fingerprint": "sha256:c73f00ddb41e3a97ca432b9aa3f7ca1098b454f49a8c1a1e64a8814241828c57",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-10-09T10:22:01.674Z",
-        "reason": "Reviewed authorized unreleased worker JSON cancellation patch and independent review: explicit aborted true on normal exit rejects submitted results, retains observed changes, preserves parent/process failure precedence and legacy events. README remains consistent as architecture dependent. make verify passed 230 tests at 97.85/92.44/96.80 coverage; site/budget passed and production audit zero vulnerabilities. No new release/push authorization."
+        "at": "2026-10-09T10:38:58.603Z",
+        "reason": "Reviewed authorized interrupted-report recovery and independent review: preserve structurally valid provisional claims separately from successful result, keep interruption/process failure primary and warn of incomplete/inaccurate work and nonexistent claimed files. Malformed/absent reports retain original error and observations. README and migration/image guidance remain consistent; no configuration or diagram revision needed. make verify passed 239 tests at 97.86/92.50/96.80 coverage; site/budget passed, audit zero vulnerabilities. No push or release authorized."
       }
     },
     {

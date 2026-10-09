@@ -218,16 +218,19 @@ checkout. npm's provenance record identifies the same commit and
 publication job; its signature was not independently cryptographically
 validated.
 
-{verified} A subsequent unreleased worker patch recognizes explicit JSON
-`agent_settled.aborted: true` on normal exit, rejecting submitted
-results while retaining observed changes. Older Pi events remain
-compatible; existing parent-stop and process-failure handling stays in
-control. Regression tests cover chunked/trailing JSON, malformed and
-legacy events, and failure precedence. Independent read-only review
-found no blockers. `make verify` passed 230 tests with
-97.85/92.44/96.80% line/branch/function coverage; `make site` passed,
-source stayed within budget, and production audit found zero
-vulnerabilities.
+{verified} Unreleased worker handling recognizes explicit JSON
+`agent_settled.aborted: true` on normal exit. Interruption and process
+failure remain primary errors, but structurally valid submitted reports
+are preserved separately with an explicit warning that work and claimed
+status/files may be incomplete or inaccurate. Successful `result` stays
+absent for failures; independently observed changes remain visible.
+Older Pi events remain compatible. Regression tests cover cancellation,
+report recovery and invalid reports, missing claimed files, provisional
+rendering, and process-failure precedence. Independent read-only review
+found no material blockers. `make verify` passed 239 tests at
+97.86/92.50/96.80% line/branch/function coverage; `make site` passed,
+runtime source remained within budget, and production audit found zero
+vulnerabilities. This follow-up is not published.
 
 ## Immediate next step
 

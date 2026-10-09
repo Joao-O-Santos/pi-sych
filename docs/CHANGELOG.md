@@ -10,10 +10,15 @@ state.
 ### Fixed
 
 - Honor an explicit worker JSON `agent_settled.aborted: true` on normal
-  process exit: report cancellation and reject any submitted result,
-  while still observing project changes. Preserve parent cancellation,
-  timeout, process-failure handling, and compatibility with older Pi
-  versions that omit the flag.
+  process exit: report cancellation rather than success, while still
+  observing project changes. Preserve parent cancellation, timeout,
+  process-failure handling, and compatibility with older Pi versions
+  that omit the flag.
+- Preserve structurally valid reports from interrupted or failed workers
+  separately from successful results, warning that claimed status,
+  summary, and files may be incomplete or inaccurate. Keep the primary
+  error and independently observed changes visible; do not require
+  claimed files to still exist when recovering a provisional report.
 
 ## 8.0.0
 

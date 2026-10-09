@@ -131,6 +131,75 @@ test("dispatch compares reported files with observed changes and retains failed-
 	assert.deepEqual(failed.unexpectedChanges, ["residual.md"]);
 });
 
+for (const launch of [
+	{ exitCode: 0, stderr: "", classification: "cancelled" },
+	{ exitCode: null, stderr: "", classification: "timeout" },
+	{ exitCode: null, stderr: "", terminationSignal: "SIGTERM" },
+	{ exitCode: 1, stderr: "failed after submission" },
+]) {
+	test(`dispatch retains a provisional report after ${launch.classification ?? launch.terminationSignal ?? "nonzero exit"}`, async (t) => {
+		const { root, agentDir, resolved } = await readyProject(t);
+		const report = {
+			status: "complete",
+			summary: "claimed done",
+			files: ["A.md", "missing.md"],
+			limitations: ["not independently checked"],
+		};
+		const outcome = await dispatchWorker({
+			project: resolved,
+			workerAgentDir: agentDir,
+			request,
+			catalog,
+			launcher: async (spec) => {
+				await writeFile(join(root, "A.md"), "partial work");
+				await writeFile(join(root, "unreported.md"), "residual work");
+				await writeImmutableResult(spec.resultPath, report);
+				return launch;
+			},
+		});
+		assert.ok(outcome.error);
+		assert.equal(outcome.result, undefined);
+		assert.deepEqual(outcome.interruptedReport.report, report);
+		assert.match(outcome.interruptedReport.warning, /unverified.*incomplete or inaccurate/i);
+		assert.deepEqual(outcome.reportedFiles, ["A.md", "missing.md"]);
+		assert.deepEqual(outcome.observedChangedFiles, ["A.md", "unreported.md"]);
+		assert.deepEqual(outcome.unexpectedChanges, ["unreported.md"]);
+	});
+}
+
+for (const submitted of [
+	undefined,
+	"not JSON",
+	JSON.stringify({ status: "complete" }),
+	JSON.stringify({
+		status: "complete",
+		summary: "bad path",
+		files: ["../escape"],
+		limitations: [],
+	}),
+]) {
+	test(`interrupted dispatch does not retain invalid report ${submitted ?? "absent"}`, async (t) => {
+		const { root, agentDir, resolved } = await readyProject(t);
+		const outcome = await dispatchWorker({
+			project: resolved,
+			workerAgentDir: agentDir,
+			request,
+			catalog,
+			launcher: async (spec) => {
+				await writeFile(join(root, "A.md"), "partial work");
+				if (submitted !== undefined) await writeFile(spec.resultPath, submitted);
+				return { exitCode: null, stderr: "", classification: "timeout" };
+			},
+		});
+		assert.equal(outcome.error, "Worker timeout");
+		assert.equal(outcome.result, undefined);
+		assert.equal(outcome.interruptedReport, undefined);
+		assert.deepEqual(outcome.reportedFiles, []);
+		assert.deepEqual(outcome.observedChangedFiles, ["A.md"]);
+		assert.deepEqual(outcome.unexpectedChanges, ["A.md"]);
+	});
+}
+
 test("dispatch reports an observation error when the project disappears after launch", async (t) => {
 	const { root, agentDir, resolved } = await readyProject(t);
 	const outcome = await dispatchWorker({
@@ -753,6 +822,9 @@ test("agent_settled aborted cancels dispatch after chunked JSONL and retains sub
 	assert.deepEqual(outcome.observedChangedFiles, ["changed.md"]);
 	assert.deepEqual(outcome.unexpectedChanges, ["changed.md"]);
 	assert.equal(outcome.result, undefined);
+	assert.equal(outcome.interruptedReport.report.summary, "already submitted");
+	assert.equal(outcome.interruptedReport.report.status, "complete");
+	assert.match(outcome.interruptedReport.warning, /unverified.*incomplete or inaccurate/i);
 	assert.equal(
 		await access(resultPath).then(
 			() => true,

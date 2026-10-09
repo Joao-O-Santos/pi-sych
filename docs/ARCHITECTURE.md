@@ -92,21 +92,27 @@ worker's `complete` status is not human approval. Cancellation, timeout,
 spawn failure, a signal exit, or non-zero exit takes precedence over a
 result file. On Pi versions that expose `agent_settled.aborted` in JSON
 output, an explicit `true` also classifies an otherwise normally exited
-worker as cancelled and rejects its submitted result. Missing or false
-flags do not establish success; process checks and result validation
-remain required. Before launch and after termination, Pi Sych snapshots
-project files and reports reported, observed, and unexpected changed
-paths independently of worker success. Observation does not undo
-changes. Temporary runtime/session state is removed after every outcome.
-Signal exits retain their terminating signal in the failure diagnostic.
-Git snapshot fallback covers file enumeration, not file-hashing errors;
-observation failures remain explicit instead of switching snapshot
-scope. On POSIX, workers have their own process group. Timeout or
-cancellation starts graceful group termination, with ten seconds before
-forced cleanup. A normally exited worker also gets ten seconds to drain
-inherited output pipes, without being reclassified as timed out. Windows
-signals the direct child; pipe cleanup still prevents descendants from
-holding dispatch open.
+worker as cancelled rather than accepting its submitted result as
+success. A structurally valid report recovered after interruption or
+process failure is retained separately as `interruptedReport`, with an
+explicit warning that work may be incomplete or inaccurate. Its claimed
+status, summary, limitations, and reported paths are provisional; paths
+may no longer exist. The primary error remains, and `result` is absent.
+Missing or invalid reports do not mask the interruption. Missing or
+false settlement flags do not establish success; process checks and
+result validation remain required. Before launch and after termination,
+Pi Sych snapshots project files and reports reported, observed, and
+unexpected changed paths independently of worker success. Observation
+does not undo changes. Temporary runtime/session state is removed after
+every outcome. Signal exits retain their terminating signal in the
+failure diagnostic. Git snapshot fallback covers file enumeration, not
+file-hashing errors; observation failures remain explicit instead of
+switching snapshot scope. On POSIX, workers have their own process
+group. Timeout or cancellation starts graceful group termination, with
+ten seconds before forced cleanup. A normally exited worker also gets
+ten seconds to drain inherited output pipes, without being reclassified
+as timed out. Windows signals the direct child; pipe cleanup still
+prevents descendants from holding dispatch open.
 
 ## Project state
 

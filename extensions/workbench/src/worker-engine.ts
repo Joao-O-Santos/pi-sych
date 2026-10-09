@@ -81,6 +81,7 @@ export type DispatchOutcome = {
 	unexpectedChanges: string[];
 	observationError?: string;
 	result?: WorkerResult;
+	interruptedReport?: { report: WorkerResult; warning: string };
 	error?: string;
 };
 export type WorkerLauncher = (spec: WorkerLaunchSpec) => Promise<WorkerLaunchOutcome>;
@@ -672,25 +673,19 @@ export async function dispatchWorker(options: {
 		unexpectedChanges: observedChangedFiles,
 		...(observationError ? { observationError } : {}),
 	};
-	if (launch.classification || launch.terminationSignal || launch.exitCode !== 0) {
-		const failure = launch.terminationSignal
-			? `Worker terminated by ${launch.terminationSignal}`
-			: `Worker exited ${launch.exitCode ?? "without an exit code"}`;
-		return {
-			id,
-			model,
-			timeoutMs,
-			launch,
-			...observed,
-			error: launch.classification
-				? `Worker ${launch.classification}`
-				: `${failure}${launch.stderr ? `: ${launch.stderr}` : ""}`,
-		};
-	}
+	const failure = launch.terminationSignal
+		? `Worker terminated by ${launch.terminationSignal}`
+		: `Worker exited ${launch.exitCode ?? "without an exit code"}`;
+	const error = launch.classification
+		? `Worker ${launch.classification}`
+		: launch.terminationSignal || launch.exitCode !== 0
+			? `${failure}${launch.stderr ? `: ${launch.stderr}` : ""}`
+			: undefined;
 	try {
 		const result = validateWorkerResult(JSON.parse(await readFile(resultPath, "utf8")));
-		for (const file of result.files)
-			await resolveExistingProjectPath(options.project.projectRoot, file);
+		if (!error)
+			for (const file of result.files)
+				await resolveExistingProjectPath(options.project.projectRoot, file);
 		const reportedFiles = result.files,
 			reported = new Set(reportedFiles);
 		return {
@@ -702,7 +697,16 @@ export async function dispatchWorker(options: {
 			observedChangedFiles,
 			unexpectedChanges: observedChangedFiles.filter((file) => !reported.has(file)),
 			...(observationError ? { observationError } : {}),
-			result,
+			...(error
+				? {
+						error,
+						interruptedReport: {
+							report: result,
+							warning:
+								"Unverified interrupted report: work may be incomplete or inaccurate; claimed status and files are not verified outcomes.",
+						},
+					}
+				: { result }),
 		};
 	} catch (reason) {
 		return {
@@ -711,7 +715,9 @@ export async function dispatchWorker(options: {
 			timeoutMs,
 			launch,
 			...observed,
-			error: `Worker result protocol failed: ${reason instanceof Error ? reason.message : String(reason)}`,
+			error:
+				error ??
+				`Worker result protocol failed: ${reason instanceof Error ? reason.message : String(reason)}`,
 		};
 	}
 }

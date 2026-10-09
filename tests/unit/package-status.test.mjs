@@ -423,3 +423,30 @@ test("worker output is reduced to result essentials", () => {
 	assert.match(text, /Observed project changes:\n- A.md/);
 	assert.doesNotMatch(text, /Result package|Artifacts/);
 });
+
+test("interrupted worker output keeps failure primary and labels report claims as provisional", () => {
+	const text = formatDispatchWorkerOutcome({
+		launch: { exitCode: 0, stderr: "", classification: "cancelled" },
+		error: "Worker cancelled",
+		reportedFiles: ["A.md"],
+		observedChangedFiles: ["A.md"],
+		unexpectedChanges: [],
+		interruptedReport: {
+			report: {
+				status: "complete",
+				summary: "claimed done",
+				files: ["A.md"],
+				limitations: ["unfinished verification"],
+			},
+			warning:
+				"Unverified interrupted report: work may be incomplete or inaccurate; claimed status and files are not verified outcomes.",
+		},
+	});
+	assert.match(text, /^Worker status: interrupted\nSummary: Worker cancelled/);
+	assert.match(text, /Interrupted worker report \(provisional\):/);
+	assert.match(text, /Unverified.*incomplete or inaccurate/);
+	assert.match(text, /Claimed status: complete\nReported summary: claimed done/);
+	assert.match(text, /Reported files:\n- A.md/);
+	assert.match(text, /Limitations:\n- unfinished verification/);
+	assert.doesNotMatch(text, /Worker status: complete|Summary: claimed done/);
+});
