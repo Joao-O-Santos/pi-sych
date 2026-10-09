@@ -106,20 +106,19 @@ requirements and workflows remain in `AGENTS.md` and/or `PROJECT.md`.
 
 ## Current state
 
-{verified} v8.0.0 is tagged and published. It uses strict layered
+{verified} v8.0.1 is tagged and published. It uses strict layered
 version 2 configuration, Pi-native worker MCP/codemode, a 150k task-
 centred compaction threshold, and structured read-only literature
 discovery. MCPorter and the special-case companion web inheritance were
 removed; companion packages remain separately installed.
 
 {verified} Against the v7.0.1 deterministic coverage baseline (97.48%
-lines, 90.23% branches, 95.31% functions), the current v8 preparation
-coverage measures 97.85% lines, 92.27% branches, and 96.80% functions.
-Runtime nonblank source is about 3,200 lines, within the 3,200-line
-budget. The local native MCP fixture and live read-only Context7 worker
-call passed. The opt-in real-model workflow and an installed-package
-`project_status` dogfood call passed after private local v8
-configuration migration.
+lines, 90.23% branches, 95.31% functions), v8.0.1 coverage measures
+97.86% lines, 92.50% branches, and 96.80% functions. Runtime nonblank
+source is about 3,200 lines, within the 3,200-line budget. The local
+native MCP fixture and live read-only Context7 worker call passed. The
+opt-in real-model workflow and an installed-package `project_status`
+dogfood call passed after private local v8 configuration migration.
 
 {verified} The supervisor prompt, dispatch tool guidance, worker schema
 and assignment prompt, local literature tool guidance, seven umbrella
@@ -179,7 +178,7 @@ runtime source-code budget remains 3,200 lines.
 
 {verified} Repository-native formatting, documentation, type, budget,
 and test checks remain the acceptance boundary. The published package
-version is 8.0.0.
+version is 8.0.1.
 
 {verified} After revising reviewer-response guidance and repairing the
 benchmark fixtures, the five-case opt-in evaluation completed with
@@ -204,42 +203,34 @@ for a documentation fetch, not a worker MCP call.
 
 ## Previous action
 
-{verified} Released v8.0.0 at signed commit
-`8b2234a628ff5acdfe407e9000486a23760cdc46` with a verified signed tag.
-The corrected architecture image and package inventory passed
-independent review. Local `make verify` passed 216 tests, including
-packed installs with and without optional dependencies; coverage was
-97.85/92.27/96.80% for lines/branches/functions. Site and production
-audit passed (zero vulnerabilities). Exact-revision main pipeline
-`2904866909` and tag publication pipeline `2904875553` passed. npm
-reports `pi-sych@8.0.0` and `latest` at 8.0.0 with the matching gitHead;
-the downloaded tarball checksum and all 212 files match the release
-checkout. npm's provenance record identifies the same commit and
-publication job; its signature was not independently cryptographically
+{verified} Released v8.0.1 at signed commit
+`89dc912367559e8a8a01fcfa15050d6e94dde708` with a verified signed tag.
+Main pipelines `2930169788` (worker fixes) and `2930185890` (version
+bump) passed verify/pages; tag pipeline `2930208540` passed verify and
+npm publication. npm reports version/latest 8.0.1 with the matching
+gitHead. The downloaded tarball checksum and all 212 files match the
+release checkout; npm's provenance record identifies the same commit and
+tarball digest. Its signature was not independently cryptographically
 validated.
 
-{verified} v8.0.1 preparation recognizes explicit JSON
-`agent_settled.aborted: true` on normal exit. Interruption and process
-failure remain primary errors, but structurally valid submitted reports
-are preserved separately with an explicit warning that work and claimed
-status/files may be incomplete or inaccurate. Successful `result` stays
-absent for failures; independently observed changes remain visible.
-Older Pi events remain compatible. Regression tests cover cancellation,
-report recovery and invalid reports, missing claimed files, provisional
-rendering, and process-failure precedence. Independent read-only review
-found no material blockers. `make verify` passed 239 tests at
-97.86/92.50/96.80% line/branch/function coverage; `make site` passed,
-runtime source remained within budget, and production audit found zero
-vulnerabilities. This follow-up is not published.
+{verified} v8.0.1 recognizes explicit JSON `agent_settled.aborted: true`
+on normal exit. Interruption and process failure remain primary errors,
+but structurally valid submitted reports are preserved separately with
+an explicit warning that work and claimed status/files may be incomplete
+or inaccurate. Successful `result` stays absent for failures;
+independently observed changes remain visible. Older Pi events remain
+compatible. Regression tests cover cancellation, report recovery and
+invalid reports, missing claimed files, provisional rendering, and
+process-failure precedence. Independent read-only review found no
+material blockers. `make verify` passed 239 tests at 97.86/92.50/96.80%
+line/branch/function coverage; `make site` passed, runtime source
+remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
-{user-explicit} Release the worker cancellation/report-preservation
-fixes as v8.0.1 after successful CI, push its signed tag, and monitor
-publication. The main pipeline for `b221897` passed (`2930169788`);
-verify the bumped revision before tagging. Retain this project brief for
-ongoing accepted constraints. Future releases require their own
-authorization.
+{verified} The authorized v8.0.1 release is complete. No release task
+remains. Retain this project brief for ongoing accepted constraints;
+future releases require their own authorization.
 
 {unresolved} Model recognition of unfinished authorized work remains
 semantic, not mechanically guaranteed. Exa was not configured as a

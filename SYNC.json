@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-09T11:01:32.108Z",
+  "confirmedAt": "2026-10-09T11:15:07.373Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:e484f3e763c303336ba89d1804eeb6510e610083d214356dd0b70e87386bc870",
+      "fingerprint": "sha256:c69b28002b761c59dfb61b1661c0ee6f6cb314977bbead5bb00f4536a4e9f5bb",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,8 +15,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-10-09T11:01:32.108Z",
-        "reason": "Reviewed owner-authorized v8.0.1 patch release preparation. Prior main pipeline 2930169788 passed; version/lockfile/tagged image links/changelog align at 8.0.1. Local make verify passed 239 tests including packed installs (97.86/92.50/96.80 coverage); site/budget/pack inventory passed, production audit zero vulnerabilities. Bumped exact-revision pipeline and publication remain pending."
+        "at": "2026-10-09T11:15:07.373Z",
+        "reason": "Recorded completed owner-authorized v8.0.1 release: verified signed commit/tag at 89dc912; successful exact-commit main pipeline 2930185890 and tag verify/publication pipeline 2930208540; npm version/latest/gitHead verified, published checksum and 212-file content match, provenance record matches commit/digest (signature not independently validated). Local 239-test checks, site, budget and zero-vulnerability audit passed; metadata-only state update."
       }
     },
     {
