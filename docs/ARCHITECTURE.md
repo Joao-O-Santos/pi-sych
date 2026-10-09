@@ -90,7 +90,11 @@ The worker reports `complete`, `partial`, or `failed`, a non-empty
 summary, existing project-relative output files, and limitations. A
 worker's `complete` status is not human approval. Cancellation, timeout,
 spawn failure, a signal exit, or non-zero exit takes precedence over a
-result file. Before launch and after termination, Pi Sych snapshots
+result file. On Pi versions that expose `agent_settled.aborted` in JSON
+output, an explicit `true` also classifies an otherwise normally exited
+worker as cancelled and rejects its submitted result. Missing or false
+flags do not establish success; process checks and result validation
+remain required. Before launch and after termination, Pi Sych snapshots
 project files and reports reported, observed, and unexpected changed
 paths independently of worker success. Observation does not undo
 changes. Temporary runtime/session state is removed after every outcome.

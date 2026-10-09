@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-02T00:23:45.853Z",
+  "confirmedAt": "2026-10-09T10:22:01.674Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:331c20a631e37eb567eb2f4610f7cff448bb4064c30b0fbc467a02d5d71ef8db",
+      "fingerprint": "sha256:42330ac9ac05f827b124d8e5f2ce87718c19ae5a020894629092c8e250cd178a",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,21 +15,21 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-10-02T00:23:45.853Z",
-        "reason": "Owner-requested removal of completed historical v7 PLAN.md; updated project state to point historical changes to Git/changelog. No active plan or SYNC entry depended on the deleted file. Markdown check and git diff --check passed."
+        "at": "2026-10-09T10:22:01.674Z",
+        "reason": "Reviewed authorized unreleased worker JSON cancellation patch and independent review: explicit aborted true on normal exit rejects submitted results, retains observed changes, preserves parent/process failure precedence and legacy events. README remains consistent as architecture dependent. make verify passed 230 tests at 97.85/92.44/96.80 coverage; site/budget passed and production audit zero vulnerabilities. No new release/push authorization."
       }
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:ca3814b7825b5b5d5a542950298b9d641635b6caf7db79d1a530b56c39d8879c",
+      "fingerprint": "sha256:ca14d38e7b2d8573c71a1c6282591a5686aad64c3830b049a509a6805a3d160a",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T22:39:28.103Z",
-        "reason": "Reviewed six bounded audit fixes and regressions, preserved shutdown and failure precedence, confirmed README/package consistency with architecture. Final make verify passed 213 tests, make site passed, production audit found zero vulnerabilities; clean-context review found no material issues. No push or release authorized."
+        "at": "2026-10-09T10:22:01.674Z",
+        "reason": "Reviewed authorized unreleased worker JSON cancellation patch and independent review: explicit aborted true on normal exit rejects submitted results, retains observed changes, preserves parent/process failure precedence and legacy events. README remains consistent as architecture dependent. make verify passed 230 tests at 97.85/92.44/96.80 coverage; site/budget passed and production audit zero vulnerabilities. No new release/push authorization."
       }
     },
     {
@@ -46,8 +46,8 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T22:39:28.103Z",
-        "reason": "Reviewed six bounded audit fixes and regressions, preserved shutdown and failure precedence, confirmed README/package consistency with architecture. Final make verify passed 213 tests, make site passed, production audit found zero vulnerabilities; clean-context review found no material issues. No push or release authorized."
+        "at": "2026-10-09T10:22:01.674Z",
+        "reason": "Reviewed authorized unreleased worker JSON cancellation patch and independent review: explicit aborted true on normal exit rejects submitted results, retains observed changes, preserves parent/process failure precedence and legacy events. README remains consistent as architecture dependent. make verify passed 230 tests at 97.85/92.44/96.80 coverage; site/budget passed and production audit zero vulnerabilities. No new release/push authorization."
       }
     },
     {
@@ -125,7 +125,7 @@
     {
       "path": "docs/migration-v7-to-v8.md",
       "fingerprint": "sha256:c2b10bcabf2f25f62c638a9f5d1579a6fdc76ec1a9a6a84a42320f20200816fd",
-      "status": "current",
+      "status": "needs-review",
       "role": "migration-guide",
       "authoritativeFor": [
         "v7-to-v8-user-configuration-migration"
@@ -143,7 +143,7 @@
     {
       "path": "docs/img/readme.md",
       "fingerprint": "sha256:77e27652e26a3c7852c25e2d0ce7483e056b7029157a6d459e480b3114cf93c0",
-      "status": "current",
+      "status": "needs-review",
       "role": "image-update-guidance",
       "authoritativeFor": [
         "diagram-asset-status-and-edit-instructions"
@@ -177,15 +177,15 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:39763973ed9504a5eee568892a3fad446fc2fed900243c968e9e64faa14da418",
+      "fingerprint": "sha256:32b7c39add32015c74558720587681074e4ff3d778fe54f48d51f0fd57a903bb",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T22:52:04.260Z",
-        "reason": "Reviewed compaction hardening for malformed UTF-8 expansion, serialized prompt bounds, clipped manual focus, and manual failure-notification fallback; added boundary regressions. Updated v8 state and MCP verification record. Final make verify passed 216 tests at 97.85/92.27/96.80% line/branch/function coverage, make site passed, production npm audit reported zero vulnerabilities. No push or release."
+        "at": "2026-10-09T10:22:01.674Z",
+        "reason": "Reviewed authorized unreleased worker JSON cancellation patch and independent review: explicit aborted true on normal exit rejects submitted results, retains observed changes, preserves parent/process failure precedence and legacy events. README remains consistent as architecture dependent. make verify passed 230 tests at 97.85/92.44/96.80 coverage; site/budget passed and production audit zero vulnerabilities. No new release/push authorization."
       }
     },
     {

@@ -218,6 +218,17 @@ checkout. npm's provenance record identifies the same commit and
 publication job; its signature was not independently cryptographically
 validated.
 
+{verified} A subsequent unreleased worker patch recognizes explicit JSON
+`agent_settled.aborted: true` on normal exit, rejecting submitted
+results while retaining observed changes. Older Pi events remain
+compatible; existing parent-stop and process-failure handling stays in
+control. Regression tests cover chunked/trailing JSON, malformed and
+legacy events, and failure precedence. Independent read-only review
+found no blockers. `make verify` passed 230 tests with
+97.85/92.44/96.80% line/branch/function coverage; `make site` passed,
+source stayed within budget, and production audit found zero
+vulnerabilities.
+
 ## Immediate next step
 
 {verified} The authorized v8.0.0 release is complete. No release task

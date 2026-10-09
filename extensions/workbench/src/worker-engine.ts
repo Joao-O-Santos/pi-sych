@@ -351,10 +351,13 @@ function forwardWorkerActivity(
 	onActivity?: (activity: readonly string[]) => void,
 ) {
 	let buffered = "";
+	const settlement = { aborted: false };
 	const activity: string[] = [];
 	const forward = (line: string) => {
 		try {
-			const item = workerActivity(JSON.parse(line));
+			const event = JSON.parse(line);
+			if (event?.type === "agent_settled" && event.aborted === true) settlement.aborted = true;
+			const item = workerActivity(event);
 			if (!item) return;
 			activity.push(item);
 			if (activity.length > ACTIVITY_LIMIT) activity.shift();
@@ -372,6 +375,7 @@ function forwardWorkerActivity(
 	stream.once("end", () => {
 		if (buffered) forward(buffered);
 	});
+	return settlement;
 }
 export function validateWorkerResult(value: unknown): WorkerResult {
 	if (!value || typeof value !== "object" || Array.isArray(value))
@@ -441,7 +445,7 @@ export async function launchPiWorker(
 			stdio: ["ignore", "pipe", "pipe"],
 		},
 	);
-	forwardWorkerActivity(child.stdout, spec.onActivity);
+	const settlement = forwardWorkerActivity(child.stdout, spec.onActivity);
 	child.stderr.setEncoding("utf8");
 	child.stderr.on("data", (chunk) => (stderr = (stderr + chunk).slice(-LOG_LIMIT)));
 	const signalWorker = (signal: NodeJS.Signals) => {
@@ -509,6 +513,8 @@ export async function launchPiWorker(
 			classification: "spawn-failure",
 		};
 	}
+	if (exitCode === 0 && !terminationSignal && settlement.aborted)
+		return { exitCode, stderr, classification: "cancelled" };
 	return { exitCode, stderr, ...(terminationSignal ? { terminationSignal } : {}) };
 }
 async function snapshotFile(root: string, relativePath: string): Promise<string> {

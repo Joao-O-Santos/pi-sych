@@ -719,6 +719,102 @@ test("worker activity parses chunked JSONL, ignores malformed events, and stays 
 	assert.ok(updates.some((activity) => activity.includes(`write ${"x".repeat(111)}...`)));
 });
 
+test("agent_settled aborted cancels dispatch after chunked JSONL and retains submitted work", async (t) => {
+	const { root, agentDir, resolved } = await readyProject(t);
+	const fake = fakeSpawn();
+	let resultPath;
+	const outcome = await dispatchWorker({
+		project: resolved,
+		workerAgentDir: agentDir,
+		request,
+		catalog,
+		launcher: async (spec) => {
+			resultPath = spec.resultPath;
+			await writeImmutableResult(resultPath, {
+				status: "complete",
+				summary: "already submitted",
+				files: [],
+				limitations: [],
+			});
+			await writeFile(join(root, "changed.md"), "retained after cancellation\n");
+			const launched = launchPiWorker(spec, fake.spawn);
+			fake.child.stdout.write('{"type":"agent_sett');
+			fake.child.stdout.write('led","aborted":true}');
+			const ended = new Promise((resolve) => fake.child.stdout.once("end", resolve));
+			fake.child.stdout.end();
+			await ended;
+			fake.child.emit("close", 0, null);
+			return launched;
+		},
+	});
+	assert.equal(outcome.launch.classification, "cancelled");
+	assert.match(outcome.error ?? "", /cancelled/i);
+	assert.deepEqual(outcome.reportedFiles, []);
+	assert.deepEqual(outcome.observedChangedFiles, ["changed.md"]);
+	assert.deepEqual(outcome.unexpectedChanges, ["changed.md"]);
+	assert.equal(outcome.result, undefined);
+	assert.equal(
+		await access(resultPath).then(
+			() => true,
+			() => false,
+		),
+		false,
+	);
+});
+
+for (const [label, lines] of [
+	["no settlement", []],
+	["false aborted", ['{"type":"agent_settled","aborted":false}']],
+	["older Pi settlement", ['{"type":"agent_settled"}']],
+	["null event", ["null"]],
+	["non-boolean aborted", ['{"type":"agent_settled","aborted":"true"}']],
+	["malformed JSON", ['{"type":"agent_settled","aborted":true']],
+	["unrelated event", ['{"type":"message_end","aborted":true}']],
+]) {
+	test(`launcher does not infer cancellation from ${label}`, async (t) => {
+		const root = await mkdtemp(join(tmpdir(), "pi-sych-launcher-settlement-"));
+		t.after(() => rm(root, { recursive: true, force: true }));
+		const fake = fakeSpawn();
+		const launched = launchPiWorker(launchSpec(root), fake.spawn);
+		fake.child.stdout.write(lines.join("\n"));
+		const ended = new Promise((resolve) => fake.child.stdout.once("end", resolve));
+		fake.child.stdout.end();
+		await ended;
+		fake.child.emit("close", 0, null);
+		assert.deepEqual(await launched, { exitCode: 0, stderr: "" });
+	});
+}
+
+for (const kind of ["normal", "timeout", "cancelled", "signal", "nonzero", "spawn-failure"]) {
+	test(`aborted settlement preserves ${kind} process handling`, async (t) => {
+		t.mock.timers.enable({ apis: ["setTimeout"] });
+		const fake = fakeSpawn();
+		const controller = new AbortController();
+		const launched = launchPiWorker(
+			launchSpec(tmpdir(), { signal: controller.signal }),
+			fake.spawn,
+		);
+		fake.child.stdout.write('{"type":"agent_settled","aborted":true}\n');
+		if (kind === "timeout") t.mock.timers.tick(100);
+		if (kind === "cancelled") controller.abort();
+		if (kind === "spawn-failure") fake.child.emit("error", new Error("spawn failed"));
+		else
+			fake.child.emit(
+				"close",
+				kind === "nonzero" ? 1 : kind === "signal" ? null : 0,
+				kind === "signal" ? "SIGTERM" : null,
+			);
+		const outcome = await launched;
+		assert.equal(
+			outcome.classification,
+			kind === "normal" ? "cancelled" : ["signal", "nonzero"].includes(kind) ? undefined : kind,
+		);
+		if (kind === "signal") assert.equal(outcome.terminationSignal, "SIGTERM");
+		if (kind === "nonzero") assert.equal(outcome.exitCode, 1);
+		if (kind === "normal") assert.deepEqual(fake.child.kills, []);
+	});
+}
+
 test("worker activity callback failures do not alter process success", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-launcher-"));
 	t.after(() => rm(root, { recursive: true, force: true }));

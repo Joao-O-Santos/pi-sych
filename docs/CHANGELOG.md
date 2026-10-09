@@ -5,7 +5,17 @@ npm registry metadata establish publication status and dates; headings
 below record versioned changes without duplicating that live release
 state.
 
-## Unreleased (v8 preparation; not tagged or published)
+## Unreleased
+
+### Fixed
+
+- Honor an explicit worker JSON `agent_settled.aborted: true` on normal
+  process exit: report cancellation and reject any submitted result,
+  while still observing project changes. Preserve parent cancellation,
+  timeout, process-failure handling, and compatibility with older Pi
+  versions that omit the flag.
+
+## 8.0.0
 
 ### Breaking
 
