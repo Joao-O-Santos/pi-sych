@@ -5,7 +5,7 @@ npm registry metadata establish publication status and dates; headings
 below record versioned changes without duplicating that live release
 state.
 
-## Unreleased
+## 8.0.1
 
 ### Fixed
 

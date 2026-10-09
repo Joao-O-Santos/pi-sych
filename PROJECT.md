@@ -218,7 +218,7 @@ checkout. npm's provenance record identifies the same commit and
 publication job; its signature was not independently cryptographically
 validated.
 
-{verified} Unreleased worker handling recognizes explicit JSON
+{verified} v8.0.1 preparation recognizes explicit JSON
 `agent_settled.aborted: true` on normal exit. Interruption and process
 failure remain primary errors, but structurally valid submitted reports
 are preserved separately with an explicit warning that work and claimed
@@ -234,9 +234,12 @@ vulnerabilities. This follow-up is not published.
 
 ## Immediate next step
 
-{verified} The authorized v8.0.0 release is complete. No release task
-remains; retain this project brief for ongoing accepted constraints.
-Future tags and publications require their own authorization.
+{user-explicit} Release the worker cancellation/report-preservation
+fixes as v8.0.1 after successful CI, push its signed tag, and monitor
+publication. The main pipeline for `b221897` passed (`2930169788`);
+verify the bumped revision before tagging. Retain this project brief for
+ongoing accepted constraints. Future releases require their own
+authorization.
 
 {unresolved} Model recognition of unfinished authorized work remains
 semantic, not mechanically guaranteed. Exa was not configured as a

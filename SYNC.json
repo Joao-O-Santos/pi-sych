@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-09T10:38:58.603Z",
+  "confirmedAt": "2026-10-09T11:01:32.108Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:ff258b0e38b426eab22947520cf26fb067229d660f7f8ab3ddba6680e2515101",
+      "fingerprint": "sha256:e484f3e763c303336ba89d1804eeb6510e610083d214356dd0b70e87386bc870",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,8 +15,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-10-09T10:38:58.603Z",
-        "reason": "Reviewed authorized interrupted-report recovery and independent review: preserve structurally valid provisional claims separately from successful result, keep interruption/process failure primary and warn of incomplete/inaccurate work and nonexistent claimed files. Malformed/absent reports retain original error and observations. README and migration/image guidance remain consistent; no configuration or diagram revision needed. make verify passed 239 tests at 97.86/92.50/96.80 coverage; site/budget passed, audit zero vulnerabilities. No push or release authorized."
+        "at": "2026-10-09T11:01:32.108Z",
+        "reason": "Reviewed owner-authorized v8.0.1 patch release preparation. Prior main pipeline 2930169788 passed; version/lockfile/tagged image links/changelog align at 8.0.1. Local make verify passed 239 tests including packed installs (97.86/92.50/96.80 coverage); site/budget/pack inventory passed, production audit zero vulnerabilities. Bumped exact-revision pipeline and publication remain pending."
       }
     },
     {
@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:5222fb58627b64f18eb4ce6377c3f9eea48119677bdd84c10f92fca323885eaa",
+      "fingerprint": "sha256:7f7ad64708e8ba91e0c982cfd570dbe6a67d18d201d35b6a05d8bc6f1611721b",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,13 +46,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-10-09T10:38:58.603Z",
-        "reason": "Reviewed authorized interrupted-report recovery and independent review: preserve structurally valid provisional claims separately from successful result, keep interruption/process failure primary and warn of incomplete/inaccurate work and nonexistent claimed files. Malformed/absent reports retain original error and observations. README and migration/image guidance remain consistent; no configuration or diagram revision needed. make verify passed 239 tests at 97.86/92.50/96.80 coverage; site/budget passed, audit zero vulnerabilities. No push or release authorized."
+        "at": "2026-10-09T11:01:32.108Z",
+        "reason": "Reviewed owner-authorized v8.0.1 patch release preparation. Prior main pipeline 2930169788 passed; version/lockfile/tagged image links/changelog align at 8.0.1. Local make verify passed 239 tests including packed installs (97.86/92.50/96.80 coverage); site/budget/pack inventory passed, production audit zero vulnerabilities. Bumped exact-revision pipeline and publication remain pending."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:61d9aa0fa7ea6ef90e51bf5bf11ccab22a2c241e804ab59411fb95395132f6f5",
+      "fingerprint": "sha256:d6cc9056d4a9d75deb4d5ed620084f024f44ec806b5d898a3157714b84761881",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -66,8 +66,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T22:39:28.103Z",
-        "reason": "Reviewed six bounded audit fixes and regressions, preserved shutdown and failure precedence, confirmed README/package consistency with architecture. Final make verify passed 213 tests, make site passed, production audit found zero vulnerabilities; clean-context review found no material issues. No push or release authorized."
+        "at": "2026-10-09T11:01:32.108Z",
+        "reason": "Reviewed owner-authorized v8.0.1 patch release preparation. Prior main pipeline 2930169788 passed; version/lockfile/tagged image links/changelog align at 8.0.1. Local make verify passed 239 tests including packed installs (97.86/92.50/96.80 coverage); site/budget/pack inventory passed, production audit zero vulnerabilities. Bumped exact-revision pipeline and publication remain pending."
       }
     },
     {
@@ -125,7 +125,7 @@
     {
       "path": "docs/migration-v7-to-v8.md",
       "fingerprint": "sha256:c2b10bcabf2f25f62c638a9f5d1579a6fdc76ec1a9a6a84a42320f20200816fd",
-      "status": "current",
+      "status": "needs-review",
       "role": "migration-guide",
       "authoritativeFor": [
         "v7-to-v8-user-configuration-migration"
@@ -177,15 +177,15 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:c73f00ddb41e3a97ca432b9aa3f7ca1098b454f49a8c1a1e64a8814241828c57",
+      "fingerprint": "sha256:ddd855585a879bf2f777b5406867d2338c251c16e3139ddc440637754a581b87",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-10-09T10:38:58.603Z",
-        "reason": "Reviewed authorized interrupted-report recovery and independent review: preserve structurally valid provisional claims separately from successful result, keep interruption/process failure primary and warn of incomplete/inaccurate work and nonexistent claimed files. Malformed/absent reports retain original error and observations. README and migration/image guidance remain consistent; no configuration or diagram revision needed. make verify passed 239 tests at 97.86/92.50/96.80 coverage; site/budget passed, audit zero vulnerabilities. No push or release authorized."
+        "at": "2026-10-09T11:01:32.108Z",
+        "reason": "Reviewed owner-authorized v8.0.1 patch release preparation. Prior main pipeline 2930169788 passed; version/lockfile/tagged image links/changelog align at 8.0.1. Local make verify passed 239 tests including packed installs (97.86/92.50/96.80 coverage); site/budget/pack inventory passed, production audit zero vulnerabilities. Bumped exact-revision pipeline and publication remain pending."
       }
     },
     {
