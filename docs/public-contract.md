@@ -60,7 +60,9 @@ v8 guide documents obsolete config-key removal and new layered behavior.
 
 Before release, name the affected row above, say whether a documented
 use needs migration, check stored state and default-side-effect changes,
-and justify the major/minor/patch choice in the changelog. Test public
-names, schemas, declared resources, templates, and file behavior without
-creating a second registry or freezing semantic prose into keyword
-checks.
+and justify the major/minor/patch choice in the changelog. Prepared
+package metadata and changelog entries do not establish publication;
+publication status comes from the signed release tag and npm registry
+metadata. Test public names, schemas, declared resources, templates, and
+file behavior without creating a second registry or freezing semantic
+prose into keyword checks.

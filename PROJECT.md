@@ -178,7 +178,10 @@ runtime source-code budget is 3,250 lines.
 
 {verified} Repository-native formatting, documentation, type, budget,
 and test checks remain the acceptance boundary. The published package
-version is 8.0.1.
+version remains 8.0.1. Package metadata is prepared at 8.1.0 following
+successful exact-commit pipeline `2944641167` for
+`cce4b9d865ec0334606fe076f8e8727cba848a02`; that version is not tagged
+or published.
 
 {verified} After revising reviewer-response guidance and repairing the
 benchmark fixtures, the five-case opt-in evaluation completed with
@@ -228,9 +231,13 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
-{verified} The authorized v8.0.1 release is complete. No release task
-remains. Retain this project brief for ongoing accepted constraints;
-future releases require their own authorization.
+{verified} The v8.0.1 release remains the latest published release.
+Version 8.1.0 is prepared in package metadata and the changelog after
+successful exact-commit pipeline `2944641167` at
+`cce4b9d865ec0334606fe076f8e8727cba848a02`; no v8.1.0 tag or npm
+publication exists yet. Tagging and publication require separate
+maintainer authorization. Retain this project brief for ongoing accepted
+constraints; future release actions require their own authorization.
 
 {unresolved} Model recognition of unfinished authorized work remains
 semantic, not mechanically guaranteed. Exa was not configured as a

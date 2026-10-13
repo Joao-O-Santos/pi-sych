@@ -65,7 +65,7 @@ documented gate. Inspect `npm pack --dry-run` so the package contains
 only intended public files.
 
 Maintainers create the signed release commit and annotated `v<version>`
-tag after explicit authorization. The GitLab tag pipeline reruns checks
-and publishes the matching npm version with provenance through the
-project's configured credentials. Contributors do not need an npm token
-or publish directly.
+tag after explicit authorization. A prepared package version is not a
+release: the GitLab tag pipeline reruns checks and publishes the
+matching npm version with provenance through the project's configured
+credentials. Contributors do not need an npm token or publish directly.

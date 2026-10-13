@@ -4,8 +4,8 @@
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:9edc325acc28eaf97cbf6079ddcd0f6e12e51b8ac5e407546d37f86f5c7e59e5",
-      "status": "current",
+      "fingerprint": "sha256:39edc6ea511a3c0ef26b1e0cf795c26e2c10d8c97411d0ba7d85b11d59afa7b7",
+      "status": "needs-review",
       "role": "project",
       "authoritativeFor": [
         "objective",
@@ -52,8 +52,8 @@
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:d6cc9056d4a9d75deb4d5ed620084f024f44ec806b5d898a3157714b84761881",
-      "status": "current",
+      "fingerprint": "sha256:68c36583d0d9ff82f3478540b6a5958fdf6ab027617e012c98e7063197274909",
+      "status": "needs-review",
       "role": "package-boundary",
       "authoritativeFor": [
         "scripts",
@@ -98,8 +98,8 @@
     },
     {
       "path": "docs/public-contract.md",
-      "fingerprint": "sha256:cfd3bfcba9e57e19417ef7d3da702d37113fd898f8cdca8518a99d756a207b82",
-      "status": "current",
+      "fingerprint": "sha256:d1223de5b2541240b7e812c4ffdf0fe5ab872ca18fa628b243989a68802b5b2e",
+      "status": "needs-review",
       "role": "documentation",
       "authoritativeFor": [
         "compatibility"
@@ -183,8 +183,8 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:816a6ef19544a06f291dd4023f485b8defd4fa41119253665321fae2e49bc027",
-      "status": "current",
+      "fingerprint": "sha256:b3a5f9930e29b0614186349c93381e4c3cade1cd4e9d47e4e4ec9364dd40bac3",
+      "status": "needs-review",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"

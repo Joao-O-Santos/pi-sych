@@ -5,7 +5,13 @@ npm registry metadata establish publication status and dates; headings
 below record versioned changes without duplicating that live release
 state.
 
-## Unreleased
+## 8.1.0 (prepared; not published)
+
+Prepared after successful exact-commit pipeline `2944641167` for
+`cce4b9d865ec0334606fe076f8e8727cba848a02`. This is a minor release: it
+adds an optional backward-compatible worker capability and requires no
+migration. Package metadata and this changelog are prepared only; no tag
+or npm publication has been created.
 
 ### Changed
 
@@ -39,8 +45,8 @@ state.
 - Align README, architecture, review workflow, prompt guidance, and
   developer maintenance instructions with the implemented boundaries.
 
-These are documentation changes, not a new published version or a claim
-that local verification or publication has occurred.
+The listed changes are prepared for 8.1.0; preparation does not claim
+that this version has been tagged or published.
 
 ## 8.0.1
 
