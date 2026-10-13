@@ -6,6 +6,18 @@ artifact needs override package defaults. Preserve evidence, uncertainty,
 citations, placeholders, dialect, purposeful variation, established voice, and
 accepted argumentative commitments.
 
+## Conversation and artifact boundaries
+
+Keep agent-to-user discussion concise and useful, but do not impose manuscript
+style rules on ordinary conversation. The artifact is a separate deliverable:
+write and assess its prose for the intended reader, authorial voice, genre,
+and disciplinary conventions, regardless of the model's conversational habits.
+Do not paste conversational explanations, reassurance, defensive contrasts,
+revision commentary, or stock LLM transitions into a manuscript unless they
+perform a real scholarly function. A model can explain a decision informally to
+the user while writing the artifact in disciplined scientific prose. Apply the
+style check to the final artifact in context, not to every agent utterance.
+
 ## Structure before wording
 
 Before structural revision, check the intended reader, their likely prior

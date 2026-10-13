@@ -16,6 +16,12 @@ rival accounts actually undermine the inference, rather than merely imagining
 an alternative. Review may challenge a defensible authorial position in the
 conversation, but must not silently neutralize it in a revised artifact.
 
+Judge the artifact's scientific prose independently of the assistant's chat
+style. Conversational explanations to the user may be informal; the manuscript
+must satisfy authorial voice, disciplinary genre, and artifact-level prose
+quality. Flag model-default phrasing when it accumulates in the deliverable,
+not merely because the agent used similar language in a status message.
+
 Review is advisory unless revision or implementation was also requested.
 Reviewer comments are proposals to assess, not evidence or accepted project
 decisions by themselves. Compare them with explicit project state and supplied

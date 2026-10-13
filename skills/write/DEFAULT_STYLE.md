@@ -6,6 +6,10 @@ publisher requirements, renderer constraints, accessibility needs, and
 source/evidence limits override these defaults. Do not invent personal
 experience, facts, citations, quotations, results, or requirements.
 
+These defaults govern produced writing artifacts, not the wording of every
+agent-to-user message. Keep user-facing process communication concise; assess
+scientific prose in the manuscript itself.
+
 ## General
 
 - Identify the audience, purpose, and primary reader action before drafting.
