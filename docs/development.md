@@ -20,6 +20,48 @@ For substantive behavior changes, use independent test design and
 read-only review when proportionate. Do not turn a narrow correction
 into a workflow controller, repository abstraction, or new policy layer.
 
+## Where changes belong
+
+Use the [code tour](code-tour.md) for the source map and the
+[public contract](public-contract.md) to distinguish stable userland
+from internal implementation details.
+
+| Change | Primary location | Related checks |
+| --- | --- | --- |
+| Supervisor tool or lifecycle behavior | `extensions/workbench/index.ts` and `extensions/workbench/src/` | Unit/integration tests and public contract |
+| Worker launch, context, or terminal report | `extensions/workbench/src/worker-engine.ts`, `extensions/worker/index.ts` | Worker and process tests; architecture |
+| Fingerprints or dependency acknowledgement | `project-files.ts`, `project-status.ts` | State and acknowledgement tests; `SYNC.json` |
+| Local literature discovery | `literature-search.ts` | Database fixtures; configuration |
+| Domain-specific review or writing behavior | Public skill, routed module, or shared method | Skill routing and task-level evaluation |
+| Optional review interface | `extensions/plannotator/` | Adapter tests and review workflow |
+| Optional review lens | `prompts/review-*.md` | Prompt discovery and review skill consistency |
+
+Do not turn a documentation-only clarification into a new runtime
+mechanism. Conversely, a behavior change must be documented where
+users encounter it, not only in the code tour.
+
+## Documentation and synchronization checks
+
+For a documentation update, inspect the relevant implementation and
+tests before asserting runtime behavior. Keep the README as orientation,
+architecture as the mechanism-level explanation, public contract as the
+compatibility authority, and code tour as a navigable source map.
+Use `docs/review-workflow.md` for human/LLM feedback distinctions and
+`docs/review-prompts.md` for optional review lenses. Avoid repeating
+full skill instructions across these pages.
+
+Review `SYNC.json` after changes to tracked documents. A stored
+fingerprint that no longer matches is evidence of a change, not
+permission to mark it approved. Update acknowledgement only after
+reviewing the new content and declared dependent artifacts. Preserve
+unresolved `needs-review` states and do not invent test results or
+review timestamps.
+
+`make verify` checks types, style, source budget, coverage, packaging,
+and Git whitespace. Run `make site` separately to check the published
+documentation build and links. A remote edit without a local checkout
+cannot establish that either command passed; report that limitation.
+
 ## Checks
 
 Run the repository gate before treating substantive work as complete:
