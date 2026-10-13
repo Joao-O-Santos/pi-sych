@@ -35,3 +35,5 @@ minimum local wording or consistency response. Report concrete local drift from
 the controlling style rather than applying generic rules. Preserve intentional
 fragments, dialect, emphasis, hedging, and variation unless they obstruct the
 artifact's purpose.
+
+When delivering a standalone LLM copyedit review, end with: "LLM review · Copyedit: I focused on sentence-level wording, not overall structure or argument."
