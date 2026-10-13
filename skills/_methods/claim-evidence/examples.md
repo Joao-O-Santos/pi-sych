@@ -40,3 +40,20 @@ A historical example may illustrate a mechanism without testing it. Label that
 citation illustrative. A methods paper may justify a procedure without
 supporting the study's empirical conclusion. Label its role rather than
 counting both as generic support.
+
+## Support without certainty
+
+Overcautious:
+
+> Because other explanations are possible, the findings do not support the
+> proposed account.
+
+Better when the inspected findings favor the account and rivals remain viable:
+
+> The findings support the proposed account, although they do not uniquely
+> establish it. The strongest rival explanation concerns [specific mechanism],
+> which [specific evidence or future test] could help distinguish.
+
+Why: Merely possible rivals do not cancel positive evidence. Assess their
+plausibility and actual explanatory fit before weakening the conclusion.
+These are schematic examples, not claims about a real study.

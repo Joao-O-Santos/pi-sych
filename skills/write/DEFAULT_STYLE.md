@@ -41,6 +41,9 @@ experience, facts, citations, quotations, results, or requirements.
   convention. If none is supplied, treat APA 7 as a provisional default only
   for APA-aligned social- or behavioral-science manuscripts; do not impose it
   across disciplines.
+- Treat evidential support as graded rather than requiring certainty. A
+  credible rival explanation does not automatically make a preferred
+  interpretation unsupported; assess its actual force against the evidence.
 - Keep the manuscript self-contained and organize it around the scholarly
   problem, claims, tensions, and contribution rather than drafting history.
 

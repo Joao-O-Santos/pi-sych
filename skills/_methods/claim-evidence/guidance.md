@@ -55,6 +55,13 @@ positive inference, not consume or substitute for it. When inspected evidence
 cannot support an accepted project claim or argument invariant, expose that
 conflict for resolution rather than silently retreating to a different thesis.
 
+A conceivable alternative explanation is not automatically a substantive
+counterargument. Judge whether it is plausible, supported by available
+observations, and capable of materially changing the inference. Reserve
+"unsupported" for claims whose relevant support is absent or inadequate,
+not claims that merely remain open to revision. "Well supported" need not
+mean conclusively established.
+
 A lack of certainty is not itself a lack of support. Assess the degree and
 type of support relative to the claim: well-supported but defeasible,
 partially supported, genuinely contested, or contradicted. For consequential

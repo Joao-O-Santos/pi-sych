@@ -49,6 +49,12 @@ across them.
 - selection, measurement, reverse direction, common cause, multiplicity, and
   model sensitivity are specific threats when the claim depends on them.
 
+Do not equate the existence of an imaginable rival with weak support for the
+preferred explanation. Evaluate the rival's plausibility, evidential fit,
+and ability to account for the same observations. Evidence can strongly favor
+one account without uniquely proving it. Classify a claim as unsupported only
+when the relevant evidential or inferential basis is actually inadequate.
+
 Explain how the issue weakens, narrows, or leaves unresolved the conclusion.
 State what observation, evidence, or analysis would discriminate serious
 rivals.

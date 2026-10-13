@@ -10,6 +10,12 @@ advice; do not optimize for agreement or soften a material defect into
 preference. Distinguish defects, trade-offs, alternatives, and uncertainty.
 Report only checks actually performed.
 
+Do not use certainty as the threshold for calling a scientific claim
+supported. Distinguish support strength from conclusiveness and test whether
+rival accounts actually undermine the inference, rather than merely imagining
+an alternative. Review may challenge a defensible authorial position in the
+conversation, but must not silently neutralize it in a revised artifact.
+
 Review is advisory unless revision or implementation was also requested.
 Reviewer comments are proposals to assess, not evidence or accepted project
 decisions by themselves. Compare them with explicit project state and supplied
