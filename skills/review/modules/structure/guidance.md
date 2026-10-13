@@ -45,6 +45,13 @@ Check voice coherence as well as logical coherence: unexplained shifts in
 register, confidence, terminology, or intellectual posture can signal a deeper
 structural problem.
 
+For ordinary expository paragraphs, inspect the opening claim, its development,
+and the final takeaway. Flag endings that introduce a generic caveat instead
+of resolving the paragraph's job. A necessary qualification should delimit
+the claim without erasing its supported conclusion. After a paragraph edit,
+reread the whole paragraph; after a section edit, reread the whole section
+and its transitions to the sections on either side.
+
 Make a flow pass in reading order. At paragraph boundaries, state the relation
 between the preceding move and the next one; flag a transition that merely
 announces importance or sequence without making that relation clear. Within

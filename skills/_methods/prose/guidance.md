@@ -16,7 +16,15 @@ major revision, reverse-outline what each section and paragraph does, then
 reorder, merge, cut, split, or expand before polishing sentences. An ordinary
 expository paragraph should normally have one discernible job. For ordinary
 expository paragraphs, prefer a loose hamburger shape: topic or claim,
-development with reasoning or evidence, then consequence or link. This is a
+development with reasoning or evidence, then consequence or link. The opening gives the reader the point, the middle develops it with reasons,
+evidence, or explanation, and the ending draws the warranted inference or
+states why the point matters for the next move. Do not routinely end with a
+new caveat that undercuts the paragraph's contribution. Put material scope
+conditions near the claim they delimit, or use a short parenthesis when it
+is genuinely clearer. The final sentence should normally leave the reader
+with the strongest supported takeaway within the stated scope, not a vague
+warning to be cautious. A limitation that genuinely changes the conclusion
+must still be stated, even when that calls for a weaker takeaway. This is a
 default, not a template; transitional, serial, dialogic, and deliberately
 fragmentary paragraphs may legitimately differ.
 
@@ -41,6 +49,13 @@ venue need, or meet requested style. Preserve useful idiosyncrasy, rhythm,
 hedging, fragments, and effective unusual constructions. An explicit broad
 rewrite may recast broadly, but preserve meaning, evidence, uncertainty, stable
 voice, and accepted argumentative force unless the user asked to change them.
+
+After editing a paragraph, reread it from first sentence to last: check that
+the claim, development, qualifications, and ending still fit. After editing a
+section, reread the entire section in order, then check its connection to the
+preceding and following sections. Do not judge the success of a replacement
+sentence in isolation. Check transitions, referents, repetition, and whether
+the section still delivers its intended conclusion.
 
 For substantial argumentative revision, reconstruct the central thesis and its
 major supporting moves before editing. Treat explicit accepted project claims
@@ -119,8 +134,11 @@ short and genuinely useful.
 Use familiar-to-new flow when it supports continuity. Put the main action early
 when delay increases memory load, and use end-weight for longer or more complex
 material. Prefer concrete verbs and nouns while retaining precise technical
-terms. Use short sentences when they provide emphasis or reset complexity. Use
-longer sentences when several ideas genuinely need to be related. Vary length
+terms. Prefer concise sentences when they make a thought easier to follow, but do not
+split tightly connected ideas merely to keep sentences short. Join sentences
+when their relationship becomes clearer in one grammatical unit. Use short
+sentences for emphasis or to reset complexity; use longer ones when the logic
+benefits from showing the connection. Vary length
 and structure according to the thought, not according to a mechanical
 alternation rule. Revise in this order when feasible: argument, section jobs,
 paragraph logic, information flow, sentences, then words.
@@ -136,7 +154,8 @@ register. Keep hedges that represent real uncertainty; remove defensive fog and
 unsupported intensifiers. Treat punctuation and rhetorical templates as
 choices. Watch for locally unmotivated model-like habits: habitual em-dash
 qualifications, semicolon chains that pack several claims into one sentence,
-repeated `not X but Y` contrasts, formulaic symmetry, ceremonial openings,
+repeated `not X but Y` contrasts, formulaic `this does not mean` retreats,
+`while X, it is important to recognize Y` endings, formulaic symmetry, ceremonial openings,
 generic importance claims, over-signposting, unnecessary recap, repeated
 conclusions, and metadiscourse. These are failure patterns, not banned forms;
 retain them when they genuinely serve the argument and established voice. If a

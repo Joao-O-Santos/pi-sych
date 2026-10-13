@@ -105,3 +105,52 @@ reader-visible role in the finished artifact. The sources support the positive
 historical claim, so the artifact should state that claim directly. A rebuttal
 would become useful only if the artifact itself introduced the alternative or
 if it were a live interpretation in the relevant literature.
+
+## Paragraph ending: qualification versus takeaway
+
+Weak:
+
+> The findings suggest that structured interviews can improve consistency.
+> However, interviews may still reflect bias, context varies across settings,
+> and no single procedure guarantees fair decisions.
+
+Better:
+
+> Structured interviews can improve consistency by asking candidates the same
+> job-relevant questions and using common scoring criteria. They remain
+> vulnerable to biased criteria or implementation. Even so, a structured
+> process gives organizations a more defensible starting point for comparing
+> candidates.
+
+Why:
+
+Both versions acknowledge limitations. The second develops a positive claim
+and closes with the conclusion supported within its scope. Do not use this
+shape to rescue a claim the evidence cannot support.
+
+## Sentence boundaries and habitual contrast
+
+Choppy:
+
+> The measures were reliable. They were brief. They were administered twice.
+> This reduced participant burden.
+
+Better:
+
+> The brief measures were administered twice, reducing participant burden
+> while allowing reliability to be assessed across occasions.
+
+Habitual model contrast:
+
+> This is not to suggest that the method is without limitations. Rather, it
+> offers a potentially useful approach, although further work is needed.
+
+Better when warranted:
+
+> The method offers a practical way to compare the two conditions.
+
+Why:
+
+Combine connected ideas and make the positive point directly. Retain a
+specific limitation only when it affects interpretation. Sentence length and
+contrast should follow the argument, not a fixed template.

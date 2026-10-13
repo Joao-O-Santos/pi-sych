@@ -160,6 +160,16 @@ Context mode is independent of files, skills, model, tool mode, and
 research access. In either mode the result returns to the supervisor.
 Context selection is not an operating-system sandbox.
 
+## Scientific prose and AI disclosure
+
+Pi Sych's writing guidance aims to produce clear, varied, precise scientific
+prose rather than repetitive model-default phrasing. This is a quality and
+readability goal, not an attempt to conceal LLM assistance or misrepresent
+authorship. Authors remain responsible for their manuscripts, claims, citations,
+and disclosures. They must follow the AI-use, authorship, and disclosure policies
+of the journal, conference, publisher, institution, or other relevant venue.
+Pi Sych's style guidance does not supersede those requirements.
+
 ## What Pi Sych can help with
 
 Skills are reusable guidance for a model, not persistent agents. Pi Sych
