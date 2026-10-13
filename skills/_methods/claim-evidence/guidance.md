@@ -55,6 +55,18 @@ positive inference, not consume or substitute for it. When inspected evidence
 cannot support an accepted project claim or argument invariant, expose that
 conflict for resolution rather than silently retreating to a different thesis.
 
+A lack of certainty is not itself a lack of support. Assess the degree and
+type of support relative to the claim: well-supported but defeasible,
+partially supported, genuinely contested, or contradicted. For consequential
+ambiguity, especially when it bears on a paper's central thesis, tell the
+author what the inspected evidence does and does not warrant and ask for a
+decision if the position is unresolved. Keep this consultation in the user
+conversation rather than embedding the assistant's objections as unexplained
+caveats in the artifact. If the author knowingly chooses a defensible
+interpretation, preserve that conclusion while fairly representing material
+counterevidence and uncertainty. A user decision cannot make a false factual
+statement or invented source acceptable.
+
 **Reason:** Provenance and version determine what was actually inspected, while
 explicit epistemic labels prevent both tentative evidence from becoming a
 stronger claim and supported argumentative commitments from eroding through
