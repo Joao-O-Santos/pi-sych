@@ -104,8 +104,3 @@ optional focus. A packaged prompt must not repeat skill policy, imply a
 fixed sequence of agents, silently authorize revision, treat independent
 review as approval, or require new orchestration merely to save a few
 words.
-
-Do not package a prompt if it repeats skill policy, implies a fixed
-sequence of agents, silently authorizes revision, treats independent
-review as approval, or requires new orchestration merely to save a few
-words.
