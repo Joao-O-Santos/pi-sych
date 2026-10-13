@@ -133,6 +133,39 @@ clarification on each material point.
 You can respond in the conversation, annotate the last assistant
 message, or annotate a project-local review file.
 
+### Feedback authority and review scope
+
+A review's delivery channel is not its authority. **Author-authored
+Plannotator annotations are direct author feedback**, not independent
+LLM review. Co-author comments have a strong presumption of integration,
+subject to discussion when there is a substantial objection. Human
+peer-review feedback deserves a serious response: integrate it where
+warranted or give a reasoned rebuttal. Independent LLM reviews are
+advisory, especially when instructed to find flaws. A demonstrated
+factual or methodological error still matters regardless of its source.
+
+Before editing, compare LLM findings with `PROJECT.md`, accepted
+decisions, evidence, and the intended contribution. Triage material
+errors separately from stylistic alternatives, speculative objections,
+and obvious limitations. An adversarial model can keep generating
+objections; exhausting them is not a completion criterion. Avoid
+accumulating caveats that bury a defensible thesis.
+
+**Every LLM-generated review**, including one requested in ordinary
+language rather than through a packaged prompt, ends with a separate,
+visually distinct **Review scope** footer. The footer briefly names the
+actual instructions that shaped the output. For example:
+
+> **LLM review · Adversarial:** I was asked to find problems; some may be minor or speculative.
+
+Collaborative reviews identify their improvement-oriented focus;
+copyediting reviews state that they worked at sentence level;
+structural and verification reviews name the scope actually checked.
+The footer is not a bullet under `Limitations`, and generic AI
+disclaimers are not a substitute. Keep genuine, consequential
+limitations in the findings when needed. Do not add an LLM-review
+footer to human-authored comments.
+
 ### 4. Launch a fresh edit worker
 
 The supervisor converts your decisions into a clean implementation
