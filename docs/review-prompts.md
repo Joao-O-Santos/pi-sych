@@ -68,6 +68,33 @@ criteria separately. Passing mechanical checks is not human approval or general
 semantic correctness.
 ```
 
+## Scope disclosure is skill-wide
+
+The five packaged prompts select optional lenses; they are not required
+to obtain a review. The `review` skill applies the same provenance
+rule to a review requested directly by the user or dispatched through
+a worker. Finish every LLM review with a **separate highlighted
+Review scope footer** identifying the actual instructions, not a
+limitations bullet or generic model disclaimer.
+
+Examples of concise footer content:
+
+| Lens | Footer |
+| --- | --- |
+| Adversarial | **LLM review · Adversarial:** I was asked to find problems; some may be minor or speculative. |
+| Collaborative | **LLM review · Collaborative:** I focused on helping the author improve the manuscript. |
+| Structural | **LLM review · Structural:** I focused on organization and argument flow. |
+| Reader friction | **LLM review · Reader friction:** I read for prose that depends on hidden drafting context. |
+| Verification | **LLM review · Verification:** I checked the specified criteria, not every aspect of the manuscript. |
+| Copyedit | **LLM review · Copyedit:** I focused on sentence-level wording, not the overall argument. |
+
+The examples are not rigid labels for every possible request. A
+mixed or narrower task should disclose what was actually requested
+and performed. The footer describes how to interpret the review,
+not the authority of its conclusions. Human-authored feedback,
+including author annotations made with Plannotator, does not receive
+an LLM footer.
+
 ## Packaging rule
 
 The packaged entry points contain little more than posture and output
