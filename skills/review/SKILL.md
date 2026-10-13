@@ -22,6 +22,30 @@ must satisfy authorial voice, disciplinary genre, and artifact-level prose
 quality. Flag model-default phrasing when it accumulates in the deliverable,
 not merely because the agent used similar language in a status message.
 
+Review findings carry different authority. Direct author feedback, including
+Plannotator annotations authored by the user, expresses authorial intent.
+Co-author feedback has a strong presumption of integration; discuss substantial
+objections rather than silently reject it. Human peer-review feedback warrants
+a serious response and normally integration unless a reasoned rebuttal is
+justified. Independent LLM reviews, especially adversarial ones, are diagnostic
+and have low default authority, although a verifiable material error matters
+regardless of its source. Identify the actual origin of comments, not just the
+tool or file that contains them.
+
+Clean-context reviews can expose blind spots but do not supersede current
+`PROJECT.md` or accepted authorial decisions. Triage findings against project
+purpose, evidence, and thesis; bring genuinely consequential threats to the
+author. Do not revise to eliminate every adversarial LLM objection or allow
+successive caveats to obscure the contribution. A review cycle can end with
+reasonable objections unresolved.
+
+End LLM-generated reviews with a brief, truthful, mode-specific line identifying
+the review as LLM-produced and the instruction that shaped its scope. For
+example: "LLM review · Adversarial: I was asked to find problems; some may be
+minor or speculative." Collaborative, copyedit, structural, and verification
+reviews should state their own actual focus instead. This is provenance, not a
+generic AI limitations disclaimer; do not append it to human-authored feedback.
+
 Review is advisory unless revision or implementation was also requested.
 Reviewer comments are proposals to assess, not evidence or accepted project
 decisions by themselves. Compare them with explicit project state and supplied
