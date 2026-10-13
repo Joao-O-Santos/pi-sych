@@ -119,30 +119,28 @@ more careful checking, not repeated prompts asking whether to continue.
 
 ## Skills, review lenses, and source layout
 
-Pi Sych exposes seven public skills: `project`, `write`,
-`analyze`, `code`, `review`, `research`, and
-`automation`. Each is a small entry point that routes to
-specialist guidance only when relevant; shared methods live under
-`skills/_methods/`. Optional review prompts select lenses rather
-than creating extra agents. The TypeScript runtime in
-`extensions/workbench/` implements mechanical project state,
-bounded worker dispatch, configuration, compaction, and local
-literature lookup. The optional `extensions/plannotator/` adapter
-captures human review feedback.
+Pi Sych exposes seven public skills: `project`, `write`, `analyze`,
+`code`, `review`, `research`, and `automation`. Each is a small entry
+point that routes to specialist guidance only when relevant; shared
+methods live under `skills/_methods/`. Optional review prompts select
+lenses rather than creating extra agents. The TypeScript runtime in
+`extensions/workbench/` implements mechanical project state, bounded
+worker dispatch, configuration, compaction, and local literature lookup.
+The optional `extensions/plannotator/` adapter captures human review
+feedback.
 
 For independent LLM reviews, a short final **Review scope** footer
-identifies the instruction that shaped the findings, including when
-the user requested a review without using a packaged prompt. In
-particular, adversarial reviews identify their fault-finding
-posture. Such findings are advisory: compare them with evidence and
-accepted project decisions rather than automatically accepting
-every objection. Author comments made through Plannotator remain
-author feedback, not LLM reviews.
+identifies the instruction that shaped the findings, including when the
+user requested a review without using a packaged prompt. In particular,
+adversarial reviews identify their fault-finding posture. Such findings
+are advisory: compare them with evidence and accepted project decisions
+rather than automatically accepting every objection. Author comments
+made through Plannotator remain author feedback, not LLM reviews.
 
 See the [code tour](docs/code-tour.md) for the source-file map,
-[architecture](docs/ARCHITECTURE.md) for runtime boundaries,
-and [review workflow](docs/review-workflow.md) for the distinction
-between human feedback and independent LLM criticism.
+[architecture](docs/ARCHITECTURE.md) for runtime boundaries, and [review
+workflow](docs/review-workflow.md) for the distinction between human
+feedback and independent LLM criticism.
 
 ## Project files as shared memory
 
@@ -189,13 +187,14 @@ Context selection is not an operating-system sandbox.
 
 ## Scientific prose and AI disclosure
 
-Pi Sych's writing guidance aims to produce clear, varied, precise scientific
-prose rather than repetitive model-default phrasing. This is a quality and
-readability goal, not an attempt to conceal LLM assistance or misrepresent
-authorship. Authors remain responsible for their manuscripts, claims, citations,
-and disclosures. They must follow the AI-use, authorship, and disclosure policies
-of the journal, conference, publisher, institution, or other relevant venue.
-Pi Sych's style guidance does not supersede those requirements.
+Pi Sych's writing guidance aims to produce clear, varied, precise
+scientific prose rather than repetitive model-default phrasing. This is
+a quality and readability goal, not an attempt to conceal LLM assistance
+or misrepresent authorship. Authors remain responsible for their
+manuscripts, claims, citations, and disclosures. They must follow the
+AI-use, authorship, and disclosure policies of the journal, conference,
+publisher, institution, or other relevant venue. Pi Sych's style
+guidance does not supersede those requirements.
 
 ## What Pi Sych can help with
 

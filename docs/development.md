@@ -22,12 +22,12 @@ into a workflow controller, repository abstraction, or new policy layer.
 
 ## Where changes belong
 
-Use the [code tour](code-tour.md) for the source map and the
-[public contract](public-contract.md) to distinguish stable userland
-from internal implementation details.
+Use the [code tour](code-tour.md) for the source map and the [public
+contract](public-contract.md) to distinguish stable userland from
+internal implementation details.
 
 | Change | Primary location | Related checks |
-| --- | --- | --- |
+|------------------------|------------------------|------------------------|
 | Supervisor tool or lifecycle behavior | `extensions/workbench/index.ts` and `extensions/workbench/src/` | Unit/integration tests and public contract |
 | Worker launch, context, or terminal report | `extensions/workbench/src/worker-engine.ts`, `extensions/worker/index.ts` | Worker and process tests; architecture |
 | Fingerprints or dependency acknowledgement | `project-files.ts`, `project-status.ts` | State and acknowledgement tests; `SYNC.json` |
@@ -37,16 +37,16 @@ from internal implementation details.
 | Optional review lens | `prompts/review-*.md` | Prompt discovery and review skill consistency |
 
 Do not turn a documentation-only clarification into a new runtime
-mechanism. Conversely, a behavior change must be documented where
-users encounter it, not only in the code tour.
+mechanism. Conversely, a behavior change must be documented where users
+encounter it, not only in the code tour.
 
 ## Documentation and synchronization checks
 
 For a documentation update, inspect the relevant implementation and
 tests before asserting runtime behavior. Keep the README as orientation,
 architecture as the mechanism-level explanation, public contract as the
-compatibility authority, and code tour as a navigable source map.
-Use `docs/review-workflow.md` for human/LLM feedback distinctions and
+compatibility authority, and code tour as a navigable source map. Use
+`docs/review-workflow.md` for human/LLM feedback distinctions and
 `docs/review-prompts.md` for optional review lenses. Avoid repeating
 full skill instructions across these pages.
 

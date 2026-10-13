@@ -156,15 +156,15 @@ language rather than through a packaged prompt, ends with a separate,
 visually distinct **Review scope** footer. The footer briefly names the
 actual instructions that shaped the output. For example:
 
-> **LLM review · Adversarial:** I was asked to find problems; some may be minor or speculative.
+> **LLM review · Adversarial:** I was asked to find problems; some may
+> be minor or speculative.
 
 Collaborative reviews identify their improvement-oriented focus;
-copyediting reviews state that they worked at sentence level;
-structural and verification reviews name the scope actually checked.
-The footer is not a bullet under `Limitations`, and generic AI
-disclaimers are not a substitute. Keep genuine, consequential
-limitations in the findings when needed. Do not add an LLM-review
-footer to human-authored comments.
+copyediting reviews state that they worked at sentence level; structural
+and verification reviews name the scope actually checked. The footer is
+not a bullet under `Limitations`, and generic AI disclaimers are not a
+substitute. Keep genuine, consequential limitations in the findings when
+needed. Do not add an LLM-review footer to human-authored comments.
 
 ### 4. Launch a fresh edit worker
 

@@ -16,7 +16,7 @@ point. The workbench delegates to small files in
 `extensions/workbench/src/`:
 
 | Source | Responsibility |
-| --- | --- |
+|------------------------------------|------------------------------------|
 | `worker-engine.ts`, `model-catalog.ts` | Dispatch schema, context modes, model selection, process lifecycle, and immutable results. |
 | `project-files.ts`, `project-status.ts` | Project paths, `SYNC.json` parsing, fingerprints, declared dependency impact, and acknowledgement. |
 | `compaction.ts` | Bounded context snapshot and unreviewed proposals, without changing canonical semantic decisions. |
@@ -24,22 +24,22 @@ point. The workbench delegates to small files in
 | `literature-search.ts` | Read-only local SQLite discovery. |
 | `plannotator.ts` | Optional review integration support. |
 
-The **seven public skills** are `project`, `write`, `analyze`,
-`code`, `review`, `research`, and `automation`. Each
-`skills/<name>/SKILL.md` is the entry point for its task guidance.
-Specialist `skills/<name>/modules/<topic>/guidance.md` files are
-selected for particular tasks, not automatically loaded in full.
-Reusable cross-skill methods live under `skills/_methods/`, with
-their own guidance, examples, and optional templates. The internal
-module/method paths are guidance organization, not additional public
-skills or mandatory steps for every task.
+The **seven public skills** are `project`, `write`, `analyze`, `code`,
+`review`, `research`, and `automation`. Each `skills/<name>/SKILL.md` is
+the entry point for its task guidance. Specialist
+`skills/<name>/modules/<topic>/guidance.md` files are selected for
+particular tasks, not automatically loaded in full. Reusable cross-skill
+methods live under `skills/_methods/`, with their own guidance,
+examples, and optional templates. The internal module/method paths are
+guidance organization, not additional public skills or mandatory steps
+for every task.
 
 The `prompts/review-*.md` files are thin optional entry points for
 review lenses. A request in ordinary language can invoke the same
 `review` skill without those prompts. `templates/` contains starter
-project state; `tests/unit/`, `tests/integration/`,
-`tests/usage/`, and `tests/benchmarks/` separate deterministic
-checks, opt-in model evaluations, and benchmark fixtures.
+project state; `tests/unit/`, `tests/integration/`, `tests/usage/`, and
+`tests/benchmarks/` separate deterministic checks, opt-in model
+evaluations, and benchmark fixtures.
 `scripts/generate-code-reference.mjs` derives the published runtime
 reference from TypeScript declarations. The code tour explains
 relationships; the generated reference tracks declarations.
@@ -47,21 +47,21 @@ relationships; the generated reference tracks declarations.
 ### Review provenance versus runtime limitations
 
 The review skill, not the dispatch engine, instructs **every
-LLM-produced review** to end with a short, visually distinct
-**Review scope** footer identifying the task's actual focus, even when
-the user did not invoke a packaged prompt. An adversarial review must
-make clear that the model was asked to find problems. This footer is
-separate from genuine findings or limitations; it is not an item in a
-limitations list. A worker's terminal `limitations` field, by
-contrast, records execution/report limitations and is not a substitute
-for the review footer in its written report.
+LLM-produced review** to end with a short, visually distinct **Review
+scope** footer identifying the task's actual focus, even when the user
+did not invoke a packaged prompt. An adversarial review must make clear
+that the model was asked to find problems. This footer is separate from
+genuine findings or limitations; it is not an item in a limitations
+list. A worker's terminal `limitations` field, by contrast, records
+execution/report limitations and is not a substitute for the review
+footer in its written report.
 
 Review guidance also distinguishes provenance and authority. Author
-comments recorded through Plannotator remain author feedback;
-co-author and human peer-review feedback warrant different handling
-from advisory independent LLM criticism. The supervisor compares
-review findings with project decisions and evidence before revision;
-no mechanical status or worker result confers editorial approval.
+comments recorded through Plannotator remain author feedback; co-author
+and human peer-review feedback warrant different handling from advisory
+independent LLM criticism. The supervisor compares review findings with
+project decisions and evidence before revision; no mechanical status or
+worker result confers editorial approval.
 
 ## Dispatch and worker lifecycle
 
