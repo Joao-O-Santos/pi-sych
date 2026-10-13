@@ -647,17 +647,16 @@ export async function dispatchWorker(options: {
 		const contextPath = ["AGENTS.override.md", "AGENTS.md", "AGENTS.MD", "CLAUDE.md", "CLAUDE.MD"]
 			.map((name) => resolve(options.workerAgentDir, name))
 			.find((path) => existsSync(path) && statSync(path).isFile());
-		const existingInstructions = contextPath ? await readFile(contextPath, "utf8") : "";
+		const existingInstructions = contextPath ? (await readFile(contextPath, "utf8")).trim() : "";
+		const instructions = `${existingInstructions}${existingInstructions ? "\n\n" : ""}${request.workerInstructions.trim()}`;
 		await cp(options.workerAgentDir, workerAgentDir, {
 			recursive: true,
 			verbatimSymlinks: true,
 			filter: (source) => source !== resolve(options.workerAgentDir, "AGENTS.override.md"),
 		});
-		await writeFile(
-			resolve(workerAgentDir, "AGENTS.override.md"),
-			`${existingInstructions.trim()}${existingInstructions.trim() ? "\n\n" : ""}${request.workerInstructions.trim()}\n`,
-			{ mode: 0o600 },
-		);
+		await writeFile(resolve(workerAgentDir, "AGENTS.override.md"), `${instructions}\n`, {
+			mode: 0o600,
+		});
 	}
 	const spec: WorkerLaunchSpec = {
 		id,

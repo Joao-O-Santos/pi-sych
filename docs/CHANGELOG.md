@@ -1,8 +1,21 @@
 # Changelog
 
-All notable changes to Pi Sych are documented here.
+All notable changes to Pi Sych are documented here. Signed Git tags and
+npm registry metadata establish publication status and dates; headings
+below record versioned changes without duplicating that live release
+state.
 
 ## Unreleased
+
+### Changed
+
+- Raise the nonblank runtime source budget to 3,250 lines to accommodate
+  the readable compaction recovery implementation.
+- Recover compaction summaries despite malformed optional entries or
+  invalid promotions when required memory remains usable. Inbox failures
+  no longer discard valid summaries; required unusable memory retains
+  native fallback, with canonical writes and decision provenance
+  unchanged.
 
 ### Added
 
@@ -10,11 +23,7 @@ All notable changes to Pi Sych are documented here.
   launch-scoped Pi-native `AGENTS.override.md` in a private temporary
   agent directory. Omission preserves the prior worker agent directory
   and behavior; injected guidance does not mutate shared worker
-  configuration or the project. Signed Git tags and npm registry
-  metadata establish publication status and dates; headings below record
-  versioned changes without duplicating that live release state.
-
-## Unreleased
+  configuration or the project.
 
 ### Documentation
 

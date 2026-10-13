@@ -59,8 +59,14 @@ review timestamps.
 
 `make verify` checks types, style, source budget, coverage, packaging,
 and Git whitespace. Run `make site` separately to check the published
-documentation build and links. A remote edit without a local checkout
-cannot establish that either command passed; report that limitation.
+documentation build and links. The opt-in usage suite includes
+`worker-instructions.test.mjs`, which checks inline guidance through a
+live dispatch and verifies shared worker files and project AGENTS remain
+unchanged, and `custom-compaction.test.mjs`, which checks a live summary
+and proposal. These require explicit opt-in and configured credentials;
+model/run-specific results are not deterministic CI contracts. A remote
+edit without a local checkout cannot establish that either repository
+command passed; report that limitation.
 
 ## Checks
 

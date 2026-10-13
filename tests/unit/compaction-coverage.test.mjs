@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -39,31 +39,34 @@ test("compaction output requires a JSON object with bounded promotions", () => {
 		() => parseCompactionModelOutput('{"workingMemory": null}'),
 		/workingMemory must be an object/,
 	);
-	assert.throws(
-		() => parseCompactionModelOutput(JSON.stringify({ workingMemory: memory, promotions: {} })),
-		/promotions must be an array/,
+	assert.deepEqual(
+		parseCompactionModelOutput(JSON.stringify({ workingMemory: memory, promotions: {} }))
+			.promotions,
+		[],
 	);
-	const many = Array.from({ length: 6 }, () => ({ target: "todo", proposal: "x" }));
-	assert.throws(
-		() => parseCompactionModelOutput(JSON.stringify({ workingMemory: memory, promotions: many })),
-		/at most five/,
+	const many = Array.from({ length: 6 }, (_, index) => ({ target: "todo", proposal: `x${index}` }));
+	assert.equal(
+		parseCompactionModelOutput(JSON.stringify({ workingMemory: memory, promotions: many }))
+			.promotions.length,
+		5,
 	);
-	assert.throws(
-		() => parseCompactionModelOutput(valid({ decisions: "x" })),
-		/decisions must be an array/,
+	assert.deepEqual(
+		parseCompactionModelOutput(valid({ decisions: "x" })).workingMemory.decisions,
+		[],
 	);
-	assert.throws(
-		() => parseCompactionModelOutput(valid({ projectStateGaps: {} })),
-		/projectStateGaps must be an array/,
+	assert.deepEqual(
+		parseCompactionModelOutput(valid({ projectStateGaps: {} })).workingMemory.projectStateGaps,
+		[],
 	);
-	assert.throws(
-		() =>
-			parseCompactionModelOutput(valid({ decisions: [{ provenance: "rumor", decision: "x" }] })),
-		/provenance is not allowed/,
+	assert.deepEqual(
+		parseCompactionModelOutput(valid({ decisions: [{ provenance: "rumor", decision: "x" }] }))
+			.workingMemory.decisions,
+		[],
 	);
-	assert.throws(
-		() => parseCompactionModelOutput(valid({ projectStateGaps: [{ kind: "bogus", detail: "x" }] })),
-		/kind is not allowed/,
+	assert.deepEqual(
+		parseCompactionModelOutput(valid({ projectStateGaps: [{ kind: "bogus", detail: "x" }] }))
+			.workingMemory.projectStateGaps,
+		[],
 	);
 	const sparseGaps = parseCompactionModelOutput(
 		valid({
@@ -77,30 +80,29 @@ test("compaction output requires a JSON object with bounded promotions", () => {
 	assert.deepEqual(sparseGaps.workingMemory.projectStateGaps, [
 		{ kind: "conflict", detail: "real gap" },
 	]);
-	assert.throws(
-		() => parseCompactionModelOutput(valid({ authorization: 42 })),
-		/authorization must be an array of strings/,
+	assert.deepEqual(
+		parseCompactionModelOutput(valid({ authorization: 42 })).workingMemory.authorization,
+		[],
 	);
-	assert.throws(
-		() =>
-			parseCompactionModelOutput(
-				JSON.stringify({
-					workingMemory: memory,
-					promotions: [{ target: "nope", proposal: "x" }],
-				}),
-			),
-		/target is not allowed/,
+	assert.deepEqual(
+		parseCompactionModelOutput(
+			JSON.stringify({
+				workingMemory: memory,
+				promotions: [
+					{ target: "nope", proposal: "x" },
+					{ target: "todo", proposal: "a\nb" },
+					{ target: "todo", proposal: "usable" },
+				],
+			}),
+		).promotions,
+		[{ target: "todo", proposal: "usable" }],
 	);
-	assert.throws(
-		() =>
-			parseCompactionModelOutput(
-				JSON.stringify({
-					workingMemory: memory,
-					promotions: [{ target: "todo", proposal: "a\nb" }],
-				}),
-			),
-		/one line/,
+	const recovered = parseCompactionModelOutput(
+		`Model response:\n${JSON.stringify({ workingMemory: { objective: "o", nextAction: "n", constraints: 42 }, promotions: "malformed" })}`,
 	);
+	assert.equal(recovered.workingMemory.objective, "o");
+	assert.deepEqual(recovered.workingMemory.constraints, []);
+	assert.deepEqual(recovered.promotions, []);
 });
 
 test("sparse working memory normalizes omitted arrays and single-file strings", () => {
@@ -521,6 +523,13 @@ test("compact refuses an inbox that aliases SYNC.json", async (t) => {
 			stopReason: "stop",
 		}),
 	);
-	assert.equal(result, undefined);
-	assert.match(notices.join("\n"), /aliases SYNC\.json/);
+	assert.ok(result, "unsafe proposal destination must not discard usable continuation memory");
+	assert.match(result.compaction.summary, /# Continuation/);
+	assert.equal(
+		await readFile(join(root, "SYNC.json"), "utf8")
+			.then(JSON.parse)
+			.then((value) => value.canonical.inbox),
+		"SYNC.json",
+	);
+	assert.match(notices.join("\\n"), /proposal append skipped/i);
 });

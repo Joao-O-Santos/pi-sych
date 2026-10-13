@@ -31,16 +31,18 @@ const response = {
 	stopReason: "stop",
 };
 
-test("promotion proposals remain one line", () =>
-	assert.throws(
-		() =>
-			parseCompactionModelOutput(
-				JSON.stringify({
-					workingMemory: memory,
-					promotions: [{ target: "todo", proposal: "one\ntwo" }],
-				}),
-			),
-		/one line/,
+test("promotion proposals remain one line and invalid entries are skipped", () =>
+	assert.deepEqual(
+		parseCompactionModelOutput(
+			JSON.stringify({
+				workingMemory: memory,
+				promotions: [
+					{ target: "todo", proposal: "one\ntwo" },
+					{ target: "todo", proposal: "single line" },
+				],
+			}),
+		).promotions,
+		[{ target: "todo", proposal: "single line" }],
 	));
 
 test("compact preserves model limit and signal", async (t) => {
@@ -167,7 +169,7 @@ test("snapshot clips unicode and rejects inbox aliases", async (t) => {
 		modelRegistry: { getApiKeyAndHeaders: async () => ({ ok: true, apiKey: "key" }) },
 		ui: { notify() {} },
 	};
-	assert.equal(
+	assert.ok(
 		await compact(event, ctx, async () => ({
 			...response,
 			content: [
@@ -180,7 +182,6 @@ test("snapshot clips unicode and rejects inbox aliases", async (t) => {
 				},
 			],
 		})),
-		undefined,
 	);
 	assert.equal(await readFile(projectPath, "utf8"), "🧪".repeat(COMPACTION_FILE_BYTE_LIMIT));
 });

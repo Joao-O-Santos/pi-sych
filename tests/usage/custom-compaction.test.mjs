@@ -213,15 +213,8 @@ test("real Pi proactively invokes custom compaction and retains usable memory/pr
 		true,
 		`Pi persisted a native summary instead of the Pi Sych custom-hook result. ${diagnostics}`,
 	);
-	const strings = [];
-	const collectStrings = (value) => {
-		if (typeof value === "string") strings.push(value);
-		else if (Array.isArray(value)) value.forEach(collectStrings);
-		else if (value && typeof value === "object") Object.values(value).forEach(collectStrings);
-	};
-	collectStrings(persisted);
 	assert.match(
-		strings.join("\n"),
+		compactionEntry.summary,
 		/# Continuation[\s\S]*## Objective[\s\S]*field report on the Amber Heron migration/i,
 		`No usable custom continuation summary found in session. ${diagnostics}`,
 	);

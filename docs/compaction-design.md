@@ -74,14 +74,29 @@ status fields must be omitted. It may append only bounded, one-line,
 visibly unreviewed proposals to the configured inbox. The inbox is
 created only when a valid compaction result contains one or more
 proposals; successful compaction without proposals does not create an
-empty `INBOX.md`. Model output must encode `promotions` as an array of
-at most five `{target, proposal}` objects, with an allowed canonical
-role target and one-line proposal text. Invalid output—including
-string-valued promotion suggestions—falls back to Pi's native summary
-without writing the inbox. If custom output is omitted, invalid,
-cancelled, or fails, the handler returns no custom result so Pi's native
-fallback remains in control. Manual failure notifications are best-effort and do
-not prevent native fallback if the UI itself fails.
+empty `INBOX.md`. Model output may encode `promotions` as an array of at
+most five `{target, proposal}` objects, with an allowed canonical role
+target and one-line proposal text. A malformed promotions container is
+treated as no proposals; invalid items are skipped independently, and
+only the first five candidates are considered. Proposal writes remain
+confined to the configured inbox after alias checks; an unsafe destination
+or inbox write failure skips proposals without discarding otherwise usable
+memory. Cancellation is checked after asynchronous inbox safety and
+directory operations and immediately before append, so an abort during
+those waits cannot write a proposal. If the existing inbox cannot be
+counted, the completion notice reports the count as unavailable rather
+than zero. Omitted or malformed
+optional memory arrays become empty; invalid members are skipped
+independently so valid siblings survive. Promotion targets and gap kinds
+require exact allow-list membership; partial labels are rejected. Decision
+provenance and gap kinds remain allow-listed; provenance is never inferred
+or repaired. The required objective and next action must still be
+usable. A JSON object may be extracted from surrounding prose or Markdown
+fences, but malformed JSON or a missing/unusable
+required summary falls back to Pi's native summary. Cancellation and
+model failures also leave native fallback in control. Manual failure
+notifications are best-effort and do not prevent native fallback if the
+UI itself fails.
 
 ## Suggested continuation shape
 
@@ -102,10 +117,15 @@ files:
 projectStateGaps:
 ```
 
-`objective` and `nextAction` must be non-empty strings; omitted array
-fields normalize to empty arrays. Boundedness comes from bounded source
-reads, item, message, status, retained-tail, snapshot, and proposal limits
-rather than prompt word-count budgets. UTF-8 snapshots are decoded and
+`objective` and `nextAction` must be non-empty strings; omitted or
+malformed optional array fields normalize to empty arrays, and invalid
+members are skipped independently. Decision records retain only explicitly
+allow-listed provenance labels; invalid entries are omitted, never
+reclassified. Boundedness comes from bounded source reads, item, message,
+status, retained-tail, snapshot, and proposal limits
+rather than prompt word-count budgets. The nonblank runtime source budget
+is 3,250 lines; the checker reports a 50-line-rounded estimate. UTF-8
+snapshots are decoded and
 then byte-bounded, including malformed source text; serialized snapshots
 and optional focus instructions also have explicit prompt-byte limits.
 Observable messages and the retained tail exclude hidden thinking. Recorded label attributions are

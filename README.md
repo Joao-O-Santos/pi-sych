@@ -310,16 +310,21 @@ orchestration system:
   context.
 - **Bounded delegation:** `dispatch_worker` starts one short-lived
   worker with an explicit assignment, clean or trajectory context,
-  files, skills, model role, tool mode, and timeout. Dispatch reports
-  worker-reported files separately from observed project changes,
-  including residual changes after failure; it does not roll them back.
+  files, skills, model role, tool mode, and timeout. Optional inline
+  `workerInstructions` apply only to that launch through a private,
+  temporary Pi `AGENTS.override.md`; omission leaves the configured
+  worker directory unchanged. Dispatch reports worker-reported files
+  separately from observed project changes, including residual changes
+  after failure; it does not roll them back.
 - **Small working memory:** when custom compaction is enabled in Pi Sych
   config, the workbench handles native compaction requests and proactive
   admission defaults to 150,000 context tokens at a safe settled
-  boundary. It retains bounded observable continuation state. It can
-  append clearly marked, unreviewed proposals to `INBOX.md`, but never
-  mutates canonical semantic files; omission or failure returns control
-  to Pi's native compactor.
+  boundary. It retains bounded observable continuation state. Malformed
+  optional memory/proposal entries are skipped independently when the
+  required summary remains usable; missing or unusable required fields
+  retain Pi's native fallback. Inbox safety/write failures skip
+  proposals without discarding usable memory, and canonical semantic
+  files are never mutated.
 - **Optional completion reassessment:** disabled by default; when
   enabled, the workbench asks once at Pi's final actionable boundary
   whether the current authorized request is complete. It continues

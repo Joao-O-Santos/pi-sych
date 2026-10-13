@@ -4,7 +4,7 @@
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:c69b28002b761c59dfb61b1661c0ee6f6cb314977bbead5bb00f4536a4e9f5bb",
+      "fingerprint": "sha256:9edc325acc28eaf97cbf6079ddcd0f6e12e51b8ac5e407546d37f86f5c7e59e5",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -21,22 +21,21 @@
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:c6f9815e92c62f62ad8285b12a3e029b09b835a427bc74ea4179424349c49ba7",
-      "status": "needs-review",
+      "fingerprint": "sha256:092261f2aca83bcd1f2eb37e0848440c1a0da062538e8a31f5806b73aec9dc88",
+      "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-10-09T10:38:58.603Z",
-        "reason": "Reviewed authorized interrupted-report recovery and independent review: preserve structurally valid provisional claims separately from successful result, keep interruption/process failure primary and warn of incomplete/inaccurate work and nonexistent claimed files. Malformed/absent reports retain original error and observations. README and migration/image guidance remain consistent; no configuration or diagram revision needed. make verify passed 239 tests at 97.86/92.50/96.80 coverage; site/budget passed, audit zero vulnerabilities. No push or release authorized."
-      },
-      "pendingReason": "Documentation changed after recorded acknowledgement; fingerprint and dependent-document review pending. Previous acknowledgement is retained as historical, not current approval."
+        "at": "2026-10-13T23:36:45Z",
+        "reason": "Workhorse reviewed the revised text against current compaction/worker source and relevant tests. make verify passed 247 unit/integration tests (97.91/92.92/96.89% aggregate line/branch/function coverage), packaging, type/style/source-budget/whitespace checks; make site passed. No independent read-only reviewer or opt-in live-model test was run. Related diagram review remains pending; no diagram changed."
+      }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:7f7ad64708e8ba91e0c982cfd570dbe6a67d18d201d35b6a05d8bc6f1611721b",
-      "status": "needs-review",
+      "fingerprint": "sha256:df7aa343c8c1b389d15171ffa24c1bd60b2a52176c97ee3fee1fbac7d71874bf",
+      "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "package-usage",
@@ -47,10 +46,9 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-10-09T11:01:32.108Z",
-        "reason": "Reviewed owner-authorized v8.0.1 patch release preparation. Prior main pipeline 2930169788 passed; version/lockfile/tagged image links/changelog align at 8.0.1. Local make verify passed 239 tests including packed installs (97.86/92.50/96.80 coverage); site/budget/pack inventory passed, production audit zero vulnerabilities. Bumped exact-revision pipeline and publication remain pending."
-      },
-      "pendingReason": "Documentation changed after recorded acknowledgement; fingerprint and dependent-document review pending. Previous acknowledgement is retained as historical, not current approval."
+        "at": "2026-10-13T23:36:45Z",
+        "reason": "Workhorse reviewed the revised text against current compaction/worker source and relevant tests. make verify passed 247 unit/integration tests (97.91/92.92/96.89% aggregate line/branch/function coverage), packaging, type/style/source-budget/whitespace checks; make site passed. No independent read-only reviewer or opt-in live-model test was run. Related diagram review remains pending; no diagram changed."
+      }
     },
     {
       "path": "package.json",
@@ -74,42 +72,41 @@
     },
     {
       "path": "docs/configuration.md",
-      "fingerprint": "sha256:7c62ee37498acafb9631b02f8ce7e51078d56f1ffe2e14535149eee918d82f67",
+      "fingerprint": "sha256:78f15e5dda5aa3c286ddc2d39a661422d02fedae1014deba1a4962fcdf883264",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T20:30:17.397Z",
-        "reason": "Reviewed the new default-off lifecycle behavior and its configuration, compatibility, architecture, README, and changelog statements; README was checked as the declared architecture dependent."
+        "at": "2026-10-13T23:36:45Z",
+        "reason": "Workhorse reviewed the revised text against current compaction/worker source and relevant tests. make verify passed 247 unit/integration tests (97.91/92.92/96.89% aggregate line/branch/function coverage), packaging, type/style/source-budget/whitespace checks; make site passed. No independent read-only reviewer or opt-in live-model test was run. Related diagram review remains pending; no diagram changed."
       }
     },
     {
       "path": "docs/development.md",
-      "fingerprint": "sha256:9541bb9f082c00dbf30cbada108dddb2f77b6cb828033cc9558d49713dc8574d",
-      "status": "needs-review",
+      "fingerprint": "sha256:3166c06ae363e8c28e91522eeed32574f0bdf91fe4c2054e948a04145316e681",
+      "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "development-checks"
       ],
       "acknowledgement": {
-        "at": "2026-09-14T13:38:30.372Z",
-        "reason": "Reviewed current documentation and skill changes against the implementation and accepted project direction."
-      },
-      "pendingReason": "Documentation changed after recorded acknowledgement; fingerprint and dependent-document review pending. Previous acknowledgement is retained as historical, not current approval."
+        "at": "2026-10-13T23:36:45Z",
+        "reason": "Workhorse reviewed the revised text against current compaction/worker source and relevant tests. make verify passed 247 unit/integration tests (97.91/92.92/96.89% aggregate line/branch/function coverage), packaging, type/style/source-budget/whitespace checks; make site passed. No independent read-only reviewer or opt-in live-model test was run. Related diagram review remains pending; no diagram changed."
+      }
     },
     {
       "path": "docs/public-contract.md",
-      "fingerprint": "sha256:aa8d94806ebd14456bc5e75cdcab75c847618489e0732fe752989c461eb1769a",
-      "status": "needs-review",
+      "fingerprint": "sha256:cfd3bfcba9e57e19417ef7d3da702d37113fd898f8cdca8518a99d756a207b82",
+      "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "compatibility"
       ],
       "acknowledgement": {
-        "at": "2026-10-09T10:38:58.603Z",
-        "reason": "Reviewed authorized interrupted-report recovery and independent review: preserve structurally valid provisional claims separately from successful result, keep interruption/process failure primary and warn of incomplete/inaccurate work and nonexistent claimed files. Malformed/absent reports retain original error and observations. README and migration/image guidance remain consistent; no configuration or diagram revision needed. make verify passed 239 tests at 97.86/92.50/96.80 coverage; site/budget passed, audit zero vulnerabilities. No push or release authorized."
+        "at": "2026-10-13T23:36:45Z",
+        "reason": "Workhorse reviewed the revised text against current compaction/worker source and relevant tests. make verify passed 247 unit/integration tests (97.91/92.92/96.89% aggregate line/branch/function coverage), packaging, type/style/source-budget/whitespace checks; make site passed. No independent read-only reviewer or opt-in live-model test was run. Related diagram review remains pending; no diagram changed."
       }
     },
     {
@@ -166,7 +163,7 @@
     },
     {
       "path": "docs/compaction-design.md",
-      "fingerprint": "sha256:29a2981f5a22e0d43dfeb61c30f284df19b6bf8d7852ec8304f258668acdd0fc",
+      "fingerprint": "sha256:fa87a9acd136d43e882b7cc4aeb354db6fee5828269911cedcdf56865a26002e",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
@@ -176,26 +173,26 @@
         "extensions/workbench/src/compaction.ts",
         "tests/unit/compaction.test.mjs",
         "tests/unit/compaction-boundaries.test.mjs",
+        "tests/integration/compaction-recovery.test.mjs",
         "tests/usage/custom-compaction.test.mjs"
       ],
       "acknowledgement": {
-        "at": "2026-10-13T20:18:00.000Z",
-        "reason": "Reviewed live custom-compaction failure evidence: Pi defaulted to native summary because model output encoded promotions as strings instead of required {target,proposal} objects. Clarified the model-facing schema and added a prompt regression. Added an opt-in Pi RPC usage test with keepRecentTokens=1; the live run persisted a Pi Sych summary, appended an INBOX promotion, and left canonical project state unchanged. All 219 unit tests, typecheck, formatting, markdown, and whitespace checks passed; opt-out usage invocation skipped as intended. The live test used the configured OpenAI Codex model and is model/run-specific."
+        "at": "2026-10-13T23:36:45Z",
+        "reason": "Workhorse reviewed the revised text against current compaction source and tests. Confirmed the substring concern is false: TARGETS and GAP_KINDS are arrays and exact-membership checks reject partial labels. make verify passed 247 unit/integration tests (97.91/92.92/96.89% aggregate line/branch/function coverage), packaging, type/style/source-budget/whitespace checks; make site passed. No independent read-only reviewer or opt-in live-model test was run. Related diagram review remains pending; no diagram changed."
       }
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:b05f3c0e649b7179035d9e146b7086f8dd121256620f8b10a4f7b9667c6e6b32",
-      "status": "needs-review",
+      "fingerprint": "sha256:816a6ef19544a06f291dd4023f485b8defd4fa41119253665321fae2e49bc027",
+      "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-10-09T11:01:32.108Z",
-        "reason": "Reviewed owner-authorized v8.0.1 patch release preparation. Prior main pipeline 2930169788 passed; version/lockfile/tagged image links/changelog align at 8.0.1. Local make verify passed 239 tests including packed installs (97.86/92.50/96.80 coverage); site/budget/pack inventory passed, production audit zero vulnerabilities. Bumped exact-revision pipeline and publication remain pending."
-      },
-      "pendingReason": "Documentation changed after recorded acknowledgement; fingerprint and dependent-document review pending. Previous acknowledgement is retained as historical, not current approval."
+        "at": "2026-10-13T23:36:45Z",
+        "reason": "Workhorse reviewed the revised text against current compaction/worker source and relevant tests. make verify passed 247 unit/integration tests (97.91/92.92/96.89% aggregate line/branch/function coverage), packaging, type/style/source-budget/whitespace checks; make site passed. No independent read-only reviewer or opt-in live-model test was run. Related diagram review remains pending; no diagram changed."
+      }
     },
     {
       "path": "skills/code/SKILL.md",

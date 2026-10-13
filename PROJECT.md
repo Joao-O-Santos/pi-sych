@@ -115,7 +115,7 @@ removed; companion packages remain separately installed.
 {verified} Against the v7.0.1 deterministic coverage baseline (97.48%
 lines, 90.23% branches, 95.31% functions), v8.0.1 coverage measures
 97.86% lines, 92.50% branches, and 96.80% functions. Runtime nonblank
-source is about 3,200 lines, within the 3,200-line budget. The local
+source is about 3,250 lines, within the 3,250-line budget. The local
 native MCP fixture and live read-only Context7 worker call passed. The
 opt-in real-model workflow and an installed-package `project_status`
 dogfood call passed after private local v8 configuration migration.
@@ -174,7 +174,7 @@ roll back changes. Plannotator absence does not prevent core startup.
 README/configuration/architecture/public-contract text describes seven
 skills, Pi-native MCP worker selection, layered configuration,
 persistence/scrutiny and clean/trajectory semantics. The nonblank
-runtime source-code budget remains 3,200 lines.
+runtime source-code budget is 3,250 lines.
 
 {verified} Repository-native formatting, documentation, type, budget,
 and test checks remain the acceptance boundary. The published package

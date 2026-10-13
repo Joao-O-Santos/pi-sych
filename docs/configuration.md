@@ -82,8 +82,16 @@ example:
 `dispatch_worker` looks up the exact requested `modelRole`, or the
 catalogue's `default` role. Cost and notes are context for the
 supervisor; the runtime does not rank models or invent fallbacks. The
-model catalogue is needed to dispatch a worker, not merely to start Pi
-Sych for direct project work.
+tool also accepts optional inline `workerInstructions` for guidance
+specific to one launch. Pi Sych copies the configured worker agent
+directory to private temporary state and writes the supplied text to a
+launch-scoped `AGENTS.override.md`, preserving existing worker
+instructions before it. Pi loads this through native AGENTS discovery;
+project and ancestor AGENTS files retain Pi's normal precedence. The
+shared worker directory and project files are not modified. Omit the
+option to use the configured worker directory unchanged with no injected
+guidance. The model catalogue is needed to dispatch a worker, not merely
+to start Pi Sych for direct project work.
 
 Initialize the conventional
 `<global Pi Sych config directory>/worker-agent` directory once with the

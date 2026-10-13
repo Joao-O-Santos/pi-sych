@@ -48,6 +48,27 @@ const response = (value, extra = {}) => ({
 	stopReason: "stop",
 });
 
+test("allow-lists reject substring targets and gap kinds", () => {
+	const parsed = parseCompactionModelOutput(
+		JSON.stringify({
+			workingMemory: memory({
+				projectStateGaps: [
+					{ kind: "conf", detail: "Partial label must be dropped" },
+					{ kind: "conflict", detail: "Exact label remains" },
+				],
+			}),
+			promotions: [
+				{ target: "age", proposal: "Partial label must be dropped" },
+				{ target: "agents", proposal: "Exact target remains" },
+			],
+		}),
+	);
+	assert.deepEqual(parsed.promotions, [{ target: "agents", proposal: "Exact target remains" }]);
+	assert.deepEqual(parsed.workingMemory.projectStateGaps, [
+		{ kind: "conflict", detail: "Exact label remains" },
+	]);
+});
+
 test("validates bounded structured continuation and provenance", () => {
 	const parsed = parseCompactionModelOutput(
 		JSON.stringify({
@@ -81,15 +102,14 @@ test("validates bounded structured continuation and provenance", () => {
 		{ projectStateGaps: [{ kind: "conflict", detail: "before\nafter" }] },
 	])
 		assert.throws(() => validateWorkingMemory({ ...memory(), ...value }), /line breaks/);
-	assert.throws(
-		() =>
-			parseCompactionModelOutput(
-				JSON.stringify({
-					workingMemory: memory(),
-					promotions: Array(6).fill({ target: "todo", proposal: "x" }),
-				}),
-			),
-		/at most five/,
+	assert.equal(
+		parseCompactionModelOutput(
+			JSON.stringify({
+				workingMemory: memory(),
+				promotions: Array(6).fill({ target: "todo", proposal: "x" }),
+			}),
+		).promotions.length,
+		5,
 	);
 });
 
@@ -307,6 +327,47 @@ test("compact delegates authentication and completion to the host model registry
 	assert.equal("apiKey" in call[2], false);
 });
 
+test("compact preserves usable memory while skipping invalid optional fields and promotions", async (t) => {
+	const { root, ctx, event } = await fixture(t);
+	const originalProject = await readFile(join(root, "PROJECT.md"), "utf8");
+	const imperfect = {
+		objective: "Continue the authorized work",
+		nextAction: "Run the next check",
+		constraints: 42,
+		progress: "One completed check",
+		decisions: [{ provenance: "user-explicit", decision: "Keep the reported boundary" }],
+		projectStateGaps: [{ kind: "unknown", detail: "Do not retain" }],
+		files: ["PROJECT.md"],
+	};
+	const result = await compact(event, ctx, async () => ({
+		content: [
+			{
+				type: "text",
+				text: `Continuation follows:\n${JSON.stringify({
+					workingMemory: imperfect,
+					promotions: [
+						{ target: "todo", proposal: "Review the next check" },
+						{ target: "unknown", proposal: "Invalid target" },
+						{ target: "agents", proposal: "line\nbreak" },
+						null,
+					],
+				})}\n`,
+			},
+		],
+		usage: { input: 1, output: 2, totalTokens: 3 },
+		stopReason: "stop",
+	}));
+	assert.match(result.compaction.summary, /Continue the authorized work/);
+	assert.match(result.compaction.summary, /One completed check/);
+	assert.match(result.compaction.summary, /Keep the reported boundary/);
+	assert.doesNotMatch(result.compaction.summary, /invented|unknown/);
+	assert.equal(
+		await readFile(join(root, "INBOX.md"), "utf8"),
+		"\n- {todo} Review the next check\n",
+	);
+	assert.equal(await readFile(join(root, "PROJECT.md"), "utf8"), originalProject);
+});
+
 test("compact writes only bounded unreviewed proposals after successful output", async (t) => {
 	const { root, ctx, event, notifications } = await fixture(t);
 	const output = memory({ files: ["PROJECT.md", "missing.md"] });
@@ -366,7 +427,7 @@ test("manual model failure remains a fallback if error notification also fails",
 });
 
 test("model failure, cancellation, and non-stop completion do not write proposals", async (t) => {
-	for (const kind of ["throw", "abort", "length"]) {
+	for (const kind of ["throw", "abort", "length", "invalid-summary"]) {
 		const { root, ctx, event } = await fixture(t);
 		const controller = new AbortController();
 		event.signal = controller.signal;
@@ -376,6 +437,16 @@ test("model failure, cancellation, and non-stop completion do not write proposal
 				controller.abort();
 				return response(memory());
 			}
+			if (kind === "invalid-summary")
+				return {
+					...response(memory()),
+					content: [
+						{
+							type: "text",
+							text: JSON.stringify({ workingMemory: { objective: "missing next action" } }),
+						},
+					],
+				};
 			return { ...response(memory()), stopReason: "length" };
 		});
 		assert.equal(result, undefined);

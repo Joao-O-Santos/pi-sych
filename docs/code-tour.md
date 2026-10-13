@@ -17,9 +17,9 @@ point. The workbench delegates to small files in
 
 | Source | Responsibility |
 |------------------------------------|------------------------------------|
-| `worker-engine.ts`, `model-catalog.ts` | Dispatch schema, context modes, model selection, process lifecycle, and immutable results. |
+| `worker-engine.ts`, `model-catalog.ts` | Dispatch schema, context modes, model selection, process lifecycle, launch-scoped worker instructions, and immutable results. |
 | `project-files.ts`, `project-status.ts` | Project paths, `SYNC.json` parsing, fingerprints, declared dependency impact, and acknowledgement. |
-| `compaction.ts` | Bounded context snapshot and unreviewed proposals, without changing canonical semantic decisions. |
+| `compaction.ts` | Bounded context snapshot, tolerant recovery of optional memory/proposal entries, and unreviewed inbox proposals, without changing canonical semantic decisions. |
 | `config-directory.ts`, `validation.ts` | Configuration resolution and mechanical validation. |
 | `literature-search.ts` | Read-only local SQLite discovery. |
 | `plannotator.ts` | Optional review integration support. |
@@ -80,6 +80,14 @@ and verifies that reported project files still exist. Cancellation,
 timeout, spawn failure, a signal exit, and a non-zero exit take
 precedence over a result file; none is a successful result.
 
+Optional `workerInstructions` applies only to its dispatch. The engine
+copies the configured worker agent directory into private temporary
+state and writes a launch-scoped `AGENTS.override.md` that preserves
+existing worker guidance before the supplied instructions. Pi discovers
+it using its normal context-file mechanism; the shared directory and
+project are not modified. When omitted, the configured directory is used
+unchanged and context-file discovery is disabled for that worker.
+
 Ordinary workers do not load MCP or codemode. `remoteResearch: true`
 adds Pi's `builtin:mcp` and `builtin:codemode` extensions explicitly.
 Native Pi reads `mcp.json` from that worker's `PI_CODING_AGENT_DIR`; the
@@ -113,8 +121,13 @@ supervisor model for structured working memory, filters its file
 references, and appends a small number of visibly unreviewed proposals
 to the inbox. Returning no custom result leaves Pi's native compactor in
 control. Canonical semantic files are never mutated; recorded label
-attributions are preserved without verification, and omission or failure
-returns native fallback.
+attributions are preserved without verification. Malformed optional
+collections and invalid members are skipped independently, preserving
+usable siblings and required summary fields. Invalid or missing required
+summary fields still return native fallback. Unsafe inbox destinations
+or proposal-append failures skip proposals without discarding usable
+memory; an unreadable inbox count is reported as unavailable.
+Cancellation before append prevents proposal writes.
 
 `config-directory.ts` owns strict parsing and layering: global
 `<pi-config-root>/pi-sych/config.json`, then project

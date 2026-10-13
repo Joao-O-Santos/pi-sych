@@ -70,9 +70,7 @@ const list = (value: unknown, label: string) => {
 		values.some((item) => typeof item === "string" && /\r|\n/.test(item))
 	)
 		throw new Error(`${label} must not contain line breaks`);
-	return boundedStringArray(value, label, ITEM_LIMIT, MEMORY_ITEM_LIMIT).map((item, index) =>
-		text(item, `${label}[${index}]`),
-	);
+	return boundedStringArray(value, label, ITEM_LIMIT, MEMORY_ITEM_LIMIT);
 };
 const decision = (value: unknown, index: number): MemoryDecision => {
 	const item = objectRecord(value, `decisions[${index}]`),
@@ -97,27 +95,35 @@ const gap = (value: unknown, index: number): ProjectStateGap | undefined => {
 		detail: text(item.detail, `projectStateGaps[${index}].detail`),
 	};
 };
-export function validateWorkingMemory(value: unknown): Memory {
-	const item = objectRecord(value, "workingMemory");
+const workingMemory = (value: unknown, recover = false): Memory => {
+	const item = objectRecord(value, "workingMemory"),
+		array = <T>(value: unknown, label: string, parse: (item: unknown, index: number) => T) =>
+			recover
+				? bestEffortArray(value, parse)
+				: boundedArray(value, label, MEMORY_ITEM_LIMIT, parse),
+		optional = (field: string) =>
+			recover
+				? bestEffortArray(item[field], (entry) => list([entry], field)[0])
+				: list(item[field], field);
 	return {
 		objective: text(item.objective, "objective", SCALAR_LIMIT),
-		authorization: list(item.authorization, "authorization"),
-		constraints: list(item.constraints, "constraints"),
-		progress: list(item.progress, "progress"),
-		decisions: boundedArray(item.decisions, "decisions", MEMORY_ITEM_LIMIT, decision),
-		inferences: list(item.inferences, "inferences"),
-		failedOrRejected: list(item.failedOrRejected, "failedOrRejected"),
-		unresolved: list(item.unresolved, "unresolved"),
-		activeWork: list(item.activeWork, "activeWork"),
+		authorization: optional("authorization"),
+		constraints: optional("constraints"),
+		progress: optional("progress"),
+		decisions: array(item.decisions, "decisions", decision),
+		inferences: optional("inferences"),
+		failedOrRejected: optional("failedOrRejected"),
+		unresolved: optional("unresolved"),
+		activeWork: optional("activeWork"),
 		nextAction: text(item.nextAction, "nextAction", SCALAR_LIMIT),
-		files: list(item.files, "files"),
-		projectStateGaps: boundedArray(
-			item.projectStateGaps,
-			"projectStateGaps",
-			MEMORY_ITEM_LIMIT,
-			gap,
-		).filter((item): item is ProjectStateGap => item !== undefined),
+		files: optional("files"),
+		projectStateGaps: array(item.projectStateGaps, "projectStateGaps", gap).filter(
+			(item): item is ProjectStateGap => item !== undefined,
+		),
 	};
+};
+export function validateWorkingMemory(value: unknown): Memory {
+	return workingMemory(value);
 }
 const promotion = (value: unknown): Promotion => {
 	const item = objectRecord(value, "promotion");
@@ -128,16 +134,28 @@ const promotion = (value: unknown): Promotion => {
 	if (!TARGETS.includes(target)) throw new Error("promotion.target is not allowed");
 	return { target: target as PromotionTarget, proposal };
 };
+const bestEffortArray = <T>(
+	value: unknown,
+	parse: (item: unknown, index: number) => T | undefined,
+	limit = MEMORY_ITEM_LIMIT,
+): T[] =>
+	(Array.isArray(value) ? value : typeof value === "string" ? [value] : [])
+		.slice(0, limit)
+		.flatMap((item, index) => {
+			try {
+				const parsed = parse(item, index);
+				return parsed === undefined ? [] : [parsed];
+			} catch {
+				return [];
+			}
+		});
 export function parseCompactionModelOutput(raw: string) {
 	const match = raw.match(/\{[\s\S]*\}/);
 	if (!match) throw new Error("compaction output contains no JSON object");
-	const value = objectRecord(JSON.parse(match[0]), "compaction output"),
-		promotions = value.promotions ?? [];
-	if (!Array.isArray(promotions) || promotions.length > 5)
-		throw new Error("promotions must be an array of at most five entries");
+	const value = objectRecord(JSON.parse(match[0]), "compaction output");
 	return {
-		workingMemory: validateWorkingMemory(value.workingMemory),
-		promotions: promotions.map(promotion),
+		workingMemory: workingMemory(value.workingMemory, true),
+		promotions: bestEffortArray(value.promotions, promotion, 5),
 	};
 }
 const section = (name: string, values: string[]) =>
@@ -584,10 +602,25 @@ export async function compact(
 				output.workingMemory.files,
 			);
 		if (signal.aborted) return undefined;
-		const pending = (await pendingPromotions(project)) + output.promotions.length;
+		let pending: number | undefined,
+			proposalAppendSkipped = false;
+		try {
+			pending = await pendingPromotions(project);
+		} catch {}
 		if (output.promotions.length) {
-			await safeInbox(project);
-			await mkdir(dirname(project.canonical.inbox), { recursive: true });
+			try {
+				await safeInbox(project);
+				if (signal.aborted) return undefined;
+				await mkdir(dirname(project.canonical.inbox), { recursive: true });
+				if (signal.aborted) return undefined;
+				await appendFile(
+					project.canonical.inbox,
+					`\n${output.promotions.map((item) => `- {${item.target}} ${item.proposal}`).join("\n")}\n`,
+				);
+				if (pending !== undefined) pending += output.promotions.length;
+			} catch {
+				proposalAppendSkipped = true;
+			}
 		}
 		const result = {
 			compaction: {
@@ -598,20 +631,14 @@ export async function compact(
 			},
 		};
 		if (signal.aborted) return undefined;
-		if (output.promotions.length)
-			await appendFile(
-				project.canonical.inbox,
-				`\n${output.promotions.map((item) => `- {${item.target}} ${item.proposal}`).join("\n")}\n`,
+		try {
+			ctx.ui.notify(
+				`Working-memory compaction complete. ${proposalAppendSkipped ? "Proposal append skipped; " : ""}${pending === undefined ? "Pending proposal count unavailable." : `${showPath(project.projectRoot, project.canonical.inbox)} has ${pending} pending memory proposals.`}`,
+				"info",
 			);
-		if (!signal.aborted)
-			try {
-				ctx.ui.notify(
-					`Working-memory compaction complete. ${showPath(project.projectRoot, project.canonical.inbox)} has ${pending} pending memory proposals.`,
-					"info",
-				);
-			} catch (error) {
-				console.error(`Working-memory compaction notification failed: ${String(error)}`);
-			}
+		} catch (error) {
+			console.error(`Working-memory compaction notification failed: ${String(error)}`);
+		}
 		return result;
 	} catch (error) {
 		if (signal.aborted) return undefined;

@@ -69,11 +69,12 @@ directory containing the configured agent files and a launch-scoped
 `AGENTS.override.md` that preserves existing worker instructions before
 the supplied guidance. Pi then loads project/ancestor AGENTS files by
 its normal discovery and precedence. Omission uses the configured worker
-agent directory unchanged and injects no instructions. For a writing
-worker, the package `skills/write/DEFAULT_STYLE.md` is included as a
-baseline and a project `STYLE.md`, when present, is included as a local
-override. These style files are not loaded for unrelated work. Worker
-modes control visible Pi tools; they are not sandboxes.
+agent directory unchanged, injects no instructions, and disables
+context-file discovery for that worker. For a writing worker, the
+package `skills/write/DEFAULT_STYLE.md` is included as a baseline and a
+project `STYLE.md`, when present, is included as a local override. These
+style files are not loaded for unrelated work. Worker modes control
+visible Pi tools; they are not sandboxes.
 
 ## Worker lifecycle
 
@@ -168,11 +169,22 @@ rejected paths, unresolved issues, active work, next action, files, and
 project-state gaps. It uses bounded observable messages, bounded
 retained tail, and bounded canonical snapshots. Recorded `user-explicit`
 and `accepted-project` decision attributions are preserved without
-verification; inferences are kept separate. At most bounded one-line
-proposals are appended to the configured inbox as visibly unreviewed
-state. Canonical semantic files are never mutated. If custom compaction
-is disabled, omitted, fails, is cancelled, or produces invalid output,
-Pi's native compactor remains in control.
+verification; inferences are kept separate. Malformed optional
+collections and invalid individual members are skipped independently so
+usable siblings survive. Invalid promotion candidates are likewise
+skipped rather than invalidating the memory summary. The required
+objective and next action must remain usable; malformed JSON or missing
+or unusable required fields leave native fallback in control.
+
+At most bounded one-line proposals are appended to the configured inbox
+as visibly unreviewed state. Canonical semantic files are never mutated.
+Inbox safety or append failures skip proposals without discarding
+otherwise usable memory; an unreadable existing inbox count is reported
+as unavailable, not zero. Cancellation during inbox safety or directory
+operations is checked before append, preventing late proposal writes. If
+custom compaction is disabled, omitted, fails, is cancelled, or lacks
+usable required summary fields, Pi's native compactor remains in
+control.
 
 ## Local literature
 

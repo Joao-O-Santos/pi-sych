@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { spawn } from "node:child_process";
+import { execFileSync, spawn } from "node:child_process";
 import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { homedir, tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -31,13 +31,7 @@ test("supervisor passes inline workerInstructions through dispatch to a live Pi 
 	const agentDir = await mkdtemp(join(tmpdir(), "pi-sych-worker-instructions-agent-"));
 	const projectRoot = join(root, "project");
 	const launchRoot = join(projectRoot, "src");
-	await new Promise((resolvePromise, reject) => {
-		const git = spawn("git", ["init", "-q", root], { stdio: "ignore" });
-		git.once("error", reject);
-		git.once("close", (code) =>
-			code === 0 ? resolvePromise() : reject(new Error(`git init exited ${code}`)),
-		);
-	});
+	execFileSync("git", ["init", "-q", root], { stdio: "ignore", timeout: 5_000 });
 	const session = join(root, "supervisor-session.jsonl");
 	const workerAgentDir = join(agentDir, "pi-sych", "worker-agent");
 	t.after(() =>
