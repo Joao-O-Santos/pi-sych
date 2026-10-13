@@ -74,9 +74,13 @@ status fields must be omitted. It may append only bounded, one-line,
 visibly unreviewed proposals to the configured inbox. The inbox is
 created only when a valid compaction result contains one or more
 proposals; successful compaction without proposals does not create an
-empty `INBOX.md`. If custom output is omitted, invalid, cancelled, or
-fails, the handler returns no custom result so Pi's native fallback
-remains in control. Manual failure notifications are best-effort and do
+empty `INBOX.md`. Model output must encode `promotions` as an array of
+at most five `{target, proposal}` objects, with an allowed canonical
+role target and one-line proposal text. Invalid output—including
+string-valued promotion suggestions—falls back to Pi's native summary
+without writing the inbox. If custom output is omitted, invalid,
+cancelled, or fails, the handler returns no custom result so Pi's native
+fallback remains in control. Manual failure notifications are best-effort and do
 not prevent native fallback if the UI itself fails.
 
 ## Suggested continuation shape

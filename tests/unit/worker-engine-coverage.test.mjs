@@ -115,6 +115,46 @@ test("writing workers receive package defaults and project style overrides", asy
 	assert.match(captured.prompt, /Writing defaults are a baseline/);
 });
 
+test("launcher enables Pi AGENTS discovery only for explicit worker instructions", async (_t) => {
+	for (const workerInstructions of [undefined, "Use task-specific rules."]) {
+		const root = await mkdtemp(join(tmpdir(), "pi-sych-agents-launch-"));
+		try {
+			const child = new EventEmitter();
+			child.stdout = new PassThrough();
+			child.stderr = new PassThrough();
+			child.kill = () => true;
+			let args;
+			const launched = launchPiWorker(
+				{
+					id: "agents",
+					request: {
+						...request,
+						timeoutMs: 100,
+						contextFiles: [],
+						...(workerInstructions === undefined ? {} : { workerInstructions }),
+					},
+					workerAgentDir: root,
+					resultPath: join(root, "result.json"),
+					projectRoot: root,
+					model: "provider/model",
+					prompt: "test",
+					packageRoot: process.cwd(),
+					extraExtensionPaths: [],
+				},
+				(_command, argv) => {
+					args = argv;
+					return child;
+				},
+			);
+			child.emit("close", 0, null);
+			await launched;
+			assert.equal(args.includes("--no-context-files"), workerInstructions === undefined);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	}
+});
+
 test("launcher forwards an explicit thinking level to Pi", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-thinking-"));
 	t.after(() => rm(root, { recursive: true, force: true }));

@@ -21,7 +21,7 @@
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:7a2e1490a41f2486b4a3a85b4bf8da50a2c6d66d4858c29ce27bf8c6b156e771",
+      "fingerprint": "sha256:c6f9815e92c62f62ad8285b12a3e029b09b835a427bc74ea4179424349c49ba7",
       "status": "needs-review",
       "role": "architecture",
       "authoritativeFor": [
@@ -101,8 +101,8 @@
     },
     {
       "path": "docs/public-contract.md",
-      "fingerprint": "sha256:4d2e6c5ae98f1c6f1b554f0e55c4cd3617a92d40ca3b620cc79f98b4ee7252c1",
-      "status": "current",
+      "fingerprint": "sha256:aa8d94806ebd14456bc5e75cdcab75c847618489e0732fe752989c461eb1769a",
+      "status": "needs-review",
       "role": "documentation",
       "authoritativeFor": [
         "compatibility"
@@ -166,7 +166,7 @@
     },
     {
       "path": "docs/compaction-design.md",
-      "fingerprint": "sha256:0ed1cd18158092e4b970e4247f32b3ad95f293a2d89b1f5d1a6c5893f28c511f",
+      "fingerprint": "sha256:29a2981f5a22e0d43dfeb61c30f284df19b6bf8d7852ec8304f258668acdd0fc",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
@@ -174,16 +174,18 @@
       ],
       "updateFrom": [
         "extensions/workbench/src/compaction.ts",
-        "tests/unit/compaction-boundaries.test.mjs"
+        "tests/unit/compaction.test.mjs",
+        "tests/unit/compaction-boundaries.test.mjs",
+        "tests/usage/custom-compaction.test.mjs"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T22:52:04.260Z",
-        "reason": "Reviewed compaction hardening for malformed UTF-8 expansion, serialized prompt bounds, clipped manual focus, and manual failure-notification fallback; added boundary regressions. Updated v8 state and MCP verification record. Final make verify passed 216 tests at 97.85/92.27/96.80% line/branch/function coverage, make site passed, production npm audit reported zero vulnerabilities. No push or release."
+        "at": "2026-10-13T20:18:00.000Z",
+        "reason": "Reviewed live custom-compaction failure evidence: Pi defaulted to native summary because model output encoded promotions as strings instead of required {target,proposal} objects. Clarified the model-facing schema and added a prompt regression. Added an opt-in Pi RPC usage test with keepRecentTokens=1; the live run persisted a Pi Sych summary, appended an INBOX promotion, and left canonical project state unchanged. All 219 unit tests, typecheck, formatting, markdown, and whitespace checks passed; opt-out usage invocation skipped as intended. The live test used the configured OpenAI Codex model and is model/run-specific."
       }
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:ddd855585a879bf2f777b5406867d2338c251c16e3139ddc440637754a581b87",
+      "fingerprint": "sha256:b05f3c0e649b7179035d9e146b7086f8dd121256620f8b10a4f7b9667c6e6b32",
       "status": "needs-review",
       "role": "documentation",
       "authoritativeFor": [

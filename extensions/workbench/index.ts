@@ -70,6 +70,7 @@ export function formatDispatchWorkerCallSummary(
 		| "mode"
 		| "skills"
 		| "remoteResearch"
+		| "workerInstructions"
 		| "timeoutMs"
 	>,
 ) {
@@ -269,6 +270,7 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 			"A prepared plan, TODO, or brief can make clean delegation sufficient after supervisor pre-work; needing conversation context does not force the supervisor to execute the task itself.",
 			"Give the worker one explicit outcome and authorization boundary and expect completion within it. Context mode does not change worker tools, permissions, model, skills, files, or research access.",
 			"Set remoteResearch: true only when remote retrieval is part of the assigned task. It loads native MCP and codemode in the worker; selecting research alone adds only local literature_search.",
+			"Use workerInstructions only when the worker needs durable-agent-style guidance for this launch. Pi loads it through native AGENTS.md context-file discovery; omission injects nothing, and the launch uses a private temporary agent directory rather than changing shared worker configuration.",
 		],
 		parameters: dispatchSchema,
 		renderCall(args, theme, { expanded }) {

@@ -61,7 +61,15 @@ Before dispatch, the supervisor inspects the available skill catalogue,
 selects only useful skills, and supplies one explicit assignment,
 expected output, capability mode, context files, context mode, model
 role, thinking level when useful, and bounded timeout. Configured
-`agents` files are automatically included when present. For a writing
+`agents` files are automatically included when present. Optional
+`workerInstructions` supplies worker-specific guidance through Pi's
+native AGENTS context-file discovery, not the assignment prompt. For
+that dispatch only, Pi Sych creates a private temporary worker agent
+directory containing the configured agent files and a launch-scoped
+`AGENTS.override.md` that preserves existing worker instructions before
+the supplied guidance. Pi then loads project/ancestor AGENTS files by
+its normal discovery and precedence. Omission uses the configured worker
+agent directory unchanged and injects no instructions. For a writing
 worker, the package `skills/write/DEFAULT_STYLE.md` is included as a
 baseline and a project `STYLE.md`, when present, is included as a local
 override. These style files are not loaded for unrelated work. Worker

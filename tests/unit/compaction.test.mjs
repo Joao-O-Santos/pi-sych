@@ -115,6 +115,14 @@ test("prompt preserves recorded decision attributions across continuation passes
 		/Previously recorded decision attributions from the previous Pi Sych continuation/,
 	);
 	assert.match(prompt, /not independently verified and not new authorization/);
+	assert.match(
+		prompt,
+		/Promotions must be an array of at most five objects shaped \{target,proposal\}/,
+	);
+	assert.match(
+		prompt,
+		/target must be one of project,agents,personal-agents,style,evidence,decisions,todo/,
+	);
 	assert.match(prompt, /- \[user-explicit\] Use bounded continuation/);
 	assert.doesNotMatch(
 		buildCompactionPrompt(

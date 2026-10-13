@@ -1,9 +1,18 @@
 # Changelog
 
-All notable changes to Pi Sych are documented here. Signed Git tags and
-npm registry metadata establish publication status and dates; headings
-below record versioned changes without duplicating that live release
-state.
+All notable changes to Pi Sych are documented here.
+
+## Unreleased
+
+### Added
+
+- Add optional `dispatch_worker.workerInstructions`, loaded as a
+  launch-scoped Pi-native `AGENTS.override.md` in a private temporary
+  agent directory. Omission preserves the prior worker agent directory
+  and behavior; injected guidance does not mutate shared worker
+  configuration or the project. Signed Git tags and npm registry
+  metadata establish publication status and dates; headings below record
+  versioned changes without duplicating that live release state.
 
 ## Unreleased
 

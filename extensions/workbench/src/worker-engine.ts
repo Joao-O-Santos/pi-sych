@@ -3,6 +3,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { constants, existsSync, statSync } from "node:fs";
 import {
 	access,
+	cp,
 	lstat,
 	mkdir,
 	mkdtempDisposable,
@@ -121,6 +122,7 @@ export const dispatchSchema = Type.Object({
 			description: "Pi thinking level; omission preserves the selected model's default",
 		}),
 	),
+	workerInstructions: Type.Optional(Type.String({ description: "Optional Pi AGENTS.md guidance" })),
 	remoteResearch: Type.Optional(
 		Type.Boolean({
 			description:
@@ -420,7 +422,7 @@ export async function launchPiWorker(
 			"--no-skills",
 			"--no-prompt-templates",
 			"--no-themes",
-			"--no-context-files",
+			...(spec.request.workerInstructions === undefined ? ["--no-context-files"] : []),
 			"--no-approve",
 			"--model",
 			spec.model,
@@ -631,16 +633,36 @@ export async function dispatchWorker(options: {
 	await using _runtimeHandle = runtime;
 	const resultPath = resolve(runtime.path, "result.json");
 	const contextMode = request.contextMode ?? "clean";
+	if (request.workerInstructions !== undefined)
+		nonEmptyString(request.workerInstructions, "workerInstructions");
 	if (contextMode === "trajectory" && !options.trajectory)
 		throw new Error("Trajectory context is unavailable for this dispatch");
 	const sessionPath =
 		contextMode === "trajectory" && options.trajectory
 			? await prepareTrajectorySession({ ...options.trajectory, runtimePath: runtime.path })
 			: undefined;
+	let workerAgentDir = options.workerAgentDir;
+	if (request.workerInstructions !== undefined) {
+		workerAgentDir = resolve(runtime.path, "worker-agent");
+		const contextPath = ["AGENTS.override.md", "AGENTS.md", "AGENTS.MD", "CLAUDE.md", "CLAUDE.MD"]
+			.map((name) => resolve(options.workerAgentDir, name))
+			.find((path) => existsSync(path) && statSync(path).isFile());
+		const existingInstructions = contextPath ? await readFile(contextPath, "utf8") : "";
+		await cp(options.workerAgentDir, workerAgentDir, {
+			recursive: true,
+			verbatimSymlinks: true,
+			filter: (source) => source !== resolve(options.workerAgentDir, "AGENTS.override.md"),
+		});
+		await writeFile(
+			resolve(workerAgentDir, "AGENTS.override.md"),
+			`${existingInstructions.trim()}${existingInstructions.trim() ? "\n\n" : ""}${request.workerInstructions.trim()}\n`,
+			{ mode: 0o600 },
+		);
+	}
 	const spec: WorkerLaunchSpec = {
 		id,
 		request: { ...request, contextMode, contextFiles, timeoutMs },
-		workerAgentDir: options.workerAgentDir,
+		workerAgentDir,
 		...(options.piSychConfigDirectory
 			? { piSychConfigDirectory: options.piSychConfigDirectory }
 			: {}),

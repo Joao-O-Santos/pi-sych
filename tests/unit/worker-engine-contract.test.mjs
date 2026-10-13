@@ -36,6 +36,15 @@ test("worker request and result retain the bounded protocol", () => {
 	assert.equal(Value.Check(dispatchSchema, { ...bounded, contextMode: "clean" }), true);
 	assert.equal(Value.Check(dispatchSchema, { ...bounded, contextMode: "trajectory" }), true);
 	assert.equal(Value.Check(dispatchSchema, { ...bounded, contextMode: "history" }), false);
+	assert.equal(
+		Value.Check(dispatchSchema, {
+			...bounded,
+			workerInstructions: "Follow local API conventions.",
+		}),
+		true,
+	);
+	assert.equal(Value.Check(dispatchSchema, { ...bounded, workerInstructions: 42 }), false);
+	assert.match(dispatchSchema.properties.workerInstructions.description, /AGENTS\.md/i);
 	for (const thinkingLevel of THINKING_LEVELS)
 		assert.equal(Value.Check(dispatchSchema, { ...bounded, thinkingLevel }), true);
 	assert.equal(Value.Check(dispatchSchema, { ...bounded, thinkingLevel: "maximum" }), false);
@@ -216,6 +225,7 @@ test("worker prompt carries assignment, context, persistence, and terminal-resul
 	assert.match(prompt, /Report missing context, unresolved ambiguity/i);
 	assert.match(prompt, /existing project-relative paths/i);
 	assert.match(prompt, /submit_artifact exactly once as the final tool call/i);
+	assert.doesNotMatch(prompt, /workerInstructions|AGENTS\.md-level/);
 	const research = taskPrompt(
 		{
 			id: "task-2",

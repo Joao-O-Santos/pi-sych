@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { PassThrough } from "node:stream";
 import test from "node:test";
-import { SessionManager } from "@earendil-works/pi-coding-agent";
+import { DefaultResourceLoader, SessionManager } from "@earendil-works/pi-coding-agent";
 import {
 	dispatchWorker,
 	launchPiWorker,
@@ -43,7 +43,7 @@ async function readyProject(t) {
 
 test("dispatch rejects empty assignment fields at the worker boundary", async (t) => {
 	const { agentDir, resolved } = await readyProject(t);
-	for (const field of ["task", "expectedOutput"]) {
+	for (const field of ["task", "expectedOutput", "workerInstructions"]) {
 		await assert.rejects(
 			dispatchWorker({
 				project: resolved,
@@ -54,6 +54,50 @@ test("dispatch rejects empty assignment fields at the worker boundary", async (t
 			new RegExp(`${field} must be a non-empty string`),
 		);
 	}
+});
+
+test("worker instructions use launch-scoped Pi AGENTS discovery and preserve default agent configuration", async (t) => {
+	const { root, agentDir, resolved } = await readyProject(t);
+	await writeFile(join(agentDir, "AGENTS.md"), "Shared worker guidance.\n");
+	await writeFile(join(root, "AGENTS.md"), "Project guidance.\n");
+	let defaultDir, injectedDir, agentInstructions, discovered;
+	await dispatchWorker({
+		project: resolved,
+		workerAgentDir: agentDir,
+		request,
+		catalog,
+		launcher: async (spec) => {
+			defaultDir = spec.workerAgentDir;
+			return { exitCode: 1, stderr: "expected" };
+		},
+	});
+	assert.equal(defaultDir, agentDir);
+	assert.equal(await readFile(join(agentDir, "AGENTS.md"), "utf8"), "Shared worker guidance.\n");
+	await dispatchWorker({
+		project: resolved,
+		workerAgentDir: agentDir,
+		request: { ...request, workerInstructions: "Use the task-local API conventions." },
+		catalog,
+		launcher: async (spec) => {
+			injectedDir = spec.workerAgentDir;
+			agentInstructions = await readFile(join(injectedDir, "AGENTS.override.md"), "utf8");
+			const loader = new DefaultResourceLoader({ cwd: root, agentDir: injectedDir });
+			await loader.reload();
+			discovered = loader.getAgentsFiles().agentsFiles;
+			return { exitCode: 1, stderr: "expected" };
+		},
+	});
+	assert.notEqual(injectedDir, agentDir);
+	assert.match(agentInstructions, /Shared worker guidance\./);
+	assert.match(agentInstructions, /Use the task-local API conventions\./);
+	assert.equal(await readFile(join(agentDir, "AGENTS.md"), "utf8"), "Shared worker guidance.\n");
+	await assert.rejects(access(injectedDir), { code: "ENOENT" });
+	assert.deepEqual(
+		discovered.map((file) => file.path),
+		[join(injectedDir, "AGENTS.override.md"), join(root, "AGENTS.md")],
+	);
+	assert.match(discovered[0].content, /Use the task-local API conventions/);
+	assert.match(discovered[1].content, /Project guidance/);
 });
 
 test("dispatch accepts a valid result and rejects reported path escapes", async (t) => {
