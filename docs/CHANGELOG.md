@@ -5,6 +5,25 @@ npm registry metadata establish publication status and dates; headings
 below record versioned changes without duplicating that live release
 state.
 
+## Unreleased
+
+### Documentation
+
+- Expand the code tour with a source map, the seven-skill routing
+  hierarchy, specialist modules, shared methods, and the distinction
+  between review provenance and worker execution limitations.
+- Clarify that co-author and human peer-review feedback is evaluated
+  differently from independent or adversarial LLM reviews. A genuine
+  material error requires attention regardless of who identifies it.
+- Explain the brief, separate review-scope footer required by the
+  review skill for LLM-generated reviews, including requests made
+  without packaged review prompts.
+- Align README, architecture, review workflow, prompt guidance, and
+  developer maintenance instructions with the implemented boundaries.
+
+These are documentation changes, not a new published version or a
+claim that local verification or publication has occurred.
+
 ## 8.0.1
 
 ### Fixed
