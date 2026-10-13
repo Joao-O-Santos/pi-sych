@@ -46,6 +46,8 @@ minor or speculative." Collaborative, copyedit, structural, and verification
 reviews should state their own actual focus instead. This is provenance, not a
 generic AI limitations disclaimer; do not append it to human-authored feedback.
 
+For any LLM-generated review, including one requested without a preset prompt, put the actual task focus in a short, distinct final **Review scope** footer. Do not bury it in limitations bullets or replace it with generic disclaimers.
+
 Review is advisory unless revision or implementation was also requested.
 Reviewer comments are proposals to assess, not evidence or accepted project
 decisions by themselves. Compare them with explicit project state and supplied
