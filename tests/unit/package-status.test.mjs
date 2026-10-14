@@ -381,36 +381,24 @@ test("workbench lifecycle and status commands cover configured branches", async 
 	const originalAgentDir = process.env.PI_CODING_AGENT_DIR;
 	process.env.PI_CODING_AGENT_DIR = cwd;
 	try {
-		const matched = await status.execute(
-			"id",
-			{ action: "check" },
-			undefined,
-			undefined,
-			{ ...ctx, model: { provider: "provider", id: "fast" } },
-		);
+		const matched = await status.execute("id", { action: "check" }, undefined, undefined, {
+			...ctx,
+			model: { provider: "provider", id: "fast" },
+		});
 		assert.match(
 			matched.content[0].text,
 			/Supervisor model: role=cheap; cost=low; notes=Routine work/,
 		);
-		const unmatched = await status.execute(
-			"id",
-			{ action: "check" },
-			undefined,
-			undefined,
-			{ ...ctx, model: { provider: "provider", id: "other" } },
-		);
+		const unmatched = await status.execute("id", { action: "check" }, undefined, undefined, {
+			...ctx,
+			model: { provider: "provider", id: "other" },
+		});
 		assert.match(unmatched.content[0].text, /Supervisor model: role=none; not in catalog/);
-		const unavailable = await status.execute(
-			"id",
-			{ action: "check" },
-			undefined,
-			undefined,
-			{ ...ctx, model: undefined },
-		);
-		assert.match(
-			unavailable.content[0].text,
-			/Supervisor model: role=none; model unavailable/,
-		);
+		const unavailable = await status.execute("id", { action: "check" }, undefined, undefined, {
+			...ctx,
+			model: undefined,
+		});
+		assert.match(unavailable.content[0].text, /Supervisor model: role=none; model unavailable/);
 	} finally {
 		if (originalAgentDir === undefined) delete process.env.PI_CODING_AGENT_DIR;
 		else process.env.PI_CODING_AGENT_DIR = originalAgentDir;
