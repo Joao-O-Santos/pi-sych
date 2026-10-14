@@ -4,13 +4,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
-import workbench, {
+import workbench, { formatDispatchWorkerOutcome } from "../../.test-build/workbench/index.js";
+import { DEFAULT_CONFIG } from "../../.test-build/workbench/src/config-directory.js";
+import {
 	formatDispatchWorkerCallDetails,
 	formatDispatchWorkerCallSummary,
-	formatDispatchWorkerOutcome,
-} from "../../.test-build/workbench/index.js";
-import { DEFAULT_CONFIG } from "../../.test-build/workbench/src/config-directory.js";
-import { workerActivity } from "../../.test-build/workbench/src/worker-engine.js";
+	workerActivity,
+} from "../../.test-build/workbench/src/worker-engine.js";
 
 test("workbench wires status, worker, compaction, and one-shot completion reassessment", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-registration-"));
