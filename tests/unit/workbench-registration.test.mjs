@@ -296,7 +296,7 @@ test("workbench dispatches through Pi and reports command status failures", asyn
 	assert.match(outcome.content[0].text, /Worker status: complete/);
 	assert.equal(outcome.details.result.summary, "fake worker completed");
 	assert.match(outcome.content[0].text, /- fake limitation/);
-	assert.deepEqual(updates.at(-1).details.activity, ["read PROJECT.md"]);
+	assert.deepEqual(updates.at(-1).details.activity, ["read path=PROJECT.md"]);
 	const trajectory = await dispatch.execute(
 		"dispatch-id",
 		{
@@ -321,7 +321,7 @@ test("workbench dispatches through Pi and reports command status failures", asyn
 			skills: ["research"],
 			remoteResearch: true,
 		}),
-		/literature_search; native MCP\/codemode/,
+		/mode\/tools: full-host \/ read, edit, write, bash, submit_artifact, literature_search, codemode/,
 	);
 	assert.match(
 		formatDispatchWorkerOutcome({

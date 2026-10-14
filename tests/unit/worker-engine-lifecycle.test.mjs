@@ -823,13 +823,15 @@ test("worker activity parses chunked JSONL, ignores malformed events, and stays 
 	await ended;
 	fake.child.emit("close", 0, null);
 	assert.deepEqual(await launched, { exitCode: 0, stderr: "" });
-	assert.deepEqual(updates[0], ["read A.md"]);
+	assert.deepEqual(updates[0], ["read path=A.md"]);
 	assert.equal(updates.at(-1).length, 12);
-	assert.equal(updates.at(-1)[0], "read file-3.md");
+	assert.equal(updates.at(-1)[0], "read path=file-3.md");
 	assert.equal(updates.at(-1).at(-1), "grep");
 	assert.ok(updates.every((activity) => activity.length <= 12));
-	assert.ok(updates.every((activity) => activity.every((item) => item.length <= 120)));
-	assert.ok(updates.some((activity) => activity.includes(`write ${"x".repeat(111)}...`)));
+	assert.ok(updates.every((activity) => activity.every((item) => item.length <= 220)));
+	assert.ok(
+		updates.some((activity) => activity.at(-2)?.startsWith(`write path=${"x".repeat(100)}`)),
+	);
 });
 
 test("agent_settled aborted cancels dispatch after chunked JSONL and retains submitted work", async (t) => {

@@ -5,7 +5,16 @@ import test from "node:test";
 
 const publicSkills = ["analyze", "automation", "code", "project", "research", "review", "write"];
 const modules = {
-	project: ["bootstrap", "artifacts", "status", "reconcile", "plans", "pi-sych", "retrospective"],
+	project: [
+		"bootstrap",
+		"artifacts",
+		"status",
+		"reconcile",
+		"plans",
+		"pi-sych",
+		"retrospective",
+		"delegation",
+	],
 	write: [
 		"academic",
 		"empirical",

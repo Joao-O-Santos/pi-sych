@@ -100,8 +100,11 @@ export function formatDispatchWorkerCallDetails(args: DispatchRequest) {
 		`Timeout: ${formatTimeout(args.timeoutMs ?? DEFAULT_TIMEOUT_MS)}`,
 		"Context",
 		`Context mode: ${args.contextMode ?? "clean"}`,
-		...(args.contextFiles.length
-			? ["Context files:", ...args.contextFiles.map(({ path, purpose }) => `- ${path}: ${purpose}`)]
+		...((args.contextFiles ?? []).length
+			? [
+					"Context files:",
+					...(args.contextFiles ?? []).map(({ path, purpose }) => `- ${path}: ${purpose}`),
+				]
 			: ["Context files: none"]),
 		`Skills: ${args.skills?.join(", ") || "none"}`,
 		`Research: ${formatRequestedResearch(args)}`,
