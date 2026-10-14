@@ -369,7 +369,52 @@ test("workbench lifecycle and status commands cover configured branches", async 
 		ctx,
 	);
 	const status = extension.tools.find((tool) => tool.name === "project_status");
-	await status.execute("id", { action: "check" }, undefined, undefined, ctx);
+	const catalogDir = join(cwd, "pi-sych");
+	await mkdir(catalogDir, { recursive: true });
+	await writeFile(
+		join(catalogDir, "worker-models.json"),
+		JSON.stringify({
+			default: "cheap",
+			models: { cheap: { model: "provider/fast", cost: "low", notes: "Routine work" } },
+		}),
+	);
+	const originalAgentDir = process.env.PI_CODING_AGENT_DIR;
+	process.env.PI_CODING_AGENT_DIR = cwd;
+	try {
+		const matched = await status.execute(
+			"id",
+			{ action: "check" },
+			undefined,
+			undefined,
+			{ ...ctx, model: { provider: "provider", id: "fast" } },
+		);
+		assert.match(
+			matched.content[0].text,
+			/Supervisor model: role=cheap; cost=low; notes=Routine work/,
+		);
+		const unmatched = await status.execute(
+			"id",
+			{ action: "check" },
+			undefined,
+			undefined,
+			{ ...ctx, model: { provider: "provider", id: "other" } },
+		);
+		assert.match(unmatched.content[0].text, /Supervisor model: role=none; not in catalog/);
+		const unavailable = await status.execute(
+			"id",
+			{ action: "check" },
+			undefined,
+			undefined,
+			{ ...ctx, model: undefined },
+		);
+		assert.match(
+			unavailable.content[0].text,
+			/Supervisor model: role=none; model unavailable/,
+		);
+	} finally {
+		if (originalAgentDir === undefined) delete process.env.PI_CODING_AGENT_DIR;
+		else process.env.PI_CODING_AGENT_DIR = originalAgentDir;
+	}
 	await assert.rejects(
 		status.execute("id", { action: "acknowledge" }, undefined, undefined, ctx),
 		/requires named files/,

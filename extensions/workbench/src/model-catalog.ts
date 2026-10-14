@@ -76,3 +76,19 @@ export function loadOptionalModelCatalog(
 ): ModelCatalog | undefined {
 	return readModelCatalog(modelCatalogPath(projectRoot, env), false);
 }
+
+export function describeSupervisorModel(
+	model: { provider: string; id: string } | null | undefined,
+	catalog?: ModelCatalog,
+): string {
+	if (!model?.provider || !model.id) return "Supervisor model: role=none; model unavailable";
+	const match = Object.entries(catalog?.models ?? {}).find(
+		([, entry]) => entry.model === `${model.provider}/${model.id}`,
+	);
+	if (!match) return "Supervisor model: role=none; not in catalog";
+	const [role, entry] = match;
+	const parts = [`Supervisor model: role=${role}`];
+	if (entry.cost) parts.push(`cost=${entry.cost}`);
+	if (entry.notes) parts.push(`notes=${entry.notes}`);
+	return parts.join("; ");
+}

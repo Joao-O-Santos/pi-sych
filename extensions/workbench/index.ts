@@ -10,7 +10,11 @@ import {
 	piSychConfigDirectory,
 } from "./src/config-directory.js";
 import { registerLiteratureSearch } from "./src/literature-search.js";
-import { loadModelCatalog, loadOptionalModelCatalog } from "./src/model-catalog.js";
+import {
+	describeSupervisorModel,
+	loadModelCatalog,
+	loadOptionalModelCatalog,
+} from "./src/model-catalog.js";
 import { resolveProject, showPath } from "./src/project-files.js";
 import {
 	acknowledgeProjectStatus,
@@ -113,20 +117,14 @@ export async function configuredSupervisorInstructions(cwd: string, existing = "
 	if (!instructions.trim() || existing.includes(instructions.trim())) return undefined;
 	return `Configured project instructions (${showPath(project.projectRoot, project.canonical.agents)}):\n${instructions.trim()}`;
 }
-async function statusView(cwd: string) {
+async function statusView(cwd: string, model?: { provider: string; id: string }) {
 	const state = await checkProjectStatus(cwd);
-	if (state.syncError) return { state, pending: 0, text: formatProjectStatusCheck(state) };
-	const project = await resolveProject(cwd),
-		pending = await pendingPromotions(project);
-	return {
-		state,
-		pending,
-		text: formatProjectStatusCheck(
-			state,
-			pending,
-			showPath(project.projectRoot, project.canonical.inbox),
-		),
-	};
+	const project = state.syncError ? undefined : await resolveProject(cwd);
+	const pending = project ? await pendingPromotions(project) : 0;
+	const inbox = project ? showPath(project.projectRoot, project.canonical.inbox) : "INBOX.md";
+	const modelInfo = describeSupervisorModel(model, loadOptionalModelCatalog(state.projectRoot));
+	const text = formatProjectStatusCheck(state, pending, inbox);
+	return { state, pending, text: `${text}\n\n${modelInfo}` };
 }
 export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 	const project = await resolveProject(process.cwd());
@@ -274,7 +272,7 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 		name: "project_status",
 		label: "Project status",
 		description:
-			"Check mechanical project state or acknowledge named reviewed files; hashes and acknowledgement never decide semantic drift, correctness, or authority.",
+			"Check project state and current supervisor model, or acknowledge reviewed files; hashes never determine correctness.",
 		promptGuidelines: [
 			"Use project_status only for mechanical state or acknowledgement; changed content is not semantic drift, correctness, or approval.",
 			"The proposal inbox is human-review state: obtain its pending count through project_status and read it only when the user requests inbox review.",
@@ -282,7 +280,7 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 		parameters: statusSchema,
 		async execute(_id, params, _signal, _update, ctx) {
 			if (params.action === "check") {
-				const view = await statusView(ctx.cwd);
+				const view = await statusView(ctx.cwd, ctx.model);
 				return {
 					content: [{ type: "text", text: view.text }],
 					details: { ...view.state, pendingPromotions: view.pending },
@@ -309,7 +307,7 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 		description: "Show mechanical project status",
 		handler: async (_args, ctx) => {
 			try {
-				ctx.ui.notify((await statusView(ctx.cwd)).text, "info");
+				ctx.ui.notify((await statusView(ctx.cwd, ctx.model)).text, "info");
 			} catch (error) {
 				notifyError(ctx, error);
 			}

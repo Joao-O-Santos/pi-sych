@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import {
+	describeSupervisorModel,
 	loadModelCatalog,
 	loadOptionalModelCatalog,
 	parseModelCatalog,
@@ -48,4 +49,38 @@ test("optional model catalog distinguishes absence from invalid content", async 
 		new RegExp(`Worker model catalog is unavailable or invalid at ${path}`),
 	);
 	assert.throws(() => loadModelCatalog(undefined, env), /unavailable or invalid/);
+});
+
+test("supervisor model lookup reports role, cost, and notes only on exact match", () => {
+	const catalog = parseModelCatalog({
+		default: "cheap",
+		models: { cheap: { model: "provider/fast", cost: "low", notes: "Routine work" } },
+	});
+	assert.equal(
+		describeSupervisorModel({ provider: "provider", id: "fast" }, catalog),
+		"Supervisor model: role=cheap; cost=low; notes=Routine work",
+	);
+	assert.equal(
+		describeSupervisorModel({ provider: "provider", id: "other" }, catalog),
+		"Supervisor model: role=none; not in catalog",
+	);
+	assert.equal(
+		describeSupervisorModel({ provider: "other", id: "fast" }, catalog),
+		"Supervisor model: role=none; not in catalog",
+	);
+	assert.equal(
+		describeSupervisorModel({ provider: "provider", id: "fast" }),
+		"Supervisor model: role=none; not in catalog",
+	);
+	assert.equal(
+		describeSupervisorModel(undefined, catalog),
+		"Supervisor model: role=none; model unavailable",
+	);
+	assert.equal(
+		describeSupervisorModel(
+			{ provider: "provider", id: "fast" },
+			parseModelCatalog({ default: "only", models: { only: { model: "provider/fast" } } }),
+		),
+		"Supervisor model: role=only",
+	);
 });
