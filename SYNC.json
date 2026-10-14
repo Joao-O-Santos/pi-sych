@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-14T18:25:50.538Z",
+  "confirmedAt": "2026-10-14T18:38:47.746Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:1dc0c741af4f08555f4afb03d7430b3ba56bf83275f3ab36a21609ec03a61c9b",
+      "fingerprint": "sha256:6c3708539ed082fc471cb2ae6b6c2c16556385877d8e209b7dc19b2ad6648733",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,8 +15,8 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-10-14T12:31:19.364Z",
-        "reason": "Recorded verified v8.1.1 release state and reviewed patched call/activity renderer documentation, release links, and metadata. Main pipeline 2946786917 and signed v8.1.1 tag pipeline 2946801296 passed; npm version/latest/gitHead match. Local make verify passed 247 tests and source budget; make site and style checks passed. Unrelated pending-review files remain unchanged."
+        "at": "2026-10-14T18:38:47.746Z",
+        "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       }
     },
     {
@@ -183,15 +183,15 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:6caedd600881fbffb742aab1a8bb53c22b49ca8335fae2b613361b4938f53f1d",
+      "fingerprint": "sha256:3e06ca3f2ee67b50f4a6b487e54b99edc79e8b646a495e7715cf0097ae177ba6",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-10-14T18:25:50.538Z",
-        "reason": "Reviewed the final v8.1.2 patch changelog rationale and user-facing changes; local `make verify` passed all 248 tests, source budget and package dry-run passed, and `make site` succeeded. The release makes no migration requirement."
+        "at": "2026-10-14T18:38:47.746Z",
+        "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       }
     },
     {

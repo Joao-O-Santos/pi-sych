@@ -7,8 +7,9 @@ state.
 
 ## 8.1.2
 
-Patch release: adds supervisor model reporting and refines worker
-summaries and review-lens cues without requiring migration.
+Tagged and published as a patch release. It adds supervisor model
+reporting and refines worker summaries and review-lens cues without
+requiring migration.
 
 ### Added
 

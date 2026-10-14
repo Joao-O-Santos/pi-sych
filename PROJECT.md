@@ -181,13 +181,15 @@ persistence/scrutiny and clean/trajectory semantics. The nonblank
 runtime source-code budget is 3,250 lines.
 
 {verified} Repository-native formatting, documentation, type, budget,
-and test checks remain the acceptance boundary. v8.1.1 is the latest
+and test checks remain the acceptance boundary. v8.1.2 is the latest
 published package version at signed commit
-`973b6fa9982888cdbb4403d97c4f9f34b768e51e`. Main pipeline `2946786917`
-and tag verify/publication pipeline `2946801296` passed; npm reports
-`pi-sych@8.1.1`, `latest` 8.1.1, and matching gitHead. `make verify`
-passed 247 tests at 97.91/92.56/96.91% line/branch/function coverage;
-`make site` passed. The source budget remains 3,250 lines.
+`40cd3f0ea67257c90fb10bc40670076e39c29537`. Main pipeline `2947839453`
+and tag verify/publication pipeline `2947850894` passed; npm reports
+`pi-sych@8.1.2`, `latest` 8.1.2, and matching gitHead. `make verify`
+passed 248 tests at 97.92/92.52/96.93% line/branch/function coverage;
+`make site` passed. The registry tarball contains 214 files, matching
+the local dry-run; npm metadata exposes a SLSA provenance attestation.
+The source budget remains 3,250 lines.
 
 {verified} After revising reviewer-response guidance and repairing the
 benchmark fixtures, the five-case opt-in evaluation completed with
@@ -211,6 +213,15 @@ not configured as an MCP in either agent directory; Exa's cache was used
 for a documentation fetch, not a worker MCP call.
 
 ## Previous action
+
+{verified} Released v8.1.2 at signed tag `v8.1.2`, pointing to
+`40cd3f0ea67257c90fb10bc40670076e39c29537`. Main pipeline `2947839453`
+passed before tagging; tag pipeline `2947850894` passed verification and
+npm publication. npm reports version/latest 8.1.2 and matching gitHead;
+the downloaded registry tarball's 214-file list matches the local
+package dry-run. The npm package metadata exposes a SLSA provenance
+attestation. The tag signature verifies locally; GPG reports the key as
+not certified with a trusted signature.
 
 {verified} Released v8.1.1 at signed tag `v8.1.1`, pointing to
 `973b6fa9982888cdbb4403d97c4f9f34b768e51e`. Main push and pipeline
@@ -244,7 +255,7 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
-{verified} v8.1.1 is the latest published release. The next release
+{verified} v8.1.2 is the latest published release. The next release
 requires a separate owner-authorized version and publication decision.
 Retain this project brief for ongoing accepted constraints; future
 release actions require their own authorization.
