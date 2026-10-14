@@ -5,10 +5,12 @@ import { join } from "node:path";
 import test from "node:test";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import workbench, {
+	formatDispatchWorkerCallDetails,
 	formatDispatchWorkerCallSummary,
 	formatDispatchWorkerOutcome,
 } from "../../.test-build/workbench/index.js";
 import { DEFAULT_CONFIG } from "../../.test-build/workbench/src/config-directory.js";
+import { workerActivity } from "../../.test-build/workbench/src/worker-engine.js";
 
 test("workbench wires status, worker, compaction, and one-shot completion reassessment", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "pi-sych-registration-"));
@@ -158,8 +160,9 @@ test("workbench wires status, worker, compaction, and one-shot completion reasse
 			task: "  do\n this  ",
 			mode: "read-only",
 			timeoutMs: 90_000,
+			workerInstructions: "First custom line\nSecond custom line\nThird line",
 		}),
-		/task-summary: do this[\s\S]*context: clean[\s\S]*research: none[\s\S]*timeout: 90s/,
+		/custom-agents\.md: First custom line \/ Second custom line[\s\S]*task: do this[\s\S]*permissions: read-only[\s\S]*mode\/tools: read-only \/ read, grep, find, ls, submit_artifact[\s\S]*model: catalog default \(default thinking\)/,
 	);
 	const rendered = dispatch.renderCall(
 		{ task: "short", mode: "read-only", timeoutMs: 1 },
@@ -173,6 +176,25 @@ test("workbench wires status, worker, compaction, and one-shot completion reasse
 		{ expanded: true },
 	);
 	assert.ok(expanded);
+	const details = formatDispatchWorkerCallDetails({
+		task: "inspect files",
+		expectedOutput: "Findings report",
+		mode: "edit",
+		contextFiles: [{ path: "src/a.ts", purpose: "implementation" }],
+		workerInstructions: "Use project style.",
+		skills: ["code"],
+	});
+	assert.match(details, /Expected output:\nFindings report/);
+	assert.match(details, /src\/a\.ts: implementation/);
+	assert.match(details, /custom-agents\.md:\nUse project style\./);
+	assert.equal(
+		workerActivity({
+			type: "tool_execution_start",
+			toolName: "read",
+			args: { path: "src/a.ts", offset: 20, limit: 10 },
+		}),
+		"read path=src/a.ts offset=20 limit=10",
+	);
 });
 
 test("workbench dispatches through Pi and reports command status failures", async (t) => {

@@ -87,7 +87,11 @@ visible Pi tools; they are not sandboxes.
 A worker is a separate short-lived Pi process with one immutable
 terminal result. It reads its explicit assignment, every context file
 and selected skill, then the routed methods/modules. Trajectory history
-is background, not a source of additional assignments or approval.
+is background, not a source of additional assignments or approval. The
+`dispatch_worker` call renderer shows a prioritized human-readable
+summary when collapsed and labeled assignment, execution, and context
+details when expanded; live activity lines include available tool
+argument details in bounded readable form.
 
 Ordinary workers do not receive MCP or codemode. `remoteResearch: true`
 explicitly loads Pi's `builtin:mcp` and `builtin:codemode` extensions;

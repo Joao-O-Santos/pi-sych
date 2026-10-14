@@ -24,6 +24,7 @@ import {
 	dispatchSchema,
 	dispatchWorker,
 	MAX_TIMEOUT_MS,
+	toolsForRequest,
 } from "./src/worker-engine.js";
 export const PACKAGE_ROOT = resolve(
 	process.env.PI_PACKAGE_DIR ?? resolve(import.meta.dirname, "../.."),
@@ -48,6 +49,10 @@ const compactTaskSummary = (task: string) => {
 		? `${summary.slice(0, TASK_SUMMARY_LIMIT - 3)}...`
 		: summary;
 };
+const firstLines = (value: string, count = 2) =>
+	value.trim().split(/\r?\n/).slice(0, count).join(" / ");
+const formatWorkerInstructions = (value?: string) =>
+	value === undefined ? "false" : firstLines(value) || "(empty)";
 const formatTimeout = (timeoutMs: number) => {
 	if (timeoutMs % 60_000 === 0) return `${timeoutMs / 60_000}m`;
 	if (timeoutMs % 1_000 === 0) return `${timeoutMs / 1_000}s`;
@@ -74,14 +79,33 @@ export function formatDispatchWorkerCallSummary(
 		| "timeoutMs"
 	>,
 ) {
+	const tools = toolsForRequest(args).join(", ");
 	return [
-		`task-summary: ${compactTaskSummary(args.task)}`,
-		`context: ${args.contextMode ?? "clean"}`,
-		`model: ${args.modelRole ?? "catalog default"}`,
-		`thinking: ${args.thinkingLevel ?? "default"}`,
-		`mode: ${args.mode}`,
-		`research: ${formatRequestedResearch(args)}`,
-		`timeout: ${formatTimeout(args.timeoutMs ?? DEFAULT_TIMEOUT_MS)}`,
+		`custom-agents.md: ${formatWorkerInstructions(args.workerInstructions)}`,
+		`task: ${compactTaskSummary(args.task)}`,
+		`permissions: ${args.mode}`,
+		`mode/tools: ${args.mode} / ${tools}`,
+		`model: ${args.modelRole ?? "catalog default"} (${args.thinkingLevel ?? "default thinking"})`,
+	].join("\n");
+}
+export function formatDispatchWorkerCallDetails(args: DispatchRequest) {
+	return [
+		"Assignment",
+		`Task:\n${args.task}`,
+		`Expected output:\n${args.expectedOutput}`,
+		"Execution",
+		`Permissions: ${args.mode}`,
+		`Mode/tools: ${args.mode} / ${toolsForRequest(args).join(", ")}`,
+		`Model: ${args.modelRole ?? "catalog default"} (${args.thinkingLevel ?? "default thinking"})`,
+		`Timeout: ${formatTimeout(args.timeoutMs ?? DEFAULT_TIMEOUT_MS)}`,
+		"Context",
+		`Context mode: ${args.contextMode ?? "clean"}`,
+		...(args.contextFiles.length
+			? ["Context files:", ...args.contextFiles.map(({ path, purpose }) => `- ${path}: ${purpose}`)]
+			: ["Context files: none"]),
+		`Skills: ${args.skills?.join(", ") || "none"}`,
+		`Research: ${formatRequestedResearch(args)}`,
+		`custom-agents.md:\n${args.workerInstructions ?? "false"}`,
 	].join("\n");
 }
 export function formatDispatchWorkerOutcome(outcome: DispatchOutcome) {
@@ -276,7 +300,7 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 		renderCall(args, theme, { expanded }) {
 			const title = theme.fg("toolTitle", theme.bold("Dispatch worker"));
 			const details = expanded
-				? `\n${JSON.stringify(args, null, 2)}`
+				? `\n${formatDispatchWorkerCallDetails(args)}`
 				: `\n${formatDispatchWorkerCallSummary(args)}`;
 			return new Text(title + details, 0, 0);
 		},

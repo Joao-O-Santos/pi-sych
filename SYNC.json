@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-14T11:46:53.723Z",
+  "confirmedAt": "2026-10-14T12:02:23.093Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -21,15 +21,15 @@
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:5fdfa623846ca6eef11fee5c16277cb3f4ce5fc90d7da488a3c58c35b9c21fa8",
+      "fingerprint": "sha256:7ede1d82da81f8683729f51ba48aed54932eae34fbc55dbf2b9d07b0d461a46a",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-10-14T11:46:53.723Z",
-        "reason": "Documented owner-requested optional dispatch patterns and every dispatch choice in routed project delegation guidance/examples, grounded in inspected primary prewalk/Anthropic/Cursor accounts. Independent static read-only review found no material inaccuracies; supervisor subsequently clarified planner/builder trajectory hybrid per owner feedback and reviewed it. Markdown and whitespace checks pass. Style/site checks blocked by missing biome/typescript dependencies; no runtime changes. Existing unrelated pending reviews retained."
+        "at": "2026-10-14T12:02:23.093Z",
+        "reason": "Documented revised human-readable dispatch call renderer and bounded live activity argument details against implementation. Markdown and whitespace checks pass; typecheck/unit tests cannot run because TypeScript dependencies are absent."
       }
     },
     {

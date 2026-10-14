@@ -44,7 +44,7 @@ export const DEFAULT_TIMEOUT_MS = 90_000;
 export const MAX_TIMEOUT_MS = 30 * 60_000;
 const LOG_LIMIT = 8_192;
 const ACTIVITY_LIMIT = 12;
-const ACTIVITY_TEXT_LIMIT = 120;
+const ACTIVITY_TEXT_LIMIT = 220;
 export const PI_SYCH_PACKAGE_ROOT = resolve(
 	process.env.PI_PACKAGE_DIR ?? resolve(import.meta.dirname, "../../.."),
 );
@@ -339,15 +339,25 @@ export const workerResultSchema = Type.Object({
 });
 const conciseActivity = (text: string) =>
 	text.length > ACTIVITY_TEXT_LIMIT ? `${text.slice(0, ACTIVITY_TEXT_LIMIT - 3)}...` : text;
-function workerActivity(value: unknown) {
+export function workerActivity(value: unknown) {
 	if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
 	const event = value as { type?: unknown; toolName?: unknown; args?: unknown };
 	if (event.type !== "tool_execution_start" || typeof event.toolName !== "string") return undefined;
-	const path =
+	const args =
 		event.args && typeof event.args === "object" && !Array.isArray(event.args)
-			? (event.args as { path?: unknown }).path
-			: undefined;
-	return conciseActivity(`${event.toolName}${typeof path === "string" ? ` ${path}` : ""}`);
+			? Object.entries(event.args as Record<string, unknown>)
+					.filter(([, item]) => item !== undefined && item !== null)
+					.map(([key, item]) => {
+						const rendered = Array.isArray(item)
+							? item.map(String).join(", ")
+							: typeof item === "object"
+								? "[details]"
+								: String(item).replace(/\s+/g, " ");
+						return `${key}=${rendered}`;
+					})
+					.join(" ")
+			: "";
+	return conciseActivity(`${event.toolName}${args ? ` ${args}` : ""}`);
 }
 function forwardWorkerActivity(
 	stream: NodeJS.ReadableStream,
