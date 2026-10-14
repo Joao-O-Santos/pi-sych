@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-14T12:02:23.093Z",
+  "confirmedAt": "2026-10-14T12:31:19.364Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:b2c417605994ea81ed067591ce3f5cf026ae61273fdc9aac71cb10a700d52de0",
+      "fingerprint": "sha256:1dc0c741af4f08555f4afb03d7430b3ba56bf83275f3ab36a21609ec03a61c9b",
       "status": "current",
       "role": "project",
       "authoritativeFor": [
@@ -15,27 +15,27 @@
         "accepted-direction"
       ],
       "acknowledgement": {
-        "at": "2026-10-14T11:46:53.723Z",
-        "reason": "Documented owner-requested optional dispatch patterns and every dispatch choice in routed project delegation guidance/examples, grounded in inspected primary prewalk/Anthropic/Cursor accounts. Independent static read-only review found no material inaccuracies; supervisor subsequently clarified planner/builder trajectory hybrid per owner feedback and reviewed it. Markdown and whitespace checks pass. Style/site checks blocked by missing biome/typescript dependencies; no runtime changes. Existing unrelated pending reviews retained."
+        "at": "2026-10-14T12:31:19.364Z",
+        "reason": "Recorded verified v8.1.1 release state and reviewed patched call/activity renderer documentation, release links, and metadata. Main pipeline 2946786917 and signed v8.1.1 tag pipeline 2946801296 passed; npm version/latest/gitHead match. Local make verify passed 247 tests and source budget; make site and style checks passed. Unrelated pending-review files remain unchanged."
       }
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:7ede1d82da81f8683729f51ba48aed54932eae34fbc55dbf2b9d07b0d461a46a",
+      "fingerprint": "sha256:06b3082b4017a5b69a69e7cc18be3920793c42f0e3021ed4cd14314e41c82287",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-10-14T12:02:23.093Z",
-        "reason": "Documented revised human-readable dispatch call renderer and bounded live activity argument details against implementation. Markdown and whitespace checks pass; typecheck/unit tests cannot run because TypeScript dependencies are absent."
+        "at": "2026-10-14T12:31:19.364Z",
+        "reason": "Recorded verified v8.1.1 release state and reviewed patched call/activity renderer documentation, release links, and metadata. Main pipeline 2946786917 and signed v8.1.1 tag pipeline 2946801296 passed; npm version/latest/gitHead match. Local make verify passed 247 tests and source budget; make site and style checks passed. Unrelated pending-review files remain unchanged."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:df7aa343c8c1b389d15171ffa24c1bd60b2a52176c97ee3fee1fbac7d71874bf",
-      "status": "needs-review",
+      "fingerprint": "sha256:5f18ff8b290f1640c7b7d54ec46e7366eaba8e02a1cda8180fdb9e92e40a72a4",
+      "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "package-usage",
@@ -46,14 +46,14 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-10-13T23:36:45Z",
-        "reason": "Workhorse reviewed the revised text against current compaction/worker source and relevant tests. make verify passed 247 unit/integration tests (97.91/92.92/96.89% aggregate line/branch/function coverage), packaging, type/style/source-budget/whitespace checks; make site passed. No independent read-only reviewer or opt-in live-model test was run. Related diagram review remains pending; no diagram changed."
+        "at": "2026-10-14T12:31:19.364Z",
+        "reason": "Recorded verified v8.1.1 release state and reviewed patched call/activity renderer documentation, release links, and metadata. Main pipeline 2946786917 and signed v8.1.1 tag pipeline 2946801296 passed; npm version/latest/gitHead match. Local make verify passed 247 tests and source budget; make site and style checks passed. Unrelated pending-review files remain unchanged."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:68c36583d0d9ff82f3478540b6a5958fdf6ab027617e012c98e7063197274909",
-      "status": "needs-review",
+      "fingerprint": "sha256:ec8f8e5e7964830f5a80e11a2d79b37f363ce5d19d618af9558b83e5513b49c7",
+      "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
         "scripts",
@@ -66,8 +66,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-10-09T11:01:32.108Z",
-        "reason": "Reviewed owner-authorized v8.0.1 patch release preparation. Prior main pipeline 2930169788 passed; version/lockfile/tagged image links/changelog align at 8.0.1. Local make verify passed 239 tests including packed installs (97.86/92.50/96.80 coverage); site/budget/pack inventory passed, production audit zero vulnerabilities. Bumped exact-revision pipeline and publication remain pending."
+        "at": "2026-10-14T12:31:19.364Z",
+        "reason": "Recorded verified v8.1.1 release state and reviewed patched call/activity renderer documentation, release links, and metadata. Main pipeline 2946786917 and signed v8.1.1 tag pipeline 2946801296 passed; npm version/latest/gitHead match. Local make verify passed 247 tests and source budget; make site and style checks passed. Unrelated pending-review files remain unchanged."
       }
     },
     {
@@ -183,15 +183,15 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:b3a5f9930e29b0614186349c93381e4c3cade1cd4e9d47e4e4ec9364dd40bac3",
-      "status": "needs-review",
+      "fingerprint": "sha256:2b88836477d80e8f1adbb0abe358ea22fbb1fc90cc98423b9499129e70dc1062",
+      "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-10-13T23:36:45Z",
-        "reason": "Workhorse reviewed the revised text against current compaction/worker source and relevant tests. make verify passed 247 unit/integration tests (97.91/92.92/96.89% aggregate line/branch/function coverage), packaging, type/style/source-budget/whitespace checks; make site passed. No independent read-only reviewer or opt-in live-model test was run. Related diagram review remains pending; no diagram changed."
+        "at": "2026-10-14T12:31:19.364Z",
+        "reason": "Recorded verified v8.1.1 release state and reviewed patched call/activity renderer documentation, release links, and metadata. Main pipeline 2946786917 and signed v8.1.1 tag pipeline 2946801296 passed; npm version/latest/gitHead match. Local make verify passed 247 tests and source budget; make site and style checks passed. Unrelated pending-review files remain unchanged."
       }
     },
     {

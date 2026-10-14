@@ -5,11 +5,11 @@ npm registry metadata establish publication status and dates; headings
 below record versioned changes without duplicating that live release
 state.
 
-## 8.1.1 (prepared; not published)
+## 8.1.1
 
-This patch release improves human-readable `dispatch_worker` call and
-activity rendering, adds project delegation-pattern guidance, and
-requires no migration.
+Tagged and published as a patch release. It improves human-readable
+`dispatch_worker` call and activity rendering, adds project
+delegation-pattern guidance, and requires no migration.
 
 ### Changed
 

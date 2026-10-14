@@ -181,11 +181,13 @@ persistence/scrutiny and clean/trajectory semantics. The nonblank
 runtime source-code budget is 3,250 lines.
 
 {verified} Repository-native formatting, documentation, type, budget,
-and test checks remain the acceptance boundary. The published package
-version remains 8.0.1. Package metadata is prepared at 8.1.0 following
-successful exact-commit pipeline `2944641167` for
-`cce4b9d865ec0334606fe076f8e8727cba848a02`; that version is not tagged
-or published.
+and test checks remain the acceptance boundary. v8.1.1 is the latest
+published package version at signed commit
+`973b6fa9982888cdbb4403d97c4f9f34b768e51e`. Main pipeline `2946786917`
+and tag verify/publication pipeline `2946801296` passed; npm reports
+`pi-sych@8.1.1`, `latest` 8.1.1, and matching gitHead. `make verify`
+passed 247 tests at 97.91/92.56/96.91% line/branch/function coverage;
+`make site` passed. The source budget remains 3,250 lines.
 
 {verified} After revising reviewer-response guidance and repairing the
 benchmark fixtures, the five-case opt-in evaluation completed with
@@ -209,6 +211,13 @@ not configured as an MCP in either agent directory; Exa's cache was used
 for a documentation fetch, not a worker MCP call.
 
 ## Previous action
+
+{verified} Released v8.1.1 at signed tag `v8.1.1`, pointing to
+`973b6fa9982888cdbb4403d97c4f9f34b768e51e`. Main push and pipeline
+`2946786917` succeeded before tagging; tag pipeline `2946801296` passed
+verification and npm publication. npm reports version/latest 8.1.1 and
+gitHead matching the tag commit. The tag signature verifies locally; GPG
+reports the key as not certified with a trusted signature.
 
 {verified} Released v8.0.1 at signed commit
 `89dc912367559e8a8a01fcfa15050d6e94dde708` with a verified signed tag.
@@ -235,13 +244,10 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
-{verified} The v8.0.1 release remains the latest published release.
-Version 8.1.0 is prepared in package metadata and the changelog after
-successful exact-commit pipeline `2944641167` at
-`cce4b9d865ec0334606fe076f8e8727cba848a02`; no v8.1.0 tag or npm
-publication exists yet. Tagging and publication require separate
-maintainer authorization. Retain this project brief for ongoing accepted
-constraints; future release actions require their own authorization.
+{verified} v8.1.1 is the latest published release. The next release
+requires a separate owner-authorized version and publication decision.
+Retain this project brief for ongoing accepted constraints; future
+release actions require their own authorization.
 
 {unresolved} Model recognition of unfinished authorized work remains
 semantic, not mechanically guaranteed. Exa was not configured as a
