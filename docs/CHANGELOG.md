@@ -9,7 +9,11 @@ state.
 
 ### Added
 
-- Report the current supervisor model in `project_status` and `/pi-sych-status` checks: catalog role, optional `cost` and `notes`, or a non-error unmatched/unavailable indication. The lookup runs only on request; it neither monitors model changes nor exposes the raw model ID.
+-   Report the current supervisor model in `project_status` and
+    `/pi-sych-status` checks: catalog role, optional `cost` and `notes`,
+    or a non-error unmatched/unavailable indication. The lookup runs
+    only on request; it neither monitors model changes nor exposes the
+    raw model ID.
 
 ## 8.1.1
 

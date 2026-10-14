@@ -93,12 +93,13 @@ option to use the configured worker directory unchanged with no injected
 guidance. The model catalogue is needed to dispatch a worker, not merely
 to start Pi Sych for direct project work.
 
-A `project_status` check also reports the current supervisor model by exact
-`provider/model` match against this catalogue, without monitoring model
-changes. For a match it reports the role plus any defined `cost` and `notes`
-fields, without repeating the model ID. For no match or no catalogue it
-reports `role=none; not in catalog`. If Pi exposes no active model it
-reports `role=none; model unavailable`. Neither case is an error.
+A `project_status` check also reports the current supervisor model by
+exact `provider/model` match against this catalogue, without monitoring
+model changes. For a match it reports the role plus any defined `cost`
+and `notes` fields, without repeating the model ID. For no match or no
+catalogue it reports `role=none; not in catalog`. If Pi exposes no
+active model it reports `role=none; model unavailable`. Neither case is
+an error.
 
 Initialize the conventional
 `<global Pi Sych config directory>/worker-agent` directory once with the
