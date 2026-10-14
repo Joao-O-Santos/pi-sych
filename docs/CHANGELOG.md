@@ -5,13 +5,30 @@ npm registry metadata establish publication status and dates; headings
 below record versioned changes without duplicating that live release
 state.
 
-## 8.1.0 (prepared; not published)
+## 8.1.1 (prepared; not published)
 
-Prepared after successful exact-commit pipeline `2944641167` for
-`cce4b9d865ec0334606fe076f8e8727cba848a02`. This is a minor release: it
-adds an optional backward-compatible worker capability and requires no
-migration. Package metadata and this changelog are prepared only; no tag
-or npm publication has been created.
+This patch release improves human-readable `dispatch_worker` call and
+activity rendering, adds project delegation-pattern guidance, and
+requires no migration.
+
+### Changed
+
+- Render collapsed worker calls with prioritized task, worker guidance,
+  mode/tools, and model details; show labeled readable fields when
+  expanded rather than raw JSON.
+- Include available tool arguments in bounded worker activity lines.
+- Document optional planner/builder, pre-walk, orchestrator,
+  exploration, and review handoffs without imposing fixed workflows.
+
+### Tests
+
+- Cover readable call summaries, expanded details, and worker activity
+  arguments.
+
+## 8.1.0
+
+Tagged `v8.1.0` and published to npm; registry metadata reports version
+and `latest` as `8.1.0`.
 
 ### Changed
 
@@ -44,9 +61,6 @@ or npm publication has been created.
   packaged review prompts.
 - Align README, architecture, review workflow, prompt guidance, and
   developer maintenance instructions with the implemented boundaries.
-
-The listed changes are prepared for 8.1.0; preparation does not claim
-that this version has been tagged or published.
 
 ## 8.0.1
 

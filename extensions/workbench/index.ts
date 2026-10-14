@@ -18,13 +18,12 @@ import {
 	formatProjectStatusCheck,
 } from "./src/project-status.js";
 import {
-	DEFAULT_TIMEOUT_MS,
 	type DispatchOutcome,
-	type DispatchRequest,
 	dispatchSchema,
 	dispatchWorker,
+	formatDispatchWorkerCallDetails,
+	formatDispatchWorkerCallSummary,
 	MAX_TIMEOUT_MS,
-	toolsForRequest,
 } from "./src/worker-engine.js";
 export const PACKAGE_ROOT = resolve(
 	process.env.PI_PACKAGE_DIR ?? resolve(import.meta.dirname, "../.."),
@@ -42,75 +41,6 @@ const statusSchema = Type.Object({
 	files: Type.Optional(Type.Array(Type.String())),
 	reason: Type.Optional(Type.String()),
 });
-const TASK_SUMMARY_LIMIT = 60;
-const compactTaskSummary = (task: string) => {
-	const summary = task.replace(/\s+/g, " ").trim();
-	return summary.length > TASK_SUMMARY_LIMIT
-		? `${summary.slice(0, TASK_SUMMARY_LIMIT - 3)}...`
-		: summary;
-};
-const firstLines = (value: string, count = 2) =>
-	value.trim().split(/\r?\n/).slice(0, count).join(" / ");
-const formatWorkerInstructions = (value?: string) =>
-	value === undefined ? "false" : firstLines(value) || "(empty)";
-const formatTimeout = (timeoutMs: number) => {
-	if (timeoutMs % 60_000 === 0) return `${timeoutMs / 60_000}m`;
-	if (timeoutMs % 1_000 === 0) return `${timeoutMs / 1_000}s`;
-	return `${timeoutMs}ms`;
-};
-const formatRequestedResearch = (args: Pick<DispatchRequest, "skills" | "remoteResearch">) => {
-	const capabilities = [
-		...(args.skills?.includes("research") ? ["literature_search"] : []),
-		...(args.remoteResearch ? ["native MCP/codemode"] : []),
-	];
-	return capabilities.join("; ") || "none";
-};
-export function formatDispatchWorkerCallSummary(
-	args: Pick<
-		DispatchRequest,
-		| "task"
-		| "contextMode"
-		| "modelRole"
-		| "thinkingLevel"
-		| "mode"
-		| "skills"
-		| "remoteResearch"
-		| "workerInstructions"
-		| "timeoutMs"
-	>,
-) {
-	const tools = toolsForRequest(args).join(", ");
-	return [
-		`custom-agents.md: ${formatWorkerInstructions(args.workerInstructions)}`,
-		`task: ${compactTaskSummary(args.task)}`,
-		`permissions: ${args.mode}`,
-		`mode/tools: ${args.mode} / ${tools}`,
-		`model: ${args.modelRole ?? "catalog default"} (${args.thinkingLevel ?? "default thinking"})`,
-	].join("\n");
-}
-export function formatDispatchWorkerCallDetails(args: DispatchRequest) {
-	return [
-		"Assignment",
-		`Task:\n${args.task}`,
-		`Expected output:\n${args.expectedOutput}`,
-		"Execution",
-		`Permissions: ${args.mode}`,
-		`Mode/tools: ${args.mode} / ${toolsForRequest(args).join(", ")}`,
-		`Model: ${args.modelRole ?? "catalog default"} (${args.thinkingLevel ?? "default thinking"})`,
-		`Timeout: ${formatTimeout(args.timeoutMs ?? DEFAULT_TIMEOUT_MS)}`,
-		"Context",
-		`Context mode: ${args.contextMode ?? "clean"}`,
-		...((args.contextFiles ?? []).length
-			? [
-					"Context files:",
-					...(args.contextFiles ?? []).map(({ path, purpose }) => `- ${path}: ${purpose}`),
-				]
-			: ["Context files: none"]),
-		`Skills: ${args.skills?.join(", ") || "none"}`,
-		`Research: ${formatRequestedResearch(args)}`,
-		`custom-agents.md:\n${args.workerInstructions ?? "false"}`,
-	].join("\n");
-}
 export function formatDispatchWorkerOutcome(outcome: DispatchOutcome) {
 	const interrupted = outcome.interruptedReport;
 	const result = outcome.result ?? interrupted?.report;

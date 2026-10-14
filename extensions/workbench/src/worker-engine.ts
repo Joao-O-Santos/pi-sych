@@ -144,6 +144,51 @@ export const toolsForRequest = (
 	...(request.skills?.includes("research") ? ["literature_search"] : []),
 	...(request.remoteResearch ? ["codemode"] : []),
 ];
+const formatTimeout = (timeoutMs: number) =>
+	timeoutMs % 60_000 === 0
+		? `${timeoutMs / 60_000}m`
+		: timeoutMs % 1_000 === 0
+			? `${timeoutMs / 1_000}s`
+			: `${timeoutMs}ms`;
+export function formatDispatchWorkerCallSummary(
+	args: Pick<
+		DispatchRequest,
+		"task" | "mode" | "modelRole" | "thinkingLevel" | "workerInstructions"
+	> &
+		Pick<DispatchRequest, "skills" | "remoteResearch">,
+) {
+	const instructions = args.workerInstructions?.trim().split(/\r?\n/).slice(0, 2).join(" / ");
+	const task = args.task.replace(/\s+/g, " ").trim();
+	return [
+		`custom-agents.md: ${instructions || (args.workerInstructions === undefined ? "false" : "(empty)")}`,
+		`task: ${task.length > 60 ? `${task.slice(0, 57)}...` : task}`,
+		`permissions: ${args.mode}`,
+		`mode/tools: ${args.mode} / ${toolsForRequest(args).join(", ")}`,
+		`model: ${args.modelRole ?? "catalog default"} (${args.thinkingLevel ?? "default thinking"})`,
+	].join("\n");
+}
+export function formatDispatchWorkerCallDetails(args: DispatchRequest) {
+	return [
+		"Assignment",
+		`Task:\n${args.task}`,
+		`Expected output:\n${args.expectedOutput}`,
+		"Execution",
+		`Permissions: ${args.mode}`,
+		`Mode/tools: ${args.mode} / ${toolsForRequest(args).join(", ")}`,
+		`Model: ${args.modelRole ?? "catalog default"} (${args.thinkingLevel ?? "default thinking"})`,
+		`Timeout: ${formatTimeout(args.timeoutMs ?? DEFAULT_TIMEOUT_MS)}`,
+		"Context",
+		`Context mode: ${args.contextMode ?? "clean"}`,
+		...((args.contextFiles ?? []).length
+			? [
+					"Context files:",
+					...(args.contextFiles ?? []).map(({ path, purpose }) => `- ${path}: ${purpose}`),
+				]
+			: ["Context files: none"]),
+		`Skills: ${args.skills?.join(", ") || "none"}`,
+		`custom-agents.md:\n${args.workerInstructions ?? "false"}`,
+	].join("\n");
+}
 export function skillPaths(
 	selectors: string[] = [],
 	projectRoot: string,
@@ -343,20 +388,17 @@ export function workerActivity(value: unknown) {
 	if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
 	const event = value as { type?: unknown; toolName?: unknown; args?: unknown };
 	if (event.type !== "tool_execution_start" || typeof event.toolName !== "string") return undefined;
-	const args =
+	const entries =
 		event.args && typeof event.args === "object" && !Array.isArray(event.args)
 			? Object.entries(event.args as Record<string, unknown>)
-					.filter(([, item]) => item !== undefined && item !== null)
-					.map(([key, item]) => {
-						const rendered = Array.isArray(item)
-							? item.map(String).join(", ")
-							: typeof item === "object"
-								? "[details]"
-								: String(item).replace(/\s+/g, " ");
-						return `${key}=${rendered}`;
-					})
-					.join(" ")
-			: "";
+			: [];
+	const args = entries
+		.filter(([, item]) => item != null)
+		.map(
+			([key, item]) =>
+				`${key}=${Array.isArray(item) ? item.join(", ") : typeof item === "object" ? "[details]" : String(item).replace(/\s+/g, " ")}`,
+		)
+		.join(" ");
 	return conciseActivity(`${event.toolName}${args ? ` ${args}` : ""}`);
 }
 function forwardWorkerActivity(

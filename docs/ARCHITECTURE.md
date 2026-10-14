@@ -55,8 +55,7 @@ is separate from delegation choice:
   clean delegation.
 
 Needing prior context therefore does not imply that the supervisor must
-execute the task itself. The project skill's [delegation
-module](../skills/project/modules/delegation/guidance.md) teaches
+execute the task itself. The project skill's delegation module teaches
 optional pre-walk, planner/builder, orchestrator, exploration, and
 independent-review patterns using these dispatch choices. These are
 semantic working possibilities, not runtime workflows or automatic model
