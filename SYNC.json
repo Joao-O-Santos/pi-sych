@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-14T18:00:20.695Z",
+  "confirmedAt": "2026-10-14T18:25:50.538Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:a8717993e9e066192abb747643e832a215b60ce86e89c1499a8ab31a6048e6b4",
+      "fingerprint": "sha256:833bada55be0c9732e5b35091d5f11659707a7092f2e9f6010efe6542c20de44",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,13 +46,13 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-10-14T18:00:20.695Z",
-        "reason": "Reviewed the worker dispatch summary split and the worker/packaged-prompt lens-cue changes, docs examples, release note, and architecture-diagram metadata. Independent read-only review found no concrete defects. `make verify` passed 248 tests at 97.92/92.52/96.93% line/branch/function coverage; `make site`, style, source-budget, and diff checks passed. The migration guide remains pending review because of separate earlier configuration changes."
+        "at": "2026-10-14T18:25:35.543Z",
+        "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       }
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:ec8f8e5e7964830f5a80e11a2d79b37f363ce5d19d618af9558b83e5513b49c7",
+      "fingerprint": "sha256:31db4beaeb2b8912f04c52efc51780505120d76d2f27ba47d053105e882c3528",
       "status": "current",
       "role": "package-boundary",
       "authoritativeFor": [
@@ -66,8 +66,8 @@
         "scripts"
       ],
       "acknowledgement": {
-        "at": "2026-10-14T12:31:19.364Z",
-        "reason": "Recorded verified v8.1.1 release state and reviewed patched call/activity renderer documentation, release links, and metadata. Main pipeline 2946786917 and signed v8.1.1 tag pipeline 2946801296 passed; npm version/latest/gitHead match. Local make verify passed 247 tests and source budget; make site and style checks passed. Unrelated pending-review files remain unchanged."
+        "at": "2026-10-14T18:25:35.543Z",
+        "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       }
     },
     {
@@ -183,15 +183,15 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:323aeab14ef76f362205b71ca1368e1614769c41b8c07c9000b7361385891b03",
+      "fingerprint": "sha256:6caedd600881fbffb742aab1a8bb53c22b49ca8335fae2b613361b4938f53f1d",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-10-14T18:00:20.695Z",
-        "reason": "Reviewed the worker dispatch summary split and the worker/packaged-prompt lens-cue changes, docs examples, release note, and architecture-diagram metadata. Independent read-only review found no concrete defects. `make verify` passed 248 tests at 97.92/92.52/96.93% line/branch/function coverage; `make site`, style, source-budget, and diff checks passed. The migration guide remains pending review because of separate earlier configuration changes."
+        "at": "2026-10-14T18:25:50.538Z",
+        "reason": "Reviewed the final v8.1.2 patch changelog rationale and user-facing changes; local `make verify` passed all 248 tests, source budget and package dry-run passed, and `make site` succeeded. The release makes no migration requirement."
       }
     },
     {

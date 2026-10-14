@@ -5,7 +5,10 @@ npm registry metadata establish publication status and dates; headings
 below record versioned changes without duplicating that live release
 state.
 
-## Unreleased
+## 8.1.2
+
+Patch release: adds supervisor model reporting and refines worker
+summaries and review-lens cues without requiring migration.
 
 ### Added
 
@@ -21,6 +24,11 @@ state.
   the duplicate `permissions` label.
 - Shape review provenance lines around the likely selection bias of the
   requested lens, especially for worker and packaged-prompt reviews.
+
+### Tests
+
+- Cover separate dispatch `mode` and `tools` labels and ensure the
+  duplicate permissions label is absent.
 
 ## 8.1.1
 
