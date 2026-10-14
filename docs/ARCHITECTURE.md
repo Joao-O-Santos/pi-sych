@@ -260,12 +260,13 @@ module, or repository instruction file.
 Review is a useful example of this separation. Packaged
 `prompts/review-*.md` choose optional lenses, but the
 `skills/review/SKILL.md` contract also applies when a user requests a
-review without a preset prompt. Every LLM review should end in a
-distinct, brief **Review scope** footer stating the actual instruction
-and focus; this is not an execution `limitations` field or a bullet in a
-limitations section. Adversarial fault-finding, collaborative
-improvement, structural inspection, copyediting, and verification
-produce differently selected observations.
+review without a preset prompt. Reviews returned by workers or invoked
+through packaged prompts end with a brief **LLM review** line explaining
+how the requested lens may shape the findings---for example, adversarial
+fault-finding may surface less relevant objections, while a
+collaborative lens may miss flaws needing a more skeptical pass. This is
+a useful interpretive cue, not a generic disclaimer or list of unchecked
+work.
 
 The supervisor evaluates those observations against accepted project
 state and evidence. Author-authored Plannotator notes express author

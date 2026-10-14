@@ -162,7 +162,7 @@ test("workbench wires status, worker, compaction, and one-shot completion reasse
 			timeoutMs: 90_000,
 			workerInstructions: "First custom line\nSecond custom line\nThird line",
 		}),
-		/custom-agents\.md: First custom line \/ Second custom line[\s\S]*task: do this[\s\S]*permissions: read-only[\s\S]*mode\/tools: read-only \/ read, grep, find, ls, submit_artifact[\s\S]*model: catalog default \(default thinking\)/,
+		/custom-agents\.md: First custom line \/ Second custom line[\s\S]*task: do this[\s\S]*mode: read-only[\s\S]*tools: read, grep, find, ls, submit_artifact[\s\S]*model: catalog default \(default thinking\)/,
 	);
 	const rendered = dispatch.renderCall(
 		{ task: "short", mode: "read-only", timeoutMs: 1 },
@@ -185,6 +185,11 @@ test("workbench wires status, worker, compaction, and one-shot completion reasse
 		skills: ["code"],
 	});
 	assert.match(details, /Expected output:\nFindings report/);
+	assert.match(
+		details,
+		/Mode: edit[\s\S]*Tools: read, grep, find, ls, edit, write, submit_artifact/,
+	);
+	assert.doesNotMatch(details, /Permissions:/);
 	assert.match(details, /src\/a\.ts: implementation/);
 	assert.match(details, /custom-agents\.md:\nUse project style\./);
 	assert.equal(
@@ -321,7 +326,7 @@ test("workbench dispatches through Pi and reports command status failures", asyn
 			skills: ["research"],
 			remoteResearch: true,
 		}),
-		/mode\/tools: full-host \/ read, edit, write, bash, submit_artifact, literature_search, codemode/,
+		/mode: full-host[\s\S]*tools: read, edit, write, bash, submit_artifact, literature_search, codemode/,
 	);
 	assert.match(
 		formatDispatchWorkerOutcome({

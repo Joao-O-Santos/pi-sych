@@ -129,13 +129,14 @@ worker dispatch, configuration, compaction, and local literature lookup.
 The optional `extensions/plannotator/` adapter captures human review
 feedback.
 
-For independent LLM reviews, a short final **Review scope** footer
-identifies the instruction that shaped the findings, including when the
-user requested a review without using a packaged prompt. In particular,
-adversarial reviews identify their fault-finding posture. Such findings
-are advisory: compare them with evidence and accepted project decisions
-rather than automatically accepting every objection. Author comments
-made through Plannotator remain author feedback, not LLM reviews.
+Reviews returned by workers and packaged review prompts include a brief
+**LLM review** line describing how the requested lens may shape the
+findings---for example, an adversarial task may surface less relevant
+objections, while a collaborative task may miss flaws needing a more
+skeptical pass. Such findings are advisory: compare them with evidence
+and accepted project decisions rather than automatically accepting every
+objection. Author comments made through Plannotator remain author
+feedback, not LLM reviews.
 
 See the [code tour](docs/code-tour.md) for the source-file map,
 [architecture](docs/ARCHITECTURE.md) for runtime boundaries, and [review

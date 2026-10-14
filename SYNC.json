@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-10-14T12:31:19.364Z",
+  "confirmedAt": "2026-10-14T18:00:20.695Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -21,20 +21,20 @@
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:06b3082b4017a5b69a69e7cc18be3920793c42f0e3021ed4cd14314e41c82287",
+      "fingerprint": "sha256:fa518c63a9a58995e6eab77406e38e0e43cb6bf6bc746925ae5c351c4d3fbc36",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-10-14T12:31:19.364Z",
-        "reason": "Recorded verified v8.1.1 release state and reviewed patched call/activity renderer documentation, release links, and metadata. Main pipeline 2946786917 and signed v8.1.1 tag pipeline 2946801296 passed; npm version/latest/gitHead match. Local make verify passed 247 tests and source budget; make site and style checks passed. Unrelated pending-review files remain unchanged."
+        "at": "2026-10-14T18:00:20.695Z",
+        "reason": "Reviewed the worker dispatch summary split and the worker/packaged-prompt lens-cue changes, docs examples, release note, and architecture-diagram metadata. Independent read-only review found no concrete defects. `make verify` passed 248 tests at 97.92/92.52/96.93% line/branch/function coverage; `make site`, style, source-budget, and diff checks passed. The migration guide remains pending review because of separate earlier configuration changes."
       }
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:5f18ff8b290f1640c7b7d54ec46e7366eaba8e02a1cda8180fdb9e92e40a72a4",
+      "fingerprint": "sha256:a8717993e9e066192abb747643e832a215b60ce86e89c1499a8ab31a6048e6b4",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -46,8 +46,8 @@
         "package.json"
       ],
       "acknowledgement": {
-        "at": "2026-10-14T12:31:19.364Z",
-        "reason": "Recorded verified v8.1.1 release state and reviewed patched call/activity renderer documentation, release links, and metadata. Main pipeline 2946786917 and signed v8.1.1 tag pipeline 2946801296 passed; npm version/latest/gitHead match. Local make verify passed 247 tests and source budget; make site and style checks passed. Unrelated pending-review files remain unchanged."
+        "at": "2026-10-14T18:00:20.695Z",
+        "reason": "Reviewed the worker dispatch summary split and the worker/packaged-prompt lens-cue changes, docs examples, release note, and architecture-diagram metadata. Independent read-only review found no concrete defects. `make verify` passed 248 tests at 97.92/92.52/96.93% line/branch/function coverage; `make site`, style, source-budget, and diff checks passed. The migration guide remains pending review because of separate earlier configuration changes."
       }
     },
     {
@@ -111,15 +111,15 @@
     },
     {
       "path": "docs/review-workflow.md",
-      "fingerprint": "sha256:a7c5c2578973c306a4ac3c94d43f0e450f2675cfc44854944580887e7399fac1",
-      "status": "needs-review",
+      "fingerprint": "sha256:962289258097ebd5630484d8ab52aef88f053b3eb50cbaf9b2c75c8f356f015e",
+      "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "review-workflow"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T18:07:20.003Z",
-        "reason": "Reviewed the v8 preparation's configuration, native MCP worker, compaction and literature contracts against implementation and local test results; local checks passed and external native MCP/auth and real-model workflow remain explicitly unverified."
+        "at": "2026-10-14T18:00:20.695Z",
+        "reason": "Reviewed the worker dispatch summary split and the worker/packaged-prompt lens-cue changes, docs examples, release note, and architecture-diagram metadata. Independent read-only review found no concrete defects. `make verify` passed 248 tests at 97.92/92.52/96.93% line/branch/function coverage; `make site`, style, source-budget, and diff checks passed. The migration guide remains pending review because of separate earlier configuration changes."
       },
       "pendingReason": "Documentation changed after recorded acknowledgement; fingerprint and dependent-document review pending. Previous acknowledgement is retained as historical, not current approval."
     },
@@ -145,7 +145,7 @@
     {
       "path": "docs/img/readme.md",
       "fingerprint": "sha256:77e27652e26a3c7852c25e2d0ce7483e056b7029157a6d459e480b3114cf93c0",
-      "status": "needs-review",
+      "status": "current",
       "role": "image-update-guidance",
       "authoritativeFor": [
         "diagram-asset-status-and-edit-instructions"
@@ -156,8 +156,8 @@
         "docs/img/architecture.png"
       ],
       "acknowledgement": {
-        "at": "2026-10-09T10:38:58.603Z",
-        "reason": "Reviewed authorized interrupted-report recovery and independent review: preserve structurally valid provisional claims separately from successful result, keep interruption/process failure primary and warn of incomplete/inaccurate work and nonexistent claimed files. Malformed/absent reports retain original error and observations. README and migration/image guidance remain consistent; no configuration or diagram revision needed. make verify passed 239 tests at 97.86/92.50/96.80 coverage; site/budget passed, audit zero vulnerabilities. No push or release authorized."
+        "at": "2026-10-14T18:00:20.695Z",
+        "reason": "Reviewed the worker dispatch summary split and the worker/packaged-prompt lens-cue changes, docs examples, release note, and architecture-diagram metadata. Independent read-only review found no concrete defects. `make verify` passed 248 tests at 97.92/92.52/96.93% line/branch/function coverage; `make site`, style, source-budget, and diff checks passed. The migration guide remains pending review because of separate earlier configuration changes."
       },
       "pendingReason": "Architecture documentation changed; diagram guidance needs dependency review before re-acknowledgement."
     },
@@ -183,15 +183,15 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:2b88836477d80e8f1adbb0abe358ea22fbb1fc90cc98423b9499129e70dc1062",
+      "fingerprint": "sha256:323aeab14ef76f362205b71ca1368e1614769c41b8c07c9000b7361385891b03",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
       ],
       "acknowledgement": {
-        "at": "2026-10-14T12:31:19.364Z",
-        "reason": "Recorded verified v8.1.1 release state and reviewed patched call/activity renderer documentation, release links, and metadata. Main pipeline 2946786917 and signed v8.1.1 tag pipeline 2946801296 passed; npm version/latest/gitHead match. Local make verify passed 247 tests and source budget; make site and style checks passed. Unrelated pending-review files remain unchanged."
+        "at": "2026-10-14T18:00:20.695Z",
+        "reason": "Reviewed the worker dispatch summary split and the worker/packaged-prompt lens-cue changes, docs examples, release note, and architecture-diagram metadata. Independent read-only review found no concrete defects. `make verify` passed 248 tests at 97.92/92.52/96.93% line/branch/function coverage; `make site`, style, source-budget, and diff checks passed. The migration guide remains pending review because of separate earlier configuration changes."
       }
     },
     {

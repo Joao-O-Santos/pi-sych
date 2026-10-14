@@ -39,14 +39,15 @@ author. Do not revise to eliminate every adversarial LLM objection or allow
 successive caveats to obscure the contribution. A review cycle can end with
 reasonable objections unresolved.
 
-End LLM-generated reviews with a brief, truthful, mode-specific line identifying
-the review as LLM-produced and the instruction that shaped its scope. For
-example: "LLM review · Adversarial: I was asked to find problems; some may be
-minor or speculative." Collaborative, copyedit, structural, and verification
-reviews should state their own actual focus instead. This is provenance, not a
-generic AI limitations disclaimer; do not append it to human-authored feedback.
-
-For any LLM-generated review, including one requested without a preset prompt, put the actual task focus in a short, distinct final **Review scope** footer. Do not bury it in limitations bullets or replace it with generic disclaimers.
+For reviews returned by a worker or invoked through a packaged
+`prompts/review-*.md` entry point, end with a brief **LLM review** line naming
+the requested lens and how it may shape the findings. Make the line a useful
+reading cue, not a checklist of work omitted or a generic AI disclaimer. For
+example: "LLM review · Adversarial: I was asked to prioritize flaws, so some
+points may be less relevant than others." A collaborative review can note that
+its improvement-oriented task may miss flaws needing a more adversarial pass.
+Tailor other lenses similarly. Ordinary supervisor reviews need not carry this
+line unless requested or useful; never append it to human-authored feedback.
 
 Review is advisory unless revision or implementation was also requested.
 Reviewer comments are proposals to assess, not evidence or accepted project

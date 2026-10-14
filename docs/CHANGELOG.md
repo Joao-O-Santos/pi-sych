@@ -15,6 +15,13 @@ state.
   on request; it neither monitors model changes nor exposes the raw
   model ID.
 
+### Changed
+
+- Separate worker dispatch summary `mode` and `tools` fields, removing
+  the duplicate `permissions` label.
+- Shape review provenance lines around the likely selection bias of the
+  requested lens, especially for worker and packaged-prompt reviews.
+
 ## 8.1.1
 
 Tagged and published as a patch release. It improves human-readable

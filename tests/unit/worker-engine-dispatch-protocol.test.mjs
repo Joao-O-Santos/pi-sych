@@ -140,6 +140,7 @@ test("dispatch observes a tracked edit committed during worker launch", async (t
 	git(["init"]);
 	git(["config", "user.email", "worker-test@example.invalid"]);
 	git(["config", "user.name", "Worker Test"]);
+	git(["config", "commit.gpgsign", "false"]);
 	git(["add", "A.md"]);
 	git(["commit", "-m", "initial"]);
 	const outcome = await dispatch(setup, async (spec) => {
@@ -169,6 +170,7 @@ test("dispatch observes nested tracked edits and newly committed files", async (
 	git(["init"]);
 	git(["config", "user.email", "worker-test@example.invalid"]);
 	git(["config", "user.name", "Worker Test"]);
+	git(["config", "commit.gpgsign", "false"]);
 	git(["add", "project/A.md"]);
 	git(["commit", "-m", "initial"]);
 	const setup = { root, workerAgentDir, project: resolvedProject(root) };

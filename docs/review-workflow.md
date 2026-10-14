@@ -151,20 +151,19 @@ and obvious limitations. An adversarial model can keep generating
 objections; exhausting them is not a completion criterion. Avoid
 accumulating caveats that bury a defensible thesis.
 
-**Every LLM-generated review**, including one requested in ordinary
-language rather than through a packaged prompt, ends with a separate,
-visually distinct **Review scope** footer. The footer briefly names the
-actual instructions that shaped the output. For example:
+Reviews returned by a worker or invoked through a packaged prompt end
+with a brief **LLM review** line naming the requested lens and how that
+task may shape which findings stand out. For example:
 
-> **LLM review · Adversarial:** I was asked to find problems; some may
-> be minor or speculative.
+> **LLM review · Adversarial:** I was asked to prioritize flaws, so some
+> points may be less relevant than others.
 
-Collaborative reviews identify their improvement-oriented focus;
-copyediting reviews state that they worked at sentence level; structural
-and verification reviews name the scope actually checked. The footer is
-not a bullet under `Limitations`, and generic AI disclaimers are not a
-substitute. Keep genuine, consequential limitations in the findings when
-needed. Do not add an LLM-review footer to human-authored comments.
+Prefer this useful cue about the review's likely selection bias over a
+list of checks not performed or a generic AI disclaimer. Collaborative
+reviews can note that prioritizing constructive improvement may miss
+flaws needing a more adversarial pass; tailor other lenses similarly.
+Ordinary supervisor reviews need not carry the line unless requested or
+useful. Do not add an LLM-review line to human-authored comments.
 
 ### 4. Launch a fresh edit worker
 

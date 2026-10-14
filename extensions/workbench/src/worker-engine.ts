@@ -162,8 +162,8 @@ export function formatDispatchWorkerCallSummary(
 	return [
 		`custom-agents.md: ${instructions || (args.workerInstructions === undefined ? "false" : "(empty)")}`,
 		`task: ${task.length > 60 ? `${task.slice(0, 57)}...` : task}`,
-		`permissions: ${args.mode}`,
-		`mode/tools: ${args.mode} / ${toolsForRequest(args).join(", ")}`,
+		`mode: ${args.mode}`,
+		`tools: ${toolsForRequest(args).join(", ")}`,
 		`model: ${args.modelRole ?? "catalog default"} (${args.thinkingLevel ?? "default thinking"})`,
 	].join("\n");
 }
@@ -173,8 +173,8 @@ export function formatDispatchWorkerCallDetails(args: DispatchRequest) {
 		`Task:\n${args.task}`,
 		`Expected output:\n${args.expectedOutput}`,
 		"Execution",
-		`Permissions: ${args.mode}`,
-		`Mode/tools: ${args.mode} / ${toolsForRequest(args).join(", ")}`,
+		`Mode: ${args.mode}`,
+		`Tools: ${toolsForRequest(args).join(", ")}`,
 		`Model: ${args.modelRole ?? "catalog default"} (${args.thinkingLevel ?? "default thinking"})`,
 		`Timeout: ${formatTimeout(args.timeoutMs ?? DEFAULT_TIMEOUT_MS)}`,
 		"Context",

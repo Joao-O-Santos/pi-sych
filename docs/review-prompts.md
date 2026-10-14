@@ -68,32 +68,29 @@ criteria separately. Passing mechanical checks is not human approval or general
 semantic correctness.
 ```
 
-## Scope disclosure is skill-wide
+## Review-lens cue
 
 The five packaged prompts select optional lenses; they are not required
-to obtain a review. The `review` skill applies the same provenance
-rule to a review requested directly by the user or dispatched through
-a worker. Finish every LLM review with a **separate highlighted
-Review scope footer** identifying the actual instructions, not a
-limitations bullet or generic model disclaimer.
-
-Examples of concise footer content:
+to obtain a review. For reviews returned by workers or invoked through a
+packaged prompt, use a brief **LLM review** footer that identifies the
+lens and its likely influence on the findings. Prefer a cue about how
+the task can shape selection over a list of unchecked aspects or a
+generic model disclaimer.
 
 | Lens | Footer |
 | --- | --- |
-| Adversarial | **LLM review · Adversarial:** I was asked to find problems; some may be minor or speculative. |
-| Collaborative | **LLM review · Collaborative:** I focused on helping the author improve the manuscript. |
-| Structural | **LLM review · Structural:** I focused on organization and argument flow. |
-| Reader friction | **LLM review · Reader friction:** I read for prose that depends on hidden drafting context. |
-| Verification | **LLM review · Verification:** I checked the specified criteria, not every aspect of the manuscript. |
-| Copyedit | **LLM review · Copyedit:** I focused on sentence-level wording, not the overall argument. |
+| Adversarial | **LLM review · Adversarial:** I was asked to prioritize flaws, so some points may be less relevant than others. |
+| Collaborative | **LLM review · Collaborative:** I was asked to preserve the contribution and help improve it, so I may miss flaws needing a more adversarial pass. |
+| Structural | **LLM review · Structural:** I prioritized how the organization carries the argument, which can make local issues less salient. |
+| Reader friction | **LLM review · Reader friction:** I prioritized a first-time reader's experience, so specialist conventions may look like friction. |
+| Verification | **LLM review · Verification:** I prioritized the supplied criteria, so issues outside them may receive less attention. |
+| Copyedit | **LLM review · Copyedit:** I prioritized sentence-level wording, so larger argument issues may be less visible. |
 
-The examples are not rigid labels for every possible request. A
-mixed or narrower task should disclose what was actually requested
-and performed. The footer describes how to interpret the review,
-not the authority of its conclusions. Human-authored feedback,
-including author annotations made with Plannotator, does not receive
-an LLM footer.
+Tailor the cue to the actual request when lenses are mixed or narrower.
+It describes the likely selection bias of the review, not the authority
+of its conclusions. Ordinary supervisor reviews need not carry a footer
+unless requested or useful. Human-authored feedback, including author
+annotations made with Plannotator, does not receive an LLM footer.
 
 ## Packaging rule
 
