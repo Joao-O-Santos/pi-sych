@@ -51,7 +51,11 @@ a defined scope authorizes that scope.
 than a universal default. Clean workers are appropriate when an explicit
 packet is sufficient; trajectory workers are appropriate when prior
 conversation materially helps. Supervisor pre-work recorded in a plan,
-TODO, brief, or context file can enable later clean delegation.
+TODO, brief, or context file can enable later clean delegation. Document
+optional dispatch patterns rather than fixed workflows. Lean toward
+supervisor pre-walk when firsthand interpretation matters; bounded
+explorers remain useful for breadth, but their summaries should not
+replace decisive source inspection by the model choosing the approach.
 
 {accepted} For argumentative prose, treat accepted central claims and
 their intended force as durable project state when the owner records

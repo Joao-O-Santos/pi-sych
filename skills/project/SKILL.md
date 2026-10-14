@@ -28,5 +28,6 @@ work actually performed. Select the smallest applicable route.
 | interpret project status | [status](modules/status/guidance.md) |
 | meaningful disagreement | [reconcile](modules/reconcile/guidance.md) |
 | long or consequential plan | [plans](modules/plans/guidance.md) |
+| execution pattern or worker handoff | [delegation](modules/delegation/guidance.md) |
 | Pi Sych help | [Pi Sych](modules/pi-sych/guidance.md) |
 | completed-work lessons | [retrospective](modules/retrospective/guidance.md) |

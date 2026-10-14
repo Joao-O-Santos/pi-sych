@@ -20,7 +20,9 @@ default. A clean worker is appropriate when an explicit packet is sufficient;
 use trajectory context when prior conversation materially helps, such as when
 that conversation contains reasoning or constraints omitted from the packet.
 Supervisor pre-work recorded in a plan, TODO, brief, or context file can make a
-clean worker packet sufficient.
+clean worker packet sufficient. For optional pre-walk, planner/builder,
+orchestrator, exploration, and independent-review patterns, use
+[delegation](../delegation/guidance.md); none requires a fixed workflow.
 
 A decision memo may state options, evidence, trade-offs, unresolved questions,
 and the owner decision. If a consequential choice is still unresolved, stop at
