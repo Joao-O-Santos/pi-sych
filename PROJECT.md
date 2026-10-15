@@ -186,10 +186,9 @@ published at commit `1b227fb809c54f0d27393cf46e1d5dbf997a4d06`. Tag
 pipeline `2952106494` passed `verify` and `publish-npm`; npm reports
 `pi-sych@8.1.3`, `latest` 8.1.3, and matching gitHead. The v8.1.3 tag
 points to that commit. The published patch improves readable
-`dispatch_worker` call rendering. A shared-renderer follow-up and
-nonblank runtime source-budget increase to 3,300 lines are post-tag
-source changes recorded under Unreleased; they are not part of published
-v8.1.3.
+`dispatch_worker` call rendering. The shared ordered-renderer follow-up
+and nonblank runtime source-budget increase to 3,300 lines are prepared
+for v8.1.4 and are not part of published v8.1.3.
 
 {verified} After revising reviewer-response guidance and repairing the
 benchmark fixtures, the five-case opt-in evaluation completed with
@@ -261,12 +260,15 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
-{verified} v8.1.3 is the latest published release at tag `v8.1.3`/commit
-`1b227fb809c54f0d27393cf46e1d5dbf997a4d06`; tag pipeline `2952106494`
-passed verify and npm publication, and registry version/latest/gitHead
-match. The shared-renderer follow-up remains an Unreleased post-tag
-source change. Retain this project brief for ongoing accepted
-constraints; future release actions require their own authorization.
+{verified} npm reports current version/latest `8.1.3`, and no local or
+remote `v8.1.4` tag exists. Prepared package metadata and README image
+URLs for `8.1.4`; its changelog entry records the shared ordered worker-
+call renderer follow-up and source-budget increase. This patch improves
+a documented presentation without changing the public interface or
+requiring migration. It is prepared, not published; publication awaits a
+passing regular commit pipeline and an authorized annotated tag. Retain
+this project brief for ongoing accepted constraints; later release
+actions require their own authorization.
 
 {unresolved} Model recognition of unfinished authorized work remains
 semantic, not mechanically guaranteed. Exa was not configured as a

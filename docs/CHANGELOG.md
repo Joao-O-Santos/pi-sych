@@ -5,11 +5,17 @@ npm registry metadata establish publication status and dates; headings
 below record versioned changes without duplicating that live release
 state.
 
-## Unreleased
+## 8.1.4 (prepared; not published)
 
-- Keep the shared ordered worker-call renderer readable and consistent;
-  raise the nonblank runtime source budget from 3,250 to 3,300 lines.
-  This follow-up is subsequent to tagged v8.1.3.
+Prepared as a patch for the post-v8.1.3 shared worker-call renderer and
+its consistent field ordering. This improves a documented presentation
+without changing the public interface or requiring migration. Raise the
+nonblank runtime source budget from 3,250 to 3,300 lines for this
+change.
+
+### Changed
+
+- Keep the shared ordered worker-call renderer readable and consistent.
 
 ## 8.1.3
 
