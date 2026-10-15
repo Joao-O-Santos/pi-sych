@@ -189,7 +189,10 @@ and tag verify/publication pipeline `2947850894` passed; npm reports
 passed 248 tests at 97.92/92.52/96.93% line/branch/function coverage;
 `make site` passed. The registry tarball contains 214 files, matching
 the local dry-run; npm metadata exposes a SLSA provenance attestation.
-The source budget remains 3,250 lines.
+The source budget remains 3,250 lines. Package version 8.1.3 is prepared
+as a patch for readable dispatch-call rendering; v8.1.2 remains latest
+published until the regular commit pipeline passes and an annotated tag
+is pushed.
 
 {verified} After revising reviewer-response guidance and repairing the
 benchmark fixtures, the five-case opt-in evaluation completed with
@@ -255,8 +258,10 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
-{verified} v8.1.2 is the latest published release. The next release
-requires a separate owner-authorized version and publication decision.
+{verified} v8.1.2 remains the latest published release. Package metadata
+and changelog are prepared for v8.1.3, a backward-compatible patch for
+readable dispatch-worker call rendering. Commit verification and the
+annotated release tag are pending; no v8.1.3 publication is claimed.
 Retain this project brief for ongoing accepted constraints; future
 release actions require their own authorization.
 

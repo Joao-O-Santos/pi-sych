@@ -144,50 +144,50 @@ export const toolsForRequest = (
 	...(request.skills?.includes("research") ? ["literature_search"] : []),
 	...(request.remoteResearch ? ["codemode"] : []),
 ];
-const formatTimeout = (timeoutMs: number) =>
-	timeoutMs % 60_000 === 0
-		? `${timeoutMs / 60_000}m`
-		: timeoutMs % 1_000 === 0
-			? `${timeoutMs / 1_000}s`
-			: `${timeoutMs}ms`;
 export function formatDispatchWorkerCallSummary(
 	args: Pick<
 		DispatchRequest,
-		"task" | "mode" | "modelRole" | "thinkingLevel" | "workerInstructions"
+		"task" | "mode" | "contextMode" | "modelRole" | "thinkingLevel" | "workerInstructions"
 	> &
 		Pick<DispatchRequest, "skills" | "remoteResearch">,
 ) {
 	const instructions = args.workerInstructions?.trim().split(/\r?\n/).slice(0, 2).join(" / ");
 	const task = args.task.replace(/\s+/g, " ").trim();
 	return [
-		`custom-agents.md: ${instructions || (args.workerInstructions === undefined ? "false" : "(empty)")}`,
 		`task: ${task.length > 60 ? `${task.slice(0, 57)}...` : task}`,
 		`mode: ${args.mode}`,
+		`context: ${args.contextMode ?? "clean"}`,
 		`tools: ${toolsForRequest(args).join(", ")}`,
 		`model: ${args.modelRole ?? "catalog default"} (${args.thinkingLevel ?? "default thinking"})`,
+		...(instructions ? [`custom-agents.md: ${instructions}`] : []),
 	].join("\n");
 }
 export function formatDispatchWorkerCallDetails(args: DispatchRequest) {
-	return [
-		"Assignment",
+	const lines = [
 		`Task:\n${args.task}`,
-		`Expected output:\n${args.expectedOutput}`,
-		"Execution",
-		`Mode: ${args.mode}`,
-		`Tools: ${toolsForRequest(args).join(", ")}`,
-		`Model: ${args.modelRole ?? "catalog default"} (${args.thinkingLevel ?? "default thinking"})`,
-		`Timeout: ${formatTimeout(args.timeoutMs ?? DEFAULT_TIMEOUT_MS)}`,
-		"Context",
-		`Context mode: ${args.contextMode ?? "clean"}`,
-		...((args.contextFiles ?? []).length
-			? [
-					"Context files:",
-					...(args.contextFiles ?? []).map(({ path, purpose }) => `- ${path}: ${purpose}`),
-				]
-			: ["Context files: none"]),
-		`Skills: ${args.skills?.join(", ") || "none"}`,
-		`custom-agents.md:\n${args.workerInstructions ?? "false"}`,
-	].join("\n");
+		`expectedOutput: ${args.expectedOutput}`,
+		`mode: ${args.mode}`,
+	];
+	if (args.modelRole) lines.push(`modelRole: ${args.modelRole}`);
+	if (args.thinkingLevel) lines.push(`thinkingLevel: ${args.thinkingLevel}`);
+	if (args.timeoutMs !== undefined) lines.push(`timeoutMs: ${args.timeoutMs}`);
+	lines.push(`context: ${args.contextMode ?? "clean"}`);
+	if (args.contextFiles.length)
+		lines.push(
+			"contextFiles:",
+			...args.contextFiles.flatMap(({ path, purpose }) => [
+				`  - ${path}`,
+				`    purpose: ${purpose}`,
+			]),
+		);
+	if (args.skills?.length) lines.push("skills:", ...args.skills.map((skill) => `  - ${skill}`));
+	if (args.remoteResearch !== undefined) lines.push(`remoteResearch: ${args.remoteResearch}`);
+	if (args.workerInstructions) {
+		lines.push("workerInstructions:");
+		lines.push(...args.workerInstructions.split(/\r?\n/).map((line) => `  ${line}`));
+	}
+	lines.push(`tools: ${toolsForRequest(args).join(", ")}`);
+	return lines.join("\n");
 }
 export function skillPaths(
 	selectors: string[] = [],

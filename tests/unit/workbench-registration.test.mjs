@@ -155,43 +155,55 @@ test("workbench wires status, worker, compaction, and one-shot completion reasse
 	assert.equal((await beforeSettle(settledBoundary, ctx)).continue, true);
 
 	const dispatch = tools.find(({ name }) => name === "dispatch_worker");
+	const summary = formatDispatchWorkerCallSummary({
+		task: "  do\n this  ",
+		mode: "read-only",
+		contextMode: "trajectory",
+		timeoutMs: 90_000,
+		workerInstructions: "First custom line\nSecond custom line\nThird line",
+	});
 	assert.match(
-		formatDispatchWorkerCallSummary({
-			task: "  do\n this  ",
-			mode: "read-only",
-			timeoutMs: 90_000,
-			workerInstructions: "First custom line\nSecond custom line\nThird line",
-		}),
-		/custom-agents\.md: First custom line \/ Second custom line[\s\S]*task: do this[\s\S]*mode: read-only[\s\S]*tools: read, grep, find, ls, submit_artifact[\s\S]*model: catalog default \(default thinking\)/,
+		summary,
+		/task: do this[\s\S]*mode: read-only[\s\S]*context: trajectory[\s\S]*tools: read, grep, find, ls, submit_artifact[\s\S]*model: catalog default \(default thinking\)[\s\S]*custom-agents\.md: First custom line \/ Second custom line/,
 	);
+	const renderArgs = {
+		task: "short",
+		expectedOutput: "report",
+		mode: "read-only",
+		contextFiles: [],
+		contextMode: "trajectory",
+	};
 	const rendered = dispatch.renderCall(
-		{ task: "short", mode: "read-only", timeoutMs: 1 },
+		renderArgs,
 		{ fg: (_name, text) => text, bold: (text) => text },
 		{ expanded: false },
 	);
 	assert.ok(rendered);
+	assert.match(rendered.render(200).join("\n"), /task: short[\s\S]*context: trajectory/);
 	const expanded = dispatch.renderCall(
-		{ task: "short", mode: "read-only", timeoutMs: 1 },
+		renderArgs,
 		{ fg: (_name, text) => text, bold: (text) => text },
 		{ expanded: true },
 	);
 	assert.ok(expanded);
+	assert.match(expanded.render(200).join("\n"), /Task:[\s\S]*short[\s\S]*context: trajectory/);
 	const details = formatDispatchWorkerCallDetails({
 		task: "inspect files",
 		expectedOutput: "Findings report",
 		mode: "edit",
 		contextFiles: [{ path: "src/a.ts", purpose: "implementation" }],
-		workerInstructions: "Use project style.",
+		workerInstructions: "Use project style.\nKeep changes minimal.",
 		skills: ["code"],
 	});
-	assert.match(details, /Expected output:\nFindings report/);
 	assert.match(
 		details,
-		/Mode: edit[\s\S]*Tools: read, grep, find, ls, edit, write, submit_artifact/,
+		/^Task:\ninspect files[\s\S]*expectedOutput: Findings report[\s\S]*mode: edit[\s\S]*context: clean/,
 	);
-	assert.doesNotMatch(details, /Permissions:/);
-	assert.match(details, /src\/a\.ts: implementation/);
-	assert.match(details, /custom-agents\.md:\nUse project style\./);
+	assert.ok(details.includes("contextFiles:\n  - src/a.ts\n    purpose: implementation"));
+	assert.ok(details.includes("workerInstructions:\n  Use project style.\n  Keep changes minimal."));
+	assert.ok(details.includes("skills:\n  - code"));
+	assert.doesNotMatch(details, /^(?:modelRole|thinkingLevel|timeout|remoteResearch):/m);
+	assert.match(details, /tools: read, grep, find, ls, edit, write, submit_artifact/);
 	assert.equal(
 		workerActivity({
 			type: "tool_execution_start",

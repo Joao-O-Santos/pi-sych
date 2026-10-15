@@ -4,8 +4,8 @@
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:6c3708539ed082fc471cb2ae6b6c2c16556385877d8e209b7dc19b2ad6648733",
-      "status": "current",
+      "fingerprint": "sha256:21eab450d6aefda435f1f8bde6c092bdb3a6c0503e3b736db3d8dbcb2aeaf5a3",
+      "status": "needs-review",
       "role": "project",
       "authoritativeFor": [
         "objective",
@@ -17,7 +17,8 @@
       "acknowledgement": {
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
-      }
+      },
+      "pendingReason": "Prepared the authorized 8.1.3 patch version and readable dispatch-call rendering; latest npm package remains 8.1.2. Review the regular commit pipeline before tagging; this entry does not claim 8.1.3 publication."
     },
     {
       "path": "docs/ARCHITECTURE.md",
@@ -34,8 +35,8 @@
     },
     {
       "path": "README.md",
-      "fingerprint": "sha256:833bada55be0c9732e5b35091d5f11659707a7092f2e9f6010efe6542c20de44",
-      "status": "current",
+      "fingerprint": "sha256:d3eb17b3f03f1159ffcdfa8bd0936c7b0cff182b8c7521d96d7d8f1acb531664",
+      "status": "needs-review",
       "role": "documentation",
       "authoritativeFor": [
         "package-usage",
@@ -48,12 +49,13 @@
       "acknowledgement": {
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
-      }
+      },
+      "pendingReason": "Prepared the authorized 8.1.3 patch version and readable dispatch-call rendering; latest npm package remains 8.1.2. Review the regular commit pipeline before tagging; this entry does not claim 8.1.3 publication."
     },
     {
       "path": "package.json",
-      "fingerprint": "sha256:31db4beaeb2b8912f04c52efc51780505120d76d2f27ba47d053105e882c3528",
-      "status": "current",
+      "fingerprint": "sha256:4ff3daaa490d3082bf02eeed47e1edecf4aa19f59e2c8d27f0913a84ee0b4822",
+      "status": "needs-review",
       "role": "package-boundary",
       "authoritativeFor": [
         "scripts",
@@ -68,7 +70,8 @@
       "acknowledgement": {
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
-      }
+      },
+      "pendingReason": "Prepared the authorized 8.1.3 patch version and readable dispatch-call rendering; latest npm package remains 8.1.2. Review the regular commit pipeline before tagging; this entry does not claim 8.1.3 publication."
     },
     {
       "path": "docs/configuration.md",
@@ -183,8 +186,8 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:3e06ca3f2ee67b50f4a6b487e54b99edc79e8b646a495e7715cf0097ae177ba6",
-      "status": "current",
+      "fingerprint": "sha256:4bf178c9c6133410ca2957d3c1aee1da30bb3bbadd85bf9e53a5fb01d0b9ea8c",
+      "status": "needs-review",
       "role": "documentation",
       "authoritativeFor": [
         "changelog"
@@ -192,7 +195,8 @@
       "acknowledgement": {
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
-      }
+      },
+      "pendingReason": "Prepared the authorized 8.1.3 patch version and readable dispatch-call rendering; latest npm package remains 8.1.2. Review the regular commit pipeline before tagging; this entry does not claim 8.1.3 publication."
     },
     {
       "path": "skills/code/SKILL.md",

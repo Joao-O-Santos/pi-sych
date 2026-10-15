@@ -5,6 +5,18 @@ npm registry metadata establish publication status and dates; headings
 below record versioned changes without duplicating that live release
 state.
 
+## 8.1.3 (prepared; not published)
+
+Prepared as a patch release after verifying that v8.1.2 is the latest
+published version. It improves the readability of collapsed and expanded
+`dispatch_worker` calls without changing dispatch behavior.
+
+### Changed
+
+- Include `context: clean|trajectory` in collapsed worker calls and show
+  expanded arguments as readable labeled fields with indented nested
+  context, skills, and worker instructions.
+
 ## 8.1.2
 
 Tagged and published as a patch release. It adds supervisor model
