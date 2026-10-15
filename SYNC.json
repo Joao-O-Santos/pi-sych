@@ -4,7 +4,7 @@
   "artifacts": [
     {
       "path": "PROJECT.md",
-      "fingerprint": "sha256:21eab450d6aefda435f1f8bde6c092bdb3a6c0503e3b736db3d8dbcb2aeaf5a3",
+      "fingerprint": "sha256:beb2587518e032cc162eff3c3a0b91e24f0ca26d019128e96b3e0f3dd81b187e",
       "status": "needs-review",
       "role": "project",
       "authoritativeFor": [
@@ -18,7 +18,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Prepared the authorized 8.1.3 patch version and readable dispatch-call rendering; latest npm package remains 8.1.2. Review the regular commit pipeline before tagging; this entry does not claim 8.1.3 publication."
+      "pendingReason": "The v8.1.3 publication is recorded from supplied release facts. Status remains needs-review; no semantic approval is acknowledged."
     },
     {
       "path": "docs/ARCHITECTURE.md",
@@ -50,7 +50,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "Prepared the authorized 8.1.3 patch version and readable dispatch-call rendering; latest npm package remains 8.1.2. Review the regular commit pipeline before tagging; this entry does not claim 8.1.3 publication."
+      "pendingReason": "The v8.1.3 release is now published and README release links use the v8.1.3 tag. Review remains pending; no semantic approval is acknowledged."
     },
     {
       "path": "package.json",
@@ -71,7 +71,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "Prepared the authorized 8.1.3 patch version and readable dispatch-call rendering; latest npm package remains 8.1.2. Review the regular commit pipeline before tagging; this entry does not claim 8.1.3 publication."
+      "pendingReason": "Package metadata is version 8.1.3, which is published at tag v8.1.3. Review remains pending; no semantic approval is acknowledged."
     },
     {
       "path": "docs/configuration.md",
@@ -186,7 +186,7 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "fingerprint": "sha256:4bf178c9c6133410ca2957d3c1aee1da30bb3bbadd85bf9e53a5fb01d0b9ea8c",
+      "fingerprint": "sha256:a87d156aba57c302150374f53a366e7346f46eb4a249c13d4340b284bbfacffb",
       "status": "needs-review",
       "role": "documentation",
       "authoritativeFor": [
@@ -196,7 +196,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Prepared the authorized 8.1.3 patch version and readable dispatch-call rendering; latest npm package remains 8.1.2. Review the regular commit pipeline before tagging; this entry does not claim 8.1.3 publication."
+      "pendingReason": "Updated the v8.1.3 entry to record the published tag/pipeline/npm facts and identify the shared-renderer follow-up as post-tag Unreleased work. Status remains needs-review; no semantic approval is acknowledged."
     },
     {
       "path": "skills/code/SKILL.md",

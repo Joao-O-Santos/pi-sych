@@ -157,14 +157,16 @@ test("workbench wires status, worker, compaction, and one-shot completion reasse
 	const dispatch = tools.find(({ name }) => name === "dispatch_worker");
 	const summary = formatDispatchWorkerCallSummary({
 		task: "  do\n this  ",
+		expectedOutput: "brief report",
 		mode: "read-only",
 		contextMode: "trajectory",
+		contextFiles: [],
 		timeoutMs: 90_000,
 		workerInstructions: "First custom line\nSecond custom line\nThird line",
 	});
 	assert.match(
 		summary,
-		/task: do this[\s\S]*mode: read-only[\s\S]*context: trajectory[\s\S]*tools: read, grep, find, ls, submit_artifact[\s\S]*model: catalog default \(default thinking\)[\s\S]*custom-agents\.md: First custom line \/ Second custom line/,
+		/^custom-agents: First custom line \/ Second custom line[\s\S]*task: do this[\s\S]*expectedOutput: brief report[\s\S]*mode: read-only[\s\S]*context: trajectory[\s\S]*tools: read, grep, find, ls, submit_artifact[\s\S]*timeoutMs: 90000$/,
 	);
 	const renderArgs = {
 		task: "short",
@@ -179,14 +181,20 @@ test("workbench wires status, worker, compaction, and one-shot completion reasse
 		{ expanded: false },
 	);
 	assert.ok(rendered);
-	assert.match(rendered.render(200).join("\n"), /task: short[\s\S]*context: trajectory/);
+	assert.match(
+		rendered.render(200).join("\n"),
+		/task: short[\s\S]*expectedOutput: report[\s\S]*context: trajectory/,
+	);
 	const expanded = dispatch.renderCall(
 		renderArgs,
 		{ fg: (_name, text) => text, bold: (text) => text },
 		{ expanded: true },
 	);
 	assert.ok(expanded);
-	assert.match(expanded.render(200).join("\n"), /Task:[\s\S]*short[\s\S]*context: trajectory/);
+	assert.match(
+		expanded.render(200).join("\n"),
+		/task: short[\s\S]*expectedOutput: report[\s\S]*context: trajectory/,
+	);
 	const details = formatDispatchWorkerCallDetails({
 		task: "inspect files",
 		expectedOutput: "Findings report",
@@ -197,13 +205,51 @@ test("workbench wires status, worker, compaction, and one-shot completion reasse
 	});
 	assert.match(
 		details,
-		/^Task:\ninspect files[\s\S]*expectedOutput: Findings report[\s\S]*mode: edit[\s\S]*context: clean/,
+		/(?:^|\n)task: inspect files[\s\S]*expectedOutput: Findings report[\s\S]*mode: edit[\s\S]*context: clean/,
 	);
 	assert.ok(details.includes("contextFiles:\n  - src/a.ts\n    purpose: implementation"));
-	assert.ok(details.includes("workerInstructions:\n  Use project style.\n  Keep changes minimal."));
+	assert.ok(details.includes("custom-agents: Use project style.\n  Keep changes minimal."));
 	assert.ok(details.includes("skills:\n  - code"));
-	assert.doesNotMatch(details, /^(?:modelRole|thinkingLevel|timeout|remoteResearch):/m);
+	assert.doesNotMatch(details, /^(?:modelRole|thinkingLevel|timeoutMs|remoteResearch):/m);
 	assert.match(details, /tools: read, grep, find, ls, edit, write, submit_artifact/);
+	const orderedArgs = {
+		task: "T".repeat(90),
+		expectedOutput: "O".repeat(90),
+		mode: "edit",
+		contextMode: "clean",
+		contextFiles: [{ path: "src/a.ts", purpose: "source" }],
+		skills: ["code"],
+		modelRole: "fast",
+		thinkingLevel: "low",
+		timeoutMs: 1234,
+		workerInstructions: "agent guidance",
+		remoteResearch: true,
+	};
+	const expectedOrder = [
+		"custom-agents",
+		"task",
+		"expectedOutput",
+		"mode",
+		"context",
+		"tools",
+		"modelRole",
+		"thinkingLevel",
+		"timeoutMs",
+		"contextFiles",
+		"skills",
+		"remoteResearch",
+	];
+	for (const format of [formatDispatchWorkerCallSummary, formatDispatchWorkerCallDetails]) {
+		const output = format(orderedArgs);
+		const labels = output
+			.split("\n")
+			.filter((line) => !line.startsWith("  "))
+			.map((line) => line.split(":", 1)[0]);
+		assert.deepEqual(labels, expectedOrder);
+		assert.ok(output.includes("custom-agents:"));
+	}
+	assert.match(formatDispatchWorkerCallSummary(orderedArgs), /task: T{57}\.\.\./);
+	assert.ok(formatDispatchWorkerCallDetails(orderedArgs).includes(`task: ${orderedArgs.task}`));
 	assert.equal(
 		workerActivity({
 			type: "tool_execution_start",
@@ -334,7 +380,9 @@ test("workbench dispatches through Pi and reports command status failures", asyn
 	assert.match(
 		formatDispatchWorkerCallSummary({
 			task: "research",
+			expectedOutput: "report",
 			mode: "full-host",
+			contextFiles: [],
 			skills: ["research"],
 			remoteResearch: true,
 		}),

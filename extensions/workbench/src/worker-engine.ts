@@ -144,35 +144,46 @@ export const toolsForRequest = (
 	...(request.skills?.includes("research") ? ["literature_search"] : []),
 	...(request.remoteResearch ? ["codemode"] : []),
 ];
-export function formatDispatchWorkerCallSummary(
-	args: Pick<
-		DispatchRequest,
-		"task" | "mode" | "contextMode" | "modelRole" | "thinkingLevel" | "workerInstructions"
-	> &
-		Pick<DispatchRequest, "skills" | "remoteResearch">,
-) {
-	const instructions = args.workerInstructions?.trim().split(/\r?\n/).slice(0, 2).join(" / ");
-	const task = args.task.replace(/\s+/g, " ").trim();
-	return [
-		`task: ${task.length > 60 ? `${task.slice(0, 57)}...` : task}`,
-		`mode: ${args.mode}`,
-		`context: ${args.contextMode ?? "clean"}`,
-		`tools: ${toolsForRequest(args).join(", ")}`,
-		`model: ${args.modelRole ?? "catalog default"} (${args.thinkingLevel ?? "default thinking"})`,
-		...(instructions ? [`custom-agents.md: ${instructions}`] : []),
-	].join("\n");
-}
-export function formatDispatchWorkerCallDetails(args: DispatchRequest) {
-	const lines = [
-		`Task:\n${args.task}`,
-		`expectedOutput: ${args.expectedOutput}`,
-		`mode: ${args.mode}`,
-	];
+type DispatchCallArgs = Pick<
+	DispatchRequest,
+	| "task"
+	| "expectedOutput"
+	| "mode"
+	| "contextMode"
+	| "contextFiles"
+	| "skills"
+	| "modelRole"
+	| "thinkingLevel"
+	| "timeoutMs"
+	| "workerInstructions"
+	| "remoteResearch"
+>;
+const compactCallValue = (value: string, limit = 60) => {
+	const compact = value.replace(/\s+/g, " ").trim();
+	return compact.length > limit ? `${compact.slice(0, limit - 3)}...` : compact;
+};
+function dispatchWorkerCallLines(args: DispatchCallArgs, compact: boolean): string[] {
+	const lines: string[] = [];
+	if (args.workerInstructions) {
+		if (compact) {
+			const instructions = args.workerInstructions.trim().split(/\r?\n/).slice(0, 2).join(" / ");
+			lines.push(`custom-agents: ${compactCallValue(instructions)}`);
+		} else {
+			const [firstLine = "", ...remainingLines] = args.workerInstructions.split(/\r?\n/);
+			lines.push(`custom-agents: ${firstLine}`, ...remainingLines.map((line) => `  ${line}`));
+		}
+	}
+	lines.push(`task: ${compact ? compactCallValue(args.task) : args.task}`);
+	lines.push(
+		`expectedOutput: ${compact ? compactCallValue(args.expectedOutput) : args.expectedOutput}`,
+	);
+	lines.push(`mode: ${args.mode}`);
+	lines.push(`context: ${args.contextMode ?? "clean"}`);
+	lines.push(`tools: ${toolsForRequest(args).join(", ")}`);
 	if (args.modelRole) lines.push(`modelRole: ${args.modelRole}`);
 	if (args.thinkingLevel) lines.push(`thinkingLevel: ${args.thinkingLevel}`);
 	if (args.timeoutMs !== undefined) lines.push(`timeoutMs: ${args.timeoutMs}`);
-	lines.push(`context: ${args.contextMode ?? "clean"}`);
-	if (args.contextFiles.length)
+	if (args.contextFiles.length) {
 		lines.push(
 			"contextFiles:",
 			...args.contextFiles.flatMap(({ path, purpose }) => [
@@ -180,14 +191,16 @@ export function formatDispatchWorkerCallDetails(args: DispatchRequest) {
 				`    purpose: ${purpose}`,
 			]),
 		);
+	}
 	if (args.skills?.length) lines.push("skills:", ...args.skills.map((skill) => `  - ${skill}`));
 	if (args.remoteResearch !== undefined) lines.push(`remoteResearch: ${args.remoteResearch}`);
-	if (args.workerInstructions) {
-		lines.push("workerInstructions:");
-		lines.push(...args.workerInstructions.split(/\r?\n/).map((line) => `  ${line}`));
-	}
-	lines.push(`tools: ${toolsForRequest(args).join(", ")}`);
-	return lines.join("\n");
+	return lines;
+}
+export function formatDispatchWorkerCallSummary(args: DispatchCallArgs) {
+	return dispatchWorkerCallLines(args, true).join("\n");
+}
+export function formatDispatchWorkerCallDetails(args: DispatchRequest) {
+	return dispatchWorkerCallLines(args, false).join("\n");
 }
 export function skillPaths(
 	selectors: string[] = [],

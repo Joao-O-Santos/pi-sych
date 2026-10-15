@@ -5,11 +5,21 @@ npm registry metadata establish publication status and dates; headings
 below record versioned changes without duplicating that live release
 state.
 
-## 8.1.3 (prepared; not published)
+## Unreleased
 
-Prepared as a patch release after verifying that v8.1.2 is the latest
-published version. It improves the readability of collapsed and expanded
-`dispatch_worker` calls without changing dispatch behavior.
+- Keep the shared ordered worker-call renderer readable and consistent;
+  raise the nonblank runtime source budget from 3,250 to 3,300 lines.
+  This follow-up is subsequent to tagged v8.1.3.
+
+## 8.1.3
+
+Tagged and published as a patch release. Tag pipeline `2952106494`
+passed verification and npm publication; npm reports `latest` and
+version `8.1.3` with gitHead `1b227fb809c54f0d27393cf46e1d5dbf997a4d06`,
+which is also the tag target. It improves the readability of collapsed
+and expanded `dispatch_worker` calls without changing dispatch behavior.
+The shared-renderer follow-up in Unreleased is a post-tag source change;
+it is not included in published v8.1.3.
 
 ### Changed
 

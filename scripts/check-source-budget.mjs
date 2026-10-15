@@ -3,7 +3,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
 
-const limit = 3_250;
+const limit = 3_300;
 
 export const countNonblankLines = (source) =>
 	source.split("\n").filter((line) => line.trim().length > 0).length;

@@ -119,7 +119,7 @@ removed; companion packages remain separately installed.
 {verified} Against the v7.0.1 deterministic coverage baseline (97.48%
 lines, 90.23% branches, 95.31% functions), v8.0.1 coverage measures
 97.86% lines, 92.50% branches, and 96.80% functions. Runtime nonblank
-source is about 3,250 lines, within the 3,250-line budget. The local
+source is about 3,300 lines, within the 3,300-line budget. The local
 native MCP fixture and live read-only Context7 worker call passed. The
 opt-in real-model workflow and an installed-package `project_status`
 dogfood call passed after private local v8 configuration migration.
@@ -178,21 +178,18 @@ roll back changes. Plannotator absence does not prevent core startup.
 README/configuration/architecture/public-contract text describes seven
 skills, Pi-native MCP worker selection, layered configuration,
 persistence/scrutiny and clean/trajectory semantics. The nonblank
-runtime source-code budget is 3,250 lines.
+runtime source-code budget is 3,300 lines.
 
 {verified} Repository-native formatting, documentation, type, budget,
-and test checks remain the acceptance boundary. v8.1.2 is the latest
-published package version at signed commit
-`40cd3f0ea67257c90fb10bc40670076e39c29537`. Main pipeline `2947839453`
-and tag verify/publication pipeline `2947850894` passed; npm reports
-`pi-sych@8.1.2`, `latest` 8.1.2, and matching gitHead. `make verify`
-passed 248 tests at 97.92/92.52/96.93% line/branch/function coverage;
-`make site` passed. The registry tarball contains 214 files, matching
-the local dry-run; npm metadata exposes a SLSA provenance attestation.
-The source budget remains 3,250 lines. Package version 8.1.3 is prepared
-as a patch for readable dispatch-call rendering; v8.1.2 remains latest
-published until the regular commit pipeline passes and an annotated tag
-is pushed.
+and test checks remain the acceptance boundary. v8.1.3 is tagged and
+published at commit `1b227fb809c54f0d27393cf46e1d5dbf997a4d06`. Tag
+pipeline `2952106494` passed `verify` and `publish-npm`; npm reports
+`pi-sych@8.1.3`, `latest` 8.1.3, and matching gitHead. The v8.1.3 tag
+points to that commit. The published patch improves readable
+`dispatch_worker` call rendering. A shared-renderer follow-up and
+nonblank runtime source-budget increase to 3,300 lines are post-tag
+source changes recorded under Unreleased; they are not part of published
+v8.1.3.
 
 {verified} After revising reviewer-response guidance and repairing the
 benchmark fixtures, the five-case opt-in evaluation completed with
@@ -216,6 +213,12 @@ not configured as an MCP in either agent directory; Exa's cache was used
 for a documentation fetch, not a worker MCP call.
 
 ## Previous action
+
+{verified} Released v8.1.3 at tag `v8.1.3`, pointing to
+`1b227fb809c54f0d27393cf46e1d5dbf997a4d06`. Tag pipeline `2952106494`
+passed verify and npm publication; npm reports version and latest 8.1.3
+with matching gitHead. The shared-renderer follow-up in Unreleased is a
+post-tag source change and is not in the published package.
 
 {verified} Released v8.1.2 at signed tag `v8.1.2`, pointing to
 `40cd3f0ea67257c90fb10bc40670076e39c29537`. Main pipeline `2947839453`
@@ -258,12 +261,12 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
-{verified} v8.1.2 remains the latest published release. Package metadata
-and changelog are prepared for v8.1.3, a backward-compatible patch for
-readable dispatch-worker call rendering. Commit verification and the
-annotated release tag are pending; no v8.1.3 publication is claimed.
-Retain this project brief for ongoing accepted constraints; future
-release actions require their own authorization.
+{verified} v8.1.3 is the latest published release at tag `v8.1.3`/commit
+`1b227fb809c54f0d27393cf46e1d5dbf997a4d06`; tag pipeline `2952106494`
+passed verify and npm publication, and registry version/latest/gitHead
+match. The shared-renderer follow-up remains an Unreleased post-tag
+source change. Retain this project brief for ongoing accepted
+constraints; future release actions require their own authorization.
 
 {unresolved} Model recognition of unfinished authorized work remains
 semantic, not mechanically guaranteed. Exa was not configured as a
