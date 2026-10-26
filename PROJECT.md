@@ -181,14 +181,20 @@ persistence/scrutiny and clean/trajectory semantics. The nonblank
 runtime source-code budget is 3,300 lines.
 
 {verified} Repository-native formatting, documentation, type, budget,
-and test checks remain the acceptance boundary. v8.1.3 is tagged and
-published at commit `1b227fb809c54f0d27393cf46e1d5dbf997a4d06`. Tag
-pipeline `2952106494` passed `verify` and `publish-npm`; npm reports
-`pi-sych@8.1.3`, `latest` 8.1.3, and matching gitHead. The v8.1.3 tag
-points to that commit. The published patch improves readable
-`dispatch_worker` call rendering. The shared ordered-renderer follow-up
-and nonblank runtime source-budget increase to 3,300 lines are prepared
-for v8.1.4 and are not part of published v8.1.3.
+and test checks remain the acceptance boundary. v8.1.4 is published at
+signed tag `v8.1.4`, pointing to
+`1ebd3e25fa378fb098c90c14dc5974cd5090e992`. Tag pipeline `2952720137`
+passed verification and npm publication; npm reports version/latest
+8.1.4 with matching gitHead. The patch improves ordered
+`dispatch_worker` call rendering and raises the nonblank runtime source
+budget to 3,300 lines.
+
+{verified} The literature snippet fix is commit
+`2c5a4da1680bf459117d7ad147b7b2b6c2425131`; GitLab pipeline `2990914083`
+passed `verify` and `pages`. Its regression test creates a temporary
+SQLite fixture and does not require the local `~/lit/_index.db`. The
+tool fix is prepared for patch release 8.1.5; its version-bump commit
+must pass the main pipeline before the release tag is pushed.
 
 {verified} After revising reviewer-response guidance and repairing the
 benchmark fixtures, the five-case opt-in evaluation completed with
@@ -260,15 +266,12 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
-{verified} npm reports current version/latest `8.1.3`, and no local or
-remote `v8.1.4` tag exists. Prepared package metadata and README image
-URLs for `8.1.4`; its changelog entry records the shared ordered worker-
-call renderer follow-up and source-budget increase. This patch improves
-a documented presentation without changing the public interface or
-requiring migration. It is prepared, not published; publication awaits a
-passing regular commit pipeline and an authorized annotated tag. Retain
-this project brief for ongoing accepted constraints; later release
-actions require their own authorization.
+{verified} npm reports current version/latest 8.1.4 with gitHead
+`1ebd3e25fa378fb098c90c14dc5974cd5090e992`; tag pipeline `2952720137`
+passed verification and npm publication. The literature-search snippet
+fix passed main pipeline `2990914083` at commit `2c5a4da`. Patch version
+8.1.5 is prepared, not published; the version-bump commit must pass its
+main pipeline before its signed release tag is pushed.
 
 {unresolved} Model recognition of unfinished authorized work remains
 semantic, not mechanically guaranteed. Exa was not configured as a

@@ -18,7 +18,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Prepared 8.1.4 version metadata after the 8.1.3 renderer-order follow-up; these files record release state but are not semantic approval."
+      "pendingReason": "Prepared 8.1.5 version metadata for the literature-search snippet fix after main pipeline 2990914083 passed; the release is not published."
     },
     {
       "path": "docs/ARCHITECTURE.md",
@@ -50,7 +50,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "README image URLs now target prepared v8.1.4. The patch is not published; review remains pending and no semantic approval is acknowledged."
+      "pendingReason": "README image URLs now target prepared v8.1.5. The patch is not published; review remains pending and no semantic approval is acknowledged."
     },
     {
       "path": "package.json",
@@ -71,7 +71,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "Package metadata is prepared at version 8.1.4; npm latest remains 8.1.3 and no v8.1.4 tag exists. Review remains pending; no semantic approval is acknowledged."
+      "pendingReason": "Package metadata is prepared at version 8.1.5; npm latest is 8.1.4. Review remains pending; no semantic approval is acknowledged."
     },
     {
       "path": "docs/configuration.md",
@@ -196,7 +196,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Prepared 8.1.4 version metadata after the 8.1.3 renderer-order follow-up; these files record release state but are not semantic approval."
+      "pendingReason": "Prepared 8.1.5 version metadata for the literature-search snippet fix after main pipeline 2990914083 passed; the release is not published."
     },
     {
       "path": "skills/code/SKILL.md",

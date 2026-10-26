@@ -5,19 +5,29 @@ npm registry metadata establish publication status and dates; headings
 below record versioned changes without duplicating that live release
 state.
 
-## 8.1.4 (prepared; not published)
+## 8.1.5 (prepared; not published)
 
-Prepared as a patch for the post-v8.1.3 shared worker-call renderer and
-its consistent field ordering. This improves a documented presentation
-without changing the public interface or requiring migration. Raise the
-nonblank runtime source budget from 3,250 to 3,300 lines for this
-change.
+Prepared as a patch for a literature-search failure affecting matched
+records without abstracts. The fix uses matching FTS columns to build
+snippets, preserving discovery for these records without requiring a
+migration.
+
+### Fixed
+
+- Build literature snippets from matching FTS columns, so records
+  without abstracts no longer fail search result formatting.
+
+## 8.1.4
+
+Released at signed tag `v8.1.4`, pointing to commit
+`1ebd3e25fa378fb098c90c14dc5974cd5090e992`. Tag pipeline `2952720137`
+passed verification and npm publication; npm reports version/latest
+8.1.4 with matching gitHead. It includes the shared ordered worker-call
+renderer and raises the nonblank runtime source budget to 3,300 lines.
 
 ### Changed
 
 - Keep the shared ordered worker-call renderer readable and consistent.
-- Build literature snippets from matching FTS columns, so records
-  without abstracts no longer fail search result formatting.
 
 ## 8.1.3
 
