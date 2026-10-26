@@ -16,6 +16,8 @@ change.
 ### Changed
 
 - Keep the shared ordered worker-call renderer readable and consistent.
+- Build literature snippets from matching FTS columns, so records
+  without abstracts no longer fail search result formatting.
 
 ## 8.1.3
 

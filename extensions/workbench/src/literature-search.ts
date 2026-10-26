@@ -22,7 +22,7 @@ const literatureResultSchema = Type.Object({
 });
 const literatureOutputSchema = Type.Object({ results: Type.Array(literatureResultSchema) });
 const query =
-	"SELECT p.filepath AS source_path, p.title, p.item_type, p.creators_json, p.year, p.doi, snippet(papers_fts, 2, '[', ']', ' … ', 32) AS snippet, bm25(papers_fts, 1, 5, 1, 2, 1) AS score FROM papers_fts JOIN papers AS p ON p.id = papers_fts.rowid WHERE papers_fts MATCH ? ORDER BY score LIMIT ?";
+	"SELECT p.filepath AS source_path, p.title, p.item_type, p.creators_json, p.year, p.doi, snippet(papers_fts, -1, '[', ']', ' … ', 32) AS snippet, bm25(papers_fts, 1, 5, 1, 2, 1) AS score FROM papers_fts JOIN papers AS p ON p.id = papers_fts.rowid WHERE papers_fts MATCH ? ORDER BY score LIMIT ?";
 const requiredV7PapersColumns = ["item_type", "creators_json"];
 
 function missingV7PapersColumns(database: DatabaseSync): string[] {

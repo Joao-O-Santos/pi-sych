@@ -154,6 +154,25 @@ test("graded FTS fixture gives title matches priority over weaker metadata match
 	assert.equal(results[0].metadata.title, "retrieval retrieval");
 });
 
+test("literature search returns title snippets when a matched record has no abstract", async (t) => {
+	const root = await project(t),
+		path = join(root, "LITERATURE.sqlite");
+	await database(path, [
+		[
+			"Likert1932.pdf",
+			"A Technique for the Measurement of Attitudes",
+			{ author: [{ given: "Rensis", family: "Likert" }] },
+			1932,
+			null,
+			null,
+			"report",
+		],
+	]);
+	const [result] = searchLiterature(root, "technique AND attitudes");
+	assert.equal(result.metadata.title, "A Technique for the Measurement of Attitudes");
+	assert.match(result.snippet, /\[Attitudes\]/);
+});
+
 test("explicit missing literature database fails without default fallback", async (t) => {
 	const root = await project(t);
 	await database(join(root, ".pi/pi-sych/literature.sqlite"));
