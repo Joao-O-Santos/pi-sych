@@ -192,9 +192,12 @@ budget to 3,300 lines.
 {verified} The literature snippet fix is commit
 `2c5a4da1680bf459117d7ad147b7b2b6c2425131`; GitLab pipeline `2990914083`
 passed `verify` and `pages`. Its regression test creates a temporary
-SQLite fixture and does not require the local `~/lit/_index.db`. The
-tool fix is prepared for patch release 8.1.5; its version-bump commit
-must pass the main pipeline before the release tag is pushed.
+SQLite fixture and does not require the local `~/lit/_index.db`. Release
+8.1.5 is published at signed tag `v8.1.5`, pointing to
+`d37dba44f1d4408ba238a38257179faa2d8b1bbb`. The release pipeline
+`2990959577` passed; npm reports version/latest 8.1.5 and matching
+gitHead. The version-bump commit's main pipeline `2990943291` also
+passed.
 
 {verified} After revising reviewer-response guidance and repairing the
 benchmark fixtures, the five-case opt-in evaluation completed with
@@ -266,12 +269,11 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
-{verified} npm reports current version/latest 8.1.4 with gitHead
-`1ebd3e25fa378fb098c90c14dc5974cd5090e992`; tag pipeline `2952720137`
-passed verification and npm publication. The literature-search snippet
-fix passed main pipeline `2990914083` at commit `2c5a4da`. Patch version
-8.1.5 is prepared, not published; the version-bump commit must pass its
-main pipeline before its signed release tag is pushed.
+{verified} Release 8.1.5 is published at signed tag `v8.1.5`, pointing
+to commit `d37dba44f1d4408ba238a38257179faa2d8b1bbb`. Tag pipeline
+`2990959577` and main pipeline `2990943291` passed; npm reports
+version/latest 8.1.5 with matching gitHead. The tag signature verifies,
+and the working tree is clean.
 
 {unresolved} Model recognition of unfinished authorized work remains
 semantic, not mechanically guaranteed. Exa was not configured as a

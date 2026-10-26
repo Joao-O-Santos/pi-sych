@@ -5,11 +5,14 @@ npm registry metadata establish publication status and dates; headings
 below record versioned changes without duplicating that live release
 state.
 
-## 8.1.5 (prepared; not published)
+## 8.1.5
 
-Prepared as a patch for a literature-search failure affecting matched
-records without abstracts. The fix uses matching FTS columns to build
-snippets, preserving discovery for these records without requiring a
+Released at signed tag `v8.1.5`, pointing to commit
+`d37dba44f1d4408ba238a38257179faa2d8b1bbb`. Tag pipeline `2990959577`
+passed verification and npm publication; npm reports version/latest
+8.1.5 with matching gitHead. This patch fixes a literature-search
+failure affecting matched records without abstracts. It uses matching
+FTS columns to build snippets, preserving discovery without requiring a
 migration.
 
 ### Fixed
