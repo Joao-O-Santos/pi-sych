@@ -4,13 +4,16 @@ Notable user-facing changes to Pi Sych, in reverse version order.
 
 ## Unreleased
 
-- Writing guidance calls for a structural second pass, clearer links
-  between paragraphs, and fewer unnecessary defensive contrasts and
-  hedged endings.
-- Pi 1.5 and newer can show Pi Sych release notes after an update.
-- Update the repository lockfile to Pi 1.5, which includes fixes for
-  vulnerable transitive dependencies, without raising the minimum Pi
-  version.
+## 8.1.6 (prepared; not published)
+
+- Writing guidance calls for a structural second pass, clearer paragraph
+  connections, and fewer unnecessary defensive contrasts and hedged
+  endings.
+- Pi 1.5 and newer can show concise Pi Sych release notes after an
+  update.
+- Update locked Pi dependencies to fixed versions without raising the
+  minimum supported Pi version. Simplify project startup and
+  configuration typing.
 
 ## 8.1.5
 

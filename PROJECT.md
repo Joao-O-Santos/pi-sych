@@ -269,11 +269,17 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
+{verified} Commits `0e1707e`, `3d63020`, and `95593b7` were pushed to
+`main`; pipeline `3018927712` passed both `verify` and `pages` at
+`95593b760c6b3d33b9f2577b68eb0ac802ec1d84` with 97.93% line coverage.
+Prepared patch release 8.1.6 with concise user-facing release notes and
+README image links. The version-bump commit must pass the main pipeline
+before the signed release tag is pushed. It is prepared, not published.
+
 {verified} Release 8.1.5 is published at signed tag `v8.1.5`, pointing
 to commit `d37dba44f1d4408ba238a38257179faa2d8b1bbb`. Tag pipeline
 `2990959577` and main pipeline `2990943291` passed; npm reports
-version/latest 8.1.5 with matching gitHead. The tag signature verifies,
-and the working tree is clean.
+version/latest 8.1.5 with matching gitHead. The tag signature verifies.
 
 {unresolved} Model recognition of unfinished authorized work remains
 semantic, not mechanically guaranteed. Exa was not configured as a
