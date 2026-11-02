@@ -46,7 +46,11 @@ const rejectUnknown = (item: Record<string, unknown>, keys: string[], path: stri
 	if (unknown.length)
 		throw new Error(`Unknown Pi Sych config key at ${path}: ${unknown.join(", ")}`);
 };
-function readConfig(path: string): Record<string, unknown> | undefined {
+type ConfigLayer = Omit<Partial<PiSychConfig>, "version" | "compaction"> & {
+	version: 2;
+	compaction?: Partial<PiSychConfig["compaction"]>;
+};
+function readConfig(path: string): ConfigLayer | undefined {
 	let value: unknown;
 	try {
 		value = JSON.parse(readFileSync(path, "utf8"));
@@ -84,7 +88,7 @@ function readConfig(path: string): Record<string, unknown> | undefined {
 		(typeof item.literatureDatabase !== "string" || !item.literatureDatabase.trim())
 	)
 		throw new Error(`Pi Sych config literatureDatabase must be a non-empty path at ${path}`);
-	return item;
+	return item as unknown as ConfigLayer;
 }
 export function loadPiSychConfig(options: ConfigDirectoryOptions = {}): PiSychConfig {
 	const globalDirectory = options.configDirectory ?? resolve(globalConfigRoot(options), "pi-sych");
@@ -96,11 +100,10 @@ export function loadPiSychConfig(options: ConfigDirectoryOptions = {}): PiSychCo
 		project = projectPath ? readConfig(projectPath) : undefined;
 	const compaction = {
 		...DEFAULT_CONFIG.compaction,
-		...(global?.compaction as object | undefined),
-		...(project?.compaction as object | undefined),
-	} as PiSychConfig["compaction"];
-	const completionReassessment = (project?.completionReassessment ??
-		global?.completionReassessment) as boolean | undefined;
+		...global?.compaction,
+		...project?.compaction,
+	};
+	const completionReassessment = project?.completionReassessment ?? global?.completionReassessment;
 	const configured = project?.literatureDatabase ?? global?.literatureDatabase;
 	const literatureBase =
 		project?.literatureDatabase !== undefined && options.projectRoot
@@ -112,9 +115,9 @@ export function loadPiSychConfig(options: ConfigDirectoryOptions = {}): PiSychCo
 		completionReassessment: completionReassessment ?? DEFAULT_CONFIG.completionReassessment,
 		...(configured !== undefined
 			? {
-					literatureDatabase: isAbsolute(configured as string)
-						? (configured as string)
-						: resolve(literatureBase, configured as string),
+					literatureDatabase: isAbsolute(configured)
+						? configured
+						: resolve(literatureBase, configured),
 				}
 			: {}),
 	};

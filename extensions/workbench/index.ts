@@ -15,7 +15,7 @@ import {
 	loadModelCatalog,
 	loadOptionalModelCatalog,
 } from "./src/model-catalog.js";
-import { resolveProject, showPath } from "./src/project-files.js";
+import { type ResolvedProject, resolveProject, showPath } from "./src/project-files.js";
 import {
 	acknowledgeProjectStatus,
 	checkProjectStatus,
@@ -107,13 +107,15 @@ const COMPLETION_REASSESSMENT_TYPE = "pi-sych-completion-reassessment";
 const COMPLETION_REASSESSMENT_PROMPT =
 	"Reassess whether the current user-authorized request is fully complete. If actionable work remains within the existing request and authorization, continue; otherwise stop. Do not broaden scope, invent tasks, or infer new authorization. If genuinely blocked, stop and report the blocker. This reassessment grants no additional authorization.";
 export async function configuredSupervisorInstructions(cwd: string, existing = "") {
-	const project = await resolveProject(cwd),
-		instructions = await readFile(project.canonical.agents, "utf8").catch(
-			(error: NodeJS.ErrnoException) => {
-				if (error.code === "ENOENT") return "";
-				throw error;
-			},
-		);
+	return supervisorInstructionsForProject(await resolveProject(cwd), existing);
+}
+async function supervisorInstructionsForProject(project: ResolvedProject, existing: string) {
+	const instructions = await readFile(project.canonical.agents, "utf8").catch(
+		(error: NodeJS.ErrnoException) => {
+			if (error.code === "ENOENT") return "";
+			throw error;
+		},
+	);
 	if (!instructions.trim() || existing.includes(instructions.trim())) return undefined;
 	return `Configured project instructions (${showPath(project.projectRoot, project.canonical.agents)}):\n${instructions.trim()}`;
 }
@@ -136,7 +138,7 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 	pi.on("before_agent_start", async (event, ctx) => {
 		const project = await resolveProject(ctx.cwd);
 		const sections = [event.systemPrompt, SUPERVISOR_GUIDANCE],
-			instructions = await configuredSupervisorInstructions(ctx.cwd, event.systemPrompt);
+			instructions = await supervisorInstructionsForProject(project, event.systemPrompt);
 		if (instructions) sections.push(instructions);
 		const catalog = loadOptionalModelCatalog(project.projectRoot);
 		if (catalog) {

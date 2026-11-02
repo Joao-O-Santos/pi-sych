@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
-import { chmod, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { chmod, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { delimiter, join } from "node:path";
 import test from "node:test";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import workbench, { formatDispatchWorkerOutcome } from "../../.test-build/workbench/index.js";
@@ -258,6 +258,68 @@ test("workbench wires status, worker, compaction, and one-shot completion reasse
 		}),
 		"read path=src/a.ts offset=20 limit=10",
 	);
+});
+
+test("supervisor startup resolves the project once and uses its configured instructions", {
+	skip: process.platform === "win32",
+}, async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "pi-sych-startup-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const bin = join(root, "bin"),
+		log = join(root, "git-log");
+	await mkdir(bin);
+	await writeFile(
+		join(bin, "git"),
+		`#!/bin/sh\necho call >> "$GIT_LOG"\nprintf '%s\\n' "$PROJECT_ROOT"\n`,
+	);
+	await chmod(join(bin, "git"), 0o755);
+	await writeFile(
+		join(root, "SYNC.json"),
+		JSON.stringify({
+			version: 2,
+			confirmedAt: "now",
+			artifacts: [],
+			canonical: { agents: "rules.md" },
+		}),
+	);
+	await writeFile(join(root, "rules.md"), "  Local rule.\n");
+	const previous = {
+		cwd: process.cwd(),
+		path: process.env.PATH,
+		agent: process.env.PI_CODING_AGENT_DIR,
+		log: process.env.GIT_LOG,
+		root: process.env.PROJECT_ROOT,
+	};
+	process.chdir(root);
+	process.env.PATH = `${bin}${delimiter}${previous.path}`;
+	process.env.PI_CODING_AGENT_DIR = join(root, "agent");
+	process.env.GIT_LOG = log;
+	process.env.PROJECT_ROOT = root;
+	t.after(() => {
+		process.chdir(previous.cwd);
+		for (const [key, value] of Object.entries({
+			PATH: previous.path,
+			PI_CODING_AGENT_DIR: previous.agent,
+			GIT_LOG: previous.log,
+			PROJECT_ROOT: previous.root,
+		})) {
+			if (value === undefined) delete process.env[key];
+			else process.env[key] = value;
+		}
+	});
+	const events = new Map();
+	await workbench({
+		on: (name, handler) => events.set(name, handler),
+		registerTool() {},
+		registerCommand() {},
+	});
+	await writeFile(log, "");
+	const start = events.get("before_agent_start");
+	const prompt = await start({ systemPrompt: "system" }, { cwd: root });
+	assert.match(prompt.systemPrompt, /Configured project instructions \(rules\.md\):\nLocal rule\./);
+	assert.equal(await readFile(log, "utf8"), "call\n");
+	const existing = await start({ systemPrompt: "Local rule." }, { cwd: root });
+	assert.doesNotMatch(existing.systemPrompt, /Configured project instructions/);
 });
 
 test("workbench dispatches through Pi and reports command status failures", async (t) => {
