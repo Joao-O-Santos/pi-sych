@@ -15,7 +15,7 @@ import {
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
-import { StringEnum } from "@earendil-works/pi-ai";
+import { StringEnum as piStringEnum } from "@earendil-works/pi-ai";
 import { type SessionEntry, SessionManager } from "@earendil-works/pi-coding-agent";
 import { type Static, Type } from "typebox";
 import { piSkillDirectory } from "./config-directory.js";
@@ -29,6 +29,10 @@ import {
 	showPath,
 } from "./project-files.js";
 import { nonEmptyString, stringArray } from "./validation.js";
+
+// Pi 1.5 returns a generic schema rather than a TypeBox static type.
+const StringEnum = <T extends readonly string[]>(values: T, options: { description: string }) =>
+	Type.Unsafe<T[number]>(piStringEnum(values, options));
 export const WORKER_MODES = ["read-only", "edit", "full-host"] as const;
 export type WorkerMode = (typeof WORKER_MODES)[number];
 export const CONTEXT_MODES = ["clean", "trajectory"] as const;

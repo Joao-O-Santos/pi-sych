@@ -104,6 +104,7 @@
       "fingerprint": "sha256:d1223de5b2541240b7e812c4ffdf0fe5ab872ca18fa628b243989a68802b5b2e",
       "status": "needs-review",
       "role": "documentation",
+      "pendingReason": "Pi 1.5 repository checks and targeted Pi 0.99.2 compatibility checks were recorded; existing semantic review remains pending.",
       "authoritativeFor": [
         "compatibility"
       ],

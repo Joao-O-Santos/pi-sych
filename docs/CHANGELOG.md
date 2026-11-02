@@ -8,6 +8,9 @@ Notable user-facing changes to Pi Sych, in reverse version order.
   between paragraphs, and fewer unnecessary defensive contrasts and
   hedged endings.
 - Pi 1.5 and newer can show Pi Sych release notes after an update.
+- Update the repository lockfile to Pi 1.5, which includes fixes for
+  vulnerable transitive dependencies, without raising the minimum Pi
+  version.
 
 ## 8.1.5
 

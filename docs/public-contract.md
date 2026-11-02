@@ -5,7 +5,8 @@ source is not automatically public API. The initial compatibility
 baseline is the documented `4.0.6` behavior; where that baseline is
 ambiguous, preserve an existing documented workflow rather than
 retroactively calling it internal. The v8 package targets Pi 0.99.2 or
-newer; repository checks pass against Pi 0.99.2 and 1.0.0.
+newer; repository checks pass against Pi 1.5.0. Targeted type,
+worker-engine, and package-startup checks also pass against Pi 0.99.2.
 
 ## Surface classification
 
