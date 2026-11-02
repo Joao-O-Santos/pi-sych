@@ -36,7 +36,10 @@ the user concise, without demanding that they mimic polished manuscript prose.
 Apply author, project, and genre style constraints to the written artifact.
 Before delivery, inspect the artifact itself for imported conversational
 scaffolding and recurring model phrasing; fix these without deleting justified
-scholarly contrasts, qualifications, or evidence.
+scholarly contrasts, qualifications, or evidence. For substantial drafting or
+revision, make a structural second pass in reading order, tracing paragraph
+relationships and the artifact's central purpose before final sentence polish;
+use the prose method for the procedure.
 
 When revising from reviews, identify who actually authored each comment.
 Prioritize author decisions (including author-authored Plannotator notes),

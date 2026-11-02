@@ -1,1052 +1,405 @@
 # Changelog
 
-All notable changes to Pi Sych are documented here. Signed Git tags and
-npm registry metadata establish publication status and dates; headings
-below record versioned changes without duplicating that live release
-state.
+Notable user-facing changes to Pi Sych, in reverse version order.
+
+## Unreleased
+
+- Writing guidance calls for a structural second pass, clearer links
+  between paragraphs, and fewer unnecessary defensive contrasts and
+  hedged endings.
+- Pi 1.5 and newer can show Pi Sych release notes after an update.
 
 ## 8.1.5
 
-Released at signed tag `v8.1.5`, pointing to commit
-`d37dba44f1d4408ba238a38257179faa2d8b1bbb`. Tag pipeline `2990959577`
-passed verification and npm publication; npm reports version/latest
-8.1.5 with matching gitHead. This patch fixes a literature-search
-failure affecting matched records without abstracts. It uses matching
-FTS columns to build snippets, preserving discovery without requiring a
-migration.
-
-### Fixed
-
-- Build literature snippets from matching FTS columns, so records
-  without abstracts no longer fail search result formatting.
+- Literature search formats records without abstracts using snippets
+  from matching fields. No migration is required.
 
 ## 8.1.4
 
-Released at signed tag `v8.1.4`, pointing to commit
-`1ebd3e25fa378fb098c90c14dc5974cd5090e992`. Tag pipeline `2952720137`
-passed verification and npm publication; npm reports version/latest
-8.1.4 with matching gitHead. It includes the shared ordered worker-call
-renderer and raises the nonblank runtime source budget to 3,300 lines.
-
-### Changed
-
-- Keep the shared ordered worker-call renderer readable and consistent.
+- Worker calls use a shared renderer for consistent, readable details.
 
 ## 8.1.3
 
-Tagged and published as a patch release. Tag pipeline `2952106494`
-passed verification and npm publication; npm reports `latest` and
-version `8.1.3` with gitHead `1b227fb809c54f0d27393cf46e1d5dbf997a4d06`,
-which is also the tag target. It improves the readability of collapsed
-and expanded `dispatch_worker` calls without changing dispatch behavior.
-The shared-renderer follow-up in Unreleased is a post-tag source change;
-it is not included in published v8.1.3.
-
-### Changed
-
-- Include `context: clean|trajectory` in collapsed worker calls and show
-  expanded arguments as readable labeled fields with indented nested
-  context, skills, and worker instructions.
+- Collapsed worker calls show the context mode; expanded calls display
+  arguments as readable labeled fields.
 
 ## 8.1.2
 
-Tagged and published as a patch release. It adds supervisor model
-reporting and refines worker summaries and review-lens cues without
-requiring migration.
-
-### Added
-
-- Report the current supervisor model in `project_status` and
-  `/pi-sych-status` checks: catalog role, optional `cost` and `notes`,
-  or a non-error unmatched/unavailable indication. The lookup runs only
-  on request; it neither monitors model changes nor exposes the raw
-  model ID.
-
-### Changed
-
-- Separate worker dispatch summary `mode` and `tools` fields, removing
-  the duplicate `permissions` label.
-- Shape review provenance lines around the likely selection bias of the
-  requested lens, especially for worker and packaged-prompt reviews.
-
-### Tests
-
-- Cover separate dispatch `mode` and `tools` labels and ensure the
-  duplicate permissions label is absent.
+- `project_status` and `/pi-sych-status` report the supervisor model's
+  catalog role on request, when available.
+- Worker summaries distinguish mode from tools, and review provenance
+  describes the likely bias of the selected lens.
 
 ## 8.1.1
 
-Tagged and published as a patch release. It improves human-readable
-`dispatch_worker` call and activity rendering, adds project
-delegation-pattern guidance, and requires no migration.
-
-### Changed
-
-- Render collapsed worker calls with prioritized task, worker guidance,
-  mode/tools, and model details; show labeled readable fields when
-  expanded rather than raw JSON.
-- Include available tool arguments in bounded worker activity lines.
-- Document optional planner/builder, pre-walk, orchestrator,
-  exploration, and review handoffs without imposing fixed workflows.
-
-### Tests
-
-- Cover readable call summaries, expanded details, and worker activity
-  arguments.
+- Worker calls show prioritized details when collapsed and labeled
+  fields when expanded; activity lines include available tool arguments.
+- Document optional delegation and review handoffs.
 
 ## 8.1.0
 
-Tagged `v8.1.0` and published to npm; registry metadata reports version
-and `latest` as `8.1.0`.
-
-### Changed
-
-- Raise the nonblank runtime source budget to 3,250 lines to accommodate
-  the readable compaction recovery implementation.
-- Recover compaction summaries despite malformed optional entries or
-  invalid promotions when required memory remains usable. Inbox failures
-  no longer discard valid summaries; required unusable memory retains
-  native fallback, with canonical writes and decision provenance
-  unchanged.
-
-### Added
-
-- Add optional `dispatch_worker.workerInstructions`, loaded as a
-  launch-scoped Pi-native `AGENTS.override.md` in a private temporary
-  agent directory. Omission preserves the prior worker agent directory
-  and behavior; injected guidance does not mutate shared worker
-  configuration or the project.
-
-### Documentation
-
-- Expand the code tour with a source map, the seven-skill routing
-  hierarchy, specialist modules, shared methods, and the distinction
-  between review provenance and worker execution limitations.
-- Clarify that co-author and human peer-review feedback is evaluated
-  differently from independent or adversarial LLM reviews. A genuine
-  material error requires attention regardless of who identifies it.
-- Explain the brief, separate review-scope footer required by the review
-  skill for LLM-generated reviews, including requests made without
-  packaged review prompts.
-- Align README, architecture, review workflow, prompt guidance, and
-  developer maintenance instructions with the implemented boundaries.
+- Add optional `dispatch_worker.workerInstructions` as launch-scoped
+  worker guidance. Omitting it preserves the existing worker setup.
+- Recover usable compaction summaries despite malformed optional
+  entries, invalid promotions, or inbox failures; unusable required
+  memory still triggers native fallback.
+- Expand skill-routing, code-tour, and review guidance, including how to
+  evaluate feedback and disclose LLM review scope.
 
 ## 8.0.1
 
-### Fixed
-
-- Honor an explicit worker JSON `agent_settled.aborted: true` on normal
-  process exit: report cancellation rather than success, while still
-  observing project changes. Preserve parent cancellation, timeout,
-  process-failure handling, and compatibility with older Pi versions
-  that omit the flag.
-- Preserve structurally valid reports from interrupted or failed workers
-  separately from successful results, warning that claimed status,
-  summary, and files may be incomplete or inaccurate. Keep the primary
-  error and independently observed changes visible; do not require
-  claimed files to still exist when recovering a provisional report.
+- Report explicit worker aborts as cancellations, including on normal
+  process exit, while remaining compatible with older Pi versions.
+- Preserve valid reports from failed or interrupted workers as
+  provisional, alongside the primary error and independently observed
+  changes.
 
 ## 8.0.0
 
-### Breaking
+- **Breaking:** Replace v7 settings with strict version 2 global/project
+  layered configuration. The default proactive compaction threshold is
+  150,000 tokens and the worker catalogue is `worker-models.json`.
+- **Breaking:** Remove MCPorter, `/pi-sych-mcp`, and PEW-PEW
+  inheritance. Remote workers use Pi-native MCP and codemode only when
+  requested; configure servers and authentication with native Pi
+  commands. See the [v7-to-v8 migration guide](migration-v7-to-v8.md).
+- Require Pi 0.99.2 or newer and delegate transport and credentials to
+  Pi.
+- Add opt-in, one-shot completion reassessment at Pi's safe settle
+  boundary; it is off by default.
+- Improve bounded task-centred compaction and native fallback, and
+  provide validated structured literature results with bounded snippets.
+  Add OpenAlex guidance for metadata and graph discovery.
+- Improve worker exit diagnostics and process cleanup on timeout or
+  cancellation; reject overlapping acknowledgement transactions.
 
-- Replace v7 Pi Sych config keys with strict version 2 global/project
-  layered settings for custom compaction and local literature. The
-  default proactive threshold is 150,000 tokens; the worker catalogue is
-  `worker-models.json`.
-- Remove MCPorter integration, `/pi-sych-mcp`, and PEW-PEW inheritance.
-  Remote workers load Pi-native MCP and codemode only on explicit
-  request. Configure their own MCP servers and authentication with
-  native Pi commands.
-
-### Added
-
-- Add an opt-in, one-shot hidden completion reassessment at Pi's safe
-  `agent_before_settle` boundary; it preserves existing authorization
-  and defaults off.
-
-### Changed
-
-- Delegate transport and provider credentials to Pi 0.99.2, retain
-  bounded task-centred compaction with native fallback, and use
-  model-only exposure for dispatch and submission tools.
-- Provide validated structured and readable local literature results
-  with bounded snippets, while preserving read-only discovery semantics.
-- Add routed OpenAlex MCP guidance for entity resolution, query/filter
-  composition, pagination, citation graphs, and discovery limits;
-  recommend it as a first-choice metadata/graph capability when
-  available and useful.
-- Reduce duplicated runtime and test code and document capability-first
-  composition with separately installed tools. See
-  [migration](migration-v7-to-v8.md).
-
-### Fixed
-
-- Keep compaction snapshot decoding and prompt serialization within
-  UTF-8 byte bounds, clip manual focus instructions, and preserve native
-  fallback when manual failure notifications also fail.
-- Preserve signal-exit diagnostics and prevent snapshot hashing errors
-  from silently switching to non-Git traversal. Simplify bounded
-  serialization, remove unused literature capability reporting,
-  guarantee code-reference compiler cleanup, and reuse parsed site
-  fragment IDs.
-- Clean up inherited worker output pipes after a ten-second drain grace,
-  preserve normal-exit success, and terminate POSIX worker process
-  groups on timeout/cancellation with a ten-second graceful shutdown
-  window.
-- Reject overlapping acknowledgement transactions with an exclusive lock
-  rather than silently overwriting another acknowledgement.
-- Enforce the Pi 0.99.2 minimum in the coding-agent peer dependency.
-
-## v7.0.1
-
-### Changed
+## 7.0.1
 
 - Clarify that reviewer recommendations are proposals to assess, not
-  accepted project decisions or evidence; preserve supported claims
-  while adding warranted scope limits, and surface genuine conflicts.
-
-### Fixed
-
-- Complete the thesis-preservation benchmark manifests and objective
-  checks.
-- Extend the bounded npm registry verification window to accommodate
-  publication propagation delays.
-
-## v7.0.0
-
-### Breaking
-
-- Replace scalar `first_author` metadata with producer-supplied
-  `item_type` and ordered, role-aware `creators_json` metadata in the
-  supported local literature schema.
-- Return nullable `itemType` and nullable or structured `creators` from
-  `literature_search`; remove `metadata.authors`.
-
-### Added
-
-- Add the `automation` umbrella skill and strengthen the seven-skill
-  routing architecture, with shared methods and thin review prompts.
-- Add derived supervisor capability reporting and settled-turn
-  compaction with bounded observable context and native fallback. Bound
-  source reads, message serialization, and project-status diagnostics
-  before model input; carry missing-core and dependency-cycle status
-  through the continuation. Create the proposal inbox only when valid
-  unreviewed proposals are actually returned.
-- Add writing defaults and strengthen review guidance for artifact
-  self-containment, context leakage, prose flow, cumulative style
-  patterns, and calibrated uncertainty.
-- Add v7 literature migration guidance and early detection of
-  incompatible database schemas.
-- Report worker-reported files separately from mechanically observed
-  project changes, including changes left by failed or cancelled
-  workers.
-
-### Changed
-
-- Clarify worker tool mode separately from context mode, require
-  explicit project/personal scope before `agents` promotion without
-  redundant questions, and make Plannotator degrade gracefully when
-  optional dependencies or a compatible adapter are unavailable.
-- Refresh the workflow, architecture, context, and skills diagrams; show
-  them in the package README and add paste-ready instructions for future
-  updates.
-- Raise the nonblank runtime source budget to 3,200 lines, leaving
-  headroom above the current approximately 3,000-line runtime.
-
-### Compatibility and migration
-
-This major release changes both the supported literature database schema
-and the public search result. Users of local literature search must
-rebuild or migrate v6 databases and update result consumers. There is no
-automatic conversion from `first_author`, which may contain lossy
-citation stems. Reconstruct creators from source documents or reliable
-structured records where possible; leave them unknown when they cannot
-be recovered. See the [v7 literature migration
-guide](literature-database-v7.md). Pi Sych does not infer creators,
-validate the CSL vocabulary, format citations, or choose roles for a
-citation style. Users who do not use local literature search have no
-literature-data migration.
-
-## v6.5.0
-
-### Added
-
-- Permit explicit `dispatch_worker.contextFiles` entries to name any
-  readable absolute path. Relative context paths remain
-  project-relative; paths inside the project normalize to relative form,
-  while external paths remain absolute.
-
-### Compatibility
-
-This minor release adds external absolute files as optional explicit
-worker context without changing existing project-relative context paths,
-worker result-file validation, stored state, defaults, or tool modes.
-Worker-reported files remain project-relative.
-
-## v6.4.0 (2026-09-15)
-
-### Added
-
-- Add optional `dispatch_worker.contextMode`: `clean` remains the
-  default, while `trajectory` gives a worker a temporary native branch
-  of the persisted supervisor context ending immediately before the
-  exact dispatching assistant entry.
-- Reuse an already active, provenance-validated PEW-PEW `web` tool for
-  explicitly requested remote-research workers without discovering or
-  overriding disabled packages.
+  accepted decisions or evidence; preserve supported claims and surface
+  genuine conflicts.
+
+## 7.0.0
+
+- **Breaking:** Replace literature `first_author` with `item_type` and
+  ordered, role-aware `creators_json`. `literature_search` returns
+  nullable `itemType` and nullable or structured `creators` instead of
+  `metadata.authors`.
+- Local literature users must rebuild or migrate v6 databases and update
+  result consumers. There is no automatic conversion from
+  `first_author`; reconstruct creators from reliable sources where
+  possible and leave them unknown otherwise. See the [migration
+  guide](literature-database-v7.md). Users without local literature
+  search have no literature-data migration.
+- Add the `automation` skill, writing defaults, and stronger routed
+  skill and review guidance.
+- Add supervisor capability reporting and settled-turn compaction with
+  bounded context and native fallback.
+- Report worker-claimed files separately from observed project changes,
+  including changes after failure or cancellation.
+- Distinguish worker tool mode from context mode, require explicit scope
+  for `agents` promotion, and make optional Plannotator integration
+  degrade gracefully.
+
+## 6.5.0
+
+- Allow explicit `dispatch_worker.contextFiles` to include readable
+  absolute paths outside the project. Relative paths and worker-reported
+  files remain project-relative; existing requests need no migration.
+
+## 6.4.0
+
+- Add optional `dispatch_worker.contextMode: trajectory` to branch from
+  the persisted supervisor context; `clean` remains the default.
+  Trajectory dispatch fails if its exact boundary is unavailable.
+- Explicit remote-research workers can reuse an active,
+  provenance-validated PEW-PEW `web` tool; invalid or ambiguous
+  provenance can fail dispatch.
+- Show context mode in worker calls and broaden the `code` skill
+  description. Context mode does not change research access or host
+  permissions.
+
+## 6.3.2
+
+- Add the Pi Sych logo to packaged documentation and the package
+  gallery.
+
+## 6.3.1
+
+- Improve the README and workflow overview, clarify worker bootstrap and
+  Plannotator's `.md`/`.mdx` annotation boundary, and fix documentation
+  links.
+
+## 6.3.0
+
+- Show bounded live worker tool activity and a compact task, model role,
+  and timeout summary in `dispatch_worker` calls.
+- Reject whitespace-only configured paths.
+- Prereleases `6.3.0-rc.0` and `6.3.0-rc.1` introduced live activity and
+  the collapsed call summary respectively. `6.3.0-rc.0` also accepted
+  two-part Pandoc versions such as `3.11`.
+
+## 6.2.0
+
+- Show complete `dispatch_worker` arguments when a tool call is
+  expanded.
+
+## 6.1.4
+
+- Organize public documentation and licenses under `docs/`, benchmarks
+  under `tests/`, site sources under `site/`, and visible defaults under
+  `templates/`.
+
+## 6.1.3
 
-### Changed
-
-- Show effective context mode in collapsed worker calls and broaden the
-  `code` skill description to cover automation, CLI and developer
-  tooling, and integration work.
-- Retain worker-process termination ownership across repeated child
-  errors until process close is observed.
-- Raise the nonblank runtime source cap to 2,500 for the approved native
-  trajectory and active PEW-PEW integration boundaries.
-
-### Compatibility
-
-This minor release adds optional trajectory context while preserving the
-clean default, result protocol, stored project state, model selection,
-and worker tool-mode definitions. Trajectory mode fails rather than
-falling back when its exact persisted boundary is unavailable. Existing
-requests require no schema migration. Existing `remoteResearch: true`
-calls may now also expose an active, provenance-validated PEW-PEW `web`
-tool; invalid or ambiguous active-tool provenance can fail dispatch.
-Context mode itself does not change research access or host permissions.
-
-## v6.3.2
-
-### Changed
-
-- Add the Pi Sych logo to the packaged documentation and declare it as
-  the Pi package gallery image through the `pi.image` manifest field.
-  Include the image in packed-install coverage and the generated Pages
-  site.
-
-### Compatibility
-
-This patch updates packaged documentation and package gallery metadata.
-It changes no runtime behavior, supported interface, stored state, or
-default side effect and requires no migration.
-
-## v6.3.1
-
-### Changed
-
-- Strengthen README positioning and move Quick start earlier; add a
-  simpler primary workflow overview for general audiences while
-  retaining the detailed review diagram; clarify worker bootstrap; fix
-  source and Pages links; and document the actual `.md`/`.mdx`
-  Plannotator annotation boundary.
-
-### Compatibility
-
-This patch updates the **Packaged public documentation** row of the
-public contract. It changes no runtime behavior or supported interface,
-stored state, or default side effect and requires no migration.
-
-## v6.3.0
-
-### Added
-
-- Project a bounded live list of selected worker tool starts to an
-  active `dispatch_worker` call without storing it or altering its
-  terminal result protocol.
-
-### Changed
-
-- Show a compact task summary, requested model role (or catalog
-  default), and effective timeout on collapsed `dispatch_worker` calls.
-- Use Node 26 recursive directory reads, module path properties, and
-  explicit SQLite resource management to remove compatibility
-  boilerplate and manual cleanup.
-- Remove duplicate MCPorter extension resolution and simplify collapsed
-  worker-call rendering without changing its output.
-
-### Fixed
-
-- Keep benchmark timeouts terminal across graceful exits and child
-  errors, and clear their termination timers deterministically.
-- Require benchmark fixture manifests to cover every copied regular file
-  while retaining recursive symlink rejection.
-- Reject whitespace-only configured paths before filesystem resolution.
-
-### Compatibility
-
-- This minor release adds an optional bounded live-activity projection
-  to `dispatch_worker` while preserving its schema, terminal result
-  protocol, stored state, defaults, and material effects. The remaining
-  corrections and internal simplifications require no migration.
-
-## v6.3.0-rc.1
-
-### Changed
-
-- Show a compact task summary, requested model role (or catalog
-  default), and effective timeout on collapsed `dispatch_worker` calls.
-
-### Compatibility
-
-- This prerelease refines `dispatch_worker` presentation only; its
-  schema, stored state, defaults, and material effects are unchanged, so
-  users need no migration.
-
-## v6.3.0-rc.0
-
-### Added
-
-- Project a bounded live list of selected worker tool starts to an
-  active `dispatch_worker` call without storing it or altering its
-  terminal result protocol.
-
-### Fixed
-
-- Accept Pandoc's numeric two-part release form, such as `3.11`, in both
-  the local version check and CI installer.
-- Make detached Plannotator feedback tests wait for persisted feedback
-  rather than assuming one event-loop turn completes file I/O.
-
-### Compatibility
-
-- This minor prerelease adds live activity to the public
-  `dispatch_worker` use without changing its schema, stored state,
-  defaults, or material effects; existing users need no migration.
-
-## v6.2.0
-
-### Added
-
-- Show the complete submitted `dispatch_worker` arguments when a Pi tool
-  call is expanded, while keeping the collapsed call compact.
-
-### Compatibility
-
-- This minor release adds inspection to the public `dispatch_worker` use
-  without changing its schema, stored state, defaults, or material
-  effects; existing users need no migration.
-
-## v6.1.4
-
-### Changed
-
-- Group public documentation and licenses under `docs/`, benchmark
-  material and fixtures under `tests/`, site sources under `site/`, and
-  visible defaults under `templates/`; update package, build, tests,
-  links, and synchronization paths accordingly.
-- Remove the repository's optional task-local `EVIDENCE.md`.
-- Include all package scripts required by the documented verification
-  commands.
-
-## v6.1.3
-
-### Fixed
-
-- Correct the historical attribution of compaction scalar-array
-  normalization to v6.0.10.
 - Declare the literature query's non-empty constraint in its tool
   schema.
 
-### Changed
+## 6.1.2
 
-- Count nonblank runtime source lines so readability spacing does not
-  consume the source budget, and restore useful separation between
-  declarations.
-- Verify the exact published npm version and `latest` dist-tag with
-  bounded retries in the release job.
+- Maintenance-only release.
 
-## v6.1.2
+## 6.1.1
 
-### Changed
+- Forward the resolved Pi Sych configuration directory to isolated
+  workers, enabling research workers to use configured external
+  literature databases.
+- Clear worker timeout and forced-kill timers after child process
+  errors.
 
-- Keep current-release project state release-neutral and direct readers
-  to signed tags and npm registry metadata for the current identifier.
-- Clarify historical release evidence and correct older changelog
-  formatting without changing runtime behavior.
+## 6.1.0
 
-## v6.1.1 - 2026-08-10
+- Add worker-only `literature_search` for the `research` skill, with
+  local SQLite FTS5 schema and `literatureDatabase` configuration.
+- Clip compaction snapshots at valid UTF-8 boundaries and require
+  promotion proposals to be single-line inbox entries.
+- Document worker requests and results, lifecycle precedence, and the
+  custom compaction model seam.
 
-### Fixed
+## 6.0.10
 
-- Forward the resolved supervisor Pi Sych configuration directory to
-  isolated worker runtime lookup without replacing the worker's own Pi
-  directory. This makes configured external literature databases usable
-  by dispatched research workers.
-- Clear worker timeout and forced-kill timers when a child emits `error`
-  without a later `close` event.
+- Accept scalar strings as one-element arrays at the compaction
+  model-output boundary.
 
-### Changed
+## 6.0.9
 
-- Make native Node coverage a verification gate at 90% lines, branches,
-  and functions, and record its line percentage in GitLab.
-- Declare worker-only `literature_search`, `literatureDatabase`, and the
-  supported `papers`/`papers_fts` schema in the public contract.
-- Complete patch-release bookkeeping and add systematic
-  temporary-fixture cleanup in deterministic tests.
+- Restore strict shared string and string-array validation.
 
-## v6.1.0 - 2026-08-08
+## 6.0.8
 
-### Added
+- Maintenance-only release.
 
-- Add worker-only `literature_search` for dispatches that select the
-  `research` skill, with documented local SQLite FTS5 schema, database
-  resolution, and `literatureDatabase` configuration.
-- Document the worker request/result protocol, lifecycle precedence,
-  custom compaction model seam, deterministic test posture, code tour,
-  and live generated code reference.
+## 6.0.7
 
-### Changed
+- Allow lenient string and string-array coercion in shared helpers.
 
-- Simplify diagnostic coverage to the Node built-in coverage command and
-  add meaningful path, status, acknowledgement, worker-process,
-  compaction, and literature-tool boundary coverage.
-- Clip compaction snapshots only at valid UTF-8 boundaries and require
-  promotion proposals to remain single-line inbox entries.
-- Keep worker package-load registration deterministic: the worker
-  surface is exactly `submit_artifact` and `literature_search`.
+## 6.0.6
 
-## v6.0.10 - 2026-08-08
+- Clean up worker temporary directories across failure and termination
+  paths, preserve the first timeout or cancellation decision, and report
+  spawn errors.
 
-### Fixed
+## 6.0.5
 
-- Add compaction-specific `scalarStringArray` so scalar strings become
-  one-element arrays at the LLM output boundary.
+- Maintenance-only release.
 
-## v6.0.9 - 2026-08-08
+## 6.0.4
 
-### Fixed
+- Maintenance-only release.
 
-- Restore strict `nonEmptyString` / `stringArray` validation in shared
-  helpers.
+## 6.0.3
 
-## v6.0.8 - 2026-08-08
+- Maintenance-only release.
 
-### Fixed
+## 6.0.2
 
-- Version housekeeping.
+- Fix architecture diagram rendering and project-status reporting of
+  observation errors and missing-artifact dependency impact.
+- Fix active untracked compaction file validation, Windows root-relative
+  configuration paths, package-root resolution, and atomic write
+  ordering.
 
-## v6.0.7 - 2026-08-08
+## 6.0.0
 
-### Fixed
-
-- Lenient `stringArray` coercion (string-to-array, non-string item
-  coercion) and lenient `nonEmptyString` coercion.
-
-## v6.0.6 - 2026-08-08
-
-### Fixed
-
-- Worker lifecycle: `mkdtempDisposable()` now properly uses
-  `await using` so temporary directories are cleaned up on all code
-  paths (timeout, cancellation, spawn failure, signal termination,
-  non-zero exit).
-- Restore "first stop wins" semantics in `launchPiWorker()`:
-  cancellation or timeout classification no longer overwrites an earlier
-  decision.
-- Retain and clear forced SIGKILL timer on normal exit; remove abort
-  listener when process completes.
-- Preserve actual spawn error message instead of generic "spawn error".
-- Add four lifecycle regression cases: cancellation before timeout,
-  timeout before abort, SIGTERM-resistant process reaching SIGKILL,
-  failed dispatch leaving no temporary runtime directory.
-- Extract compaction file filtering into exported
-  `filterWorkingMemoryFiles()` and exercise production code in
-  `compact()` regression path (no algorithm duplication).
-- Remove the hardcoded version from the integration test.
-
-## v6.0.5 - 2026-08-08
-
-### Fixed
-
-- Simplify config test back to `assert.throws()` pattern.
-- Remove architecture-image generator script
-  (`scripts/generate-architecture-images.mjs`) and `PLAN.md` (completed
-  transient state).
-- Source budget: 1,975 actual lines (2,000 rounded).
-
-## v6.0.4 - 2026-08-07
-
-### Fixed
-
-- Fix Biome lint errors preventing CI verification:
-  - Use template literal for stderr concatenation in `launchPiWorker`
-  - Remove unused `rm` import from `worker-engine.ts`
-  - Remove unused `midX` variable from
-    `generate-architecture-images.mjs`
-  - Rename `escape` function to `escapeHtml` to avoid shadowing global
-    property
-
-## v6.0.3 - 2026-08-07
-
-### Fixed
-
-- Update integration test version expectation from 6.0.2 to 6.0.3
-
-## v6.0.2 - 2026-08-07
-
-### Fixed
-
-- Regenerate the four architecture PNGs with proper box widths and
-  line-wrapped text; the v6.0.0 and v6.0.1 renderings had boxes too
-  narrow for Mermaid to lay out, so each character appeared on its own
-  line.
-
-### Independent review corrections
-
-- Surface artifact observation errors in `ProjectStatusCheck.errors` and
-  add an "Unable to observe" formatter section; include
-  `!state.errors.length` in the all-clear condition.
-- Restore dependency impact for missing artifacts by passing
-  `[...changed, ...missing]` to `impacts()`.
-- Require active untracked compaction files to exist by using
-  `resolveExistingProjectPath()` in an inline loop, not just lexical
-  validation.
-- Fix Windows root-relative config paths using `posix.isAbsolute()` and
-  `win32.isAbsolute()`.
-- Rename the source budget metric from "Estimated production TypeScript"
-  to "runtime source".
-- Modernize with `crypto.hash()`, `import.meta.dirname`, and
-  `Static<typeof schema>` for duplicated request/result types.
-- Fix `PI_SYCH_PACKAGE_ROOT` off-by-one directory traversal (use
-  `import.meta.dirname` directly).
-- End `writeAtomicFile()` async disposal scope before `rename()` for
-  correct cross-platform resource ordering.
-- Replace chmod-based observation-error test with deterministic `EISDIR`
-  fixture (directory at tracked path).
-- Use `mkdtempDisposable()` for worker runtime cleanup.
-- Add regression tests for three-way compaction file filtering and
-  Windows root-relative config paths.
-- Source budget: 1,975 actual lines (2000/2000 rounded).
-
-## v6.0.0 - 2026-08-07
-
-### Breaking baseline
-
-- Require Node 26 or newer and use the Node 26 CI baseline.
-- Centralize Pi configuration-root and named-skill lookup, including
-  cross-platform lexical path validation.
-
-### Correctness and simplification
-
-- Distinguish current, changed, missing, and observation-error project
+- **Breaking:** Require Node 26 or newer.
+- Distinguish current, changed, missing, and unobservable project
   states; unchanged acknowledgements no longer invalidate dependants.
-- Report worker process failures before attempting to read a missing
-  result.
-- Extract valid JSON from compaction model output that includes prose or
-  fences; strengthen the prompt to request JSON-only responses.
-- Preserve active existing untracked files during compaction and
-  simplify bounded filesystem handling.
-- Consolidate model-catalog loading into one internal reader.
-- Fail fast on malformed SYNC.json at startup instead of silently
-  falling back.
-- Share the worker result TypeBox schema between the workbench and
-  worker extensions.
-- Remove the MCPorter config existence preflight; read directly and
-  distinguish ENOENT.
-- Make the Plannotator `projectFile` helper return the resolved path
-  directly.
-- Refresh the runtime source budget to include worker bootstrap code.
-- Replace the architecture and workflow diagrams with current simplified
-  PNG summaries and improve the accessible GitLab Pages presentation.
+- Improve compaction JSON extraction and preserve active existing
+  untracked files. Fail fast on malformed `SYNC.json` at startup.
+- Centralize Pi configuration-root and named-skill lookup with
+  cross-platform path validation, and report worker process failures
+  before missing results.
 
-## v5.0.0 - 2026-08-07
+## 5.0.0
 
-### Breaking configuration changes
-
-- Replace the documented `PI_SYCH_MODEL_CATALOG`,
-  `PI_SYCH_WORKER_AGENT_DIR`, and `PI_SYCH_MCPORTER_CONFIG` overrides
-  with one visible, versioned `config.json` under Pi-native project,
-  agent, XDG, or home configuration directories.
-- Relocate the default worker runtime, model catalogue, and MCPorter
-  paths under that resolved directory. Existing users of the removed
-  overrides or former paths must migrate their configuration.
-
-### Added
-
-- Make Plannotator and MCPorter optional integrations, with a separate
-  Plannotator extension entrypoint and early failures only when an
-  absent integration is explicitly enabled or requested.
+- **Breaking:** Replace `PI_SYCH_MODEL_CATALOG`,
+  `PI_SYCH_WORKER_AGENT_DIR`, and `PI_SYCH_MCPORTER_CONFIG` with a
+  versioned `config.json` in Pi-native project, agent, XDG, or home
+  configuration directories. Migrate settings from the removed overrides
+  and former default paths.
+- Make Plannotator and MCPorter optional, with a separate Plannotator
+  entrypoint and early failure when an absent integration is requested.
 - Add configurable custom compaction, optional automatic compaction at
   100,000 context tokens, and manual or Plannotator review modes.
-- Add three opt-in, real-Pi skill benchmark cases with objective checks,
-  separate candidate and judge roles, immutable result bundles, and
-  deterministic harness tests.
-- Add a Pandoc-based GitLab Pages site, internal-link validation,
-  accessible templates and styling, and packaged licensing notices.
-- Add an explicit public-contract and SemVer policy.
-- Add diagnostic V8 coverage reporting and stricter TypeScript checks.
+- Add a public-contract and SemVer policy, and strengthen coding
+  guidance.
 
-### Changed
-
-- Add thin Make targets for formatting, verification, coverage,
-  packaging, benchmarking, and Pages generation.
-- Require Pandoc 3.10.1 or newer locally and resolve the latest stable
-  release in online CI.
-- Strengthen coding guidance around direct native mechanisms, explicit
-  interfaces, human-visible state, early actionable failure, and
-  defeaters such as security, accessibility, compatibility, and data
-  integrity.
-
-## v4.0.6 - 2026-08-06
-
-### Scientific continuity
+## 4.0.6
 
 - Require inspected motivating material for hypothesis generation and
-  bound model assistance to diversification, formalization, comparison,
-  scope analysis, and discriminating tests.
-- Make retrospective proposals name predicted effects, regression risks,
-  and held-in and held-out evaluations without enabling automatic
+  bound model assistance to specified scientific reasoning tasks.
+- Make retrospective proposals identify predicted effects, regression
+  risks, and held-in and held-out evaluations without automatic
   mutation.
 - Preserve continuity-critical alternatives, negative results, failed
-  approaches, and not-yet-canonical commitments during compaction
-  without expanding the working-memory schema.
+  approaches, and uncanonical commitments during compaction.
 
-## v4.0.5 - 2026-08-06
+## 4.0.5
 
-### Skills architecture
+- Retain six umbrella skills while adding shared prose, hypothesis,
+  argument, and claim-to-evidence methods and more focused task routes.
+- Make project `STYLE.md` a local-delta template and refine prose
+  guidance.
+- Add packaged attribution and normalize documentation paths.
 
-- Keep the six public umbrella skills while adding four shared methods
-  for prose, hypothesis generation, argument analysis, and
-  claim-to-evidence mapping.
+## 4.0.4
 
-- Replace module lists with bounded ordered task recipes and retain
-  genre-specific local modules.
+- Add a user-centred review and revision workflow guide and diagrams.
 
-- Make project `STYLE.md` a local-delta template and instruct workers to
-  read routed methods and modules.
+## 4.0.3
 
-- Keep deterministic skill tests mechanical: public discovery, file
-  structure, routes, prompt budgets, and override precedence. Evaluate
-  semantic behavior only through the opt-in live-model fixtures.
-
-- Refine analysis, research, review, and manuscript routes so specialist
-  methods load only when the task needs them.
-
-- Add defeasible prose guidance for natural professional register,
-  restrained em dashes, genuine uncertainty, and common model-writing
-  defaults while preserving precise passive-voice guidance.
-
-- Complete packaged `docs/attribution.md` with cited skill-method,
-  package-design, retrospective-workflow, platform, and integration
-  influences outside routed method context.
-
-- Preserve superseded diagrams as historical files but omit stale
-  gallery image metadata until replacement artwork is reviewed.
-
-- Normalize documentation paths to lowercase, move attribution under
-  `docs/`, and remove completed project-only plans and ledgers.
-
-## v4.0.4 - 2026-08-03
-
-### Documentation and maintenance
-
-- Add the user-centred review and revision workflow guide and diagrams.
-- Consolidate shared primitive validation across worker, compaction, and
-  project-status paths.
-- Simplify optional model-catalog loading and dependency validation.
-
-## v4.0.3 - 2026-08-01
-
-### Correctness and documentation
-
-- Bound compaction snapshots, exclude unreviewed inbox contents, and
-  count actual proposal lines.
-- Make project validation errors visible, recheck files before
+- Bound compaction snapshots and exclude unreviewed inbox contents.
+- Expose project validation errors, recheck files before
   acknowledgement, and validate worker-reported paths.
-- Load supervisor instructions and worker model roles at the right time;
-  keep worker bootstrap and MCPorter configuration explicit.
-- Remove the duplicate smoke command and replace Git-history-dependent
-  migration discovery with a checked-in fixture.
-- Clarify user, supervisor, and contributor documentation, including the
-  deliberate limits of path handling and worker modes.
+- Correct the timing of supervisor instruction and worker model-role
+  loading.
 
-## v4.0.2 - 2026-08-01
+## 4.0.2
 
-### Packaging
+- Correct package manifest and README image references to the patch
+  release.
 
-- Point the Pi package manifest and README image at the published patch
-  release rather than the unpublished `4.0.0` package.
+## 4.0.1
 
-## v4.0.1 - 2026-08-01
+- Maintenance-only release.
 
-### CI
+## 4.0.0
 
-- Fetch full Git history and tags in GitLab CI so the skill-migration
-  ledger test can inspect its tagged source corpus.
-
-## v4.0.0 - 2026-08-01
-
-### Simplification
-
-- Reduced the complete extension TypeScript surface below the 2,000-line
-  cap.
-- Removed plan submission, structured promotion storage, rigid model
+- Remove plan submission, structured promotion storage, rigid model
   profiles, and redundant worker-result metadata.
-- Kept project hashes, dependency impact, bounded workers, atomic
+- Retain project hashes, dependency impact, bounded workers, atomic
   manifest replacement, and explicit human acknowledgement.
 
-## v3.0.4 - 2026-07-31
+## 3.0.4
 
-### Correctness and release completion
+- Complete configured project-root and canonical-path handling across
+  workers, status, compaction, and human review.
+- Validate `SYNC.json` metadata, recheck external canonical paths, and
+  report promotion persistence results.
 
-- Completed configured project-root and canonical-path handling across
-  workers, status, compaction, and human review paths.
-- Added strict `SYNC.json` metadata validation, external canonical-path
-  rechecks, symlink coverage, and explicit promotion persistence
-  results.
-- Refined skill contracts, qualitative guidance, and live acceptance
-  tests.
+## 3.0.3
 
-## v3.0.3 - 2026-08-01
+- Correct the documented default inbox path to `INBOX.md` and clarify
+  canonical path overrides and compaction triggers and model selection.
 
-### Documentation
+## 3.0.2
 
-- Corrected the default `inbox` path in the configuration example from
-  `.pi-sych/INBOX.md` to `INBOX.md` to match actual source defaults.
-- Added motivation for canonical path overrides (monorepo layouts,
-  shared INBOX across workspaces).
-- Clarified ARCHITECTURE.md compaction section: added explicit triggers
-  (manual `/compact`, context threshold, overflow recovery) and noted
-  compaction uses supervisor's active model, not worker profiles from
-  `models.json`.
+- Document the compaction pipeline, manifest resolution, and `SYNC.json`
+  v2 project canonical paths.
 
-## v3.0.2 - 2026-08-01
+## 3.0.1
 
-### Documentation
-
-- Added detailed compaction pipeline description to ARCHITECTURE.md:
-  working-memory construction, status projection, canonical snapshot,
-  promotion routing by role, malformed inbox isolation, failure
-  classification, and native compactor fallback.
-- Added manifest resolution section to ARCHITECTURE.md: workspace walk,
-  nearest SYNC.json selection, projectRoot relocation, canonical path
-  overrides for seven roles.
-- Added project canonical paths section to `docs/configuration.md`:
-  SYNC.json v2 schema, projectRoot and canonical object documentation,
-  role-to-path mapping, artifact declaration structure.
-
-## v3.0.1 - 2026-08-01
-
-### Fixed
-
-- Restored graceful `/pi-sych-status` handling of a malformed
-  `SYNC.json` (resolving the manifest before checking status had crashed
-  the tool instead of reporting the unavailable state).
-
-### Removed
-
-- Removed unused production exports (`countPromotionCandidates`,
-  `parseEvidenceEntries`, `EvidenceEntry`) exercised only by tests.
-- Collapsed duplicated worker tool-mode lookup into a single
-  `toolsForMode` source.
-- Removed the redundant `--local` no-op in `/plannotator-review` args.
-
-## v3.0.0 - 2026-08-01
-
-### Added
-
-- Added direct `SYNC.json` manifest version 2 with workspace,
-  nearest-manifest, and configured canonical-path resolution.
-- Added configured canonical-path promotion routing by role (`project`,
-  `agents`, `style`, `evidence`, `decisions`, `todo`) under custom
-  paths.
-- Added bounded project-status projection into working-memory
-  compaction, preserving task-relevant changed artifacts, impacted
-  dependents, and actionable findings.
-- Isolated malformed `INBOX.md` parsing so working-memory generation
-  continues and reports the inbox error without losing project state.
-- Added custom-compaction failure classification and concise
-  diagnostics, returning control to Pi's standard compactor on failure.
-- Added real-model, LLM-judged prompt-quality usage acceptance.
-- Restored all v1.2.0 substantive skill guidance under the six umbrella
-  skills with a migration ledger and tag-derived regression test.
-
-### Changed
-
-- Replaced the v1 `SYNC.md` Markdown fence with direct deterministic
+- Restore graceful `/pi-sych-status` reporting for malformed
   `SYNC.json`.
-- Consolidated manifest loading, canonical-path resolution, and project
-  discovery into one resolver passed through status and compaction.
-- Raised the production TypeScript budget cap to 3,000 lines for the
-  approved compaction and promotion-routing surface.
+- Remove the redundant `/plannotator-review --local` no-op.
 
-### Removed
+## 3.0.0
 
-- Removed legacy fixed-file project discovery and duplicated
-  canonical-path handling.
+- **Breaking:** Replace the `SYNC.md` JSON fence with direct `SYNC.json`
+  version 2, including workspace, nearest-manifest, and configured
+  canonical path resolution.
+- Route promotion by role to configured canonical paths and include
+  bounded project status in working-memory compaction.
+- Isolate malformed inbox parsing and fall back to Pi's standard
+  compactor on custom-compaction failure.
+- Restore substantive v1.2.0 guidance under the six umbrella skills.
 
-## v2.1.1 - 2026-07-31
+## 2.1.1
 
-### Fixed
+- Keep `SYNC.md` JSON fences stable under the pinned Pandoc formatter.
 
-- Kept `SYNC.md` JSON fences stable under the pinned Pandoc formatter.
+## 2.1.0
 
-## v2.1.0 - 2026-07-31
+- Add task-centred custom compaction with standard-compactor fallback
+  and human-review `INBOX.md` promotion proposals visible in project
+  status.
 
-### Added
+## 2.0.0
 
-- Added task-centred custom compaction with standard-compactor fallback.
-- Added human-review `INBOX.md` promotion proposals and pending-count
-  project-status visibility.
+- **Breaking:** Replace the indexed skill catalog with six umbrella
+  skills; consolidate the removed skills' guidance under them.
+- Add installed-documentation routing, independent review and test-first
+  coding guidance, and `submit_plan` file-review fallback when
+  Plannotator cannot start.
 
-## v2.0.0 - 2026-07-30
+## 1.2.0
 
-### Added
+- Add model-visible worker result details, Plannotator plan feedback,
+  core project-file checks, and shallow `PROJECT.md` validation.
+- Add `Previous action` and an explicit `None at present.` next-step
+  option.
+- Add optional layered review skills, expanded writing and research
+  guidance, prose and Reveal.js defaults, and a Reveal.js baseline
+  stylesheet.
+- Add `/plannotator-review` for current changes or a PR URL, and
+  Pandoc-based `markdown:check` and `markdown:fix` commands.
+- Improve project-status, MCPorter fallback, and package-load
+  diagnostics; change project-state labels from brackets to braces.
 
-- Replaced the visible skill catalog with six umbrella skills and direct
-  one-level guidance and editable example modules.
-- Added installed-documentation routing, independent substantive review,
-  independent test-first coding guidance, and Unix-oriented minimal
-  architecture defaults.
-- Added `submit_plan` file-review fallback when Plannotator cannot
-  start.
+## 1.0.3
 
-### Changed
+- Correct the diagram embedded in the architecture documentation.
 
-- Simplified the always-visible supervisor guidance and consolidated
-  duplicated runtime string validation and project-local path handling.
+## 1.0.2
 
-### Removed
+- List the nine design principles in the README and update diagram
+  links.
 
-- Removed superseded indexed skill names; their unique guidance is
-  consolidated under the six umbrella skills.
+## 1.0.1
 
-## v1.2.0 - 2026-07-30
+- Report persisted `needs-review` state even when tracked file hashes
+  match.
+- Add packaged architecture documentation and corrected diagrams.
 
-### Added
+## 1.0.0
 
-- Added model-visible worker result details, Plannotator plan feedback,
-  Google-compatible enum schemas, core project-file checks, and shallow
-  `PROJECT.md` validation.
-- Added `Previous action` and an explicit `None at present.` option for
-  a project's immediate next step.
-- Added companion-skill guidance and selected review/reporting practices
-  informed by an archived skill comparison.
-- Added optional layered review skills `review-structure`,
-  `review-detail`, and `review-copyedit` that compose with
-  `artifact-review` through ordinary multi-skill worker selection.
-- Added package prose and Reveal.js defaults, a portable
-  `templates/revealjs-baseline.css`, selectable verification recipes,
-  decision-memo options, and a README inspirations section for external
-  retrospective tools.
-- Added the human `/plannotator-review` command for Plannotator code
-  review of current changes or a PR URL, without enabling Plannotator
-  plan-mode.
-- Added reproducible `markdown:check` and `markdown:fix` commands using
-  Pandoc Markdown 3.10.1 at 72 columns.
-
-### Changed
-
-- Rewrote public documentation around people installing and using Pi
-  Sych, while keeping maintainer detail in the architecture and
-  development guides.
-- Made project-status cycle, legacy-status, MCPorter fallback,
-  package-load diagnostics, and opt-in usage-test handling more
-  reliable.
-- Removed stale public references to the intentionally deleted
-  target-architecture and principles documents.
-- Expanded writing, scholarly, R/Quarto, theory, strategy,
-  retrospective, and project-briefing skills with overridable
-  opinionated defaults and non-mutating proposal formats.
-- Changed project-state labels from bracket-delimited to brace-delimited
-  terms so Discount and Pandoc render them literally without escaping.
-- Changed installable and development dependency ranges to `latest`;
-  peer dependencies remain `*` for host compatibility. The release gate
-  resolves Pi 0.83.x from that policy.
-
-## v1.0.3 - 2026-07-30
-
-### Fixed
-
-- Corrected the architecture document to embed the architecture diagram
-  rather than the supervisor-context diagram.
-
-## v1.0.2 - 2026-07-30
-
-### Changed
-
-- Listed the nine design principles verbatim in the README.
-- Updated versioned diagram URLs and removed inline image alt text for
-  broader Markdown-renderer compatibility.
-
-## v1.0.1 - 2026-07-30
-
-### Added
-
-- Added behavioral tests for worker cancellation, `SIGTERM`, the
-  termination grace period, and forced `SIGKILL`.
-- Expanded opt-in real-Pi acceptance to exercise a clean-context
-  `dispatch_worker` call.
-- Added Pi package-gallery image metadata, packaged architecture
-  documentation, and corrected architecture diagrams rendered from
-  versioned README URLs.
-
-### Fixed
-
-- Report persisted `needs-review` state even when every tracked file
-  still matches its recorded hash.
-
-## v1.0.0 - 2026-07-30
-
-### Changed
-
-- Replaced the public workflow-tool surface with `dispatch_worker`,
-  `project_status`, and optional `submit_plan`.
-- Moved bootstrap, conceptual drift, reconciliation, evidence,
-  verification, and retrospective procedures into skills.
-- Added flexible graph-aware `SYNC.md` dependency checking and explicit
+- **Breaking:** Replace workflow tools with `dispatch_worker`,
+  `project_status`, and optional `submit_plan`; move other workflow
+  procedures into skills and remove their wrapper tools and commands.
+- Add graph-aware `SYNC.md` dependency checking and explicit
   acknowledgement.
-- Simplified worker dispatch, retained optional MCPorter remote
-  research, and retained both Plannotator annotation commands.
+- Retain optional MCPorter remote research and both Plannotator
+  annotation commands.
 
-### Removed
+## 0.1.2
 
-- Candidate, reconciliation, semantic-drift, evidence, retrospective,
-  and verification wrapper tools and commands.
+- Add Biome formatting and linting and developer scripts.
 
-## v0.1.2 - 2026-07-29
+## 0.1.1
 
-### Changed
+- Include the public changelog in the npm package.
 
-- Upgraded development TypeScript to 7.0.2 and added TypeScript 6+
-  test-build configuration.
-- Added Biome formatting and linting with tab indentation, developer
-  scripts, and GitLab CI enforcement.
+## 0.1.0
 
-## v0.1.1 - 2026-07-29
-
-### Added
-
-- Public changelog included in the npm package.
-
-## v0.1.0 - 2026-07-29
-
-### Added
-
-- Optional canonical `TODO.md` task ledger discovery and synchronization
+- Add optional `TODO.md` task ledger discovery and synchronization
   metadata for task state, priorities, and blockers.
-- Documentation and bounded artifact guidance that keep task state
-  distinct from project direction, evidence, decisions, and external
-  issue trackers.
-- A GitLab release job npm CLI requirement check for OIDC trusted
-  publishing.
 
-## v0.0.2 - 2026-07-29
+## 0.0.2
 
-### Fixed
+- Maintenance-only release.
 
-- GitLab release tag/version shell check quoting.
-
-## v0.0.0 - 2026-07-29
-
-### Added
+## 0.0.0
 
 - Initial public alpha release of Pi Sych.
 
-## Historical note
-
-`v0.0.1` is a Git tag only. Its release pipeline failed before npm
-publication because of a shell quoting error; npm has no `pi-sych@0.0.1`
-version.
+`0.0.1` was a Git tag only, not an npm release.

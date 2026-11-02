@@ -62,6 +62,21 @@ hedging, fragments, and effective unusual constructions. An explicit broad
 rewrite may recast broadly, but preserve meaning, evidence, uncertainty, stable
 voice, and accepted argumentative force unless the user asked to change them.
 
+After substantive drafting or revision, conduct a separate structural second
+pass in reading order before final sentence polish. Reconstruct the paper-wide
+purpose, central claim, and supporting moves; check that sections and paragraphs
+contribute to that path, are proportionate, and lead to a conclusion consistent
+with the supported thesis. Repair misplaced, repetitive, or distracting material
+within the authorized scope. For a section-only assignment, inspect enough of
+the surrounding artifact to test its role; report a wider structural problem
+rather than silently rewriting outside scope. If the full artifact is unavailable,
+check the available context and report that limit.
+
+At each paragraph boundary, identify the actual relation between moves (for
+example, evidence, consequence, contrast, or a shift in scale). Make that
+relation intelligible through ordering, shared terms, or a concise transition;
+do not add a stock connective where the relation is already clear.
+
 After editing a paragraph, reread it from first sentence to last: check that
 the claim, development, qualifications, and ending still fit. After editing a
 section, reread the entire section in order, then check its connection to the
@@ -106,6 +121,16 @@ finalizing, remove or rewrite process residue that has no independent job in the
 artifact: unexplained references to "this version", what "we now" do, what was
 "requested", earlier wording, reviewer comments, prior prompts, or the history
 of the revision.
+
+Scan across paragraphs for recurring defensive contrasts, not just individual
+sentences. Even locally plausible `not X but Y` turns can cumulatively make the
+paper sound preoccupied with objections rather than its own argument. Where no
+live distinction needs emphasis, state the supported positive point directly;
+retain contrasts that do real conceptual work or express the author's voice.
+Likewise inspect paragraph endings in sequence for repeated generic hedges.
+Move a necessary qualification close to the claim it limits when that improves
+clarity, and let the ending develop the supported consequence where appropriate;
+never omit a limitation that materially changes the inference.
 
 Treat an unmotivated negation or contrast as a context-leakage warning. A phrase
 such as "we do not claim Y" or "not X but Y" is useful when Y is a live,

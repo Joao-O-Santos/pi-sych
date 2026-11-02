@@ -11,6 +11,13 @@ states concrete limits and next tests, and ends with a calibrated take-home. A
 conclusion should resolve the artifact's job rather than add a generic
 importance claim.
 
+For a substantive section revision, test the section against the paper's
+central claim and its neighboring sections, not just its own internal logic.
+On the structural second pass, trace paragraph jobs and their relationships in
+reading order; repair abrupt shifts or repeated defensive endings without
+removing necessary qualifications. If the paper-wide context is unavailable,
+state that limitation rather than assuming the section's role.
+
 Calibrate voice, format, citation practice, and explanation to audience and
 genre. Preserve citations, placeholders, uncertainty, and authorial variation.
 Use titles and headings to expose the sequence without clickbait or mechanical
