@@ -4,7 +4,7 @@ Notable user-facing changes to Pi Sych, in reverse version order.
 
 ## Unreleased
 
-## 8.1.6 (prepared; not published)
+## 8.1.6
 
 - Writing guidance calls for a structural second pass, clearer paragraph
   connections, and fewer unnecessary defensive contrasts and hedged

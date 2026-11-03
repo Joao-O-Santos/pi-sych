@@ -272,9 +272,17 @@ remained within budget, and production audit found zero vulnerabilities.
 {verified} Commits `0e1707e`, `3d63020`, and `95593b7` were pushed to
 `main`; pipeline `3018927712` passed both `verify` and `pages` at
 `95593b760c6b3d33b9f2577b68eb0ac802ec1d84` with 97.93% line coverage.
-Prepared patch release 8.1.6 with concise user-facing release notes and
-README image links. The version-bump commit must pass the main pipeline
-before the signed release tag is pushed. It is prepared, not published.
+Release 8.1.6 is published at signed tag `v8.1.6`, pointing to
+`d9d3f9f69197e5ffef320a5c6f826f4805f4f332`. Main pipeline `3018955758`
+passed; tag pipeline `3018967737` passed `verify` and `publish-npm`. npm
+reports version/latest 8.1.6 and the matching gitHead; the tag signature
+verifies locally.
+
+{unresolved} The published 8.1.6 changelog incorrectly labels the
+release "prepared; not published". Pi's changelog parser includes that
+heading in update notes. The repository heading is corrected after the
+release, but the published 8.1.6 package remains affected. Interactive
+update-note rendering has not been tested.
 
 {verified} Release 8.1.5 is published at signed tag `v8.1.5`, pointing
 to commit `d37dba44f1d4408ba238a38257179faa2d8b1bbb`. Tag pipeline
