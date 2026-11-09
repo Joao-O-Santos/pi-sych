@@ -4,8 +4,11 @@ Notable user-facing changes to Pi Sych, in reverse version order.
 
 ## Unreleased
 
+## 8.1.7
+
 - Clarify that `dispatch_worker` must be called directly, not through
-  codemode. Runtime behavior is unchanged.
+  codemode. This guidance-only patch leaves runtime behavior unchanged;
+  no migration is required.
 
 ## 8.1.6
 

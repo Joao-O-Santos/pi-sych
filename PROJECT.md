@@ -269,9 +269,17 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
-{verified} The `dispatch_worker` description now says to call it
-directly, not through codemode. Its model-only exposure and runtime
-behavior are unchanged.
+{verified} The `dispatch_worker` direct-call warning was pushed at
+`196bfbcf9d096bc40195be4138d8b9ee796f1e92`; pipeline `3047253000` passed
+verification and Pages. Local `make verify` passed 250 tests,
+`make site` passed, and the production audit reported zero
+vulnerabilities. Its model-only exposure and runtime behavior are
+unchanged.
+
+{accepted} Prepare patch release 8.1.7 for this guidance clarification.
+The version, lockfile, image links, and changelog target 8.1.7; no
+migration is required. Publication remains unverified until the signed
+tag pipeline and npm registry checks pass.
 
 {verified} Commits `0e1707e`, `3d63020`, and `95593b7` were pushed to
 `main`; pipeline `3018927712` passed both `verify` and `pages` at

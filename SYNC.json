@@ -18,7 +18,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Added the dispatch_worker direct-call warning record; runtime behavior is unchanged. Release 8.1.6 publication evidence and the changelog-heading defect remain recorded. Existing semantic acknowledgement remains pending."
+      "pendingReason": "Recorded the direct-call warning's successful main pipeline 3047253000 and local checks; preparing the authorized guidance-only 8.1.7 patch release. Existing semantic acknowledgement remains pending."
     },
     {
       "path": "docs/ARCHITECTURE.md",
@@ -50,7 +50,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "Image URLs target published v8.1.6. Release-related independent review found no other concrete README issue; broader semantic acknowledgement remains pending."
+      "pendingReason": "Image URLs target the authorized 8.1.7 patch release; image assets are unchanged. Existing broader semantic acknowledgement remains pending."
     },
     {
       "path": "package.json",
@@ -71,7 +71,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "Version 8.1.6 is published with matching gitHead; the packaged changelog has an incorrect unpublished heading, corrected only in the post-release repository. Broader semantic acknowledgement remains pending."
+      "pendingReason": "Version and package image URL target the authorized 8.1.7 patch release; publication is not yet verified. Existing broader semantic acknowledgement remains pending."
     },
     {
       "path": "docs/configuration.md",
@@ -197,7 +197,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Added an Unreleased note for the dispatch_worker direct-call warning. The corrected 8.1.6 heading remains unpublished in that version's package. Existing semantic acknowledgement remains pending."
+      "pendingReason": "Prepared the 8.1.7 guidance-only patch note with unchanged runtime behavior and no migration. Existing semantic acknowledgement remains pending."
     },
     {
       "path": "skills/code/SKILL.md",
