@@ -276,10 +276,21 @@ verification and Pages. Local `make verify` passed 250 tests,
 vulnerabilities. Its model-only exposure and runtime behavior are
 unchanged.
 
-{accepted} Prepare patch release 8.1.7 for this guidance clarification.
-The version, lockfile, image links, and changelog target 8.1.7; no
-migration is required. Publication remains unverified until the signed
-tag pipeline and npm registry checks pass.
+{verified} The 8.1.7 release commit is
+`7265818a9979d2a3828885c9804d3ce0e8482094`; main pipeline `3047268594`
+passed verification and Pages. Signed tag `v8.1.7` points to that commit
+and was pushed; its signature verifies locally. Local `make verify`
+passed 250 tests, `make site` passed, and the production audit reported
+zero vulnerabilities. Independent read-only release-consistency review
+found no concrete blockers. Pi's native changelog parser returns exactly
+one new entry after 8.1.6: the 8.1.7 direct-call clarification.
+Interactive notification rendering was not tested.
+
+{unresolved} Tag pipeline `3047276780` was observed running. GitLab then
+rate-limited status reads; publication and pipeline completion remain
+unverified. The npm registry did not yet list 8.1.7 at the last check.
+The pushed tag may still publish through the existing pipeline; do not
+retag or republish without checking current state.
 
 {verified} Commits `0e1707e`, `3d63020`, and `95593b7` were pushed to
 `main`; pipeline `3018927712` passed both `verify` and `pages` at
