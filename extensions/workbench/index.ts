@@ -218,7 +218,7 @@ export default async function piSychWorkbench(pi: ExtensionAPI): Promise<void> {
 		exposure: "model-only",
 		label: "Dispatch worker",
 		description:
-			"Delegate one bounded task to a short-lived worker and return its structurally validated terminal report; completion is not correctness or approval.",
+			"Delegate one bounded task to a short-lived worker and return its structurally validated terminal report; completion is not correctness or approval. Call directly; does not work in codemode.",
 		promptSnippet:
 			"Delegate one bounded task. mode is required: choose read-only, edit, or full-host based on the worker's needed tools; contextMode is a separate choice.",
 		promptGuidelines: [

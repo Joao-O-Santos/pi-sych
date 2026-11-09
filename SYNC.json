@@ -18,7 +18,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Release 8.1.6 is published; the record now includes verified CI and npm details and the published changelog-heading defect. Semantic acknowledgement remains pending."
+      "pendingReason": "Added the dispatch_worker direct-call warning record; runtime behavior is unchanged. Release 8.1.6 publication evidence and the changelog-heading defect remain recorded. Existing semantic acknowledgement remains pending."
     },
     {
       "path": "docs/ARCHITECTURE.md",
@@ -197,7 +197,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Corrected the post-release 8.1.6 heading; the published package still contains the incorrect unpublished label. Semantic acknowledgement remains pending."
+      "pendingReason": "Added an Unreleased note for the dispatch_worker direct-call warning. The corrected 8.1.6 heading remains unpublished in that version's package. Existing semantic acknowledgement remains pending."
     },
     {
       "path": "skills/code/SKILL.md",

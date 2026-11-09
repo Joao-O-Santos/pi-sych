@@ -269,6 +269,10 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
+{verified} The `dispatch_worker` description now says to call it
+directly, not through codemode. Its model-only exposure and runtime
+behavior are unchanged.
+
 {verified} Commits `0e1707e`, `3d63020`, and `95593b7` were pushed to
 `main`; pipeline `3018927712` passed both `verify` and `pages` at
 `95593b760c6b3d33b9f2577b68eb0ac802ec1d84` with 97.93% line coverage.
