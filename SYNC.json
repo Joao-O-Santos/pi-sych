@@ -18,7 +18,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Prepared 8.1.8 locally with Pi 1.5.1 dependency and worker-contract regression checks. Existing semantic acknowledgement remains pending; publication of 8.1.8 is not claimed."
+      "pendingReason": "Recorded signed v8.1.8 at 3f178ed, passing main pipeline 3049474166 and release pipeline 3049672432, and matching npm version/latest/gitHead and all 214 tarball files. Integrity and provenance metadata checked; existing broader semantic acknowledgement remains pending."
     },
     {
       "path": "docs/ARCHITECTURE.md",
@@ -50,7 +50,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "Image URLs target the prepared, not yet created v8.1.8 tag; image assets are unchanged. Existing broader semantic acknowledgement remains pending."
+      "pendingReason": "Image URLs target the pushed signed v8.1.8 tag; published assets match the release files. Existing broader semantic acknowledgement remains pending."
     },
     {
       "path": "package.json",
@@ -71,7 +71,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "Version and package image URL target the prepared, not yet created v8.1.8 tag. Pi 1.5.1 is locked; existing broader semantic acknowledgement remains pending."
+      "pendingReason": "Version and package image URL match published signed v8.1.8. Pi 1.5.1 is locked; npm version/latest/gitHead verified. Existing broader semantic acknowledgement remains pending."
     },
     {
       "path": "docs/configuration.md",
@@ -197,7 +197,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Prepared the 8.1.8 Pi 1.5.1 verification and regression note; no migration or runtime behavior change. Existing semantic acknowledgement remains pending."
+      "pendingReason": "The 8.1.8 Pi 1.5.1 verification and regression note is published; no migration or runtime behavior change. Existing broader semantic acknowledgement remains pending."
     },
     {
       "path": "skills/code/SKILL.md",
