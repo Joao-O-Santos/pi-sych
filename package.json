@@ -1,6 +1,6 @@
 {
   "name": "pi-sych",
-  "version": "8.1.7",
+  "version": "8.1.8",
   "description": "General project and artifact development workbench for Pi",
   "files": [
     "templates",
@@ -45,7 +45,7 @@
     "software-engineering"
   ],
   "scripts": {
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --project tsconfig.types.json --noEmit",
     "lint": "biome lint extensions scripts tests",
     "format:check": "biome ci --linter-enabled=false --assist-enabled=false extensions scripts tests",
     "format:fix": "biome check --write extensions scripts tests",
@@ -88,7 +88,7 @@
     "prompts": [
       "./prompts"
     ],
-    "image": "https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v8.1.7/docs/img/logo.png",
+    "image": "https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v8.1.8/docs/img/logo.png",
     "changelogPath": "./docs/CHANGELOG.md"
   },
   "optionalDependencies": {

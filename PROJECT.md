@@ -269,6 +269,16 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
+{verified} Patch 8.1.8 is prepared locally, not tagged or published. The
+existing worker enum wrapper and spawn environment already typecheck
+with installed Pi 1.5.1; no runtime compatibility shim was added. The
+lock now resolves Pi 1.5.1 and regression checks cover inferred enum
+unions, schema validation, and launch environment. Local `make verify`
+passed 250 tests and package dry-run; `make site` passed and the
+production npm audit reported zero vulnerabilities. Independent diff
+review found no test weakening; live-model use was not retested.
+Prepared image URLs require the future tag.
+
 {verified} The `dispatch_worker` direct-call warning was pushed at
 `196bfbcf9d096bc40195be4138d8b9ee796f1e92`; pipeline `3047253000` passed
 verification and Pages. Local `make verify` passed 250 tests,

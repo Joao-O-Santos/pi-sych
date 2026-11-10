@@ -4,6 +4,14 @@ Notable user-facing changes to Pi Sych, in reverse version order.
 
 ## Unreleased
 
+## 8.1.8
+
+- Verify the worker schema and launch types against Pi 1.5.1, update the
+  locked dependencies, and add enum inference and schema regression
+  checks. This patch affects the Pi integration and worker tool
+  contract; it requires no migration or stored-state or
+  default-side-effect changes.
+
 ## 8.1.7
 
 - Clarify that `dispatch_worker` must be called directly, not through

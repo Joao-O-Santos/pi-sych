@@ -14,6 +14,7 @@ import {
 	taskPrompt,
 	toolsForRequest,
 	validateWorkerResult,
+	workerResultSchema,
 	writeImmutableResult,
 } from "../../.test-build/workbench/src/worker-engine.js";
 import piSychWorker from "../../.test-build/worker/index.js";
@@ -28,6 +29,23 @@ test("worker request and result retain the bounded protocol", () => {
 		contextFiles: [],
 	};
 	assert.equal(Value.Check(dispatchSchema, bounded), true);
+	for (const mode of ["read-only", "edit", "full-host"])
+		assert.equal(Value.Check(dispatchSchema, { ...bounded, mode }), true);
+	assert.equal(Value.Check(dispatchSchema, { ...bounded, mode: "invalid" }), false);
+	for (const status of ["complete", "partial", "failed"])
+		assert.equal(
+			Value.Check(workerResultSchema, { status, summary: "x", files: [], limitations: [] }),
+			true,
+		);
+	assert.equal(
+		Value.Check(workerResultSchema, {
+			status: "invalid",
+			summary: "x",
+			files: [],
+			limitations: [],
+		}),
+		false,
+	);
 	assert.ok(dispatchSchema.required.includes("mode"));
 	assert.match(dispatchSchema.properties.mode.description, /Required on every call/);
 	assert.match(dispatchSchema.properties.mode.description, /read-only for inspection or review/);

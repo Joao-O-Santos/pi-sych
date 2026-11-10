@@ -965,6 +965,9 @@ test("worker loads native MCP and codemode only for remote research", async (t) 
 		assert.equal(args.includes("builtin:codemode"), remoteResearch);
 		assert.equal(args.includes("--extension") && args.includes("/mcporter"), false);
 		assert.equal(fake.launch?.[2]?.env?.MCPORTER_CONFIG, undefined);
+		assert.equal(fake.launch?.[2]?.env?.PI_CODING_AGENT_DIR, spec.workerAgentDir);
+		assert.equal(fake.launch?.[2]?.env?.PI_SYCH_TASK_ID, spec.id);
+		assert.equal(fake.launch?.[2]?.env?.PI_SYCH_RESULT_PATH, spec.resultPath);
 		assert.ok(!args.includes("--tools"));
 		assert.deepEqual(JSON.parse(fake.launch?.[2]?.env?.PI_SYCH_ACTIVE_TOOLS ?? "[]"), [
 			"read",
