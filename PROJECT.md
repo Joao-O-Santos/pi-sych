@@ -289,9 +289,11 @@ audit found zero vulnerabilities. One live-model custom-compaction test
 retained an unfinished metadata audit instead of the broader report
 objective, with a concrete template-inspection next action. This tests
 one model/run and continuation output, not guaranteed semantic retention
-or actual execution after resumption. Patch 8.1.9 prepares that behavior
-for release; publication remains unverified until its signed tag
-pipeline and npm checks pass.
+or actual execution after resumption. Patch 8.1.9 is committed at
+`dc0f7c2383d77cc26ce1c0dd1d8b2f3febdbd627`; main pipeline `3065781340`
+passed, and signed tag `v8.1.9` was pushed. Tag pipeline `3065796520`
+was observed running, then GitLab rate-limited status reads. npm did not
+list 8.1.9 at the last check, so publication remains unverified.
 
 {verified} Released 8.1.8 at signed tag `v8.1.8`, pointing to
 `3f178edc0777f7671ba45d673195fa3688537c3c`. Main pipeline `3049474166`
