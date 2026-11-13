@@ -4,6 +4,8 @@ Notable user-facing changes to Pi Sych, in reverse version order.
 
 ## Unreleased
 
+## 8.1.9
+
 - Custom compaction retains the active task's goal, resume point, and
   concise approach rationale as short-term working memory, separate from
   long-term knowledge in project files. Protect user-request excerpts

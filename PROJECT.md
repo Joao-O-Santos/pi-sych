@@ -289,7 +289,9 @@ audit found zero vulnerabilities. One live-model custom-compaction test
 retained an unfinished metadata audit instead of the broader report
 objective, with a concrete template-inspection next action. This tests
 one model/run and continuation output, not guaranteed semantic retention
-or actual execution after resumption. Changes are not yet released.
+or actual execution after resumption. Patch 8.1.9 prepares that behavior
+for release; publication remains unverified until its signed tag
+pipeline and npm checks pass.
 
 {verified} Released 8.1.8 at signed tag `v8.1.8`, pointing to
 `3f178edc0777f7671ba45d673195fa3688537c3c`. Main pipeline `3049474166`
