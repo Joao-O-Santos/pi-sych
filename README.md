@@ -320,12 +320,15 @@ orchestration system:
 - **Small working memory:** when custom compaction is enabled in Pi Sych
   config, the workbench handles native compaction requests and proactive
   admission defaults to 150,000 context tokens at a safe settled
-  boundary. It retains bounded observable continuation state. Malformed
-  optional memory/proposal entries are skipped independently when the
-  required summary remains usable; missing or unusable required fields
-  retain Pi's native fallback. Inbox safety/write failures skip
-  proposals without discarding usable memory, and canonical semantic
-  files are never mutated.
+  boundary. Its bounded short-term working memory retains the active
+  task goal, resume point, and next action; inspectable project files
+  retain long-term knowledge. User-request excerpts receive protected
+  input space alongside recent activity. Malformed optional
+  memory/proposal entries are skipped independently when the required
+  summary remains usable; missing or unusable required fields retain
+  Pi's native fallback. Inbox safety/write failures skip proposals
+  without discarding usable memory, and canonical semantic files are
+  never mutated.
 - **Optional completion reassessment:** disabled by default; when
   enabled, the workbench asks once at Pi's final actionable boundary
   whether the current authorized request is complete. It continues

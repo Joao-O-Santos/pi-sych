@@ -40,7 +40,7 @@ The implementation must inspect Pi's actual lifecycle and answer:
 
 Preserve only information that materially constrains continuation:
 
-- objective and requested outcome;
+- active task objective, requested outcome, and completion conditions;
 - authorization boundary and constraints;
 - material progress and tool outcomes;
 - accepted decisions and visible rationale when stated;
@@ -50,9 +50,29 @@ Preserve only information that materially constrains continuation:
 - relevant files, artifacts, branches, or external resources; and
 - important project-state gaps or conflicts.
 
+The continuation is short-term working memory for the active user task,
+not a summary of the project's overall objective. Preserve the unfinished
+task across compaction, while using later visible user direction or
+completion evidence to update it. A recent subtask or tool check does not
+replace the goal. Retain the resume point, remaining steps, blockers, and
+a concrete next action; a settled turn or compaction does not by itself
+mean the task is complete.
+
 Keep facts, user decisions, model inference, unresolved possibilities,
-and failed attempts distinguishable. Do not turn inferred rationale into
-a user statement.
+and failed attempts distinguishable. `inferences` may hold concise
+working assumptions, the current approach, and high-level rationale
+grounded in visible evidence. These remain tentative, not user decisions
+or recovered private reasoning. Do not turn inferred rationale into a
+user statement.
+
+Within the existing 32 KiB conversation input bound, up to 8 KiB is
+reserved for chronological excerpts of the earliest available and recent
+user messages, so tool output cannot consume their entire allocation.
+The retained recent tail keeps its existing 16 KiB cap; observable
+history uses the remaining budget. Excerpts use the existing per-message
+prefix bound, so long requests and intervening messages can still be
+clipped or omitted. Earlier requests may be completed or superseded;
+the model must interpret them rather than automatically revive them.
 
 Do not preserve private chain-of-thought, hidden scratch reasoning,
 complete conversation replay, low-value narration, repeated
@@ -60,6 +80,12 @@ confirmations, or superseded wording once its material outcome is
 captured.
 
 ## Project-state reconciliation
+
+Inspectable canonical files retain long-term project knowledge; the
+session's persisted continuation retains short-term task state. Prefer
+references to durable knowledge over copying it into the continuation,
+but keep enough task-specific context to resume. Temporary task state is
+not automatically a new accepted project objective.
 
 Compaction may inspect a bounded set of relevant canonical files.
 Distinguish conversation state already represented durably, durable
@@ -124,7 +150,7 @@ allow-listed provenance labels; invalid entries are omitted, never
 reclassified. Boundedness comes from bounded source reads, item, message,
 status, retained-tail, snapshot, and proposal limits
 rather than prompt word-count budgets. The nonblank runtime source budget
-is 3,250 lines; the checker reports a 50-line-rounded estimate. UTF-8
+is 3,300 lines; the checker reports a 50-line-rounded estimate. UTF-8
 snapshots are decoded and
 then byte-bounded, including malformed source text; serialized snapshots
 and optional focus instructions also have explicit prompt-byte limits.
@@ -133,7 +159,9 @@ carried forward without verification; inferences remain distinct.
 
 ## Required regressions
 
-Test settled-boundary execution, duplicate/reentrant triggers, queued
+Test task versus project-goal separation, tool-heavy request retention,
+chronological user corrections, two-pass working-memory continuity,
+UTF-8 conversation bounds, thinking exclusion, settled-boundary execution, duplicate/reentrant triggers, queued
 follow-up preservation, explicit decisions versus inference, visible
 rationale without invented hidden reasoning, rejected-path continuity,
 project-state gap classification, canonical non-mutation, bounded

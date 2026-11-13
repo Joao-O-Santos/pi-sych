@@ -60,6 +60,7 @@ test("real Pi proactively invokes custom compaction and retains usable memory/pr
 		join(projectRoot, "AGENTS.md"),
 		"Do not merge the nesting and lighting surveys.\n",
 	);
+	await writeFile(join(projectRoot, "SURVEY_TEMPLATE.md"), "# Survey\n\nDate:\nObserver:\n");
 	await writeFile(
 		join(projectRoot, "SYNC.json"),
 		`${JSON.stringify(
@@ -80,8 +81,9 @@ test("real Pi proactively invokes custom compaction and retains usable memory/pr
 		)}\n`,
 	);
 	const prompt = [
-		"Briefly acknowledge these project facts without editing files.",
-		"The objective is a field report on the Amber Heron migration; the nesting survey must remain separate from the lighting survey; the next project step is to draft the report without merging survey results.",
+		"Briefly acknowledge this handoff without doing the audit or editing files in this turn.",
+		"The long-term project objective is a field report on the Amber Heron migration; the nesting survey must remain separate from the lighting survey.",
+		"The current authorized task is to audit the survey metadata template, not draft the field report. The audit remains unfinished. The next step after resuming is to inspect the existing SURVEY_TEMPLATE.md survey template; the current approach is to check its fields before proposing changes, because date and observer may already be captured.",
 		"The project owner suggests adding a one-line proposal to the project inbox: record the date and observer for every survey. This is a suggestion only, not an accepted canonical decision.",
 	].join(" ");
 	const runPi = (message) =>
@@ -213,10 +215,17 @@ test("real Pi proactively invokes custom compaction and retains usable memory/pr
 		true,
 		`Pi persisted a native summary instead of the Pi Sych custom-hook result. ${diagnostics}`,
 	);
+	const objective = compactionEntry.summary.match(/## Objective\n\n([^\n]+)/)?.[1] ?? "";
 	assert.match(
-		compactionEntry.summary,
-		/# Continuation[\s\S]*## Objective[\s\S]*field report on the Amber Heron migration/i,
-		`No usable custom continuation summary found in session. ${diagnostics}`,
+		objective,
+		/audit[\s\S]*survey[\s\S]*metadata|survey[\s\S]*metadata[\s\S]*audit/i,
+		`The active audit task must not become the broader field-report objective. Summary:\n${compactionEntry.summary}\n${diagnostics}`,
+	);
+	const nextAction = compactionEntry.summary.match(/## Next action\n\n([^\n]+)/)?.[1] ?? "";
+	assert.match(
+		nextAction,
+		/(?:inspect|read|check|review|examine|audit)[^\n]*template/i,
+		`The continuation must retain a concrete audit resume point. Summary:\n${compactionEntry.summary}\n${diagnostics}`,
 	);
 	const proposals = await readFile(inbox, "utf8").catch((error) => {
 		throw new Error(

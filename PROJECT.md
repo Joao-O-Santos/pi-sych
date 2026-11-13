@@ -108,6 +108,14 @@ startup capability summary. An optional user-maintained `STACK.md` may
 describe durable computer/environment facts. Project software
 requirements and workflows remain in `AGENTS.md` and/or `PROJECT.md`.
 
+{accepted} Custom compaction serves as short-term working memory for the
+active user task: its goal, completion conditions, resume point, current
+approach, remaining work, and next action. Inspectable canonical files
+retain long-term project knowledge. Compaction must not replace an
+unfinished task with the overall project objective or latest subtask,
+recover private thinking, or silently promote transient task state into
+accepted project state.
+
 ## Current state
 
 {verified} v8.0.1 is tagged and published. It uses strict layered
@@ -268,6 +276,20 @@ line/branch/function coverage; `make site` passed, runtime source
 remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
+
+{verified} Custom compaction now explicitly preserves active-task
+working memory separately from durable project knowledge. Earliest and
+recent user-request excerpts receive up to 8 KiB within the existing 32
+KiB conversation budget; hidden thinking remains excluded. Existing
+memory fields, inbox-only proposals, and native fallback are unchanged.
+Independent test design and read-only correctness review found no
+blockers. `make verify` passed 256 tests at 97.94/92.82/97.00% line,
+branch, and function coverage; `make site` passed and the production
+audit found zero vulnerabilities. One live-model custom-compaction test
+retained an unfinished metadata audit instead of the broader report
+objective, with a concrete template-inspection next action. This tests
+one model/run and continuation output, not guaranteed semantic retention
+or actual execution after resumption. Changes are not yet released.
 
 {verified} Released 8.1.8 at signed tag `v8.1.8`, pointing to
 `3f178edc0777f7671ba45d673195fa3688537c3c`. Main pipeline `3049474166`

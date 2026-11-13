@@ -175,15 +175,26 @@ compaction.
 The continuation is a bounded observable trajectory: objective,
 authorization, constraints, progress, decisions, inferences, failed or
 rejected paths, unresolved issues, active work, next action, files, and
-project-state gaps. It uses bounded observable messages, bounded
-retained tail, and bounded canonical snapshots. Recorded `user-explicit`
-and `accepted-project` decision attributions are preserved without
-verification; inferences are kept separate. Malformed optional
-collections and invalid individual members are skipped independently so
-usable siblings survive. Invalid promotion candidates are likewise
-skipped rather than invalidating the memory summary. The required
-objective and next action must remain usable; malformed JSON or missing
-or unusable required fields leave native fallback in control.
+project-state gaps. This is short-term working memory for the active
+user task, separate from long-term knowledge in inspectable canonical
+files. It preserves the task's outcome, resume point, and concise
+visible-evidence-based approach rationale, not private reasoning. Later
+user direction or completion evidence can supersede a prior task; a
+recent subtask alone does not replace it.
+
+Within the existing 32 KiB conversation bound, up to 8 KiB protects
+earliest/recent user-message excerpts from tool-output crowding, the
+retained tail remains capped at 16 KiB, and observable history uses the
+remainder. Per-message clipping still applies; the model interprets
+which requests remain active. Canonical snapshots are separately
+bounded. Recorded `user-explicit` and `accepted-project` decision
+attributions are preserved without verification; inferences are kept
+separate. Malformed optional collections and invalid individual members
+are skipped independently so usable siblings survive. Invalid promotion
+candidates are likewise skipped rather than invalidating the memory
+summary. The required objective and next action must remain usable;
+malformed JSON or missing or unusable required fields leave native
+fallback in control.
 
 At most bounded one-line proposals are appended to the configured inbox
 as visibly unreviewed state. Canonical semantic files are never mutated.
