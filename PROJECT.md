@@ -292,18 +292,23 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
-{verified} Full-visible-context compaction is implemented at
-`75928ce7521006ff423fb5081ebfb8c4f3711d9d`; main pipeline `3068694564`
-passed verification and Pages. Minor 8.2.0 is prepared for the material
-compaction improvements and backward-compatible optional memory fields;
-no configuration or stored-state migration is required. Publication
-remains unverified until the signed tag pipeline and registry checks. It
-removes sampled/protected excerpts, transcript and prior-summary byte
-caps, and working-memory text/count quotas. Native projection preserves
-retained context edits; only necessary bulky tool outputs are reduced.
-Model capacity and native token estimates govern input/output; estimates
-are not exact provider counts. Schema, bounded external reads,
-inbox-only proposals and native lifecycle/fallback remain.
+{verified} Released minor 8.2.0 at signed tag `v8.2.0`, pointing to
+`6afa72495a70731c3b545ab44307541adcc3ecee`. Implementation main pipeline
+`3068694564` and release main pipeline `3068704117` passed verify and
+Pages; tag pipeline `3068710797` passed verify and npm publication.
+Registry version/latest/gitHead and all 214 published file contents
+match the release. Tarball integrity and provenance
+source/digest/tag/pipeline metadata match; the attestation signature was
+not independently cryptographically verified. The Git tag signature
+verifies locally. This minor materially improves compaction and adds
+backward-compatible optional memory fields, without
+configuration/stored-state migration. It removes sampled/protected
+excerpts, transcript and prior-summary byte caps, and working-memory
+text/count quotas. Native projection preserves retained context edits;
+only necessary bulky tool outputs are reduced. Model capacity and native
+token estimates govern input/output; estimates are not exact provider
+counts. Schema, bounded external reads, inbox-only proposals and native
+lifecycle/fallback remain.
 
 {verified} `make verify` passed 271 tests at 97.89/93.05/96.71%
 line/branch/function coverage; packaging, source budget, site and

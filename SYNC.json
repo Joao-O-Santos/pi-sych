@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-11-14T17:41:04.698Z",
+  "confirmedAt": "2026-11-14T17:59:07.698Z",
   "artifacts": [
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:7f4fac80beb6aa619de6053b6e46b126bf5053cc40ecc96c9f24d7d31d71780b",
+      "fingerprint": "sha256:91ac8c10050d3b67cf5a5a33bd60b705da6627a6076676b14614db78314786de",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -19,8 +19,8 @@
       ],
       "pendingReason": "New bounded task evidence; supervisor inspected the actual local check logs and one soak report.",
       "acknowledgement": {
-        "at": "2026-11-14T17:41:04.698Z",
-        "reason": "Inspected release preparation evidence: implementation main pipeline3068694564 passed verify and Pages at75928ce7521006ff423fb5081ebfb8c4f3711d9d. Independent read-only preflight found no concrete release/migration blocker and supports minor8.2.0 under public contract. Release metadata local make verify passed271 tests at97.89/93.05/96.71% coverage; site and production audit passed. Checked version/lock, six README image links and pi.image pin; package dry-run has214 intended files with no repository/private state. Pi native changelog parser yields exactly one new8.2.0 entry after8.1.9. First ad-hoc pack JSON check assumed an array but local npm returned a keyed object; rerun with the correct shape passed; this was a verification-script mismatch, not a package/test failure. Coverage decreases versus preceding revision explicitly retained. Publication still pending release commit CI, signed tag and registry verification; broader review flags preserved and inbox not read."
+        "at": "2026-11-14T17:59:07.698Z",
+        "reason": "Inspected completed8.2.0 release evidence. Implementation main3068694564 and release main3068704117 passed before signed v8.2.0 at6afa72495a70731c3b545ab44307541adcc3ecee. Tag pipeline3068710797 passed verify and publish-npm after npm processing delay; no retag/republish. Registry version/latest/gitHead match; downloaded tarball SHA1/SHA512 match registry, all214 file contents match local release with no unexpected files, and decoded SLSA metadata matches source commit/digest/tag/pipeline. Git tag signature verifies locally; attestation signatures not independently cryptographically validated. Local record make verify passed271 tests; site passed. Honest coverage dip and short-soak semantic limits remain explicit. Existing broader needs-review states retained; inbox not read or staged."
       }
     },
     {
@@ -39,7 +39,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Prepared minor 8.2.0 after implementation main pipeline 3068694564 passed. Recorded 271-test local release checks and honest coverage comparison. Signed tag/registry publication remain pending; existing broader semantic acknowledgement remains pending."
+      "pendingReason": "Recorded published minor8.2.0 at signed tag v8.2.0/6afa72495a70731c3b545ab44307541adcc3ecee after main pipelines3068694564/3068704117 and tag pipeline3068710797 passed. Registry/file/integrity/provenance metadata checks passed. Honest coverage comparison retained; existing broader semantic acknowledgement remains pending."
     },
     {
       "path": "docs/ARCHITECTURE.md",
@@ -71,7 +71,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "Pinned six image references to prepared v8.2.0; compaction usage text is unchanged from the verified implementation. Version/lock/image consistency and package dry-run passed; broader semantic acknowledgement remains pending."
+      "pendingReason": "Six image references target published v8.2.0. Version/lock/image consistency and all214 published file contents verified; compaction usage is unchanged. Broader semantic acknowledgement remains pending."
     },
     {
       "path": "package.json",
@@ -92,7 +92,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "Prepared 8.2.0 version/lock and pinned image metadata after implementation CI passed. Release resource/pack checks passed with 214 intended files and no private repository state. Publication and existing broader package-boundary acknowledgement remain pending."
+      "pendingReason": "Published8.2.0 version/lock and image metadata match signed tag and registry. Release main/tag CI and214-file content/integrity/provenance metadata checks passed. Existing broader package-boundary acknowledgement remains pending."
     },
     {
       "path": "docs/configuration.md",
@@ -224,7 +224,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Promoted changes into 8.2.0 with the public-contract minor rationale, affected internal compaction/session behavior and no-migration/write-policy-change statement. Native changelog parser confirms one new entry; publication and broader semantic acknowledgement remain pending."
+      "pendingReason": "Published8.2.0 notes include minor rationale, affected internal compaction/session behavior and no-migration/write-policy-change statement. Native parser confirms one new entry; broader semantic acknowledgement remains pending."
     },
     {
       "path": "skills/code/SKILL.md",

@@ -15,18 +15,26 @@
 - The soak skips without its separate gate, including when ordinary
   `PI_SYCH_USAGE_TEST=1` is enabled. No CI configuration changed.
 
-## Release preparation
+## Release 8.2.0
 
-Implementation main pipeline `3068694564` passed verify and Pages at
-`75928ce7521006ff423fb5081ebfb8c4f3711d9d`. Independent read-only release
-preflight found no concrete blocker and supported minor 8.2.0 under the
-public contract: material improvement and optional fields, no required
-migration or canonical-file write-policy change. Publication is pending
-the release commit's CI, signed tag and registry verification.
-Release metadata passed `make verify` (271 tests), site and production
-audit. Package dry-run lists 214 intended files and no repository/private
-state; version/lock/image references agree, and Pi's native changelog
-parser returns exactly one new entry after 8.1.9: 8.2.0.
+- Implementation main pipeline `3068694564` passed at
+  `75928ce7521006ff423fb5081ebfb8c4f3711d9d`. Independent read-only preflight
+  supported minor 8.2.0: material improvement and optional fields, no
+  required migration or canonical-file write-policy change.
+- Release commit `6afa72495a70731c3b545ab44307541adcc3ecee` passed main
+  pipeline `3068704117` before signed tag `v8.2.0` was pushed. The tag
+  signature verifies locally. Tag pipeline `3068710797` passed verify
+  and npm publication. npm briefly queued processing; no republish or
+  retag was needed.
+- Local release checks passed 271 tests, site and production audit;
+  version/lock/image references agree. Pi's native changelog parser
+  returns exactly one new entry after 8.1.9: 8.2.0.
+- Registry version/latest/gitHead match. All 214 published files match
+  local contents, with no unexpected files. Download SHA-1/SHA-512 match
+  registry metadata; SLSA provenance metadata matches the SHA-512, source
+  commit, tag and tag pipeline. Attestation signatures were not
+  independently cryptographically validated.
+- Downloaded evidence: `/tmp/pi-sych-8.2.0-publication-aeJ7rf/`.
 
 ## One short soak
 
