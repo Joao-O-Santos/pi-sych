@@ -39,7 +39,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Recorded published minor8.2.0 at signed tag v8.2.0/6afa72495a70731c3b545ab44307541adcc3ecee after main pipelines3068694564/3068704117 and tag pipeline3068710797 passed. Registry/file/integrity/provenance metadata checks passed. Honest coverage comparison retained; existing broader semantic acknowledgement remains pending."
+      "pendingReason": "Reviewed all six inbox proposals: 8.1.6/8.1.9 publication facts and pipeline IDs already recorded in PROJECT.md; remaining semantic review, interactive-notice test gap and historical authorization question retained in TODO.md/PROJECT.md. Historical authorization is unresolved without preceding conversation/accepted plan; no retrospective conclusion or broader semantic acknowledgement. Published8.2.0 verification and existing needs-review states retained."
     },
     {
       "path": "docs/ARCHITECTURE.md",

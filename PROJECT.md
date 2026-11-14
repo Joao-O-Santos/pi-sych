@@ -320,7 +320,8 @@ compaction. See `EVIDENCE.md` for the local report, cost and semantic
 measurement limits. The soak is excluded from CI and ordinary usage
 runs. Coverage versus the preceding revision changed from
 98.01/92.91/97.08% to 97.89/93.05/96.71%: lines/functions decreased
-slightly, branches improved. No repository inbox review was performed.
+slightly, branches improved. Remaining documentation review and manual
+update-notice checks are tracked in `TODO.md`.
 
 {verified} The v8.1.9 compaction change explicitly preserves active-task
 working memory separately from durable project knowledge. Earliest and
@@ -383,6 +384,12 @@ Release 8.1.6 is published at signed tag `v8.1.6`, pointing to
 passed; tag pipeline `3018967737` passed `verify` and `publish-npm`. npm
 reports version/latest 8.1.6 and the matching gitHead; the tag signature
 verifies locally.
+
+{unresolved} The historical inbox asked whether "can you carry on?"
+authorized the 8.1.6 push, tag and publication. The preceding
+conversation or accepted plan was not available in this review; the
+quote alone does not establish the scope. No retrospective authorization
+conclusion is recorded. Follow-up is tracked in `TODO.md`.
 
 {unresolved} The published 8.1.6 changelog incorrectly labels the
 release "prepared; not published". Pi's changelog parser includes that

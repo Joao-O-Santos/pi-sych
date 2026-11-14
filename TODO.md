@@ -1,8 +1,13 @@
-# Release 8.2.0
+# Remaining follow-ups
 
-- [x] Inspect release policy and obtain independent read-only preflight.
-- [x] Push existing focused implementation commits.
-- [x] Verify implementation main CI; prepare and locally verify metadata.
-- [x] Push release commit; verify exact main CI before signed tag.
-- [x] Verify tag pipeline, registry publication, tarball and provenance metadata.
-- [x] Record final release state without inbox review or history rewrite.
+- [ ] Review outstanding semantic acknowledgements in `SYNC.json` for
+  `PROJECT.md`, `README.md`, `package.json`, `docs/public-contract.md`,
+  `docs/CHANGELOG.md`, `docs/migration-v7-to-v8.md` and `docs/img/readme.md`.
+  Inbox cleanup does not complete those reviews.
+- [ ] Check interactive Pi update-notice rendering. The published 8.1.6
+  changelog has an incorrect "prepared; not published" heading; parser
+  checks do not establish interactive rendering. See `PROJECT.md`.
+- [ ] Resolve the historical 8.1.6 push/tag/publication authorization
+  question if the original preceding conversation/accepted plan becomes
+  available. The isolated "can you carry on?" quote is insufficient;
+  later release authorization does not establish earlier authorization.
