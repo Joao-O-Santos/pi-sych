@@ -63,7 +63,12 @@ documentation build and links. The opt-in usage suite includes
 `worker-instructions.test.mjs`, which checks inline guidance through a
 live dispatch and verifies shared worker files and project AGENTS remain
 unchanged, and `custom-compaction.test.mjs`, which checks a live summary
-and proposal. These require explicit opt-in and configured credentials;
+and proposal. The separately gated `compaction-soak.test.mjs` runs a
+bounded workhorse read/write workload with a \<=50k automatic-compaction
+threshold and a local timing/outcome report; enable it only with
+`PI_SYCH_COMPACTION_SOAK=1`. It is excluded from CI and ordinary usage
+runs. See `tests/usage/README.md` for limits and report interpretation.
+These require explicit opt-in and configured credentials;
 model/run-specific results are not deterministic CI contracts. A remote
 edit without a local checkout cannot establish that either repository
 command passed; report that limitation.

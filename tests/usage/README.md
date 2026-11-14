@@ -2,9 +2,10 @@
 
 These tests exercise real Pi and model behavior. They are not part of
 `npm test`, may use configured credentials, may incur provider cost, and
-can vary by model or run. The real-Pi fixture isolates its temporary
-agent directory and copies only the configured OpenAI Codex auth entry
-when present; the directory is removed after the run.
+can vary by model or run. The short acceptance fixtures isolate their
+temporary agent directories and copy only the configured OpenAI Codex
+auth entry when present. The separately gated workhorse soak copies
+native auth/model configuration privately, as described below.
 
 `prompt-quality.test.mjs` reads the scenarios in
 `tests/fixtures/prompt-quality-fixtures.json`. Each fixture identifies a
@@ -52,6 +53,51 @@ checks canonical project state was not changed. The test copies the
 configured OpenAI Codex auth entry when available; it may incur model
 cost. Diagnostics include Pi stdout/stderr and the disposable session is
 removed after the run.
+
+## Separately opted-in automatic-compaction soak
+
+Explicitly run the paid short soak from the repository root:
+
+``` sh
+PI_SYCH_COMPACTION_SOAK=1 node --test tests/usage/compaction-soak.test.mjs
+```
+
+It is skipped by default, including ordinary `PI_SYCH_USAGE_TEST=1`
+runs. It reads the private `workhorse` role from the configured Pi Sych
+`worker-models.json`, copies Pi auth and model configuration into a
+private temporary agent directory, and launches an isolated Pi with the
+workbench and an observer extension. User settings are not modified. The
+model must be available to native Pi; environment-based provider
+credentials are inherited. This is not a sandbox. Only read/write tool
+calls within the temporary workspace are permitted by the test observer;
+no remote research or subdelegation is requested.
+
+The workload reads generated corpus files and writes batch notes over
+separate settled turns; it does not inject transcripts or call compact
+manually. The separate gate can incur substantial provider cost.
+Defaults are threshold 32,000 tokens, target three custom successes, at
+most eight batches and 480 seconds. Optional bounded integer environment
+variables are `PI_SYCH_SOAK_THRESHOLD` (1,000--50,000),
+`PI_SYCH_SOAK_TARGET` (2--3), `PI_SYCH_SOAK_BATCHES` (2--8), and
+`PI_SYCH_SOAK_SECONDS` (30--480). The test requires at least two custom
+successes and observed read/write work after one; it can finish below
+the target when the batch limit is reached.
+
+A private JSON report survives cleanup at the printed
+`/tmp/pi-sych-compaction-soak-*.json` path, or at a new path supplied by
+`PI_SYCH_SOAK_REPORT` (existing files are not overwritten). It records
+per-attempt native hook timing and outcome, settled usage, batch
+progress and observable session usage/cost. A native fallback is not a
+custom success: swallowed custom failures cannot always be separated
+from other fallbacks, and Pi may omit custom-call usage. Cost fields are
+pricing estimates when not provider-reported charges. The report also
+includes summary-length and lexical anchor diagnostics, which are not
+semantic-retention judgments. Proactive admission uses Pi's manual
+request path, so attempt reason may be `manual` even though the test
+sends no compact commands. Provider errors and prompts are deliberately
+not captured. Timeout kills the child process group; temporary
+credentials and workspace are removed. Forced termination of the test
+runner itself cannot guarantee cleanup.
 
 A passing evaluation is evidence from that model and run. It is not a
 deterministic contract, proof of general adherence, or substitute for

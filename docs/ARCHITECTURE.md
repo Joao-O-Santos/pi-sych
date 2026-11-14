@@ -183,18 +183,23 @@ approach rationale, not private reasoning. Later user direction or
 completion evidence can supersede a prior task; a recent subtask alone
 does not replace it.
 
-The conversation ceiling is 192 KiB, with bounded chronological
-user-request excerpts, recent messages, and remaining observable
-history. User requests share prefix allowances across the chronology;
-very large request counts are sampled. Explicit tool errors and adjacent
-context receive a protected, deduplicated allocation. Prior-summary
-input is capped at 64 KiB, with priority-aware section clipping instead
-of losing late resume state. Output is up to 16,384 tokens, capped by
-the model's output limit and one quarter of its context window. Input
-bytes are conservatively budgeted as potential tokens after
-output/framing reserves, with allocations shared across snapshots, prior
-memory and conversation. Invalid model limits or an irreducibly
-oversized prompt use native fallback rather than clipping instructions.
+Input preserves the complete available chronological visible text: user
+messages, assistant replies, full tool calls/arguments, prior summary,
+split prefix and retained tail. Pi's native retained projection honors
+context-edit replacements/omissions; raw omitted attempts do not revive.
+There are no fixed conversation/prior-summary/per-message byte ceilings
+or sampling categories. Optional canonical snapshots yield first; only
+necessary large tool/shell outputs become explicitly marked prefix/tail
+excerpts. Images are marked as omitted from text input.
+
+Pi's native token estimate plus framing headroom fits input against the
+active context window. Useful output space is reserved, yielding to a
+fitting backbone; actual output uses model capacity and remaining
+context, not a fixed 16,384-token cap. The estimate is not exact
+provider accounting. Working-memory text/count quotas are removed;
+schema and proposal safeguards remain. Invalid model limits, a genuinely
+oversized backbone or model failure use explicit native fallback rather
+than silently dropping turns. That fallback uses Pi's own policy.
 Working memory includes bounded user preferences and tool
 failure/recovery lessons. Explicit versus inferred feedback and
 project/personal/unknown scope remain distinguishable; repeated summary

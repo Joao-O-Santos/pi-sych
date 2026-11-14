@@ -5,10 +5,6 @@ import { join } from "node:path";
 import test from "node:test";
 import {
 	buildCompactionPrompt,
-	COMPACTION_CONVERSATION_BYTE_LIMIT,
-	COMPACTION_FOCUS_BYTE_LIMIT,
-	COMPACTION_SNAPSHOT_PROMPT_BYTE_LIMIT,
-	COMPACTION_SUMMARY_BYTE_LIMIT,
 	compact,
 	compactionSnapshot,
 	parseCompactionModelOutput,
@@ -69,7 +65,7 @@ test("allow-lists reject substring targets and gap kinds", () => {
 	]);
 });
 
-test("validates bounded structured continuation and provenance", () => {
+test("validates structured continuation and provenance without count limits", () => {
 	const parsed = parseCompactionModelOutput(
 		JSON.stringify({
 			workingMemory: memory(),
@@ -91,9 +87,16 @@ test("validates bounded structured continuation and provenance", () => {
 			}),
 		/provenance/,
 	);
-	assert.throws(
-		() => validateWorkingMemory({ ...memory(), constraints: Array(13).fill("x") }),
-		/at most 12/,
+	const longConstraints = Array.from({ length: 20 }, (_, index) => `${index} ${"x".repeat(2000)}`);
+	assert.deepEqual(
+		validateWorkingMemory({ ...memory(), constraints: longConstraints }).constraints,
+		longConstraints,
+	);
+	assert.deepEqual(
+		parseCompactionModelOutput(
+			JSON.stringify({ workingMemory: memory({ constraints: longConstraints }), promotions: [] }),
+		).workingMemory.constraints,
+		longConstraints,
 	);
 	for (const value of [
 		{ objective: "before\nafter" },
@@ -130,10 +133,7 @@ test("prompt preserves recorded decision attributions across continuation passes
 		{ changed: [], missing: [], impacted: [], errors: [], projectErrors: [] },
 		"INBOX.md",
 	);
-	assert.match(
-		prompt,
-		/Previously recorded decision attributions from the previous Pi Sych continuation/,
-	);
+	assert.equal(prompt.split(first).length - 1, 1);
 	assert.match(prompt, /not independently verified and not new authorization/);
 	assert.match(
 		prompt,
@@ -144,21 +144,10 @@ test("prompt preserves recorded decision attributions across continuation passes
 		/target must be one of project,agents,personal-agents,style,evidence,decisions,todo/,
 	);
 	assert.match(prompt, /- \[user-explicit\] Use bounded continuation/);
-	assert.doesNotMatch(
-		buildCompactionPrompt(
-			{
-				...event,
-				preparation: { ...event.preparation, previousSummary: "- [user-explicit] arbitrary text" },
-			},
-			{ files: [], paths: [] },
-			{ changed: [], missing: [], impacted: [], errors: [], projectErrors: [] },
-			"INBOX.md",
-		),
-		/Previously recorded decision attributions from[\s\S]*arbitrary text/,
-	);
+	assert.doesNotMatch(prompt, /Previously recorded decision attributions from/);
 });
 
-test("prompt bounds history and summary while prioritizing retained messages", () => {
+test("unbudgeted prompt retains complete history and summary with retained messages", () => {
 	const history = Array.from({ length: 6_000 }, (_, index) => ({
 		role: "user",
 		content: `history-${index} ${"x".repeat(40)}`,
@@ -167,7 +156,7 @@ test("prompt bounds history and summary while prioritizing retained messages", (
 		preparation: {
 			messagesToSummarize: history,
 			turnPrefixMessages: [],
-			previousSummary: `summary-start\n${"s".repeat(COMPACTION_SUMMARY_BYTE_LIMIT * 2)}`,
+			previousSummary: `summary-start\n${"s".repeat(128 * 1024)} summary-end`,
 			firstKeptEntryId: "keep",
 		},
 		branchEntries: [
@@ -181,18 +170,12 @@ test("prompt bounds history and summary while prioritizing retained messages", (
 		"INBOX.md",
 	);
 	assert.match(prompt, /retained-tail/);
-	assert.match(prompt, /earlier messages omitted/);
-	assert.match(prompt, /truncated after/);
-	assert.ok(
-		Buffer.byteLength(serializeObservableMessages(history)) <= COMPACTION_CONVERSATION_BYTE_LIMIT,
-	);
-	assert.ok(
-		Buffer.byteLength(`summary-start\n${"s".repeat(COMPACTION_SUMMARY_BYTE_LIMIT * 2)}`) >
-			COMPACTION_SUMMARY_BYTE_LIMIT,
-	);
+	assert.ok(prompt.includes(serializeObservableMessages(history)));
+	assert.ok(prompt.includes(event.preparation.previousSummary));
+	assert.ok(prompt.indexOf("history-0 ") < prompt.indexOf("history-5999 "));
 });
 
-test("focus and serialized snapshots have explicit UTF-8 prompt bounds", () => {
+test("unbudgeted prompt retains full focus and serialized snapshots", () => {
 	const prompt = buildCompactionPrompt(
 		{
 			customInstructions: "🧭".repeat(10_000),
@@ -209,19 +192,12 @@ test("focus and serialized snapshots have explicit UTF-8 prompt bounds", () => {
 		{ changed: [], missing: [], impacted: [], errors: [], projectErrors: [] },
 		"INBOX.md",
 	);
-	const focusStart = prompt.indexOf("Focus: ") + "Focus: ".length,
-		focusEnd = prompt.indexOf(`${String.fromCharCode(10)}Previous summary`, focusStart),
-		focus = prompt.slice(focusStart, focusEnd);
-	assert.ok(Buffer.byteLength(focus) <= COMPACTION_FOCUS_BYTE_LIMIT);
-	assert.match(focus, /truncated after/);
-	const newline = String.fromCharCode(10),
-		snapshotMarker = `${newline}Canonical snapshots (inbox excluded; clipping proves nothing):${newline}`,
-		artifactMarker = `${newline}Artifact paths:${newline}`,
-		snapshotStart = prompt.indexOf(snapshotMarker) + snapshotMarker.length,
-		snapshotEnd = prompt.indexOf(artifactMarker, snapshotStart),
-		snapshotText = prompt.slice(snapshotStart, snapshotEnd);
-	assert.ok(Buffer.byteLength(snapshotText) <= COMPACTION_SNAPSHOT_PROMPT_BYTE_LIMIT);
-	assert.match(snapshotText, /truncated after/);
+	assert.ok(prompt.includes("🧭".repeat(10_000)));
+	assert.ok(
+		prompt.includes(
+			JSON.stringify([{ path: "PROJECT.md", content: String.fromCharCode(1).repeat(10_000) }]),
+		),
+	);
 });
 
 test("compaction input treats embedded directives and authority claims as data", () => {

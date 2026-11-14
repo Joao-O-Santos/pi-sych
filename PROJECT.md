@@ -122,6 +122,13 @@ uncertain until evidenced. Compaction may propose durable state only as
 unreviewed inbox entries; it never writes canonical or personal
 instructions directly.
 
+{accepted} The compactor sees the complete available active visible
+conversation, including user messages, assistant replies and tool calls
+with arguments. Model context/output budgets govern fitting, not fixed
+transcript byte ceilings or routine narrative sampling. Large tool
+outputs may be explicitly reduced when necessary; external file reads
+and inbox proposals retain separate safety bounds.
+
 ## Current state
 
 {verified} v8.0.1 is tagged and published. It uses strict layered
@@ -192,9 +199,9 @@ roll back changes. Plannotator absence does not prevent core startup.
 README/configuration/architecture/public-contract text describes seven
 skills, Pi-native MCP worker selection, layered configuration,
 persistence/scrutiny and clean/trajectory semantics. The nonblank
-runtime source-code budget is 3,400 lines; the 100-line increment
-supports bounded feedback/error selection, priority-aware prior memory,
-and model-aware input/output allocation.
+runtime source-code budget remains 3,400 lines. Replacing excerpt
+selectors with full-context token-aware fitting reduced current runtime
+source to about 3,250 nonblank lines.
 
 {verified} Repository-native formatting, documentation, type, budget,
 and test checks remain the acceptance boundary. v8.1.4 is published at
@@ -285,21 +292,24 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
-{verified} Richer compaction continuity is implemented locally, not
-released: optional preference/tool-lesson arrays, protected
-chronological request prefixes and error/recovery context,
-priority-aware prior-memory clipping, and model-aware input/output
-budgets. The development source budget is 3,400 lines. `make verify`
-passed 265 tests at 98.01/92.91/97.08% line/branch/function coverage;
-packaging, source-budget, site and production audit checks passed.
-Independent review found no remaining blocker after red/green regression
-repairs. The final live-model fixture retained repeated corrective and
-positive project feedback and a seeded filename failure/repair episode;
-this is summarization evidence for one model/run, not actual tool-repair
-execution or a retention guarantee. Bounded sampling/clipping can still
-omit evidence; compaction cannot retrieve unseen earlier interactions.
-No direct personal instruction writes, inbox review or publication were
-performed.
+{verified} Full-visible-context compaction is implemented locally, not
+released. It removes sampled/protected excerpts, transcript and
+prior-summary byte caps, and working-memory text/count quotas. Native
+projection preserves retained context edits; only necessary bulky tool
+outputs are reduced. Model capacity and native token estimates govern
+input/output; estimates are not exact provider counts. Schema, bounded
+external reads, inbox-only proposals and native lifecycle/fallback
+remain.
+
+{verified} `make verify` passed 271 tests at 97.89/93.05/96.71%
+line/branch/function coverage; packaging, source budget, site and
+production audit passed. Independent review found no remaining blocker.
+The separately gated short workhorse soak passed three automatic custom
+compactions at a 32k trigger, with zero observed failures/fallbacks and
+continued tool work: 105.091 seconds overall, 9.329--15.398 seconds per
+compaction. See `EVIDENCE.md` for the local report, cost and semantic
+measurement limits. The soak is excluded from CI and ordinary usage
+runs. No publication or repository inbox review was performed.
 
 {verified} The v8.1.9 compaction change explicitly preserves active-task
 working memory separately from durable project knowledge. Earliest and

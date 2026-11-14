@@ -5,14 +5,21 @@ Notable user-facing changes to Pi Sych, in reverse version order.
 ## Unreleased
 
 - Custom compaction can retain repeated, scoped user feedback and
-  observed tool failure/recovery lessons. Larger model-aware bounded
-  working-memory inputs/outputs reduce automatic-compaction loss; small
-  contexts share reduced input/output allowances and fall back to native
-  compaction if the instructions cannot fit. Preference proposals remain
-  unreviewed and scoped; no personal instruction files are written.
-  Optional memory fields are backward-compatible; no migration required.
-  Raise the development source budget from 3,300 to 3,400 lines for the
-  bounded selection, priority retention, and model-budget mechanics.
+  observed tool failure/recovery lessons. Supply the complete available
+  visible conversation, tool calls/arguments and previous summary rather
+  than byte-capped sampled excerpts. Native token estimates and model
+  capacity govern fitting and output; only necessary bulky tool results
+  are explicitly reduced. Remove working-memory item/text quotas while
+  retaining schema, bounded external reads and inbox proposal
+  safeguards. Genuine oversized backbones and model failures take native
+  fallback. Preference proposals remain unreviewed and scoped; no
+  personal instruction files are written. Optional memory fields are
+  backward-compatible; no migration required. Source remains below the
+  existing 3,400-line development budget.
+- Add a separately opted-in workhorse automatic-compaction soak,
+  excluded from CI and ordinary usage runs, with an isolated \<=50k
+  threshold, bounded real read/write work and a local
+  timing/outcome/usage report.
 
 ## 8.1.9
 

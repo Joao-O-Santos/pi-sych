@@ -2,9 +2,6 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
 	buildCompactionPrompt,
-	COMPACTION_CONVERSATION_BYTE_LIMIT,
-	COMPACTION_OUTPUT_TOKEN_LIMIT,
-	COMPACTION_SUMMARY_BYTE_LIMIT,
 	parseCompactionModelOutput,
 	renderWorkingMemory,
 	validateWorkingMemory,
@@ -37,10 +34,7 @@ const prompt = (previousSummary) =>
 		"INBOX.md",
 	);
 
-test("richer model-aware bounds and feedback guidance are explicit", () => {
-	assert.equal(COMPACTION_CONVERSATION_BYTE_LIMIT, 192 * 1024);
-	assert.equal(COMPACTION_SUMMARY_BYTE_LIMIT, 64 * 1024);
-	assert.equal(COMPACTION_OUTPUT_TOKEN_LIMIT, 16_384);
+test("feedback and recovery guidance are explicit", () => {
 	const instructions = prompt();
 	for (const cue of [
 		"repeated explicit corrections/frustrations",
@@ -95,7 +89,7 @@ test("feedback and recovery survive a richer two-pass summary beyond the old 16 
 		userPreferences: [
 			"[inferred; scope unknown] Repeated complaints concerned unnecessary approval prompts, not all clarification questions; confirm durable scope at review.",
 		],
-		progress: Array.from({ length: 12 }, (_, i) => `check-${i} ${"p".repeat(900)}`),
+		progress: Array.from({ length: 20 }, (_, i) => `check-${i} ${"p".repeat(1500)}`),
 		inferences: Array.from({ length: 12 }, (_, i) => `assumption-${i} ${"i".repeat(900)}`),
 		failedOrRejected: Array.from({ length: 12 }, (_, i) => `failure-${i} ${"f".repeat(900)}`),
 		toolLessons: [

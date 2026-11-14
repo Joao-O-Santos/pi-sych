@@ -323,14 +323,16 @@ orchestration system:
   boundary. Its bounded short-term working memory retains the active
   task goal, resume point, next action, actionable user feedback, and
   observed tool recoveries; inspectable project files retain long-term
-  knowledge. Larger model-aware allowances protect user-request and
-  error/recovery excerpts alongside recent activity. Preference
-  proposals remain unreviewed in the inbox, with project/personal scope
-  explicit. Malformed optional memory/proposal entries are skipped
-  independently when the required summary remains usable; missing or
-  unusable required fields retain Pi's native fallback. Inbox
-  safety/write failures skip proposals without discarding usable memory,
-  and canonical semantic files are never mutated.
+  knowledge. The compactor sees full available visible conversation and
+  tool calls in order; model token budgets, not fixed transcript byte
+  caps, govern fitting. Large tool outputs are reduced only when needed,
+  with explicit markers. Preference proposals remain unreviewed in the
+  inbox, with project/personal scope explicit. Malformed optional
+  memory/proposal entries are skipped independently when the required
+  summary remains usable; missing or unusable required fields retain
+  Pi's native fallback. Inbox safety/write failures skip proposals
+  without discarding usable memory, and canonical semantic files are
+  never mutated.
 - **Optional completion reassessment:** disabled by default; when
   enabled, the workbench asks once at Pi's final actionable boundary
   whether the current authorized request is complete. It continues

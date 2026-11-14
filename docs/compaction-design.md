@@ -65,41 +65,51 @@ grounded in visible evidence. These remain tentative, not user decisions
 or recovered private reasoning. Do not turn inferred rationale into a
 user statement.
 
-The conversation input ceiling is 192 KiB. Up to one quarter protects
-user requests: an earliest-request prefix, followed by shared prefix
-allowances across subsequent requests so middle feedback is not simply
-replaced by the recent suffix. Extreme message counts are sampled at
-chronologically distributed positions, retaining the latest request.
-Up to one sixth (at most 32 KiB) protects tool-error episodes: each
-explicit error result plus one preceding and four following messages,
-with overlapping windows deduplicated. Flagged error prefixes receive
-reserved space before separately labeled adjacent context, so a long
-following success cannot consume their allocation. These groups are not
-a single chronological replay. Excess errors, unflagged failures, or
-repairs outside those windows can still be missed. The recent tail receives up
-to one quarter; observable history uses the remainder. Episode selection
-uses roles/error flags, not semantic interpretation of error text.
+The compactor receives the complete available active visible text:
+all user messages, assistant replies and tool calls/arguments, in order,
+including the split-turn prefix and retained recent tail. Previous
+summary and manual focus text are supplied in full. There is no fixed
+conversation, prior-summary, message or content-part byte/count ceiling,
+no request sampling, and no duplicated protected excerpts. The retained
+tail uses Pi's native projection, including context-edit replacements,
+omissions, custom messages and branch summaries; raw omitted attempts
+must not reappear. Older compacted-away text is available only through
+its previous summary, not recovered verbatim. Thinking is excluded;
+images are explicitly marked as omitted from text serialization.
 
-Prior-summary input is capped at 64 KiB, including separately preserved
-decision attributions. Oversized structured summaries are excerpted by
-section rather than prefix alone, prioritizing objective and next action
-and allocating space for preferences, tool lessons and other sections.
-Unrecognized legacy summaries use bounded prefix extraction.
+Input fitting uses Pi's exported `estimateTokens` on the actual serialized
+prompt, plus 1,024 tokens of framing headroom. This is a chars/4
+heuristic, not provider tokenizer accounting or a universal conservative
+bound, especially for multilingual/code-heavy content. Provider overflow
+or other model failure leaves native fallback in control.
 
-Output allowance is the minimum of 16,384 tokens, the model's output
-limit, and one quarter of its context window. The prompt-byte allowance
-is the context window minus that output reserve and 1,024 tokens of
-framing headroom. Treating each UTF-8 byte as a potential input token is
-intentionally more conservative than average characters-per-token
-estimates; it is not a provider tokenizer measurement. Fixed instructions,
-focus, status, paths and section framing are reserved first. Snapshots
-receive at most one sixth of the remaining allowance, prior memory at
-most one third after snapshots, and conversation receives the remainder,
-all below their respective ceilings. Unknown/unusable model limits or
-an irreducibly oversized prompt leave native fallback in control rather
-than clipping instructions. These richer defaults apply equally to
-manual, native automatic and proactive compaction; proactive admission
-uses Pi's manual request path, so reason alone cannot distinguish it.
+Full fitting tool output is retained. Optional canonical snapshot
+contents yield first, then the largest tool/shell output payloads are
+reduced only as required. Reduction retains prefix/tail excerpts and an
+explicit middle-omission marker; call identities, arguments, result
+error flags, shell commands and narrative are not clipped. Reduced
+output can lose useful evidence, so a marked excerpt is not evidence
+that the missing middle was unimportant. If the complete backbone still
+cannot fit, custom compaction explicitly falls back rather than silently
+sampling conversation turns or making additional model calls.
+
+Output reservation targets the smaller of the model's output capacity
+and one quarter of its context window, but yields to the capacity left
+after the complete minimal backbone and framing. This reservation is
+not an output cap. The actual output allowance is the smaller of the
+model's output capacity and the context remaining after estimated final
+input plus framing. There is no fixed 16,384-token ceiling, output byte
+ceiling, or working-memory item/text-length quota. Limits are ceilings,
+not requested summary lengths. Unknown/unusable model limits or a missing native projection API take
+native fallback; an incomplete/non-stop response is never persisted as a
+successful custom continuation.
+
+These policies apply to manual, native automatic and proactive requests.
+Proactive admission uses Pi's manual request path, so an event reason of
+`manual` alone does not establish that the user requested compaction.
+On custom failure Pi uses its own serializer and summarizer: the
+custom request's no-turn-sampling policy does not constrain that native
+fallback.
 
 Working memory includes `userPreferences` and `toolLessons`. Preferences
 capture repeated user corrections, frustrations, and positive feedback
@@ -108,18 +118,17 @@ are not independent evidence, later corrections supersede earlier ones,
 and praise is scoped to what was praised. Project/personal scope remains
 unknown unless visible evidence establishes it. Tool lessons retain
 failure, observed repair/outcome, and applicability limits; an untested
-suggestion is not a demonstrated fix. Both are arrays of single-line strings carrying evidence, scope, and
+suggestion is not a demonstrated fix. Both are arrays of single-line strings carrying evidence, scope and
 uncertainty, not objects or private reasoning. Prior summaries are
 records, not fresh user feedback; compaction cannot retrieve unseen
-interactions. Excerpts use the existing per-message
-prefix bound, so long requests and intervening messages can still be
-clipped or omitted. Earlier requests may be completed or superseded;
+interactions. Earlier requests may be completed or superseded;
 the model must interpret them rather than automatically revive them.
 
-Do not preserve private chain-of-thought, hidden scratch reasoning,
-complete conversation replay, low-value narration, repeated
-confirmations, or superseded wording once its material outcome is
-captured.
+The continuation output is not a transcript replay. Do not preserve
+private chain-of-thought, hidden scratch reasoning, low-value narration,
+repeated confirmations, or superseded wording once its material outcome
+is captured. Full visible input lets the model judge relevance; it does
+not require copying everything into the summary.
 
 ## Project-state reconciliation
 
@@ -170,8 +179,9 @@ UI itself fails.
 
 ## Suggested continuation shape
 
-The implemented serialization contains the following bounded fields (the preference and tool-lesson arrays are optional
-additions; old output remains usable):
+The implemented serialization contains the following schema-controlled
+fields (the preference and tool-lesson arrays are optional additions;
+old output remains usable):
 
 ```text
 objective:
@@ -194,26 +204,29 @@ projectStateGaps:
 malformed optional array fields normalize to empty arrays, and invalid
 members are skipped independently. Decision records retain only explicitly
 allow-listed provenance labels; invalid entries are omitted, never
-reclassified. Boundedness comes from bounded source reads, item, message,
-status, retained-tail, snapshot, and proposal limits
-rather than prompt word-count budgets. The nonblank runtime source budget
-is 3,400 lines; the checker reports a 50-line-rounded estimate. UTF-8
-snapshots are decoded and
-then byte-bounded, including malformed source text; serialized snapshots
-and optional focus instructions also have explicit prompt-byte limits.
-Observable messages and the retained tail exclude hidden thinking. Recorded label attributions are
-carried forward without verification; inferences remain distinct.
+reclassified. Working-memory strings and arrays have no arbitrary length/count caps;
+model input/output capacity bounds normal compaction. Inbox proposals
+remain at most five one-line entries of at most 1,000 characters each.
+External canonical reads remain at most 16 KiB per file and 48 KiB total;
+status/path metadata has separate bounds. UTF-8 snapshots are decoded
+and then byte-bounded, including malformed source text. These I/O and
+proposal safeguards do not select conversation turns. The nonblank
+runtime source budget remains 3,400 lines; the checker reports a
+50-line-rounded estimate. Recorded labels are carried forward without
+verification; inferences remain distinct.
 
 ## Required regressions
 
 Test task versus project-goal separation, tool-heavy request retention,
 chronological user corrections, two-pass working-memory continuity,
-UTF-8 conversation bounds, thinking exclusion, settled-boundary execution, duplicate/reentrant triggers, queued
+complete chronological visible input, Unicode-safe necessary output
+reduction, thinking exclusion, settled-boundary execution, duplicate/reentrant triggers, queued
 follow-up preservation, explicit decisions versus inference, visible
 rationale without invented hidden reasoning, rejected-path continuity,
 project-state gap classification, canonical non-mutation, bounded
-unreviewed proposals if retained, malformed output/failure fallback, small-model budget admission,
-large valid prior-summary priority retention, middle feedback/error-repair
+unreviewed proposals if retained, malformed output/failure fallback, model-derived input/output admission, complete large prior-summary and
+call-argument retention, native retained projection, large-output-only
+reduction, oversized-backbone fallback, middle feedback/error-repair
 coverage, and successful resumption of the actual next action.
 
 Live-model fixtures can then evaluate decision loss, reintroduction of

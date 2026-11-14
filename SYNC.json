@@ -1,7 +1,28 @@
 {
   "version": 2,
-  "confirmedAt": "2026-11-14T12:34:48.672Z",
+  "confirmedAt": "2026-11-14T17:20:17.350Z",
   "artifacts": [
+    {
+      "path": "EVIDENCE.md",
+      "fingerprint": "sha256:032c58db55f0e8b9f196b71ea5d08858e1975c0abb9e02dc9b903c7d385cb870",
+      "status": "current",
+      "role": "evidence",
+      "authoritativeFor": [
+        "full-context-compaction-local-verification"
+      ],
+      "updateFrom": [
+        "extensions/workbench/src/compaction.ts",
+        "tests/unit/compaction-full-context.test.mjs",
+        "tests/unit/compaction-budget.test.mjs",
+        "tests/usage/compaction-soak.test.mjs",
+        "tests/usage/compaction-soak-observer.ts"
+      ],
+      "pendingReason": "New bounded task evidence; supervisor inspected the actual local check logs and one soak report.",
+      "acknowledgement": {
+        "at": "2026-11-14T17:20:17.350Z",
+        "reason": "Updated the inspected local verification record to the final make verify run: 271/271 tests, 97.89/93.05/96.71% line/branch/function coverage; packaging/source budget/style/type/whitespace passed, site passed and unchanged production dependencies audited with zero vulnerabilities. Recorded the actual report-path override used for the one paid short soak. No runtime or measurement changes; model/run-specific and semantic/long-duration limitations remain explicit. No publication or inbox review."
+      }
+    },
     {
       "path": "PROJECT.md",
       "fingerprint": "sha256:ea9c8d7b16c1540c31be23d052cde5c7de694b77ed1b82f37b4d357d04e71202",
@@ -18,19 +39,19 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Recorded richer scoped user-feedback/tool-recovery continuity, model-aware budgets, 265-test verification, site/audit checks, independent review and seeded-history live-model acceptance. This change is local and unreleased; existing broader semantic acknowledgement remains pending."
+      "pendingReason": "Recorded full-visible-context token-aware compaction, removed transcript/memory quotas, 271-test verification and one separately gated real-workhorse short soak (3 custom successes, no observed failures/fallbacks). Local and unreleased; existing broader semantic acknowledgement remains pending."
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:8acfec6ff78c8a7221e60ab03f8306857fecfaba3a17493c1e38fd14ce8152b0",
+      "fingerprint": "sha256:7368a905dbf13a0781dac87a504695de1fe1e56ad9848053bb1860fe127ecbb9",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-11-14T12:34:48.672Z",
-        "reason": "Reviewed richer compaction continuity against the actual optional-field parser/renderer, chronological user prefixes, error-first episode excerpts, priority-aware prior memory, and model-aware input/output allocation. Independent test design and read-only reviews led to red/green repairs; final follow-up found no remaining blocker. make verify passed all 265 tests at 98.01/92.91/97.08% line/branch/function coverage, packaging and the explicitly documented 3400-line source budget. Site and production audit passed; final opt-in live-model acceptance retained repeated corrective/positive feedback and a seeded filename failure/repair episode. This verifies model/run-specific extraction, not actual tool repair execution or guaranteed retention; bounded sampling/clipping and already-submitted append nontransactionality remain documented. Existing unrelated broader needs-review states are retained. No inbox review, direct personal instruction writes, push or release."
+        "at": "2026-11-14T17:16:02.471Z",
+        "reason": "Reviewed full-visible-context compaction against source, native projection/lifecycle and regressions: no turn sampling or transcript/prior-memory/message byte caps; native token estimates and model capacity govern fitting/output; optional snapshots yield before necessary marked bulky tool-output reduction; narrative/arguments remain complete or custom compaction explicitly falls back. Memory text/count quotas removed while schema/provenance, bounded external reads and five one-line 1000-character inbox proposals remain. Independent static review found no concrete blocker; supervisor completed/inspected integration after a partial worker timeout. Final make verify passed 271 tests at 97.89/92.90/96.71% line/branch/function coverage, packaging and about3250/3400-line source budget; site passed and production audit found zero vulnerabilities. Supervisor inspected exactly one separately gated workhorse short soak: 105.091s, six real read/write batches, three automatic custom successes, no observed failure notices/native fallbacks/failed or cancelled attempts; compaction9.329-15.398s. Report and limits recorded in EVIDENCE.md: native token estimates/lexical diagnostics are not exact provider accounting or semantic-retention proof; this is not long-duration reliability evidence. Soak skips by default and under ordinary usage gate; no CI execution, global settings changes, inbox review, push or release. Existing broader needs-review states retained."
       }
     },
     {
@@ -50,7 +71,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "Documented richer task memory, scoped user feedback and tool recoveries with protected request/error context and unreviewed preference proposals. Published asset links are unchanged; broader semantic acknowledgement remains pending."
+      "pendingReason": "Documented complete available visible task input and calls, token-aware fitting, necessary marked tool-output reduction and unreviewed preference proposals. Published asset links are unchanged; broader semantic acknowledgement remains pending."
     },
     {
       "path": "package.json",
@@ -75,28 +96,28 @@
     },
     {
       "path": "docs/configuration.md",
-      "fingerprint": "sha256:f7f7ca73a9063546ec55e804d97564ff98f5fa24e74b1d5c03f8916393156c2f",
+      "fingerprint": "sha256:273957a371db8942ddf2c1d8b92c5d49e88b05b2d4d826ee8f2410f0a94e9a96",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-11-14T12:34:48.672Z",
-        "reason": "Reviewed richer compaction continuity against the actual optional-field parser/renderer, chronological user prefixes, error-first episode excerpts, priority-aware prior memory, and model-aware input/output allocation. Independent test design and read-only reviews led to red/green repairs; final follow-up found no remaining blocker. make verify passed all 265 tests at 98.01/92.91/97.08% line/branch/function coverage, packaging and the explicitly documented 3400-line source budget. Site and production audit passed; final opt-in live-model acceptance retained repeated corrective/positive feedback and a seeded filename failure/repair episode. This verifies model/run-specific extraction, not actual tool repair execution or guaranteed retention; bounded sampling/clipping and already-submitted append nontransactionality remain documented. Existing unrelated broader needs-review states are retained. No inbox review, direct personal instruction writes, push or release."
+        "at": "2026-11-14T17:16:02.471Z",
+        "reason": "Reviewed full-visible-context compaction against source, native projection/lifecycle and regressions: no turn sampling or transcript/prior-memory/message byte caps; native token estimates and model capacity govern fitting/output; optional snapshots yield before necessary marked bulky tool-output reduction; narrative/arguments remain complete or custom compaction explicitly falls back. Memory text/count quotas removed while schema/provenance, bounded external reads and five one-line 1000-character inbox proposals remain. Independent static review found no concrete blocker; supervisor completed/inspected integration after a partial worker timeout. Final make verify passed 271 tests at 97.89/92.90/96.71% line/branch/function coverage, packaging and about3250/3400-line source budget; site passed and production audit found zero vulnerabilities. Supervisor inspected exactly one separately gated workhorse short soak: 105.091s, six real read/write batches, three automatic custom successes, no observed failure notices/native fallbacks/failed or cancelled attempts; compaction9.329-15.398s. Report and limits recorded in EVIDENCE.md: native token estimates/lexical diagnostics are not exact provider accounting or semantic-retention proof; this is not long-duration reliability evidence. Soak skips by default and under ordinary usage gate; no CI execution, global settings changes, inbox review, push or release. Existing broader needs-review states retained."
       }
     },
     {
       "path": "docs/development.md",
-      "fingerprint": "sha256:3166c06ae363e8c28e91522eeed32574f0bdf91fe4c2054e948a04145316e681",
+      "fingerprint": "sha256:f31bdddd8ea150e684fa5260b245d1fcc2a9c59f8cf34a62450f7a340c548830",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "development-checks"
       ],
       "acknowledgement": {
-        "at": "2026-10-13T23:36:45Z",
-        "reason": "Workhorse reviewed the revised text against current compaction/worker source and relevant tests. make verify passed 247 unit/integration tests (97.91/92.92/96.89% aggregate line/branch/function coverage), packaging, type/style/source-budget/whitespace checks; make site passed. No independent read-only reviewer or opt-in live-model test was run. Related diagram review remains pending; no diagram changed."
+        "at": "2026-11-14T17:16:02.471Z",
+        "reason": "Reviewed full-visible-context compaction against source, native projection/lifecycle and regressions: no turn sampling or transcript/prior-memory/message byte caps; native token estimates and model capacity govern fitting/output; optional snapshots yield before necessary marked bulky tool-output reduction; narrative/arguments remain complete or custom compaction explicitly falls back. Memory text/count quotas removed while schema/provenance, bounded external reads and five one-line 1000-character inbox proposals remain. Independent static review found no concrete blocker; supervisor completed/inspected integration after a partial worker timeout. Final make verify passed 271 tests at 97.89/92.90/96.71% line/branch/function coverage, packaging and about3250/3400-line source budget; site passed and production audit found zero vulnerabilities. Supervisor inspected exactly one separately gated workhorse short soak: 105.091s, six real read/write batches, three automatic custom successes, no observed failure notices/native fallbacks/failed or cancelled attempts; compaction9.329-15.398s. Report and limits recorded in EVIDENCE.md: native token estimates/lexical diagnostics are not exact provider accounting or semantic-retention proof; this is not long-duration reliability evidence. Soak skips by default and under ordinary usage gate; no CI execution, global settings changes, inbox review, push or release. Existing broader needs-review states retained."
       }
     },
     {
@@ -104,7 +125,7 @@
       "fingerprint": "sha256:d1223de5b2541240b7e812c4ffdf0fe5ab872ca18fa628b243989a68802b5b2e",
       "status": "needs-review",
       "role": "documentation",
-      "pendingReason": "Documented optional backward-compatible preference/tool-lesson arrays, larger model-aware budgets and protected/priority-aware inputs. Canonical/personal instruction writes remain prohibited; earlier compatibility history and broader semantic review remain pending.",
+      "pendingReason": "Documented full chronological visible input/arguments, native retained projection, token-derived fitting/output and bounded external snapshots instead of sampled byte-capped inputs. Canonical/personal instruction writes remain prohibited; earlier compatibility history and broader semantic review remain pending.",
       "authoritativeFor": [
         "compatibility"
       ],
@@ -167,7 +188,7 @@
     },
     {
       "path": "docs/compaction-design.md",
-      "fingerprint": "sha256:5573bb7d40cdc1019792bc3b83c399596d0385429c3183d6db6e3c47ca5ed5a9",
+      "fingerprint": "sha256:626028e047666e4f0d97c05b3b5258429e0422a575f7278f0d98e61d85ee57c7",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
@@ -179,13 +200,16 @@
         "tests/unit/compaction-task.test.mjs",
         "tests/unit/compaction-preferences.test.mjs",
         "tests/unit/compaction-budget.test.mjs",
+        "tests/unit/compaction-full-context.test.mjs",
         "tests/unit/compaction-boundaries.test.mjs",
         "tests/integration/compaction-recovery.test.mjs",
-        "tests/usage/custom-compaction.test.mjs"
+        "tests/usage/custom-compaction.test.mjs",
+        "tests/usage/compaction-soak.test.mjs",
+        "tests/usage/compaction-soak-observer.ts"
       ],
       "acknowledgement": {
-        "at": "2026-11-14T12:34:48.672Z",
-        "reason": "Reviewed richer compaction continuity against the actual optional-field parser/renderer, chronological user prefixes, error-first episode excerpts, priority-aware prior memory, and model-aware input/output allocation. Independent test design and read-only reviews led to red/green repairs; final follow-up found no remaining blocker. make verify passed all 265 tests at 98.01/92.91/97.08% line/branch/function coverage, packaging and the explicitly documented 3400-line source budget. Site and production audit passed; final opt-in live-model acceptance retained repeated corrective/positive feedback and a seeded filename failure/repair episode. This verifies model/run-specific extraction, not actual tool repair execution or guaranteed retention; bounded sampling/clipping and already-submitted append nontransactionality remain documented. Existing unrelated broader needs-review states are retained. No inbox review, direct personal instruction writes, push or release."
+        "at": "2026-11-14T17:16:02.471Z",
+        "reason": "Reviewed full-visible-context compaction against source, native projection/lifecycle and regressions: no turn sampling or transcript/prior-memory/message byte caps; native token estimates and model capacity govern fitting/output; optional snapshots yield before necessary marked bulky tool-output reduction; narrative/arguments remain complete or custom compaction explicitly falls back. Memory text/count quotas removed while schema/provenance, bounded external reads and five one-line 1000-character inbox proposals remain. Independent static review found no concrete blocker; supervisor completed/inspected integration after a partial worker timeout. Final make verify passed 271 tests at 97.89/92.90/96.71% line/branch/function coverage, packaging and about3250/3400-line source budget; site passed and production audit found zero vulnerabilities. Supervisor inspected exactly one separately gated workhorse short soak: 105.091s, six real read/write batches, three automatic custom successes, no observed failure notices/native fallbacks/failed or cancelled attempts; compaction9.329-15.398s. Report and limits recorded in EVIDENCE.md: native token estimates/lexical diagnostics are not exact provider accounting or semantic-retention proof; this is not long-duration reliability evidence. Soak skips by default and under ordinary usage gate; no CI execution, global settings changes, inbox review, push or release. Existing broader needs-review states retained."
       }
     },
     {
@@ -200,7 +224,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Added an Unreleased note for scoped feedback/tool lessons, model-aware input/output and source-budget ceilings, inbox-only proposals and backward-compatible optional fields. No migration required; broader semantic acknowledgement remains pending."
+      "pendingReason": "Updated Unreleased for full visible token-budgeted compaction, removed memory quotas, retained inbox/read safety and separately gated short soak. No migration or publication; broader semantic acknowledgement remains pending."
     },
     {
       "path": "skills/code/SKILL.md",

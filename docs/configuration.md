@@ -39,13 +39,16 @@ alias for Pi's `reserveTokens`. Set custom to `false` to leave
 compaction to Pi's native behavior.
 
 Custom compaction favors sufficient ongoing-task context over the
-shortest summary. Fixed ceilings are 192 KiB of conversation input, 64
-KiB of prior-summary input, and 16,384 output tokens; active model
-limits reduce these allowances. These are not additional configuration
-keys. Both manual and automatic requests retain bounded actionable user
-preferences and tool recovery lessons when visible. Stable preferences
-may become unreviewed project/agents/personal-agents inbox proposals,
-never direct edits to those instruction files. See the
+shortest summary. It supplies complete available visible conversation,
+prior summary and tool calls, without fixed transcript/message byte
+ceilings. Active-model context/output limits and Pi's token estimate
+control fitting; bulky tool outputs may be explicitly reduced as needed.
+Output is not capped at 16,384 tokens. External snapshot reads and inbox
+proposals retain separate safety bounds. No new configuration keys are
+required. Both manual and automatic requests retain bounded actionable
+user preferences and tool recovery lessons when visible. Stable
+preferences may become unreviewed project/agents/personal-agents inbox
+proposals, never direct edits to those instruction files. See the
 [architecture](ARCHITECTURE.md#configuration-and-compaction) for the
 continuity model and its limits.
 

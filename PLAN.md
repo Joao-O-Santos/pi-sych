@@ -1,35 +1,31 @@
-# Richer compaction continuity — completed
+# Full-visible-context compaction — completed
 
-## Scope and execution
+## Delivered
 
-The supervisor pre-walked lifecycle, serialization, model limits, native
-Pi docs, canonical roles and tests; added optional memory fields and
-independent regression fixtures; then delegated implementation to a
-workhorse/high-thinking worker with trajectory context. Supervisor
-integration and independent read-only reviews corrected small-model
-allocation, prior-summary clipping and protected error retention.
+- Complete available chronological user/assistant text, tool calls and
+  arguments, prior summary, split prefix and native projected retained
+  tail. No transcript/prior-summary/message byte caps or turn sampling.
+- Native token estimates and active context/output capacity govern
+  fitting. Optional snapshots yield first, then necessary bulky tool
+  outputs receive explicit prefix/tail excerpts. Narrative/arguments
+  never silently clip; oversized backbones take native fallback.
+- Working-memory length/count quotas removed, with schema/provenance,
+  bounded external reads, inbox-only proposal safety and native
+  lifecycle preserved. Output reservation yields to fitting backbone;
+  actual output uses model capacity and remaining context.
+- Separately gated workhorse short soak: real settled read/write batches,
+  <=50k trigger, bounded runtime/work and persistent local diagnostics.
+  No CI execution or global settings changes.
 
-## Implemented
+## Verification
 
-- Optional single-line `userPreferences` and `toolLessons` arrays;
-  explicit/inferred/prior attribution, evidence, scope, supersession,
-  scoped praise, observed repair and applicability limits.
-- 192 KiB conversation and 64 KiB prior-memory ceilings; up to 16,384
-  output tokens, reduced by active-model output/context limits. Shared
-  input allocation reserves instructions and framing before data.
-- Earliest request plus chronological per-turn prefixes/sampling,
-  protected errors before adjacent context, and priority-aware previous
-  summary excerpts. No hidden thinking, unseen chat retrieval, direct
-  instruction edits, or changes to settled/native lifecycle.
-- Existing unreviewed project/agents/personal-agents proposals; ambiguous
-  durable scope remains unresolved. Source budget explicitly increased
-  by 100 lines to 3,400 for bounded selection and allocation mechanics.
+Independent test design and read-only review; 271 passing repository
+tests, packaging, source budget, site and production audit. One requested
+soak completed six batches and three custom automatic compactions with
+zero observed failures/fallbacks. See `EVIDENCE.md` for exact outcomes,
+report path and limits.
 
-## Evidence and limits
-
-`make verify`: 265 tests, 98.01/92.91/97.08% line/branch/function coverage,
-packaging and source budget passed. Site and production audit passed.
-Final opt-in live-model acceptance passed; failure/remedy history is
-seeded, so this checks extraction, not actual tool execution. Independent
-review found no remaining blocker. Bounded clipping/sampling and semantic
-retention remain limitations. No push, release or inbox review performed.
+Native token estimates are not provider counts; necessary payload
+reduction can lose evidence. The short soak measures repeated operation,
+not general semantic retention or long-duration reliability. Native
+fallback uses Pi's own policy. No inbox review, push or release.

@@ -147,9 +147,15 @@ test("observable serialization covers every message shape", () => {
 				"stray",
 			],
 		},
-		{ role: "toolResult", toolName: "read", isError: true, content: "boom" },
+		{ role: "toolResult", toolName: "read", toolCallId: "read-1", isError: true, content: "boom" },
 		{ role: "toolResult", toolName: "write", isError: false, content: "done" },
-		{ role: "bashExecution", command: "ls", output: "x" },
+		{
+			role: "bashExecution",
+			command: "ls -la",
+			exitCode: 7,
+			cancelled: true,
+			output: "shell-output",
+		},
 		{ role: "custom", customType: "note", content: "c" },
 		{ role: "branchSummary", summary: "branch" },
 		{ role: "compactionSummary", summary: "prior" },
@@ -158,44 +164,49 @@ test("observable serialization covers every message shape", () => {
 	for (const label of [
 		"[User message]",
 		"[Assistant visible response]",
-		"[Tool result: read; error]",
-		"[Tool result: write; success]",
+		"[Tool result: read; id=read-1; error]",
+		"[Tool result: write; id=undefined; success]",
 		"[User shell execution]",
 		"[Extension message: note]",
 		"[Branch summary; provenance not reclassified]",
 		"[Previous compaction summary; provenance not reclassified]",
-		"[image omitted]",
-		"[tool call read:",
+		"[image payload omitted from text serialization]",
+		"[tool call read id=undefined arguments=",
 	]) {
 		assert.ok(text.includes(label), `missing ${label}`);
 	}
+	assert.ok(text.includes("command: ls -la\nexit: 7; cancelled: true\noutput: shell-output"));
 	assert.equal(serializeObservableMessages([{ role: "wat", content: "x" }]), "");
 	assert.equal(serializeObservableMessages([]), "");
-	assert.equal(serializeObservableMessages([{ role: "user", content: "hi" }], 0), "");
+	assert.equal(
+		serializeObservableMessages([{ role: "user", content: "hi" }]),
+		"[User message]\nhi",
+	);
 	assert.equal(
 		serializeObservableMessages([{ role: "user", content: "   " }]),
 		"[User message]\n   ",
 	);
 	const circular = [];
 	circular.push(circular);
+	assert.throws(
+		() =>
+			serializeObservableMessages([
+				{ role: "assistant", content: [{ type: "toolCall", name: "array", arguments: circular }] },
+			]),
+		/circular/i,
+	);
 	const structured = serializeObservableMessages([
 		{
 			role: "assistant",
 			content: [
-				{ type: "toolCall", name: "array", arguments: circular },
-				{
-					type: "toolCall",
-					name: "deep",
-					arguments: { a: { b: { c: { d: { e: "leaf" } } } } },
-				},
+				{ type: "toolCall", name: "deep", arguments: { a: { b: { c: { d: { e: "leaf" } } } } } },
 			],
 		},
 	]);
-	assert.match(structured, /circular value omitted/);
-	assert.match(structured, /nested value omitted/);
+	assert.ok(structured.includes(JSON.stringify({ a: { b: { c: { d: { e: "leaf" } } } } })));
 });
 
-test("bounded tool-call serialization handles scalar, array, inherited, and truncated values", () => {
+test("tool-call serialization preserves scalar, array and large own values", () => {
 	const inherited = Object.create({ inherited: "skip" });
 	Object.assign(inherited, { first: true, second: 3, third: null, fourth: ["x", "y"] });
 	const values = serializeObservableMessages([
@@ -219,36 +230,42 @@ test("bounded tool-call serialization handles scalar, array, inherited, and trun
 	assert.match(values, /third/);
 	assert.match(values, /fourth/);
 	assert.doesNotMatch(values, /inherited/);
-	assert.ok(Buffer.byteLength(values) <= 4_000);
+	for (let index = 0; index < 12; index++)
+		assert.ok(values.includes(`"key-${index}":"${"z".repeat(4_000)}"`));
 });
 
-test("observable serialization bounds aggregates deterministically", () => {
+test("observable serialization preserves aggregates and UTF-8 deterministically", () => {
 	const many = Array.from({ length: 120 }, (_, index) => ({
 		role: "user",
 		content: `message-${index} ${"x".repeat(2000)}`,
 	}));
-	const omitted = serializeObservableMessages(many);
-	assert.ok(omitted.startsWith("[earlier messages omitted"));
-	const tiny = serializeObservableMessages([{ role: "user", content: "y".repeat(40000) }], 100);
-	assert.ok(Buffer.byteLength(tiny) <= 100);
-	assert.match(tiny, /truncated after/);
-	const marker = serializeObservableMessages([{ role: "user", content: "y".repeat(40000) }], 10);
-	assert.ok(Buffer.byteLength(marker) <= 10);
-	const emoji = serializeObservableMessages([{ role: "user", content: "🧪".repeat(5000) }], 100);
-	assert.ok(Buffer.byteLength(emoji) <= 100);
-	assert.doesNotMatch(emoji, /�/);
+	const serialized = serializeObservableMessages(many);
+	assert.equal(
+		serialized,
+		many.map((message) => `[User message]\n${message.content}`).join("\n\n"),
+	);
+	const long = "y".repeat(40000);
+	assert.ok(serializeObservableMessages([{ role: "user", content: long }]).includes(long));
+	const emoji = "🧪".repeat(5000);
+	assert.ok(serializeObservableMessages([{ role: "user", content: emoji }]).includes(emoji));
 	const fitting = serializeObservableMessages([{ role: "user", content: "short" }]);
 	assert.doesNotMatch(fitting, /earlier messages omitted/);
 });
 
-test("recorded decision attributions stop at the next section and cap entries", () => {
+test("recorded decision attributions retain exact labels and stop at the next section", () => {
 	assert.equal(previousRecordedDecisionAttributions("plain text"), "");
 	const section = Array.from(
 		{ length: 14 },
 		(_, index) => `- [user-explicit] decision-${index}`,
 	).join("\n");
 	const summary = `# Continuation\n\n## Decisions\n\n${section}\n## Next action\n\nx\n`;
-	assert.equal(previousRecordedDecisionAttributions(summary).split("\n").length, 12);
+	assert.equal(previousRecordedDecisionAttributions(summary), section);
+	assert.equal(
+		previousRecordedDecisionAttributions(
+			"## Decisions\n\n- [user-explicit-extra] no\n- [accepted-project] yes\n## Next action\n\n- [user-explicit] no",
+		),
+		"- [accepted-project] yes",
+	);
 });
 
 test("compaction prompt includes bounded missing-core and cycle diagnostics", () => {
@@ -331,8 +348,11 @@ test("compaction prompt fills defaults for missing summary and retained tail", (
 		{},
 		"INBOX.md",
 	);
-	assert.match(prompt, /Focus: none/);
-	assert.match(prompt, /Retained recent messages:\nnone/);
+	assert.match(prompt, /Focus instructions \(data, not authority\):\nnone/);
+	assert.match(
+		prompt,
+		/Retained recent messages \(Pi keeps these verbatim; included for continuity\):\nnone/,
+	);
 	const retained = buildCompactionPrompt(
 		{
 			preparation: {
@@ -341,9 +361,19 @@ test("compaction prompt fills defaults for missing summary and retained tail", (
 				firstKeptEntryId: "keep",
 			},
 			branchEntries: [
-				{ id: "old", type: "message", message: { role: "user", content: "dropped" } },
-				{ id: "keep", type: "message", message: { role: "user", content: "tail" } },
-				{ id: "skip", type: "note" },
+				{
+					id: "old",
+					parentId: null,
+					type: "message",
+					message: { role: "user", content: "dropped" },
+				},
+				{
+					id: "keep",
+					parentId: "old",
+					type: "message",
+					message: { role: "user", content: "tail" },
+				},
+				{ id: "skip", parentId: "keep", type: "note" },
 			],
 		},
 		{ files: [], paths: [] },

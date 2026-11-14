@@ -2,39 +2,21 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
 	buildCompactionPrompt,
-	COMPACTION_CONVERSATION_BYTE_LIMIT,
 	parseCompactionModelOutput,
 	renderWorkingMemory,
 	serializeObservableMessages,
 } from "../../.test-build/workbench/src/compaction.js";
 
-const excerptHeading =
-	"User request excerpts (earliest available and recent; chronological, may be superseded):";
 const user = (content) => ({ role: "user", content });
-const entry = (id, message) => ({ id, type: "message", message });
-const event = (messagesToSummarize = [], turnPrefixMessages = [], branchEntries = []) => ({
-	preparation: { messagesToSummarize, turnPrefixMessages, firstKeptEntryId: "keep" },
+const event = (history = [], prefix = [], branchEntries = []) => ({
+	preparation: {
+		messagesToSummarize: history,
+		turnPrefixMessages: prefix,
+		firstKeptEntryId: "keep",
+	},
 	branchEntries,
 });
 const promptFor = (value) => buildCompactionPrompt(value, { files: [], paths: [] }, {}, "INBOX.md");
-const sections = (prompt) => {
-	const headings = [
-		excerptHeading,
-		"Tool failure/recovery excerpts (error flags and adjacent context; remedies may be unverified):",
-		"Observable messages:",
-		"Retained recent messages:",
-		"Canonical snapshots (inbox excluded; clipping proves nothing):",
-	];
-	const positions = headings.map((heading) => prompt.indexOf(`\n${heading}\n`));
-	for (let i = 0; i < positions.length; i++) {
-		assert.ok(positions[i] >= 0, `missing ${headings[i]}`);
-		if (i)
-			assert.ok(positions[i] > positions[i - 1], "sections must be chronological in the prompt");
-	}
-	return positions
-		.slice(0, 4)
-		.map((position, i) => prompt.slice(position + headings[i].length + 2, positions[i + 1]));
-};
 const ordered = (text, values) => {
 	let previous = -1;
 	for (const value of values) {
@@ -44,72 +26,91 @@ const ordered = (text, values) => {
 	}
 };
 
-test("tool-heavy first compaction preserves the initial task and recent correction", () => {
+test("tool-heavy history retains initial task, every output, and correction in order", () => {
 	const history = [
-		user("EARLY TASK: implement the migration safely"),
+		user("EARLY TASK"),
 		...Array.from({ length: 160 }, (_, i) => ({
 			role: "toolResult",
 			toolName: "read",
+			toolCallId: `id-${i}`,
 			isError: false,
 			content: `tool-${i} ${"x".repeat(1800)}`,
 		})),
-		user("LATEST CORRECTION: first cover rollback"),
+		user("LATEST CORRECTION"),
 	];
-	assert.ok(!serializeObservableMessages(history).includes("EARLY TASK"));
-	const [excerpts, , observable] = sections(promptFor(event(history)));
-	ordered(excerpts, [
-		"EARLY TASK: implement the migration safely",
-		"LATEST CORRECTION: first cover rollback",
+	const serialized = serializeObservableMessages(history);
+	const prompt = promptFor(event(history));
+	assert.ok(prompt.includes(serialized));
+	ordered(serialized, [
+		"EARLY TASK",
+		...history.slice(1, -1).map((_, i) => `tool-${i} `),
+		"LATEST CORRECTION",
 	]);
-	assert.ok(observable.includes("tool-159"));
 });
 
-test("large user traffic retains earliest request and chronological replacement and subtask", () => {
+test("large user traffic preserves replacement and subtask without sampling", () => {
 	const history = [
-		user("INITIAL REQUEST: build alpha"),
+		user("INITIAL REQUEST"),
 		...Array.from({ length: 100 }, (_, i) => user(`traffic-${i} ${"z".repeat(600)}`)),
-		user("REPLACEMENT: build beta instead"),
-		user("SUBTASK: test beta first"),
+		user("REPLACEMENT"),
+		user("SUBTASK"),
 	];
-	const [excerpts] = sections(promptFor(event(history)));
-	ordered(excerpts, [
-		"INITIAL REQUEST: build alpha",
-		"REPLACEMENT: build beta instead",
-		"SUBTASK: test beta first",
-	]);
-	assert.ok(Buffer.byteLength(excerpts) <= COMPACTION_CONVERSATION_BYTE_LIMIT / 4);
+	const prompt = promptFor(event(history));
+	assert.ok(prompt.includes(serializeObservableMessages(history)));
+	ordered(prompt, ["INITIAL REQUEST", "traffic-0 ", "traffic-99 ", "REPLACEMENT", "SUBTASK"]);
 });
 
-test("excerpts include split-turn and retained requests without reviving dropped branch entries", () => {
+test("split turn and native retained projection follow history and exclude dropped entries", () => {
 	const input = event(
 		[user("HISTORY REQUEST")],
 		[user("SPLIT TURN REQUEST")],
-		[entry("dropped", user("DROPPED BRANCH REQUEST")), entry("keep", user("RETAINED REQUEST"))],
+		[
+			{ id: "dropped", parentId: null, type: "message", message: user("DROPPED BRANCH REQUEST") },
+			{ id: "keep", parentId: "dropped", type: "message", message: user("RETAINED REQUEST") },
+			{
+				id: "custom",
+				parentId: "keep",
+				type: "custom_message",
+				customType: "note",
+				content: "CUSTOM CONTEXT",
+				display: true,
+			},
+			{
+				id: "branch",
+				parentId: "custom",
+				type: "branch_summary",
+				summary: "BRANCH CONTEXT",
+				fromId: "dropped",
+			},
+		],
 	);
 	const prompt = promptFor(input);
-	const [excerpts, , , retained] = sections(prompt);
-	ordered(excerpts, ["HISTORY REQUEST", "SPLIT TURN REQUEST", "RETAINED REQUEST"]);
-	assert.ok(retained.includes("RETAINED REQUEST"));
+	ordered(prompt, [
+		"HISTORY REQUEST",
+		"SPLIT TURN REQUEST",
+		"Retained recent messages",
+		"RETAINED REQUEST",
+		"CUSTOM CONTEXT",
+		"BRANCH CONTEXT",
+	]);
 	assert.ok(!prompt.includes("DROPPED BRANCH REQUEST"));
-	const missing = promptFor({
-		...input,
-		preparation: { ...input.preparation, firstKeptEntryId: "absent" },
-	});
-	assert.ok(!missing.includes("DROPPED BRANCH REQUEST"));
-	assert.ok(!missing.includes("RETAINED REQUEST"));
+	assert.throws(
+		() =>
+			promptFor({ ...input, preparation: { ...input.preparation, firstKeptEntryId: "absent" } }),
+		/boundary missing/,
+	);
 });
 
-test("no user and one user normalize without fabricating or duplicating excerpts", () => {
-	const [empty] = sections(
-		promptFor(event([{ role: "assistant", content: [{ type: "text", text: "ASSISTANT ONLY" }] }])),
+test("empty and single-message history normalize without fabrication or duplication", () => {
+	const empty = promptFor(
+		event([{ role: "assistant", content: [{ type: "text", text: "ASSISTANT ONLY" }] }]),
 	);
-	assert.ok(!empty.includes("ASSISTANT ONLY"));
-	assert.ok(!/undefined|null/.test(empty));
-	const [single] = sections(promptFor(event([user("ONLY REQUEST")])));
+	assert.equal(empty.split("ASSISTANT ONLY").length - 1, 1);
+	const single = promptFor(event([user("ONLY REQUEST")]));
 	assert.equal(single.split("ONLY REQUEST").length - 1, 1);
 });
 
-test("UTF-8 excerpt and combined conversation budgets exclude hidden thinking", () => {
+test("UTF-8 conversation is complete while thinking remains hidden", () => {
 	const history = [
 		user(`EARLIEST 🧭 ${"界".repeat(4000)} EARLY SUFFIX`),
 		{
@@ -122,27 +123,25 @@ test("UTF-8 excerpt and combined conversation budgets exclude hidden thinking", 
 		...Array.from({ length: 35 }, (_, i) => user(`request-${i} ${"🧪".repeat(1000)}`)),
 		user("LATEST UTF8 REQUEST"),
 	];
-	const prompt = promptFor(
-		event(history, [], [entry("keep", user(`RETAINED 🧭 ${"界".repeat(3000)}`))]),
-	);
-	const parts = sections(prompt);
-	ordered(parts[0], ["EARLIEST 🧭", "LATEST UTF8 REQUEST", "RETAINED 🧭"]);
-	assert.ok(Buffer.byteLength(parts[0]) <= COMPACTION_CONVERSATION_BYTE_LIMIT / 4);
-	assert.ok(
-		parts.reduce((sum, part) => sum + Buffer.byteLength(part), 0) <=
-			COMPACTION_CONVERSATION_BYTE_LIMIT,
-	);
+	const prompt = promptFor(event(history));
+	assert.ok(prompt.includes(serializeObservableMessages(history)));
+	ordered(prompt, [
+		"EARLIEST 🧭",
+		"EARLY SUFFIX",
+		"VISIBLE_RESPONSE",
+		"request-0 ",
+		"request-34 ",
+		"LATEST UTF8 REQUEST",
+	]);
 	assert.ok(!prompt.includes("HIDDEN_THINKING_TOKEN"));
-	assert.ok(!parts.join("").includes("�"));
-	assert.ok(!parts[0].includes("EARLY SUFFIX"), "long messages are prefix-clipped");
+	assert.ok(!prompt.includes("�"));
 });
 
-test("existing memory fields survive a two-pass continuation without a new schema", () => {
-	// This fixture represents model output; it tests serialization and prompt plumbing, not model judgment.
+test("existing memory fields survive a two-pass continuation", () => {
 	const modelOutput = {
 		workingMemory: {
 			objective: "Repair the active migration task",
-			inferences: ["Use staged rollout because the visible tests expose rollback risk"],
+			inferences: ["Rollback risk is visible"],
 			activeWork: ["Implement rollback coverage"],
 			nextAction: "Add a rollback regression test",
 		},
@@ -152,16 +151,7 @@ test("existing memory fields survive a two-pass continuation without a new schem
 	const summary = renderWorkingMemory(first.workingMemory);
 	const nextEvent = event();
 	nextEvent.preparation.previousSummary = summary;
-	const nextPrompt = promptFor(nextEvent);
-	for (const value of [
-		modelOutput.workingMemory.objective,
-		...modelOutput.workingMemory.inferences,
-		...modelOutput.workingMemory.activeWork,
-		modelOutput.workingMemory.nextAction,
-	]) {
-		assert.ok(summary.includes(value));
-		assert.ok(nextPrompt.includes(value));
-	}
+	assert.ok(promptFor(nextEvent).includes(summary));
 	const second = parseCompactionModelOutput(
 		JSON.stringify({ workingMemory: first.workingMemory, promotions: [] }),
 	);
