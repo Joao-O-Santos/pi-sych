@@ -5,12 +5,28 @@
 - `make verify`: 271/271 tests; 97.89% line, 93.05% branch and 96.71%
   function coverage. Type/style, package dry-run, whitespace and source
   budget passed; runtime source is about 3,250/3,400 nonblank lines.
+- Against the preceding revision's 98.01/92.91/97.08%, lines/functions
+  decreased slightly; branches improved. Passing gates do not mean
+  unchanged coverage or lossless semantic retention.
 - `make site` passed; `npm audit --omit=dev` found zero vulnerabilities.
 - Independent regression design and read-only correctness review found
   no remaining blocker. An implementation worker timed out with partial
   edits; the supervisor inspected/completed integration and verification.
 - The soak skips without its separate gate, including when ordinary
   `PI_SYCH_USAGE_TEST=1` is enabled. No CI configuration changed.
+
+## Release preparation
+
+Implementation main pipeline `3068694564` passed verify and Pages at
+`75928ce7521006ff423fb5081ebfb8c4f3711d9d`. Independent read-only release
+preflight found no concrete blocker and supported minor 8.2.0 under the
+public contract: material improvement and optional fields, no required
+migration or canonical-file write-policy change. Publication is pending
+the release commit's CI, signed tag and registry verification.
+Release metadata passed `make verify` (271 tests), site and production
+audit. Package dry-run lists 214 intended files and no repository/private
+state; version/lock/image references agree, and Pi's native changelog
+parser returns exactly one new entry after 8.1.9: 8.2.0.
 
 ## One short soak
 

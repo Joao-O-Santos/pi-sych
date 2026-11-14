@@ -1,8 +1,8 @@
-# Full-context compaction
+# Release 8.2.0
 
-- [x] Inspect synchronization, native APIs and current flow; independent test design.
-- [x] Replace sampled inputs and fixed summary quotas; update regressions.
-- [x] Add separately gated bounded workhorse automatic-compaction soak.
-- [x] Independent review, repository verification and one observed soak run.
-- [x] Inspect results and document evidence, scope and measurement limits.
-- [x] Synchronization acknowledged; local delivery complete, without publication.
+- [x] Inspect release policy and obtain independent read-only preflight.
+- [x] Push existing focused implementation commits.
+- [x] Verify implementation main CI; prepare and locally verify metadata.
+- [ ] Push release commit; verify exact main CI before signed tag.
+- [ ] Verify tag pipeline, registry publication, tarball and provenance metadata.
+- [ ] Record final release state without inbox review or history rewrite.

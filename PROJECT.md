@@ -292,14 +292,18 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
-{verified} Full-visible-context compaction is implemented locally, not
-released. It removes sampled/protected excerpts, transcript and
-prior-summary byte caps, and working-memory text/count quotas. Native
-projection preserves retained context edits; only necessary bulky tool
-outputs are reduced. Model capacity and native token estimates govern
-input/output; estimates are not exact provider counts. Schema, bounded
-external reads, inbox-only proposals and native lifecycle/fallback
-remain.
+{verified} Full-visible-context compaction is implemented at
+`75928ce7521006ff423fb5081ebfb8c4f3711d9d`; main pipeline `3068694564`
+passed verification and Pages. Minor 8.2.0 is prepared for the material
+compaction improvements and backward-compatible optional memory fields;
+no configuration or stored-state migration is required. Publication
+remains unverified until the signed tag pipeline and registry checks. It
+removes sampled/protected excerpts, transcript and prior-summary byte
+caps, and working-memory text/count quotas. Native projection preserves
+retained context edits; only necessary bulky tool outputs are reduced.
+Model capacity and native token estimates govern input/output; estimates
+are not exact provider counts. Schema, bounded external reads,
+inbox-only proposals and native lifecycle/fallback remain.
 
 {verified} `make verify` passed 271 tests at 97.89/93.05/96.71%
 line/branch/function coverage; packaging, source budget, site and
@@ -309,7 +313,9 @@ compactions at a 32k trigger, with zero observed failures/fallbacks and
 continued tool work: 105.091 seconds overall, 9.329--15.398 seconds per
 compaction. See `EVIDENCE.md` for the local report, cost and semantic
 measurement limits. The soak is excluded from CI and ordinary usage
-runs. No publication or repository inbox review was performed.
+runs. Coverage versus the preceding revision changed from
+98.01/92.91/97.08% to 97.89/93.05/96.71%: lines/functions decreased
+slightly, branches improved. No repository inbox review was performed.
 
 {verified} The v8.1.9 compaction change explicitly preserves active-task
 working memory separately from durable project knowledge. Earliest and

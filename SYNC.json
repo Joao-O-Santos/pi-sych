@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-11-14T17:20:17.350Z",
+  "confirmedAt": "2026-11-14T17:41:04.698Z",
   "artifacts": [
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:032c58db55f0e8b9f196b71ea5d08858e1975c0abb9e02dc9b903c7d385cb870",
+      "fingerprint": "sha256:7f4fac80beb6aa619de6053b6e46b126bf5053cc40ecc96c9f24d7d31d71780b",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
@@ -19,8 +19,8 @@
       ],
       "pendingReason": "New bounded task evidence; supervisor inspected the actual local check logs and one soak report.",
       "acknowledgement": {
-        "at": "2026-11-14T17:20:17.350Z",
-        "reason": "Updated the inspected local verification record to the final make verify run: 271/271 tests, 97.89/93.05/96.71% line/branch/function coverage; packaging/source budget/style/type/whitespace passed, site passed and unchanged production dependencies audited with zero vulnerabilities. Recorded the actual report-path override used for the one paid short soak. No runtime or measurement changes; model/run-specific and semantic/long-duration limitations remain explicit. No publication or inbox review."
+        "at": "2026-11-14T17:41:04.698Z",
+        "reason": "Inspected release preparation evidence: implementation main pipeline3068694564 passed verify and Pages at75928ce7521006ff423fb5081ebfb8c4f3711d9d. Independent read-only preflight found no concrete release/migration blocker and supports minor8.2.0 under public contract. Release metadata local make verify passed271 tests at97.89/93.05/96.71% coverage; site and production audit passed. Checked version/lock, six README image links and pi.image pin; package dry-run has214 intended files with no repository/private state. Pi native changelog parser yields exactly one new8.2.0 entry after8.1.9. First ad-hoc pack JSON check assumed an array but local npm returned a keyed object; rerun with the correct shape passed; this was a verification-script mismatch, not a package/test failure. Coverage decreases versus preceding revision explicitly retained. Publication still pending release commit CI, signed tag and registry verification; broader review flags preserved and inbox not read."
       }
     },
     {
@@ -39,7 +39,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Recorded full-visible-context token-aware compaction, removed transcript/memory quotas, 271-test verification and one separately gated real-workhorse short soak (3 custom successes, no observed failures/fallbacks). Local and unreleased; existing broader semantic acknowledgement remains pending."
+      "pendingReason": "Prepared minor 8.2.0 after implementation main pipeline 3068694564 passed. Recorded 271-test local release checks and honest coverage comparison. Signed tag/registry publication remain pending; existing broader semantic acknowledgement remains pending."
     },
     {
       "path": "docs/ARCHITECTURE.md",
@@ -71,7 +71,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "Documented complete available visible task input and calls, token-aware fitting, necessary marked tool-output reduction and unreviewed preference proposals. Published asset links are unchanged; broader semantic acknowledgement remains pending."
+      "pendingReason": "Pinned six image references to prepared v8.2.0; compaction usage text is unchanged from the verified implementation. Version/lock/image consistency and package dry-run passed; broader semantic acknowledgement remains pending."
     },
     {
       "path": "package.json",
@@ -92,7 +92,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "Package metadata remains 8.1.9 while the new compaction runtime/tests are unreleased. Existing broader package-boundary acknowledgement remains pending; no version or publication change in this task."
+      "pendingReason": "Prepared 8.2.0 version/lock and pinned image metadata after implementation CI passed. Release resource/pack checks passed with 214 intended files and no private repository state. Publication and existing broader package-boundary acknowledgement remain pending."
     },
     {
       "path": "docs/configuration.md",
@@ -224,7 +224,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Updated Unreleased for full visible token-budgeted compaction, removed memory quotas, retained inbox/read safety and separately gated short soak. No migration or publication; broader semantic acknowledgement remains pending."
+      "pendingReason": "Promoted changes into 8.2.0 with the public-contract minor rationale, affected internal compaction/session behavior and no-migration/write-policy-change statement. Native changelog parser confirms one new entry; publication and broader semantic acknowledgement remain pending."
     },
     {
       "path": "skills/code/SKILL.md",

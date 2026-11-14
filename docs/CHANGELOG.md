@@ -4,6 +4,14 @@ Notable user-facing changes to Pi Sych, in reverse version order.
 
 ## Unreleased
 
+## 8.2.0
+
+- Minor release: materially improve supported compaction and add
+  optional backward-compatible memory fields. This affects the
+  compatibility-sensitive internal compaction/session behavior, not a
+  TypeScript API. No configuration or stored-state migration, supported
+  runtime requirement, or canonical-file write-policy change is
+  required.
 - Custom compaction can retain repeated, scoped user feedback and
   observed tool failure/recovery lessons. Supply the complete available
   visible conversation, tool calls/arguments and previous summary rather
