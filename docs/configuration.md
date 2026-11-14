@@ -38,6 +38,17 @@ custom summary for those requests as well. `thresholdTokens` is not an
 alias for Pi's `reserveTokens`. Set custom to `false` to leave
 compaction to Pi's native behavior.
 
+Custom compaction favors sufficient ongoing-task context over the
+shortest summary. Fixed ceilings are 192 KiB of conversation input, 64
+KiB of prior-summary input, and 16,384 output tokens; active model
+limits reduce these allowances. These are not additional configuration
+keys. Both manual and automatic requests retain bounded actionable user
+preferences and tool recovery lessons when visible. Stable preferences
+may become unreviewed project/agents/personal-agents inbox proposals,
+never direct edits to those instruction files. See the
+[architecture](ARCHITECTURE.md#configuration-and-compaction) for the
+continuity model and its limits.
+
 `completionReassessment` defaults to `false`. When enabled, the
 workbench adds one hidden reassessment at Pi's final actionable
 `agent_before_settle` boundary after a completed run, only when there

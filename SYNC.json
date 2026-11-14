@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-11-13T14:19:11.165Z",
+  "confirmedAt": "2026-11-14T12:34:48.672Z",
   "artifacts": [
     {
       "path": "PROJECT.md",
@@ -18,19 +18,19 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Recorded the accepted short-term active-task working-memory direction and implemented bounded request excerpts, 256-test verification, site/audit checks, independent review, and one live-model compaction result. Existing release evidence and broader pending semantic acknowledgement are retained."
+      "pendingReason": "Recorded richer scoped user-feedback/tool-recovery continuity, model-aware budgets, 265-test verification, site/audit checks, independent review and seeded-history live-model acceptance. This change is local and unreleased; existing broader semantic acknowledgement remains pending."
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:bed0b43e3e6693bec2544dcd3f7697a1eca10448b3ea2c49c14ebdf7df37ecfa",
+      "fingerprint": "sha256:8acfec6ff78c8a7221e60ab03f8306857fecfaba3a17493c1e38fd14ce8152b0",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-11-13T14:19:11.165Z",
-        "reason": "Reviewed active-task working-memory edits against the compaction input, prompt, renderer, and unchanged schema/inbox/fallback paths. Independent test design and read-only correctness review found no blockers. make verify passed 256 tests (97.94/92.82/97.00% line/branch/function coverage), source budget and packaging; make site and production audit passed. One opt-in live-model compaction test retained a specific unfinished audit goal and concrete resume point instead of the overall project objective. This is model/run-specific output evidence, not guaranteed semantic retention or actual post-compaction execution. Existing broader needs-review states and diagram-review limitations are not cleared."
+        "at": "2026-11-14T12:34:48.672Z",
+        "reason": "Reviewed richer compaction continuity against the actual optional-field parser/renderer, chronological user prefixes, error-first episode excerpts, priority-aware prior memory, and model-aware input/output allocation. Independent test design and read-only reviews led to red/green repairs; final follow-up found no remaining blocker. make verify passed all 265 tests at 98.01/92.91/97.08% line/branch/function coverage, packaging and the explicitly documented 3400-line source budget. Site and production audit passed; final opt-in live-model acceptance retained repeated corrective/positive feedback and a seeded filename failure/repair episode. This verifies model/run-specific extraction, not actual tool repair execution or guaranteed retention; bounded sampling/clipping and already-submitted append nontransactionality remain documented. Existing unrelated broader needs-review states are retained. No inbox review, direct personal instruction writes, push or release."
       }
     },
     {
@@ -50,7 +50,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "Documented task working memory versus durable project knowledge and protected request excerpts; existing published image links are unchanged. Broader semantic acknowledgement remains pending."
+      "pendingReason": "Documented richer task memory, scoped user feedback and tool recoveries with protected request/error context and unreviewed preference proposals. Published asset links are unchanged; broader semantic acknowledgement remains pending."
     },
     {
       "path": "package.json",
@@ -71,19 +71,19 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "Version and package image URL match published signed v8.1.8. Pi 1.5.1 is locked; npm version/latest/gitHead verified. Existing broader semantic acknowledgement remains pending."
+      "pendingReason": "Package metadata remains 8.1.9 while the new compaction runtime/tests are unreleased. Existing broader package-boundary acknowledgement remains pending; no version or publication change in this task."
     },
     {
       "path": "docs/configuration.md",
-      "fingerprint": "sha256:78f15e5dda5aa3c286ddc2d39a661422d02fedae1014deba1a4962fcdf883264",
+      "fingerprint": "sha256:f7f7ca73a9063546ec55e804d97564ff98f5fa24e74b1d5c03f8916393156c2f",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-10-13T23:36:45Z",
-        "reason": "Workhorse reviewed the revised text against current compaction/worker source and relevant tests. make verify passed 247 unit/integration tests (97.91/92.92/96.89% aggregate line/branch/function coverage), packaging, type/style/source-budget/whitespace checks; make site passed. No independent read-only reviewer or opt-in live-model test was run. Related diagram review remains pending; no diagram changed."
+        "at": "2026-11-14T12:34:48.672Z",
+        "reason": "Reviewed richer compaction continuity against the actual optional-field parser/renderer, chronological user prefixes, error-first episode excerpts, priority-aware prior memory, and model-aware input/output allocation. Independent test design and read-only reviews led to red/green repairs; final follow-up found no remaining blocker. make verify passed all 265 tests at 98.01/92.91/97.08% line/branch/function coverage, packaging and the explicitly documented 3400-line source budget. Site and production audit passed; final opt-in live-model acceptance retained repeated corrective/positive feedback and a seeded filename failure/repair episode. This verifies model/run-specific extraction, not actual tool repair execution or guaranteed retention; bounded sampling/clipping and already-submitted append nontransactionality remain documented. Existing unrelated broader needs-review states are retained. No inbox review, direct personal instruction writes, push or release."
       }
     },
     {
@@ -104,7 +104,7 @@
       "fingerprint": "sha256:d1223de5b2541240b7e812c4ffdf0fe5ab872ca18fa628b243989a68802b5b2e",
       "status": "needs-review",
       "role": "documentation",
-      "pendingReason": "Documented active-task working memory and bounded user-request excerpts; memory schema, canonical-file write policy and fallback remain unchanged. Earlier compatibility history and existing broader semantic review remain pending.",
+      "pendingReason": "Documented optional backward-compatible preference/tool-lesson arrays, larger model-aware budgets and protected/priority-aware inputs. Canonical/personal instruction writes remain prohibited; earlier compatibility history and broader semantic review remain pending.",
       "authoritativeFor": [
         "compatibility"
       ],
@@ -167,7 +167,7 @@
     },
     {
       "path": "docs/compaction-design.md",
-      "fingerprint": "sha256:1324abed46c4484e517ed47f849c96478b6e15ed372a2133684d401132011ffc",
+      "fingerprint": "sha256:5573bb7d40cdc1019792bc3b83c399596d0385429c3183d6db6e3c47ca5ed5a9",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
@@ -177,13 +177,15 @@
         "extensions/workbench/src/compaction.ts",
         "tests/unit/compaction.test.mjs",
         "tests/unit/compaction-task.test.mjs",
+        "tests/unit/compaction-preferences.test.mjs",
+        "tests/unit/compaction-budget.test.mjs",
         "tests/unit/compaction-boundaries.test.mjs",
         "tests/integration/compaction-recovery.test.mjs",
         "tests/usage/custom-compaction.test.mjs"
       ],
       "acknowledgement": {
-        "at": "2026-11-13T14:19:11.165Z",
-        "reason": "Reviewed active-task working-memory edits against the compaction input, prompt, renderer, and unchanged schema/inbox/fallback paths. Independent test design and read-only correctness review found no blockers. make verify passed 256 tests (97.94/92.82/97.00% line/branch/function coverage), source budget and packaging; make site and production audit passed. One opt-in live-model compaction test retained a specific unfinished audit goal and concrete resume point instead of the overall project objective. This is model/run-specific output evidence, not guaranteed semantic retention or actual post-compaction execution. Existing broader needs-review states and diagram-review limitations are not cleared."
+        "at": "2026-11-14T12:34:48.672Z",
+        "reason": "Reviewed richer compaction continuity against the actual optional-field parser/renderer, chronological user prefixes, error-first episode excerpts, priority-aware prior memory, and model-aware input/output allocation. Independent test design and read-only reviews led to red/green repairs; final follow-up found no remaining blocker. make verify passed all 265 tests at 98.01/92.91/97.08% line/branch/function coverage, packaging and the explicitly documented 3400-line source budget. Site and production audit passed; final opt-in live-model acceptance retained repeated corrective/positive feedback and a seeded filename failure/repair episode. This verifies model/run-specific extraction, not actual tool repair execution or guaranteed retention; bounded sampling/clipping and already-submitted append nontransactionality remain documented. Existing unrelated broader needs-review states are retained. No inbox review, direct personal instruction writes, push or release."
       }
     },
     {
@@ -198,7 +200,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Added an Unreleased note for task working memory and bounded request excerpts; no memory-schema or canonical-write-policy migration is required. Existing broader semantic acknowledgement remains pending."
+      "pendingReason": "Added an Unreleased note for scoped feedback/tool lessons, model-aware input/output and source-budget ceilings, inbox-only proposals and backward-compatible optional fields. No migration required; broader semantic acknowledgement remains pending."
     },
     {
       "path": "skills/code/SKILL.md",

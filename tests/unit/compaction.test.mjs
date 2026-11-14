@@ -159,7 +159,7 @@ test("prompt preserves recorded decision attributions across continuation passes
 });
 
 test("prompt bounds history and summary while prioritizing retained messages", () => {
-	const history = Array.from({ length: 2_000 }, (_, index) => ({
+	const history = Array.from({ length: 6_000 }, (_, index) => ({
 		role: "user",
 		content: `history-${index} ${"x".repeat(40)}`,
 	}));
@@ -287,7 +287,7 @@ async function fixture(t) {
 	const notifications = [],
 		ctx = {
 			cwd: root,
-			model: { maxTokens: 2048 },
+			model: { contextWindow: 200_000, maxTokens: 2048 },
 			modelRegistry: { getApiKeyAndHeaders: async () => ({ ok: true, apiKey: "key" }) },
 			ui: { notify: (...args) => notifications.push(args) },
 		};

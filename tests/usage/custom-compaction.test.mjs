@@ -4,6 +4,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { homedir, tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { SessionManager } from "@earendil-works/pi-coding-agent";
 
 const LIMIT_MS = 180_000;
 
@@ -38,7 +39,6 @@ test("real Pi proactively invokes custom compaction and retains usable memory/pr
 	}
 	const projectRoot = join(root, "workspace"),
 		stateDir = join(projectRoot, "state"),
-		session = join(root, "session.jsonl"),
 		inbox = join(stateDir, "INBOX.md");
 	await mkdir(stateDir, { recursive: true });
 	await mkdir(join(projectRoot, ".pi", "pi-sych"), { recursive: true });
@@ -80,6 +80,100 @@ test("real Pi proactively invokes custom compaction and retains usable memory/pr
 			2,
 		)}\n`,
 	);
+	// Seed visible history to test semantic extraction; this is not an actual
+	// tool-execution test or evidence of preferences outside this fixture.
+	const manager = SessionManager.create(projectRoot, root);
+	const assistant = (content, stopReason = "stop") => ({
+		role: "assistant",
+		content,
+		stopReason,
+		api: "openai-responses",
+		provider: "fixture",
+		model: "fixture",
+		timestamp: Date.now(),
+		usage: {
+			input: 0,
+			output: 0,
+			cacheRead: 0,
+			cacheWrite: 0,
+			totalTokens: 0,
+			cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
+		},
+	});
+	const say = (text) => assistant([{ type: "text", text }]);
+	for (const message of [
+		{
+			role: "user",
+			content:
+				"For this project, stop asking whether to continue already-authorized work; those pauses are frustrating.",
+			timestamp: Date.now(),
+		},
+		say("I will continue authorized work until complete or genuinely blocked."),
+		{
+			role: "user",
+			content: "I liked that concise evidence-based summary. Keep that format for this project.",
+			timestamp: Date.now(),
+		},
+		say("I will retain that summary format."),
+		assistant(
+			[
+				{
+					type: "toolCall",
+					id: "fixture-missing",
+					name: "read",
+					arguments: { path: "survey_template.md" },
+				},
+			],
+			"toolUse",
+		),
+		{
+			role: "toolResult",
+			toolCallId: "fixture-missing",
+			toolName: "read",
+			content: [{ type: "text", text: "ENOENT: survey_template.md not found" }],
+			isError: true,
+			timestamp: Date.now(),
+		},
+		assistant(
+			[
+				{ type: "text", text: "The file is SURVEY_TEMPLATE.md; retry using that exact case." },
+				{
+					type: "toolCall",
+					id: "fixture-correct",
+					name: "read",
+					arguments: { path: "SURVEY_TEMPLATE.md" },
+				},
+			],
+			"toolUse",
+		),
+		{
+			role: "toolResult",
+			toolCallId: "fixture-correct",
+			toolName: "read",
+			content: [{ type: "text", text: "# Survey\n\nDate:\nObserver:\n" }],
+			isError: false,
+			timestamp: Date.now(),
+		},
+		say(
+			"Reading the exact uppercase filename succeeded; this fixes the observed path mismatch, not every read failure.",
+		),
+		{
+			role: "user",
+			content: "Again: do not pause to ask me to continue approved work in this project.",
+			timestamp: Date.now(),
+		},
+		say("Understood."),
+		{
+			role: "user",
+			content:
+				"That concise evidence-based summary was helpful again; keep doing that for this project.",
+			timestamp: Date.now(),
+		},
+		say("Acknowledged."),
+	])
+		manager.appendMessage(message);
+	const session = manager.getSessionFile();
+	assert.ok(session);
 	const prompt = [
 		"Briefly acknowledge this handoff without doing the audit or editing files in this turn.",
 		"The long-term project objective is a field report on the Amber Heron migration; the nesting survey must remain separate from the lighting survey.",
@@ -227,6 +321,24 @@ test("real Pi proactively invokes custom compaction and retains usable memory/pr
 		/(?:inspect|read|check|review|examine|audit)[^\n]*template/i,
 		`The continuation must retain a concrete audit resume point. Summary:\n${compactionEntry.summary}\n${diagnostics}`,
 	);
+	const preferences =
+		compactionEntry.summary.match(/## User preferences\n\n([\s\S]*?)(?:\n## |$)/)?.[1] ?? "";
+	assert.match(
+		preferences,
+		/authoriz|approv|permission|continu|paus/i,
+		`repeated corrective feedback should survive. Summary:\n${compactionEntry.summary}`,
+	);
+	assert.match(
+		preferences,
+		/concise|short|brief|evidence/i,
+		`specific positive feedback should survive. Summary:\n${compactionEntry.summary}`,
+	);
+	assert.match(preferences, /project/i, "explicit project scope should survive");
+	const lessons =
+		compactionEntry.summary.match(/## Tool lessons\n\n([\s\S]*?)(?:\n## |$)/)?.[1] ?? "";
+	assert.match(lessons, /SURVEY_TEMPLATE\.md/);
+	assert.match(lessons, /ENOENT|case|path|file|not found/i);
+	assert.match(lessons, /succeed|success|correct|retry/i);
 	const proposals = await readFile(inbox, "utf8").catch((error) => {
 		throw new Error(
 			`Custom compaction did not create the expected proposal inbox: ${String(error)}\n${diagnostics}\nSession:\n${sessionText}`,

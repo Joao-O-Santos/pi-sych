@@ -20,6 +20,7 @@ const promptFor = (value) => buildCompactionPrompt(value, { files: [], paths: []
 const sections = (prompt) => {
 	const headings = [
 		excerptHeading,
+		"Tool failure/recovery excerpts (error flags and adjacent context; remedies may be unverified):",
 		"Observable messages:",
 		"Retained recent messages:",
 		"Canonical snapshots (inbox excluded; clipping proves nothing):",
@@ -31,7 +32,7 @@ const sections = (prompt) => {
 			assert.ok(positions[i] > positions[i - 1], "sections must be chronological in the prompt");
 	}
 	return positions
-		.slice(0, 3)
+		.slice(0, 4)
 		.map((position, i) => prompt.slice(position + headings[i].length + 2, positions[i + 1]));
 };
 const ordered = (text, values) => {
@@ -46,7 +47,7 @@ const ordered = (text, values) => {
 test("tool-heavy first compaction preserves the initial task and recent correction", () => {
 	const history = [
 		user("EARLY TASK: implement the migration safely"),
-		...Array.from({ length: 60 }, (_, i) => ({
+		...Array.from({ length: 160 }, (_, i) => ({
 			role: "toolResult",
 			toolName: "read",
 			isError: false,
@@ -55,12 +56,12 @@ test("tool-heavy first compaction preserves the initial task and recent correcti
 		user("LATEST CORRECTION: first cover rollback"),
 	];
 	assert.ok(!serializeObservableMessages(history).includes("EARLY TASK"));
-	const [excerpts, observable] = sections(promptFor(event(history)));
+	const [excerpts, , observable] = sections(promptFor(event(history)));
 	ordered(excerpts, [
 		"EARLY TASK: implement the migration safely",
 		"LATEST CORRECTION: first cover rollback",
 	]);
-	assert.ok(observable.includes("tool-59"));
+	assert.ok(observable.includes("tool-159"));
 });
 
 test("large user traffic retains earliest request and chronological replacement and subtask", () => {
@@ -86,7 +87,7 @@ test("excerpts include split-turn and retained requests without reviving dropped
 		[entry("dropped", user("DROPPED BRANCH REQUEST")), entry("keep", user("RETAINED REQUEST"))],
 	);
 	const prompt = promptFor(input);
-	const [excerpts, , retained] = sections(prompt);
+	const [excerpts, , , retained] = sections(prompt);
 	ordered(excerpts, ["HISTORY REQUEST", "SPLIT TURN REQUEST", "RETAINED REQUEST"]);
 	assert.ok(retained.includes("RETAINED REQUEST"));
 	assert.ok(!prompt.includes("DROPPED BRANCH REQUEST"));

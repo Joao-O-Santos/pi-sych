@@ -71,7 +71,7 @@ test("compact preserves model limit and signal", async (t) => {
 		},
 		{
 			cwd: root,
-			model: { maxTokens: 2048 },
+			model: { contextWindow: 200_000, maxTokens: 2048 },
 			modelRegistry: { getApiKeyAndHeaders: async () => ({ ok: true, apiKey: "key" }) },
 			ui: { notify() {} },
 		},
@@ -165,7 +165,7 @@ test("snapshot clips unicode and rejects inbox aliases", async (t) => {
 	};
 	const ctx = {
 		cwd: root,
-		model: { maxTokens: 2048 },
+		model: { contextWindow: 200_000, maxTokens: 2048 },
 		modelRegistry: { getApiKeyAndHeaders: async () => ({ ok: true, apiKey: "key" }) },
 		ui: { notify() {} },
 	};

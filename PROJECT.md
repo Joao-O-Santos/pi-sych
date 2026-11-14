@@ -114,7 +114,13 @@ approach, remaining work, and next action. Inspectable canonical files
 retain long-term project knowledge. Compaction must not replace an
 unfinished task with the overall project objective or latest subtask,
 recover private thinking, or silently promote transient task state into
-accepted project state.
+accepted project state. Preserve repeated actionable user feedback and
+observed tool failure/recovery lessons across compaction. Distinguish
+explicit preferences from inferred patterns, avoid treating duplicated
+summaries as independent evidence, and keep project/personal scope
+uncertain until evidenced. Compaction may propose durable state only as
+unreviewed inbox entries; it never writes canonical or personal
+instructions directly.
 
 ## Current state
 
@@ -186,7 +192,9 @@ roll back changes. Plannotator absence does not prevent core startup.
 README/configuration/architecture/public-contract text describes seven
 skills, Pi-native MCP worker selection, layered configuration,
 persistence/scrutiny and clean/trajectory semantics. The nonblank
-runtime source-code budget is 3,300 lines.
+runtime source-code budget is 3,400 lines; the 100-line increment
+supports bounded feedback/error selection, priority-aware prior memory,
+and model-aware input/output allocation.
 
 {verified} Repository-native formatting, documentation, type, budget,
 and test checks remain the acceptance boundary. v8.1.4 is published at
@@ -277,7 +285,23 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
-{verified} Custom compaction now explicitly preserves active-task
+{verified} Richer compaction continuity is implemented locally, not
+released: optional preference/tool-lesson arrays, protected
+chronological request prefixes and error/recovery context,
+priority-aware prior-memory clipping, and model-aware input/output
+budgets. The development source budget is 3,400 lines. `make verify`
+passed 265 tests at 98.01/92.91/97.08% line/branch/function coverage;
+packaging, source-budget, site and production audit checks passed.
+Independent review found no remaining blocker after red/green regression
+repairs. The final live-model fixture retained repeated corrective and
+positive project feedback and a seeded filename failure/repair episode;
+this is summarization evidence for one model/run, not actual tool-repair
+execution or a retention guarantee. Bounded sampling/clipping can still
+omit evidence; compaction cannot retrieve unseen earlier interactions.
+No direct personal instruction writes, inbox review or publication were
+performed.
+
+{verified} The v8.1.9 compaction change explicitly preserves active-task
 working memory separately from durable project knowledge. Earliest and
 recent user-request excerpts receive up to 8 KiB within the existing 32
 KiB conversation budget; hidden thinking remains excluded. Existing

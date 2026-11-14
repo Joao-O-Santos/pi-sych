@@ -4,6 +4,16 @@ Notable user-facing changes to Pi Sych, in reverse version order.
 
 ## Unreleased
 
+- Custom compaction can retain repeated, scoped user feedback and
+  observed tool failure/recovery lessons. Larger model-aware bounded
+  working-memory inputs/outputs reduce automatic-compaction loss; small
+  contexts share reduced input/output allowances and fall back to native
+  compaction if the instructions cannot fit. Preference proposals remain
+  unreviewed and scoped; no personal instruction files are written.
+  Optional memory fields are backward-compatible; no migration required.
+  Raise the development source budget from 3,300 to 3,400 lines for the
+  bounded selection, priority retention, and model-budget mechanics.
+
 ## 8.1.9
 
 - Custom compaction retains the active task's goal, resume point, and

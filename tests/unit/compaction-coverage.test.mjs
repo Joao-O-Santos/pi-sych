@@ -223,7 +223,7 @@ test("bounded tool-call serialization handles scalar, array, inherited, and trun
 });
 
 test("observable serialization bounds aggregates deterministically", () => {
-	const many = Array.from({ length: 20 }, (_, index) => ({
+	const many = Array.from({ length: 120 }, (_, index) => ({
 		role: "user",
 		content: `message-${index} ${"x".repeat(2000)}`,
 	}));
@@ -457,7 +457,7 @@ test("non-manual compaction failures log instead of notifying", async (t) => {
 			},
 			{
 				cwd: root,
-				model: { maxTokens: 512 },
+				model: { contextWindow: 200_000, maxTokens: 512 },
 				modelRegistry: { getApiKeyAndHeaders: async () => ({ ok: true, apiKey: "key" }) },
 				ui: {
 					notify() {
@@ -501,7 +501,7 @@ test("compact refuses an inbox that aliases SYNC.json", async (t) => {
 		},
 		{
 			cwd: root,
-			model: { maxTokens: 2048 },
+			model: { contextWindow: 200_000, maxTokens: 2048 },
 			modelRegistry: { getApiKeyAndHeaders: async () => ({ ok: true, apiKey: "key" }) },
 			ui: {
 				notify(message) {

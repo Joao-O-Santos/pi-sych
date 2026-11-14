@@ -173,28 +173,41 @@ stop when complete or genuinely blocked. This trigger is separate from
 compaction.
 
 The continuation is a bounded observable trajectory: objective,
-authorization, constraints, progress, decisions, inferences, failed or
-rejected paths, unresolved issues, active work, next action, files, and
-project-state gaps. This is short-term working memory for the active
-user task, separate from long-term knowledge in inspectable canonical
-files. It preserves the task's outcome, resume point, and concise
-visible-evidence-based approach rationale, not private reasoning. Later
-user direction or completion evidence can supersede a prior task; a
-recent subtask alone does not replace it.
+authorization, constraints, user preferences, progress, decisions,
+inferences, tool lessons, failed or rejected paths, unresolved issues,
+active work, next action, files, and project-state gaps. This is
+short-term working memory for the active user task, separate from
+long-term knowledge in inspectable canonical files. It preserves the
+task's outcome, resume point, and concise visible-evidence-based
+approach rationale, not private reasoning. Later user direction or
+completion evidence can supersede a prior task; a recent subtask alone
+does not replace it.
 
-Within the existing 32 KiB conversation bound, up to 8 KiB protects
-earliest/recent user-message excerpts from tool-output crowding, the
-retained tail remains capped at 16 KiB, and observable history uses the
-remainder. Per-message clipping still applies; the model interprets
-which requests remain active. Canonical snapshots are separately
-bounded. Recorded `user-explicit` and `accepted-project` decision
-attributions are preserved without verification; inferences are kept
-separate. Malformed optional collections and invalid individual members
-are skipped independently so usable siblings survive. Invalid promotion
-candidates are likewise skipped rather than invalidating the memory
-summary. The required objective and next action must remain usable;
-malformed JSON or missing or unusable required fields leave native
-fallback in control.
+The conversation ceiling is 192 KiB, with bounded chronological
+user-request excerpts, recent messages, and remaining observable
+history. User requests share prefix allowances across the chronology;
+very large request counts are sampled. Explicit tool errors and adjacent
+context receive a protected, deduplicated allocation. Prior-summary
+input is capped at 64 KiB, with priority-aware section clipping instead
+of losing late resume state. Output is up to 16,384 tokens, capped by
+the model's output limit and one quarter of its context window. Input
+bytes are conservatively budgeted as potential tokens after
+output/framing reserves, with allocations shared across snapshots, prior
+memory and conversation. Invalid model limits or an irreducibly
+oversized prompt use native fallback rather than clipping instructions.
+Working memory includes bounded user preferences and tool
+failure/recovery lessons. Explicit versus inferred feedback and
+project/personal/unknown scope remain distinguishable; repeated summary
+copies are not new evidence. Tool fixes retain outcome and applicability
+limits. Hidden thinking stays excluded. Canonical snapshots are
+separately bounded. Recorded `user-explicit` and `accepted-project`
+decision attributions are preserved without verification; inferences are
+kept separate. Malformed optional collections and invalid individual
+members are skipped independently so usable siblings survive. Invalid
+promotion candidates are likewise skipped rather than invalidating the
+memory summary. The required objective and next action must remain
+usable; malformed JSON or missing or unusable required fields leave
+native fallback in control.
 
 At most bounded one-line proposals are appended to the configured inbox
 as visibly unreviewed state. Canonical semantic files are never mutated.

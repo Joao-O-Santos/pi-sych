@@ -46,7 +46,7 @@ async function fixture(t, configure = async () => {}) {
 		controller = new AbortController(),
 		ctx = {
 			cwd: root,
-			model: { maxTokens: 512 },
+			model: { contextWindow: 200_000, maxTokens: 512 },
 			modelRegistry: { complete: async () => response() },
 			ui: { notify: (message) => notifications.push(message) },
 		},

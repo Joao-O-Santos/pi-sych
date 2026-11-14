@@ -65,11 +65,53 @@ grounded in visible evidence. These remain tentative, not user decisions
 or recovered private reasoning. Do not turn inferred rationale into a
 user statement.
 
-Within the existing 32 KiB conversation input bound, up to 8 KiB is
-reserved for chronological excerpts of the earliest available and recent
-user messages, so tool output cannot consume their entire allocation.
-The retained recent tail keeps its existing 16 KiB cap; observable
-history uses the remaining budget. Excerpts use the existing per-message
+The conversation input ceiling is 192 KiB. Up to one quarter protects
+user requests: an earliest-request prefix, followed by shared prefix
+allowances across subsequent requests so middle feedback is not simply
+replaced by the recent suffix. Extreme message counts are sampled at
+chronologically distributed positions, retaining the latest request.
+Up to one sixth (at most 32 KiB) protects tool-error episodes: each
+explicit error result plus one preceding and four following messages,
+with overlapping windows deduplicated. Flagged error prefixes receive
+reserved space before separately labeled adjacent context, so a long
+following success cannot consume their allocation. These groups are not
+a single chronological replay. Excess errors, unflagged failures, or
+repairs outside those windows can still be missed. The recent tail receives up
+to one quarter; observable history uses the remainder. Episode selection
+uses roles/error flags, not semantic interpretation of error text.
+
+Prior-summary input is capped at 64 KiB, including separately preserved
+decision attributions. Oversized structured summaries are excerpted by
+section rather than prefix alone, prioritizing objective and next action
+and allocating space for preferences, tool lessons and other sections.
+Unrecognized legacy summaries use bounded prefix extraction.
+
+Output allowance is the minimum of 16,384 tokens, the model's output
+limit, and one quarter of its context window. The prompt-byte allowance
+is the context window minus that output reserve and 1,024 tokens of
+framing headroom. Treating each UTF-8 byte as a potential input token is
+intentionally more conservative than average characters-per-token
+estimates; it is not a provider tokenizer measurement. Fixed instructions,
+focus, status, paths and section framing are reserved first. Snapshots
+receive at most one sixth of the remaining allowance, prior memory at
+most one third after snapshots, and conversation receives the remainder,
+all below their respective ceilings. Unknown/unusable model limits or
+an irreducibly oversized prompt leave native fallback in control rather
+than clipping instructions. These richer defaults apply equally to
+manual, native automatic and proactive compaction; proactive admission
+uses Pi's manual request path, so reason alone cannot distinguish it.
+
+Working memory includes `userPreferences` and `toolLessons`. Preferences
+capture repeated user corrections, frustrations, and positive feedback
+with their evidence and explicit/inferred status; repeated summary copies
+are not independent evidence, later corrections supersede earlier ones,
+and praise is scoped to what was praised. Project/personal scope remains
+unknown unless visible evidence establishes it. Tool lessons retain
+failure, observed repair/outcome, and applicability limits; an untested
+suggestion is not a demonstrated fix. Both are arrays of single-line strings carrying evidence, scope, and
+uncertainty, not objects or private reasoning. Prior summaries are
+records, not fresh user feedback; compaction cannot retrieve unseen
+interactions. Excerpts use the existing per-message
 prefix bound, so long requests and intervening messages can still be
 clipped or omitted. Earlier requests may be completed or superseded;
 the model must interpret them rather than automatically revive them.
@@ -109,7 +151,9 @@ confined to the configured inbox after alias checks; an unsafe destination
 or inbox write failure skips proposals without discarding otherwise usable
 memory. Cancellation is checked after asynchronous inbox safety and
 directory operations and immediately before append, so an abort during
-those waits cannot write a proposal. If the existing inbox cannot be
+those waits cannot write a proposal. An append already submitted to the
+filesystem is not transactional with session persistence and cannot be
+undone by cancellation. If the existing inbox cannot be
 counted, the completion notice reports the count as unavailable rather
 than zero. Omitted or malformed
 optional memory arrays become empty; invalid members are skipped
@@ -126,16 +170,19 @@ UI itself fails.
 
 ## Suggested continuation shape
 
-The implemented serialization contains the following bounded fields:
+The implemented serialization contains the following bounded fields (the preference and tool-lesson arrays are optional
+additions; old output remains usable):
 
 ```text
 objective:
 authorization:
 constraints:
+userPreferences:
 progress:
 decisions:
 inferences:
 failedOrRejected:
+toolLessons:
 unresolved:
 activeWork:
 nextAction:
@@ -150,7 +197,7 @@ allow-listed provenance labels; invalid entries are omitted, never
 reclassified. Boundedness comes from bounded source reads, item, message,
 status, retained-tail, snapshot, and proposal limits
 rather than prompt word-count budgets. The nonblank runtime source budget
-is 3,300 lines; the checker reports a 50-line-rounded estimate. UTF-8
+is 3,400 lines; the checker reports a 50-line-rounded estimate. UTF-8
 snapshots are decoded and
 then byte-bounded, including malformed source text; serialized snapshots
 and optional focus instructions also have explicit prompt-byte limits.
@@ -165,8 +212,9 @@ UTF-8 conversation bounds, thinking exclusion, settled-boundary execution, dupli
 follow-up preservation, explicit decisions versus inference, visible
 rationale without invented hidden reasoning, rejected-path continuity,
 project-state gap classification, canonical non-mutation, bounded
-unreviewed proposals if retained, malformed output/failure fallback, and
-successful resumption of the actual next action.
+unreviewed proposals if retained, malformed output/failure fallback, small-model budget admission,
+large valid prior-summary priority retention, middle feedback/error-repair
+coverage, and successful resumption of the actual next action.
 
 Live-model fixtures can then evaluate decision loss, reintroduction of
 rejected ideas, unsupported claims, failure to continue authorized work,
