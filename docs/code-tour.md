@@ -19,7 +19,7 @@ point. The workbench delegates to small files in
 |------------------------------------|------------------------------------|
 | `worker-engine.ts`, `model-catalog.ts` | Dispatch schema, context modes, model selection, process lifecycle, launch-scoped worker instructions, and immutable results. |
 | `project-files.ts`, `project-status.ts` | Project paths, `SYNC.json` parsing, fingerprints, declared dependency impact, and acknowledgement. |
-| `compaction.ts` | Bounded context snapshot, tolerant recovery of optional memory/proposal entries, and unreviewed inbox proposals, without changing canonical semantic decisions. |
+| `compaction.ts` | Token-fitted visible conversation and bounded project snapshots, tolerant recovery of optional memory/proposal entries, and unreviewed inbox proposals, without changing canonical semantic decisions. |
 | `config-directory.ts`, `validation.ts` | Configuration resolution and mechanical validation. |
 | `literature-search.ts` | Read-only local SQLite discovery. |
 | `plannotator.ts` | Optional review integration support. |
@@ -46,15 +46,13 @@ relationships; the generated reference tracks declarations.
 
 ### Review provenance versus runtime limitations
 
-The review skill, not the dispatch engine, instructs **every
-LLM-produced review** to end with a short, visually distinct **Review
-scope** footer identifying the task's actual focus, even when the user
-did not invoke a packaged prompt. An adversarial review must make clear
-that the model was asked to find problems. This footer is separate from
-genuine findings or limitations; it is not an item in a limitations
-list. A worker's terminal `limitations` field, by contrast, records
-execution/report limitations and is not a substitute for the review
-footer in its written report.
+The review skill, not the dispatch engine, instructs reviews returned by
+workers or invoked through packaged review prompts to end with a brief
+**LLM review** line explaining how the requested lens may shape the
+findings. An ordinary supervisor review need not include the line unless
+requested or useful. A worker's terminal `limitations` field records
+execution/report limitations and is not a substitute for that cue in its
+written report.
 
 Review guidance also distinguishes provenance and authority. Author
 comments recorded through Plannotator remain author feedback; co-author
@@ -77,8 +75,11 @@ immediately before the exact dispatching assistant entry. The worker can
 submit exactly one immutable validated result: `status`, `summary`,
 `files`, and `limitations`. Dispatch accepts it only after a normal exit
 and verifies that reported project files still exist. Cancellation,
-timeout, spawn failure, a signal exit, and a non-zero exit take
-precedence over a result file; none is a successful result.
+timeout, spawn failure, a signal exit, a non-zero exit, and an explicit
+aborted settlement take precedence over a result file; none is a
+successful result. A valid report recovered after failure can be
+returned separately as provisional `interruptedReport`, and observed
+project changes are reported without rolling them back.
 
 Optional `workerInstructions` applies only to its dispatch. The engine
 copies the configured worker agent directory into private temporary
@@ -115,17 +116,20 @@ reserve-token settings. Independently, opt-in completion reassessment
 uses `agent_before_settle` to inject one hidden,
 authorization-preserving prompt when there are no pending messages and
 Pi can continue. The per-user-message re-entry guard prevents repeated
-continuation. The compaction module builds a bounded snapshot of
-selected project state and observable conversation, asks the active
-supervisor model for structured working memory, filters its file
-references, and appends a small number of visibly unreviewed proposals
-to the inbox. Returning no custom result leaves Pi's native compactor in
-control. Canonical semantic files are never mutated; recorded label
-attributions are preserved without verification. Malformed optional
-collections and invalid members are skipped independently, preserving
-usable siblings and required summary fields. Invalid or missing required
-summary fields still return native fallback. Unsafe inbox destinations
-or proposal-append failures skip proposals without discarding usable
+continuation. The compaction module combines bounded snapshots of
+selected project state with the full available visible conversation,
+fitted to the model's token budget. When necessary, it reduces bulky
+tool outputs with explicit markers or falls back rather than silently
+dropping conversation turns. It asks the active supervisor model for
+structured working memory, filters its file references, and appends a
+small number of visibly unreviewed proposals to the inbox. Returning no
+custom result leaves Pi's native compactor in control. Canonical
+semantic files are never mutated; recorded label attributions are
+preserved without verification. Malformed optional collections and
+invalid members are skipped independently, preserving usable siblings
+and required summary fields. Invalid or missing required summary fields
+still return native fallback. Unsafe inbox destinations or
+proposal-append failures skip proposals without discarding usable
 memory; an unreadable inbox count is reported as unavailable.
 Cancellation before append prevents proposal writes.
 

@@ -4,6 +4,11 @@ Notable user-facing changes to Pi Sych, in reverse version order.
 
 ## Unreleased
 
+- Correct the code tour's review-lens and compaction descriptions and
+  clarify provisional worker reports. Align the README's Pi
+  compatibility verification summary with the public contract.
+  Documentation only; no migration is required.
+
 ## 8.2.0
 
 - Minor release: materially improve supported compaction and add

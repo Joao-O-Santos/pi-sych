@@ -1,7 +1,25 @@
 {
   "version": 2,
-  "confirmedAt": "2026-11-14T17:59:07.698Z",
+  "confirmedAt": "2026-11-17T01:48:01.709Z",
   "artifacts": [
+    {
+      "path": "docs/code-tour.md",
+      "fingerprint": "sha256:d43127d57d8e10a4284eb73284582d21139b41bf79469702e3648a55d88bc7ee",
+      "status": "current",
+      "role": "documentation",
+      "authoritativeFor": [
+        "runtime-source-tour"
+      ],
+      "updateFrom": [
+        "extensions/workbench/src/compaction.ts",
+        "extensions/workbench/src/worker-engine.ts",
+        "skills/review/SKILL.md"
+      ],
+      "acknowledgement": {
+        "at": "2026-11-17T01:48:01.709Z",
+        "reason": "Reviewed tour against current worker launch, compaction, review skill and architecture; corrected review cue, full-visible input and provisional reports. Documentation-only update; other existing review states retained."
+      }
+    },
     {
       "path": "EVIDENCE.md",
       "fingerprint": "sha256:91ac8c10050d3b67cf5a5a33bd60b705da6627a6076676b14614db78314786de",
