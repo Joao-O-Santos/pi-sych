@@ -292,6 +292,16 @@ remained within budget, and production audit found zero vulnerabilities.
 
 ## Immediate next step
 
+{verified} Released documentation patch 8.2.1 at signed tag `v8.2.1`,
+pointing to `e29446e2c279812a40cbfdc66338aafa9810ff87`. Documentation
+and release main pipelines `3076889327` and `3076899250` passed; tag
+pipeline `3076905443` passed verification and npm publication. npm
+reports version/latest 8.2.1 and matching gitHead; the registry tarball
+contents match a local package. The tag signature verifies locally;
+registry provenance metadata is present but was not independently
+cryptographically verified. Local `make verify` passed 271 tests,
+`make site` passed and the production audit found zero vulnerabilities.
+
 {verified} Released minor 8.2.0 at signed tag `v8.2.0`, pointing to
 `6afa72495a70731c3b545ab44307541adcc3ecee`. Implementation main pipeline
 `3068694564` and release main pipeline `3068704117` passed verify and
