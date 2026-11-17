@@ -4,6 +4,11 @@ Notable user-facing changes to Pi Sych, in reverse version order.
 
 ## Unreleased
 
+## 8.2.1
+
+- Patch release: documentation corrections within the existing public
+  contract; no configuration, stored-state, or runtime behavior change
+  requires migration.
 - Correct the code tour's review-lens and compaction descriptions and
   clarify provisional worker reports. Align the README's Pi
   compatibility verification summary with the public contract.

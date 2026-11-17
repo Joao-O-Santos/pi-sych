@@ -89,7 +89,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "Six image references target published v8.2.0. Version/lock/image consistency and all214 published file contents verified; compaction usage is unchanged. Broader semantic acknowledgement remains pending."
+      "pendingReason": "README compatibility summary and image references updated for prepared 8.2.1; broader semantic acknowledgement remains pending. Publication is not established by prepared metadata."
     },
     {
       "path": "package.json",
@@ -110,7 +110,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "Published8.2.0 version/lock and image metadata match signed tag and registry. Release main/tag CI and214-file content/integrity/provenance metadata checks passed. Existing broader package-boundary acknowledgement remains pending."
+      "pendingReason": "Version, lock and image metadata prepared for 8.2.1; publication requires the release pipeline and registry verification. Existing broader package-boundary acknowledgement remains pending."
     },
     {
       "path": "docs/configuration.md",
@@ -242,7 +242,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Published8.2.0 notes include minor rationale, affected internal compaction/session behavior and no-migration/write-policy-change statement. Native parser confirms one new entry; broader semantic acknowledgement remains pending."
+      "pendingReason": "Prepared 8.2.1 patch notes describe documentation corrections and no migration; broader semantic acknowledgement remains pending. Publication is verified separately from this entry."
     },
     {
       "path": "skills/code/SKILL.md",
