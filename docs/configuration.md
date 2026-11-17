@@ -104,7 +104,9 @@ instructions before it. Pi loads this through native AGENTS discovery;
 project and ancestor AGENTS files retain Pi's normal precedence. The
 shared worker directory and project files are not modified. Omit the
 option to use the configured worker directory unchanged with no injected
-guidance. The model catalogue is needed to dispatch a worker, not merely
+guidance and no Pi context-file discovery. The configured project agents
+file, when present, is still included separately in the explicit context
+packet. The model catalogue is needed to dispatch a worker, not merely
 to start Pi Sych for direct project work.
 
 A `project_status` check also reports the current supervisor model by

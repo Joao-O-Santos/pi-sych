@@ -322,14 +322,15 @@ orchestration system:
 - **Task working memory:** when custom compaction is enabled in Pi Sych
   config, the workbench handles native compaction requests and proactive
   admission defaults to 150,000 context tokens at a safe settled
-  boundary. Its bounded short-term working memory retains the active
-  task goal, resume point, next action, actionable user feedback, and
-  observed tool recoveries; inspectable project files retain long-term
-  knowledge. The compactor sees full available visible conversation and
-  tool calls in order; model token budgets, not fixed transcript byte
-  caps, govern fitting. Large tool outputs are reduced only when needed,
-  with explicit markers. Preference proposals remain unreviewed in the
-  inbox, with project/personal scope explicit. Malformed optional
+  boundary. Its short-term working memory retains the active task goal,
+  resume point, next action, actionable user feedback, and observed tool
+  recoveries; inspectable project files retain long-term knowledge.
+  Input includes available visible conversation text and tool calls in
+  order; model token budgets, not fixed transcript byte caps, govern
+  fitting. Image payloads are omitted, large tool outputs are reduced
+  only when needed with explicit markers, and an oversized backbone
+  triggers native fallback. Preference proposals remain unreviewed in
+  the inbox, with project/personal scope explicit. Malformed optional
   memory/proposal entries are skipped independently when the required
   summary remains usable; missing or unusable required fields retain
   Pi's native fallback. Inbox safety/write failures skip proposals
@@ -383,14 +384,20 @@ and native MCP changes.
 ![Pi Sych architecture: supervisor tools, workers, results, and project
 files](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v8.2.1/docs/img/architecture.png)
 
-![Supervisor compaction inputs, continuation, and separate worker
-context](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v8.2.1/docs/img/supervisors_context.png)
+![Historical supervisor compaction illustration; see the correction
+below](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v8.2.1/docs/img/supervisors_context.png)
+
+The compaction illustration is outdated: input now includes the full
+available visible conversation text subject to token fitting, not just
+recent bounded conversation, and unresolved tasks need not be resolved
+before compaction.
 
 ![Seven public skills and private module and method building
 blocks](https://gitlab.com/Joao-O-Santos/pi-sych/-/raw/v8.2.1/docs/img/skills_architecture.png)
 
-These diagrams are orientation aids, not complete runtime contracts. See
-[architecture](docs/ARCHITECTURE.md) for behavior details.
+These diagrams are orientation aids, not complete runtime contracts. The
+logo's terminal text is decorative, not a supported command interface.
+See [architecture](docs/ARCHITECTURE.md) for behavior details.
 
 ## Detailed documentation
 

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "confirmedAt": "2026-11-17T01:48:01.709Z",
+  "confirmedAt": "2026-11-17T02:15:07.008Z",
   "artifacts": [
     {
       "path": "docs/code-tour.md",
@@ -89,7 +89,7 @@
         "at": "2026-10-14T18:25:35.543Z",
         "reason": "Prepared v8.1.2 metadata and changelog for the authorized patch release; reviewed package version/lock consistency, v8.1.2 image links, release rationale, and change summary. `make verify` passed 248 tests at 97.92/92.52/96.93% coverage, `make site` passed, and npm pack dry-run contains expected public files. No migration is required for these changes; the existing migration-guide review flag from separate configuration changes remains."
       },
-      "pendingReason": "README compatibility summary and image references updated for published 8.2.1; version, tag and registry package content verified. Broader semantic acknowledgement remains pending."
+      "pendingReason": "Compaction input and outdated diagram warnings updated after 8.2.1; broader semantic acknowledgement remains pending."
     },
     {
       "path": "package.json",
@@ -114,15 +114,15 @@
     },
     {
       "path": "docs/configuration.md",
-      "fingerprint": "sha256:273957a371db8942ddf2c1d8b92c5d49e88b05b2d4d826ee8f2410f0a94e9a96",
+      "fingerprint": "sha256:1c03255674d152ecdc0c89f2992c266229e2b3a4a41d94f77013896fa51560b6",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-11-14T17:16:02.471Z",
-        "reason": "Reviewed full-visible-context compaction against source, native projection/lifecycle and regressions: no turn sampling or transcript/prior-memory/message byte caps; native token estimates and model capacity govern fitting/output; optional snapshots yield before necessary marked bulky tool-output reduction; narrative/arguments remain complete or custom compaction explicitly falls back. Memory text/count quotas removed while schema/provenance, bounded external reads and five one-line 1000-character inbox proposals remain. Independent static review found no concrete blocker; supervisor completed/inspected integration after a partial worker timeout. Final make verify passed 271 tests at 97.89/92.90/96.71% line/branch/function coverage, packaging and about3250/3400-line source budget; site passed and production audit found zero vulnerabilities. Supervisor inspected exactly one separately gated workhorse short soak: 105.091s, six real read/write batches, three automatic custom successes, no observed failure notices/native fallbacks/failed or cancelled attempts; compaction9.329-15.398s. Report and limits recorded in EVIDENCE.md: native token estimates/lexical diagnostics are not exact provider accounting or semantic-retention proof; this is not long-duration reliability evidence. Soak skips by default and under ordinary usage gate; no CI execution, global settings changes, inbox review, push or release. Existing broader needs-review states retained."
+        "at": "2026-11-17T02:15:07.008Z",
+        "reason": "Reviewed worker AGENTS discovery clarification against worker launch and context packet; independent review found no material blockers. make verify passed 271 tests; site and production audit passed. Existing broader pending reviews remain."
       }
     },
     {
@@ -143,7 +143,7 @@
       "fingerprint": "sha256:d1223de5b2541240b7e812c4ffdf0fe5ab872ca18fa628b243989a68802b5b2e",
       "status": "needs-review",
       "role": "documentation",
-      "pendingReason": "Documented full chronological visible input/arguments, native retained projection, token-derived fitting/output and bounded external snapshots instead of sampled byte-capped inputs. Canonical/personal instruction writes remain prohibited; earlier compatibility history and broader semantic review remain pending.",
+      "pendingReason": "Clarified worker context-file discovery after independent review; earlier compatibility history and broader semantic review remain pending.",
       "authoritativeFor": [
         "compatibility"
       ],
@@ -183,7 +183,7 @@
         "at": "2026-10-09T10:38:58.603Z",
         "reason": "Reviewed authorized interrupted-report recovery and independent review: preserve structurally valid provisional claims separately from successful result, keep interruption/process failure primary and warn of incomplete/inaccurate work and nonexistent claimed files. Malformed/absent reports retain original error and observations. README and migration/image guidance remain consistent; no configuration or diagram revision needed. make verify passed 239 tests at 97.86/92.50/96.80 coverage; site/budget passed, audit zero vulnerabilities. No push or release authorized."
       },
-      "pendingReason": "Existing needs-review state retained; changelog dependency changed again."
+      "pendingReason": "Clarified v7 threshold and worker configuration migration after source review; existing broader needs-review state retained."
     },
     {
       "path": "docs/img/readme.md",
@@ -202,7 +202,7 @@
         "at": "2026-10-14T18:00:20.695Z",
         "reason": "Reviewed the worker dispatch summary split and the worker/packaged-prompt lens-cue changes, docs examples, release note, and architecture-diagram metadata. Independent read-only review found no concrete defects. `make verify` passed 248 tests at 97.92/92.52/96.93% line/branch/function coverage; `make site`, style, source-budget, and diff checks passed. The migration guide remains pending review because of separate earlier configuration changes."
       },
-      "pendingReason": "Architecture documentation changed; diagram guidance needs dependency review before re-acknowledgement."
+      "pendingReason": "Visually confirmed and documented outdated compaction diagram labels and decorative logo commands; image correction and broader dependency review remain pending."
     },
     {
       "path": "docs/compaction-design.md",
@@ -242,7 +242,7 @@
         "at": "2026-10-14T18:38:47.746Z",
         "reason": "Recorded the verified v8.1.2 release: signed tag points to commit 40cd3f0; main pipeline 2947839453 and tag publication pipeline 2947850894 passed; npm reports version/latest/gitHead 8.1.2; registry tarball file list matches the local dry-run and provenance metadata is present. Local checks and package verification passed. The existing migration guide remains pending review because of separate configuration changes."
       },
-      "pendingReason": "Published 8.2.1 patch notes describe documentation corrections and no migration; release pipeline and registry publication verified. Broader semantic acknowledgement remains pending."
+      "pendingReason": "Unreleased documentation corrections noted; broader semantic acknowledgement remains pending."
     },
     {
       "path": "skills/code/SKILL.md",

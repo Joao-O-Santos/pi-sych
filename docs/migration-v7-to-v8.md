@@ -51,17 +51,23 @@ local literature database default.
 
 ## Remove obsolete v7 keys
 
-Delete these v7 keys rather than translating them:
+Set `version` to `2` in the retained configuration. Remove these
+obsolete v7 keys; migrate their associated settings as follows:
 
 - `workerAgentDir` — initialize the conventional `<Pi Sych config
-directory>/worker-agent` directory.
-- `modelCatalog` — the conventional catalogue is
+  directory>/worker-agent` directory and preserve or recreate any needed
+  worker settings and authentication there. Keep credentials private.
+- `modelCatalog` — preserve or recreate your model roles in the conventional
   `<Pi Sych config directory>/worker-models.json` (renamed to distinguish it
   from Pi's own `models.json`).
 - `mcporterConfig` — Pi reads native MCP configuration from the worker agent
   directory; configure it there instead.
-- `compaction.compactAt100k` — the Pi Sych proactive threshold is now
-  `compaction.thresholdTokens`, defaulting to 150000.
+- `compaction.compactAt100k` — use `compaction.thresholdTokens: 100000` to
+  retain the former 100,000-token trigger when it was enabled. With custom
+  compaction enabled, omitting the new threshold instead enables the
+  150,000-token default, including when the old trigger was disabled. There
+  is no separate proactive-off setting: `compaction.custom: false` disables
+  both proactive triggering and Pi Sych custom summaries.
 - `review.mode` — use Pi's resource selection to load or disable the separate
   Plannotator extension.
 

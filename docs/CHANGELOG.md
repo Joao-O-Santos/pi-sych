@@ -4,6 +4,11 @@ Notable user-facing changes to Pi Sych, in reverse version order.
 
 ## Unreleased
 
+- Clarify v7 compaction and worker-configuration migration, worker
+  context-file discovery, and token-fitted compaction input. Flag
+  outdated diagram and decorative logo text. Documentation only; no
+  migration is required for existing v8 installations.
+
 ## 8.2.1
 
 - Patch release: documentation corrections within the existing public
