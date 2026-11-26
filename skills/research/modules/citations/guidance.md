@@ -4,7 +4,9 @@ Verify bibliographic identity and the version actually inspected: author,
 title, date, locator, DOI or URL, and material correction or retraction status.
 Quote only wording inspected in that version. Identify whether each citation is
 evidential, contextual, methodological, or illustrative; correct form does not
-establish claim support.
+establish claim support. Use [citation scope](../../../_methods/claim-evidence/guidance.md#scope-in-text-citations)
+to distinguish a source placed as claim support from one cited for a method,
+related work, or disagreement.
 
 Use available capabilities according to what must be verified. A scholarly
 metadata service such as OpenAlex or an equivalent can help establish identity,

@@ -40,9 +40,25 @@ a defect.
   *Language & Communication*, 37, 60--74.
   <https://doi.org/10.1016/j.langcom.2013.08.009>
 
-These sources support strong but defeasible defaults. They do not make
-every other prose recommendation a claim attributable to Sarnecka or
-Pullum.
+These sources inform the defaults; individual editorial choices remain
+Pi Sych's. The following public examples also informed the revision:
+
+- [Sarnecka and Lee, *Levels of Number Knowledge in Early
+  Childhood*](https://doi.org/10.1016/j.jecp.2009.02.007): make an
+  abstract distinction concrete, then show what different explanations
+  would predict.
+- [Hagá and Olson, *Knowing-it-all but still
+  learning*](https://doi.org/10.1037/dev0000433): the abstract builds
+  from a familiar expectation to a result that separates two ideas
+  readers might conflate.
+- [Gomes, Silva, and Semin, *The lasting smell of
+  emotions*](https://doi.org/10.3758/s13428-020-01412-5): turn a
+  practical question into a specific, interpretable comparison.
+
+The maintainer's scientific writing and R teaching practice also
+informed the reporting and code defaults. The package examples are
+original; they contain no excerpts, data, or access paths from the
+private writing samples.
 
 ### Hypothesis generation and perspectivism
 

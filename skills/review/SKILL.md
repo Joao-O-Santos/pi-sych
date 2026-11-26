@@ -5,88 +5,36 @@ description: Independently evaluate artifacts for correctness, structure, eviden
 
 # Review
 
-Evaluate independently. Accepted requirements and evidence override generic
-advice; do not optimize for agreement or soften a material defect into
-preference. Distinguish defects, trade-offs, alternatives, and uncertainty.
-Report only checks actually performed.
+Start with the requested lens, audience, and accepted requirements. Lead with
+findings that could change the result. For each, give the location, why it
+matters, and a repair when useful. Separate material defects from preferences
+and trade-offs. Report a limit on the review only if it changes what the user
+can rely on.
 
-Do not use certainty as the threshold for calling a scientific claim
-supported. Distinguish support strength from conclusiveness and test whether
-rival accounts actually undermine the inference, rather than merely imagining
-an alternative. Review may challenge a defensible authorial position in the
-conversation, but must not silently neutralize it in a revised artifact.
+For an evidence finding, show the link between the claim and the inspected
+source or output. Judge support by design, scope and inference, not exact word
+matches or certainty. Test credible rivals against the evidence. A rival can
+narrow a claim without displacing the contribution. Surface a material conflict
+with the accepted thesis instead of silently weakening it.
 
-Judge the artifact's scientific prose independently of the assistant's chat
-style. Conversational explanations to the user may be informal; the manuscript
-must satisfy authorial voice, disciplinary genre, and artifact-level prose
-quality. Flag model-default phrasing when it accumulates in the deliverable,
-not merely because the agent used similar language in a status message.
+For prose, read the piece in order. Identify the reader, the central claim and
+what each paragraph does. Flag broken transitions, missing steps and repeated
+habits that make the piece harder to read. Ask whether a caveat changes the
+inference, whether a contrast distinguishes live alternatives, and whether a
+denial answers a question the reader has any reason to ask. Explain the
+reader-visible problem and preserve purposeful voice. Use the
+[prose method](../_methods/prose/guidance.md) for details.
 
-Review findings carry different authority. Direct author feedback, including
-Plannotator annotations authored by the user, expresses authorial intent.
-Co-author feedback has a strong presumption of integration; discuss substantial
-objections rather than silently reject it. Human peer-review feedback warrants
-a serious response and normally integration unless a reasoned rebuttal is
-justified. Independent LLM reviews, especially adversarial ones, are diagnostic
-and have low default authority, although a verifiable material error matters
-regardless of its source. Identify the actual origin of comments, not just the
-tool or file that contains them.
+Review is advisory unless the user also requests edits. Identify who made each
+comment: user or author direction carries authority, co-author feedback merits
+collaboration, and human peer review deserves a substantive response. LLM
+findings are diagnostics; verify them against the work and evidence. A fresh
+review can find a blind spot without overruling the project's accepted aims.
+Finish when the important issues are addressed, even if further objections are
+possible.
 
-Clean-context reviews can expose blind spots but do not supersede current
-`PROJECT.md` or accepted authorial decisions. Triage findings against project
-purpose, evidence, and thesis; bring genuinely consequential threats to the
-author. Do not revise to eliminate every adversarial LLM objection or allow
-successive caveats to obscure the contribution. A review cycle can end with
-reasonable objections unresolved.
-
-For reviews returned by a worker or invoked through a packaged
-`prompts/review-*.md` entry point, end with a brief **LLM review** line naming
-the requested lens and how it may shape the findings. Make the line a useful
-reading cue, not a checklist of work omitted or a generic AI disclaimer. For
-example: "LLM review · Adversarial: I was asked to prioritize flaws, so some
-points may be less relevant than others." A collaborative review can note that
-its improvement-oriented task may miss flaws needing a more adversarial pass.
-Tailor other lenses similarly. Ordinary supervisor reviews need not carry this
-line unless requested or useful; never append it to human-authored feedback.
-
-Review is advisory unless revision or implementation was also requested.
-Reviewer comments are proposals to assess, not evidence or accepted project
-decisions by themselves. Compare them with explicit project state and supplied
-evidence; distinguish a limitation that narrows scope from evidence that
-contradicts an accepted claim.
-
-For prose, route structure, voice, information flow, reader friction, and
-self-containment through the [prose method](../_methods/prose/guidance.md).
-Review the artifact as a whole before polishing sentences: identify its reader,
-purpose, argument path, and paragraph jobs. Then test whether each sentence
-advances that path or supplies context, evidence, a necessary transition, or a
-material qualification. Explicitly test for a **possible invisible
-interlocutor**. The reviewer cannot know hidden drafting context; do not claim
-that a sentence came from it. Instead ask whether the artifact itself motivates
-its denials, contrasts, caveats, rebuttals, reassurances, and corrections. Would
-a reader ask "why am I being told this?" or "what objection is this
-answering?" If so, identify the missing premise or propose the smallest direct
-positive formulation.
-
-Inspect style patterns across the artifact, not just isolated sentences:
-repeated semicolons or em dashes, serial "not X but Y" constructions, stacked
-hedges, formulaic symmetry, and signposting may cumulatively flatten voice or
-interrupt flow. These are diagnostic prompts, never count-based violations.
-For each instance, ask what rhetorical or evidential work it does. Keep
-punctuation that expresses a real relation, contrasts that distinguish live
-alternatives, and hedges that accurately calibrate uncertainty. Challenge
-hedging when several weak qualifiers obscure who knows what, how strongly, or
-why; do not convert genuine uncertainty into unwarranted certainty.
-
-Trace flow at both scales: does each paragraph follow from the previous one,
-and does each sentence connect known information to what it newly contributes?
-Notice abrupt topic shifts, delayed main clauses, overloaded sentences, and
-transitions that announce rather than establish a relationship. Read passages
-in sequence, not as a collection of quotable defects. Ground material findings
-in location and reader effect, and offer a minimal repair or a short example
-when useful. Use the requested collaborative or adversarial lens. Report
-material divergence from accepted project state rather than silently choosing
-an authority. Select the smallest route that covers the review.
+Label worker reviews and packaged-prompt reports **LLM review** and name the
+lens. Preserve the attribution of human-authored comments.
 
 ## Task routes
 

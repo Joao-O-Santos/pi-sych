@@ -5,78 +5,38 @@ description: Draft, rewrite, revise, and structure scholarly, professional, inst
 
 # Write
 
-User, project, venue, and genre requirements override package defaults.
-A project style override controls presentation, not whether claims need
-support. Presentation rules never weaken evidential or claim-support standards.
-Calibrate claims in both directions: do not strengthen a conclusion beyond its
-support, but do not weaken an accepted, adequately supported claim merely to
-make it safer, more conventional, or harder to criticize. When a qualification
-is necessary, preserve the strongest supported positive claim and delimit it
-precisely. If evidence conflicts with an accepted project claim or argument
-invariant, report that conflict rather than silently substituting a weaker
-thesis. Do not invent facts, citations, quotations, requirements, or results.
+Read the current brief, project style, and comparable samples of the author's
+work when available. Match how the author develops a point across sentences and
+paragraphs, not a list of mannerisms. User, project, and venue conventions take
+precedence over [the package defaults](DEFAULT_STYLE.md). Revise the requested
+scope and keep effective authored prose wherever it still does its job. Use the
+relevant evidence digest, if available, to locate support and caveats for the
+section you are writing.
 
-Authorial authority and evidential assessment are distinct. Treat a current
-`PROJECT.md` and explicit author decisions as the controlling account of the
-paper's purpose and intended position, unless superseded by newer instructions.
-A defensible position need not be the only possible interpretation or be proven
-beyond all doubt. If a central claim is only partly supported, materially
-contested, or genuinely uncertain, explain the specific concern to the author
-in the conversation and ask for a decision when the intended position is not
-already clear. Do not silently insert the assistant's disagreement into the
-manuscript or substitute a safer conclusion. Once the author understands the
-objection and confirms a defensible position, implement it with accurate scope,
-relevant counterarguments, and the strongest warranted conclusion. The assistant
-is an advisor, not the final arbiter of scientific truth or peer review.
-Demonstrable errors, fabricated support, and misleading representations remain
-out of bounds; explain those problems instead of complying silently.
+State the strongest defensible claim directly. Reason from the evidence: a
+paraphrase or inference can be supported without appearing word for word in a
+source. One precise qualification can carry the uncertainty. Add a limitation
+when it changes how a reader should understand or use the claim. Use contrast
+for alternatives the reader has a reason to consider. Ground facts, numbers,
+quotations, and citations in the available record.
 
-Separate communication from deliverable: keep supervisor/worker messages to
-the user concise, without demanding that they mimic polished manuscript prose.
-Apply author, project, and genre style constraints to the written artifact.
-Before delivery, inspect the artifact itself for imported conversational
-scaffolding and recurring model phrasing; fix these without deleting justified
-scholarly contrasts, qualifications, or evidence. For substantial drafting or
-revision, make a structural second pass in reading order, tracing paragraph
-relationships and the artifact's central purpose before final sentence polish;
-use the prose method for the procedure.
+For argumentative prose, recover the accepted thesis and its intended force
+from `PROJECT.md`, the draft, and explicit author decisions. A credible rival
+reading does not by itself defeat a defensible position. If evidence materially
+conflicts with an accepted claim, explain the issue to the author; preserve the
+supported parts and ask only if the next decision falls outside the brief.
 
-When revising from reviews, identify who actually authored each comment.
-Prioritize author decisions (including author-authored Plannotator notes),
-collaborate on co-author requests, and substantively address human peer-review
-feedback. Treat LLM review findings as lower-authority diagnostic suggestions,
-not automatic revision requirements. Check against current `PROJECT.md` and
-inspect evidence before making changes. Escalate serious problems, but avoid
-serial caveats, loss of thesis focus, or structural damage from trying to
-satisfy every adversarial model objection.
+When revising from reviews, identify the source of each comment. Implement
+author decisions, work with co-author requests, address human peer review, and
+treat LLM suggestions as diagnostics. Check proposed changes against the evidence
+and the paper's purpose. A narrower scope can preserve a contribution better
+than replacing it with a safer thesis.
 
-First identify the requested operation. For revision, preserve clear,
-audience-appropriate authored prose unless a concrete defect, structural need,
-venue requirement, or the requested rewrite justifies changing it. Broad editing
-still does not authorize unsupported factual, evidential, or project decisions.
-For argumentative revision, reconstruct accepted central claims from the
-project brief and relevant artifacts before editing. Reviewer comments are
-recommendations to evaluate, not accepted requirements or evidence by
-themselves. When a comment proposes replacing an accepted claim, determine
-whether supplied evidence actually contradicts it: a limitation may warrant
-narrower scope without displacing the positive contribution. Verify afterward
-that accepted meaning and intended force survive unless evidence requires a
-reported change, and report genuine conflicts rather than describing a silent
-retreat as accepted.
-
-For standalone prose, route self-containment, context leakage, and generic
-prose-quality checks to the [prose method](../_methods/prose/guidance.md).
-Treat prior conversation as working context rather than an implied audience:
-carry supported decisions and facts into the artifact without replying to
-questions, objections, or hypotheses that only existed in the conversation.
-Genre-specific guidance may retain process or reviewer language when the genre
-requires it. Do not remove distinctive human phrasing merely to make prose
-uniformly polished.
-
-For new prose, follow the strongest available author or project style evidence
-and use the package defaults in `DEFAULT_STYLE.md` only as a baseline. Explicit
-user, venue, renderer, accessibility, and evidence requirements override them.
-Select the smallest route that covers the task.
+For substantial work, review the artifact in reading order before polishing
+sentences. Check what each paragraph does and how it leads to the next. Write
+for the reader who never saw the drafting conversation; keep revision history
+or reviewer dialogue in genres that call for it. Use the [prose method](../_methods/prose/guidance.md)
+for a structural pass.
 
 ## Task routes
 
@@ -102,7 +62,8 @@ only when their distinctions materially affect the task.
 - Add [prose](../_methods/prose/guidance.md) for generic prose quality,
   self-containment, or context leakage.
 - Add [claim and evidence](../_methods/claim-evidence/guidance.md) when
-  material claims need evidence calibration.
+  material claims need evidence calibration or in-text citations need clearer
+  scope.
 - Add [argument analysis](../_methods/argument-analysis/guidance.md) when
   premises, inference, or rival accounts matter.
 - Add [hypothesis generation](../_methods/hypothesis-generation/guidance.md)

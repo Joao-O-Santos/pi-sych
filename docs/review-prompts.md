@@ -70,27 +70,10 @@ semantic correctness.
 
 ## Review-lens cue
 
-The five packaged prompts select optional lenses; they are not required
-to obtain a review. For reviews returned by workers or invoked through a
-packaged prompt, use a brief **LLM review** footer that identifies the
-lens and its likely influence on the findings. Prefer a cue about how
-the task can shape selection over a list of unchecked aspects or a
-generic model disclaimer.
-
-| Lens | Footer |
-| --- | --- |
-| Adversarial | **LLM review · Adversarial:** I was asked to prioritize flaws, so some points may be less relevant than others. |
-| Collaborative | **LLM review · Collaborative:** I was asked to preserve the contribution and help improve it, so I may miss flaws needing a more adversarial pass. |
-| Structural | **LLM review · Structural:** I prioritized how the organization carries the argument, which can make local issues less salient. |
-| Reader friction | **LLM review · Reader friction:** I prioritized a first-time reader's experience, so specialist conventions may look like friction. |
-| Verification | **LLM review · Verification:** I prioritized the supplied criteria, so issues outside them may receive less attention. |
-| Copyedit | **LLM review · Copyedit:** I prioritized sentence-level wording, so larger argument issues may be less visible. |
-
-Tailor the cue to the actual request when lenses are mixed or narrower.
-It describes the likely selection bias of the review, not the authority
-of its conclusions. Ordinary supervisor reviews need not carry a footer
-unless requested or useful. Human-authored feedback, including author
-annotations made with Plannotator, does not receive an LLM footer.
+Packaged prompts and worker reviews label their reports with the provenance
+and lens, for example **LLM review · Structural**. Explain a material scope
+constraint when it affects how the findings should be used. Human-authored
+feedback retains its original attribution.
 
 ## Packaging rule
 

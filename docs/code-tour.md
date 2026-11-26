@@ -46,13 +46,9 @@ relationships; the generated reference tracks declarations.
 
 ### Review provenance versus runtime limitations
 
-The review skill, not the dispatch engine, instructs reviews returned by
-workers or invoked through packaged review prompts to end with a brief
-**LLM review** line explaining how the requested lens may shape the
-findings. An ordinary supervisor review need not include the line unless
-requested or useful. A worker's terminal `limitations` field records
-execution/report limitations and is not a substitute for that cue in its
-written report.
+The review skill tells workers and packaged prompts to label their
+reports **LLM review** and name the lens. A worker's `limitations` field
+records material execution or evidence limits separately.
 
 Review guidance also distinguishes provenance and authority. Author
 comments recorded through Plannotator remain author feedback; co-author

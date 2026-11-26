@@ -1,217 +1,73 @@
 # Prose
 
-Use this method for substantial drafting, revision, and diagnostic review.
-Explicit user instructions, accepted project style, venue requirements, and
-artifact needs override package defaults. Preserve evidence, uncertainty,
-citations, placeholders, dialect, purposeful variation, established voice, and
-accepted argumentative commitments.
+## Find the argument
 
-## Conversation and artifact boundaries
+Start with what the reader needs to understand and why. For a substantial
+draft, sketch the claims in the order the reader will need them. For a
+revision, write one line for what each paragraph actually does. Compare
+that reverse outline with the intended argument before editing sentences.
+Move a definition to where the reader needs it, merge repeated moves, and
+make room for a missing step in the reasoning.
 
-Keep agent-to-user discussion concise and useful, but do not impose manuscript
-style rules on ordinary conversation. The artifact is a separate deliverable:
-write and assess its prose for the intended reader, authorial voice, genre,
-and disciplinary conventions, regardless of the model's conversational habits.
-Do not paste conversational explanations, reassurance, defensive contrasts,
-revision commentary, or stock LLM transitions into a manuscript unless they
-perform a real scholarly function. A model can explain a decision informally to
-the user while writing the artifact in disciplined scientific prose. Apply the
-style check to the final artifact in context, not to every agent utterance.
+Give an expository paragraph one main job. A useful shape is point,
+development, and consequence: make a claim, develop it with evidence or an
+example, then show what follows when that helps. The sense of the paragraph
+should determine its shape. A short bridge or a paragraph within a running
+example can have a different form.
 
-## Structure before wording
+## Match the author and the occasion
 
-Before structural revision, check the intended reader, their likely prior
-knowledge, and the context or definition they need for unfamiliar concepts. Work
-from the argument outward. For substantial new prose, identify the artifact or
-section job and use a topic-sentence outline when sequence is unclear. Before
-major revision, reverse-outline what each section and paragraph does, then
-reorder, merge, cut, split, or expand before polishing sentences. An ordinary
-expository paragraph should normally have one discernible job. For ordinary
-expository paragraphs, prefer a loose hamburger shape: topic or claim,
-development with reasoning or evidence, then consequence or link. The opening gives the reader the point, the middle develops it with reasons,
-evidence, or explanation, and the ending draws the warranted inference or
-states why the point matters for the next move. Do not routinely end with a
-new caveat that undercuts the paragraph's contribution. Put material scope
-conditions near the claim they delimit, or use a short parenthesis when it
-is genuinely clearer. The final sentence should normally leave the reader
-with the strongest supported takeaway within the stated scope, not a vague
-warning to be cautious. A limitation that genuinely changes the conclusion
-must still be stated, even when that calls for a weaker takeaway. This is a
-default, not a template; transitional, serial, dialogic, and deliberately
-fragmentary paragraphs may legitimately differ.
+Read comparable samples before drafting. Notice how the author opens a
+section, moves from a concrete case to an abstraction, introduces a term,
+uses first person, and lands a paragraph. Match those choices across the
+passage. Preserve an effective aside, fragment, or change in rhythm; avoid
+copying distinctive phrases or importing the sample's claims. A methods
+section, a classroom explanation, and a discussion section can sound like
+the same author without sounding alike.
 
-**Review test:** Can a reader state what each section and paragraph contributes,
-and does the sequence make the argument easier rather than harder to reconstruct?
+Preserve effective prose in revisions. Change what the request or the
+artifact needs. For argumentative work, identify the accepted thesis and
+its intended force, then compare the revised text against it. If the
+evidence calls for a change of position, surface the conflict rather than
+quietly substituting a different thesis.
 
-**Failure mode:** Polishing prose whose structural location is still in doubt,
-or enforcing school-essay conventions where a shorter, transitional, serial,
-dialogic, or deliberately fragmentary form works better.
+## Write for the reader of the finished work
 
-## Drafting and revision
+Bring decisions and evidence from the drafting conversation into the text.
+Leave the conversation behind. A stand-alone discussion should explain a
+rival account because the reader needs to consider it, not because a reviewer
+mentioned it. A response letter can name the reviewer; a methods section can
+identify a protocol change that affects interpretation.
 
-**Drafting:** Match controlling `STYLE.md` and stable patterns in supplied author
-examples or surrounding prose. Reproduce register, terminology, rhythm,
-sentence-length distribution, and degree of explicitness without copying
-phrases. Vary sentence length deliberately rather than imposing a uniformly
-smooth model cadence.
+State the strongest supported point directly. Keep a qualification near the
+claim it delimits. If “may reduce” expresses the warranted possibility, a
+second sentence saying that reduction is unproven adds little. An unresolved
+alternative earns space when it changes the reading or points to a different
+test. Contrast is useful when the reader knows the alternatives and the
+difference matters.
 
-**Revision:** Preserve acceptable prose during ordinary revision. Change it to
-fix an identifiable problem, implement the request, satisfy a structural or
-venue need, or meet requested style. Preserve useful idiosyncrasy, rhythm,
-hedging, fragments, and effective unusual constructions. An explicit broad
-rewrite may recast broadly, but preserve meaning, evidence, uncertainty, stable
-voice, and accepted argumentative force unless the user asked to change them.
+During the final read, listen for effects that build across the page:
+repeated “not X but Y” turns, hedge after hedge, ceremonial openings or
+endings, or punctuation carrying too many claims at once. Fix the local
+reason for friction rather than banning a construction. If a denial seems
+to answer an invisible interlocutor, ask what the reader would need to
+know and write that point instead.
 
-After substantive drafting or revision, conduct a separate structural second
-pass in reading order before final sentence polish. Reconstruct the paper-wide
-purpose, central claim, and supporting moves; check that sections and paragraphs
-contribute to that path, are proportionate, and lead to a conclusion consistent
-with the supported thesis. Repair misplaced, repetitive, or distracting material
-within the authorized scope. For a section-only assignment, inspect enough of
-the surrounding artifact to test its role; report a wider structural problem
-rather than silently rewriting outside scope. If the full artifact is unavailable,
-check the available context and report that limit.
+## Make the sentences carry the sequence
 
-At each paragraph boundary, identify the actual relation between moves (for
-example, evidence, consequence, contrast, or a shift in scale). Make that
-relation intelligible through ordering, shared terms, or a concise transition;
-do not add a stock connective where the relation is already clear.
+Use concrete subjects and verbs. Where it helps continuity, start with
+what the reader knows and put the important new information toward the end.
+Keep the main clause easy to find. Connect closely related moves in one
+sentence when that shows the relation; use a short sentence when the point
+benefits from room. Put optional technical detail where the reader can
+choose when to pursue it.
 
-After editing a paragraph, reread it from first sentence to last: check that
-the claim, development, qualifications, and ending still fit. After editing a
-section, reread the entire section in order, then check its connection to the
-preceding and following sections. Do not judge the success of a replacement
-sentence in isolation. Check transitions, referents, repetition, and whether
-the section still delivers its intended conclusion.
+Choose active or passive voice by topic and responsibility. A form of *be*
+alone is not passive. Keep the passive when the affected thing is the topic
+and the actor is evident or irrelevant. Name the actor when responsibility
+matters and the record establishes it.
 
-For substantial argumentative revision, reconstruct the central thesis and its
-major supporting moves before editing. Treat explicit accepted project claims
-or argument invariants as semantic constraints, not merely topics to mention.
-After revision, compare the result with them. A technically safer rewrite that
-weakens, obscures, or substitutes for a supported accepted contribution is a
-regression. If new evidence genuinely requires weakening an accepted claim,
-surface the conflict rather than making the semantic change silently.
-
-**Review test:** Can each material rewrite be tied to the requested operation or
-a concrete defect, structural need, venue requirement, requested style change,
-or evidence-based correction, while the supported thesis retains its intended
-force?
-
-**Failure mode:** Turning authored prose into generic professional prose,
-homogenizing sentence lengths, replacing one model tic with another, or fixing a
-local overclaim by globally retreating from a supported thesis.
-
-## Artifact self-containment
-
-Every sentence should **earn its keep**. It should advance the argument, supply
-needed evidence or context, define something the reader needs, guide the reader
-through a genuine transition, or prevent a plausible misunderstanding. Caveats,
-qualifications, and clarifications have a particularly high burden because they
-interrupt the main line. Keep them when they rule out an interpretation a
-reasonable reader could actually make, mark a material limitation, or calibrate
-a claim. Remove them when they merely add defensive precision that would puzzle
-a reader who never saw the drafting conversation. Necessary caveats should
-normally delimit the positive claim close to where misunderstanding could occur;
-they should not accumulate until the limitation becomes more salient than the
-supported contribution.
-
-A finished standalone artifact should make sense to a reader who never saw the
-prompt, earlier draft, reviewer exchange, or agent conversation. Before
-finalizing, remove or rewrite process residue that has no independent job in the
-artifact: unexplained references to "this version", what "we now" do, what was
-"requested", earlier wording, reviewer comments, prior prompts, or the history
-of the revision.
-
-Scan across paragraphs for recurring defensive contrasts, not just individual
-sentences. Even locally plausible `not X but Y` turns can cumulatively make the
-paper sound preoccupied with objections rather than its own argument. Where no
-live distinction needs emphasis, state the supported positive point directly;
-retain contrasts that do real conceptual work or express the author's voice.
-Likewise inspect paragraph endings in sequence for repeated generic hedges.
-Move a necessary qualification close to the claim it limits when that improves
-clarity, and let the ending develop the supported consequence where appropriate;
-never omit a limitation that materially changes the inference.
-
-Treat an unmotivated negation or contrast as a context-leakage warning. A phrase
-such as "we do not claim Y" or "not X but Y" is useful when Y is a live,
-plausible interpretation the intended reader needs ruled out. If it only answers
-a concern raised in prior conversation, delete it or state the positive claim
-directly. The same test applies to qualifications, caveats, and definitions that
-make sense only because of hidden process history.
-
-Treat conversation, review, and drafting history as **working context, not an
-implied audience**. Use that context to decide what the artifact should say, then
-write the supported account for a reader who never saw the discussion. If a
-sentence exists mainly to correct, deny, reassure about, or qualify an idea that
-appeared only in hidden process context, remove the invisible interlocutor and
-recover the underlying positive claim. Do not preserve a conversational
-hypothesis merely so the artifact can rebut it. Retain the rebuttal only when the
-finished artifact itself gives readers a reason to entertain that alternative.
-Do not replace a direct denial with an evidence-limit variant (for example,
-"the sources do not establish ...") when both answer only an invisible
-conversational objection; state the supported positive account instead.
-
-Genre controls the exception. A response-to-reviewers letter, revision memo,
-change log, or methods history may need explicit reviewer, version, previous-
-draft, and change language. Do not transfer that language into the revised
-manuscript merely because it was useful in the response document.
-
-**Review test:** Would every sentence still have an intelligible purpose if the
-reader received only the finished artifact?
-
-## Sentence construction and information flow
-
-Keep the main grammatical spine easy to recover. Avoid placing substantial
-parenthetical or comma-delimited material between closely related parts of the
-main clause, especially subject and verb or verb and object. Move a substantial
-interruption before or after the main clause, or give it its own sentence, when
-that makes the relation easier to recover. Parentheticals remain legitimate when
-short and genuinely useful.
-
-Use familiar-to-new flow when it supports continuity. Put the main action early
-when delay increases memory load, and use end-weight for longer or more complex
-material. Prefer concrete verbs and nouns while retaining precise technical
-terms. Prefer concise sentences when they make a thought easier to follow, but do not
-split tightly connected ideas merely to keep sentences short. Join sentences
-when their relationship becomes clearer in one grammatical unit. Use short
-sentences for emphasis or to reset complexity; use longer ones when the logic
-benefits from showing the connection. Vary length
-and structure according to the thought, not according to a mechanical
-alternation rule. Revise in this order when feasible: argument, section jobs,
-paragraph logic, information flow, sentences, then words.
-
-**Failure mode:** Moving every verb forward mechanically, imposing a blanket
-comma ban, stripping necessary technical language, or adding summaries and
-transitions that repeat what the reader already knows.
-
-## Register and model defaults
-
-Unless audience or genre requires formality, use a natural professional
-register. Keep hedges that represent real uncertainty; remove defensive fog and
-unsupported intensifiers. Treat punctuation and rhetorical templates as
-choices. Watch for locally unmotivated model-like habits: habitual em-dash
-qualifications, semicolon chains that pack several claims into one sentence,
-repeated `not X but Y` contrasts, formulaic `this does not mean` retreats,
-`while X, it is important to recognize Y` endings, formulaic symmetry, ceremonial openings,
-generic importance claims, over-signposting, unnecessary recap, repeated
-conclusions, and metadiscourse. These are failure patterns, not banned forms;
-retain them when they genuinely serve the argument and established voice. If a
-semicolon is doing the work of a paragraph break or a clear full stop, prefer
-the clearer structure rather than preserving density for its own sake.
-When diagnosing them, answer the proposed change directly and offer a concrete
-alternative rather than repeating the prompt's list.
-
-## Voice and agency
-
-Choose active or passive voice from topic continuity, information focus, and
-responsibility. A form of *be* alone is not passive. Retain passive voice when
-the acted-on entity should remain the topic or the actor is unknown, irrelevant,
-obvious, or already established. When responsibility matters, name the known actor
-in either voice; do not invent an actor merely to use active voice. Do not propose
-an invented `we` as an active replacement when no responsible actor is supplied.
-Never apply an active-voice quota.
-
-## Supporting files
-
-Consult [examples](examples.md) and the optional
-[reverse-outline template](templates/reverse-outline.md) when they help the task.
+Read the complete passage in order after making a substantial edit. Check
+its place in the larger work, the links between paragraphs, and whether the
+ending follows from the evidence. Then polish wording. See the [examples](examples.md)
+and the [reverse-outline template](templates/reverse-outline.md).

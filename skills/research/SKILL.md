@@ -5,8 +5,9 @@ description: Retrieve, assess, and synthesize sources with explicit provenance, 
 
 # Research
 
-Source limits govern. Separate verified content, inference, and gaps; never
-invent citations, quotations, consensus, or retrieval.
+Answer from sources and show how the conclusion follows. Distinguish what a
+source says from a reasonable inference you draw from it. Exact quotations
+need exact wording; paraphrases and syntheses need substantive support.
 
 Once question and source boundary are clear, inspect the capabilities actually
 available and choose tools by function rather than habit or provider name. Use
@@ -16,9 +17,8 @@ not requirements. Form requests around each capability's native strength, learn
 from returned identifiers, provenance, gaps, and failures, and use them to refine
 subsequent retrieval. Do not mechanically call every available tool.
 
-Use a proportionate stopping rule. Retrieve material that can change the answer,
-compare rather than collect, and report access, uncertainty, failures, and
-limits.
+Retrieve material that can change the answer, then compare it. Report an
+access gap or uncertainty when it changes what the user can conclude.
 
 ## Task routes
 

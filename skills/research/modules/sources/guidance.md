@@ -1,8 +1,8 @@
 # Sources
 
-Ask whether the inspected source can bear the exact intended inference. Check
-design or basis, population, measures, comparison, uncertainty, stated limits,
-and relevance to the claim. Distinguish primary evidence from secondary
+Ask what the inspected source supports. Trace the inference from design,
+population, measures and comparison to the author's result and the claim you
+want to make. Match meaning and scope; a source need not use your words. Distinguish primary evidence from secondary
 reporting; verify the version, corrections, and time sensitivity when they
 matter.
 
@@ -19,6 +19,5 @@ relationships, use an appropriate metadata service and cross-check consequential
 fields when conflicts appear. Record what was actually inspected.
 
 Reconcile conflicts by locating differences in design, scope, measurement, or
-timing rather than averaging them into consensus. State when access is partial,
-only secondary reporting is available, or the source cannot support the needed
-claim.
+timing. If incomplete access or indirect evidence changes the answer, identify
+the claim affected and what you can conclude from the material you inspected.

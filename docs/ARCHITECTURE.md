@@ -292,13 +292,9 @@ module, or repository instruction file.
 Review is a useful example of this separation. Packaged
 `prompts/review-*.md` choose optional lenses, but the
 `skills/review/SKILL.md` contract also applies when a user requests a
-review without a preset prompt. Reviews returned by workers or invoked
-through packaged prompts end with a brief **LLM review** line explaining
-how the requested lens may shape the findings---for example, adversarial
-fault-finding may surface less relevant objections, while a
-collaborative lens may miss flaws needing a more skeptical pass. This is
-a useful interpretive cue, not a generic disclaimer or list of unchecked
-work.
+review without a preset prompt. Worker reviews and packaged prompts use
+a short **LLM review** label naming the lens. Explain the scope when it
+materially affects how the reader should use a finding.
 
 The supervisor evaluates those observations against accepted project
 state and evidence. Author-authored Plannotator notes express author

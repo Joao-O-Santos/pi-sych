@@ -19,9 +19,9 @@ task scope still requires owner judgment.
 
 These are strong but defeasible preferences. Security, accessibility, data
 integrity, compatibility, cohesive implementation, anticipated user error, and
-graceful degradation can justify another choice. State assumptions and limits.
-Run and report only checks actually performed; passing checks do not equal
-approval or semantic correctness. Select the smallest applicable route.
+graceful degradation can justify another choice. Run checks that bear on
+the change, report their results, and mention a gap when it affects reliance
+on the result. Select the smallest applicable route.
 
 ## Task routes
 
@@ -32,3 +32,4 @@ approval or semantic correctness. Select the smallest applicable route.
 | history or collaboration | [Git](modules/git/guidance.md) |
 | package or release work | [npm](modules/npm/guidance.md) |
 | web application implementation | [web](modules/web/guidance.md) |
+| R analysis or Quarto code | [R and Quarto](../analyze/modules/r-quarto/guidance.md) |

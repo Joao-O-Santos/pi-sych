@@ -4,10 +4,10 @@ Bad:
 
 > The null result proves the intervention has no effect.
 
-Better:
+Better (illustrative):
 
-> The estimate was imprecise and did not reach the stated threshold; this study does not establish an
-> effect, and it does not prove none exists.
+> The estimated difference was 2 points (95% CI: −4 to 8), leaving both a
+> small decrease and a meaningful increase compatible with the data.
 
 Why: report estimate and uncertainty; non-significance is not proof of no effect.
 
@@ -17,16 +17,15 @@ Bad:
 
 > Participants performed significantly better in A than B.
 
-Better, if the same participants completed both conditions:
+Better, if the same participants completed both conditions (illustrative):
 
-> Participants performed better in A than in B, with the statistical result
-> providing evidence for the corresponding population-level contrast.
+> Participants scored 4 points higher in A than in B (mean paired difference
+> 4, 95% CI: 1 to 7; paired t test, p = .01).
 
-Better, if A and B contain different participants:
+Better, if A and B contain different participants (illustrative):
 
-> Participants in A performed better than participants in B, with the
-> statistical result providing evidence for the corresponding population-level
-> contrast.
+> Participants in A scored 4 points higher on average than those in B
+> (difference 4, 95% CI: 1 to 7; independent-samples t test, p = .01).
 
 Why: significance belongs to the inferential evidence, not to the observed
 difference, and the sentence should not imply a within-person comparison when

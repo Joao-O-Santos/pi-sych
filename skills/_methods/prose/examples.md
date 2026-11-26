@@ -1,5 +1,7 @@
 # Prose examples
 
+All passages below are illustrative, not evidence for real events or studies.
+
 ## Reverse outline before line editing
 
 Draft paragraphs currently do these jobs:
@@ -116,29 +118,24 @@ Weak:
 
 Better:
 
-> Structured interviews can improve consistency by asking candidates the same
-> job-relevant questions and using common scoring criteria. They remain
-> vulnerable to biased criteria or implementation. Even so, a structured
-> process gives organizations a more defensible starting point for comparing
-> candidates.
+> Structured interviews can improve consistency. Each candidate answers the
+> same questions, and interviewers score their answers against the same criteria.
 
-Why:
-
-Both versions acknowledge limitations. The second develops a positive claim
-and closes with the conclusion supported within its scope. Do not use this
-shape to rescue a claim the evidence cannot support.
+The first sentence gives the claim and its degree of certainty. The second
+explains how the approach works. If the paper also makes a claim about fairness,
+address the choice of scoring criteria there.
 
 ## Sentence boundaries and habitual contrast
 
 Choppy:
 
-> The measures were reliable. They were brief. They were administered twice.
-> This reduced participant burden.
+> Participants completed two questionnaires twice. The questionnaires were
+> brief. The researchers used the scores to assess reliability across visits.
 
 Better:
 
-> The brief measures were administered twice, reducing participant burden
-> while allowing reliability to be assessed across occasions.
+> Participants completed two short questionnaires at each visit. The researchers
+> compared scores across visits to assess reliability.
 
 Habitual model contrast:
 

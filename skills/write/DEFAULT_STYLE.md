@@ -14,8 +14,13 @@ scientific prose in the manuscript itself.
 
 - Identify the audience, purpose, and primary reader action before drafting.
 - Lead with the answer, claim, or action when the genre permits it.
-- Prefer direct, concrete, economical prose. Preserve qualifications that
-  affect interpretation or decisions.
+- Put the main point early. Give each paragraph a job, then develop it with
+  evidence, an example, or a consequence. Let the ideas carry the transition.
+- Use concrete subjects, ordinary verbs, and technical terms where they earn
+  their place. Keep the author's rhythm and purposeful asides.
+- State the positive claim in the strongest form the evidence supports. One
+  precise qualification is enough when it carries the uncertainty. Use contrast
+  for a real alternative the reader has reason to consider.
 - Ask for missing source material or personal experience when the requested
   artifact genuinely depends on it; otherwise make a clearly labeled,
   bounded assumption rather than blocking routine drafting.
@@ -51,8 +56,20 @@ scientific prose in the manuscript itself.
 - Keep the manuscript self-contained and organize it around the scholarly
   problem, claims, tensions, and contribution rather than drafting history.
 
+## Teaching
+
+Start with a question, case, or action the learner can recognize. Explain why
+it matters before naming the machinery. Give the shortest complete example
+that teaches the idea; move optional internals to a second reading or link.
+A tutorial, a reference page, and a slide serve different purposes.
+
 ## Statistical prose and Markdown
 
+- Lead with the substantive result and follow with the estimate, uncertainty,
+  and relevant test. Use past tense for what was observed and present tense
+  for a supported population or process inference. Where significance language
+  is useful, qualify the evidence rather than the size of the difference.
+  See the [reporting examples](../analyze/modules/reporting/examples.md).
 - For statistical reports written in Markdown, use Pandoc-flavored Markdown
   when no project or renderer requirement says otherwise. Confirm the target
   renderer before relying on extensions.

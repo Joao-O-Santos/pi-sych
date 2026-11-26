@@ -1,26 +1,29 @@
 # Academic examples
 
-## Contribution hidden by topic listing
+## Let the question grow out of a concrete problem
 
-Input: an introduction lists topics but hides the paper contribution.
+Illustrative introduction:
 
-Output: revise the sequence so question, gap, contribution, and roadmap are
-visible; flag any unsupported novelty claim.
+> A bus that comes every ten minutes is easy to plan around. A bus that
+> comes twice in quick succession and then leaves passengers waiting nearly
+> twenty minutes is harder to use, even if the two services run the same
+> number of trips. How much of the wait at a busy stop is due to uneven
+> spacing?
+>
+> We used vehicle-location records to estimate this extra wait along three
+> routes. We compared each route's observed service with a simulated service
+> with the same number of departures at equal intervals. That comparison
+> isolates the contribution of spacing in the simulation; estimating what
+> passengers actually experienced also requires information on when they
+> arrived at the stop.
 
-## Revision history leaked into manuscript
+The first paragraph gives readers a reason to care about the distinction.
+The next defines the comparison and explains why it addresses the question.
+The final sentence marks a boundary that matters to anyone using the estimate.
 
-Input: a manuscript discussion says "in the present revised version, we now
-consider an alternative explanation suggested by the reviewer."
+## Give revision history a reason to appear
 
-Output: if the alternative explanation is scientifically relevant, discuss it
-directly on those merits without referring to the revision process. Keep the
-reviewer/change language in the response letter instead.
-
-## Legitimate version reference
-
-Input: a methods section must distinguish the preregistered protocol from an
-amended protocol actually used in data collection.
-
-Output: retain the version/history distinction because it is substantive method
-information, and describe it precisely enough for the reader to understand what
-changed and why.
+A Discussion can assess an alternative raised by a reviewer on its merits.
+The response letter explains who raised it. In Methods, a protocol amendment
+that changed when observations were made belongs in the article: the timing
+could affect how a reader interprets the results.

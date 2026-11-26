@@ -151,19 +151,10 @@ and obvious limitations. An adversarial model can keep generating
 objections; exhausting them is not a completion criterion. Avoid
 accumulating caveats that bury a defensible thesis.
 
-Reviews returned by a worker or invoked through a packaged prompt end
-with a brief **LLM review** line naming the requested lens and how that
-task may shape which findings stand out. For example:
-
-> **LLM review · Adversarial:** I was asked to prioritize flaws, so some
-> points may be less relevant than others.
-
-Prefer this useful cue about the review's likely selection bias over a
-list of checks not performed or a generic AI disclaimer. Collaborative
-reviews can note that prioritizing constructive improvement may miss
-flaws needing a more adversarial pass; tailor other lenses similarly.
-Ordinary supervisor reviews need not carry the line unless requested or
-useful. Do not add an LLM-review line to human-authored comments.
+Label worker and packaged-prompt reports with their provenance and lens,
+for example **LLM review · Adversarial**. Mention scope when it affects
+how someone should use the findings. Keep human-authored comments
+separate.
 
 ### 4. Launch a fresh edit worker
 
