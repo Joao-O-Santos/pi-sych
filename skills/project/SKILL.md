@@ -24,7 +24,7 @@ work actually performed. Select the smallest applicable route.
 | Task | Route |
 | --- | --- |
 | new or recovered project | [bootstrap](modules/bootstrap/guidance.md) |
-| move between state and deliverable | [artifacts](modules/artifacts/guidance.md) |
+| maintain evidence or move between state and deliverable | [artifacts](modules/artifacts/guidance.md) |
 | interpret project status | [status](modules/status/guidance.md) |
 | meaningful disagreement | [reconcile](modules/reconcile/guidance.md) |
 | long or consequential plan | [plans](modules/plans/guidance.md) |

@@ -11,7 +11,8 @@ migration or canonical-write policy change; soak remains outside CI.
 Registry version/latest/gitHead, all 214 file contents, tarball integrity
 and provenance source/digest/tag/pipeline metadata match the release.
 Tag signature verifies; attestation signatures were not independently
-validated. See `EVIDENCE.md` for exact revisions, pipelines and limits.
+validated. See `git show 240aaeb1:EVIDENCE.md` for revisions, pipelines
+and limits.
 
 Coverage dipped slightly in lines/functions while branches improved;
 all 271 local tests passed. No inbox review, history rewrite, retagging

@@ -148,8 +148,10 @@ record of a project. Durable information belongs in ordinary files that
 a collaborator, another model, or a future session can inspect.
 
 A project can begin with `PROJECT.md` and add other files only when they
-become useful. `EVIDENCE.md` is optional task evidence, not a required
-repository file.
+become useful. Keep the optional `EVIDENCE.md` as a short working
+digest: source notes for current writing or key checks for current and
+recent code changes. Replace superseded entries and use source files,
+logs, or history for details.
 
 | File | Typical purpose |
 |------------------------------------|------------------------------------|

@@ -34,10 +34,11 @@ verification, or final review.
 ## Project rules and preferences
 
 {accepted} Prefer direct and minimal implementations. Keep durable state
-explicit in `PROJECT.md` and `SYNC.json`; use optional `EVIDENCE.md` as
-bounded task evidence rather than an accumulating release log. Give
-workers exact resources, retain immutable results, report unexpected
-changes, and keep new consequential choices human-owned.
+explicit in `PROJECT.md` and `SYNC.json`; keep optional `EVIDENCE.md`
+focused on the checks and limits that matter to active or recent work.
+Keep older release and test evidence in Git history. Give workers exact
+resources, retain immutable results, report unexpected changes, and keep
+new consequential choices human-owned.
 
 {accepted} Treat persistence and scrutiny as independent task-posture
 dimensions. Once a requested outcome and authorization boundary are
@@ -130,6 +131,15 @@ outputs may be explicitly reduced when necessary; external file reads
 and inbox proposals retain separate safety bounds.
 
 ## Current state
+
+{verified} The current working tree uses shorter supervisor, worker, and
+reassessment guidance. It carries authorized work to the next actionable
+step, favors firsthand reading when interpretation matters, and uses
+trajectory when meaningful feedback or pre-work remains in conversation.
+Writing and R defaults show direct, well-scoped claims, evidence-based
+inference, and straightforward analysis scripts. Compaction separately
+nominates reusable, scoped preferences for human inbox review, including
+a standing instruction given once.
 
 {verified} v8.0.1 is tagged and published. It uses strict layered
 version 2 configuration, Pi-native worker MCP/codemode, a 150k task-
@@ -326,9 +336,9 @@ production audit passed. Independent review found no remaining blocker.
 The separately gated short workhorse soak passed three automatic custom
 compactions at a 32k trigger, with zero observed failures/fallbacks and
 continued tool work: 105.091 seconds overall, 9.329--15.398 seconds per
-compaction. See `EVIDENCE.md` for the local report, cost and semantic
-measurement limits. The soak is excluded from CI and ordinary usage
-runs. Coverage versus the preceding revision changed from
+compaction. See `git show 240aaeb1:EVIDENCE.md` for the local report,
+cost and measurement limits. The soak is excluded from CI and ordinary
+usage runs. Coverage versus the preceding revision changed from
 98.01/92.91/97.08% to 97.89/93.05/96.71%: lines/functions decreased
 slightly, branches improved. Remaining documentation review and manual
 update-notice checks are tracked in `TODO.md`.

@@ -1,63 +1,20 @@
-# Full-context compaction verification
+# Current verification evidence
 
-## Local checks
+## Agent guidance and preference proposals
 
-- `make verify`: 271/271 tests; 97.89% line, 93.05% branch and 96.71%
-  function coverage. Type/style, package dry-run, whitespace and source
-  budget passed; runtime source is about 3,250/3,400 nonblank lines.
-- Against the preceding revision's 98.01/92.91/97.08%, lines/functions
-  decreased slightly; branches improved. Passing gates do not mean
-  unchanged coverage or lossless semantic retention.
-- `make site` passed; `npm audit --omit=dev` found zero vulnerabilities.
-- Independent regression design and read-only correctness review found
-  no remaining blocker. An implementation worker timed out with partial
-  edits; the supervisor inspected/completed integration and verification.
-- The soak skips without its separate gate, including when ordinary
-  `PI_SYCH_USAGE_TEST=1` is enabled. No CI configuration changed.
-
-## Release 8.2.0
-
-- Implementation main pipeline `3068694564` passed at
-  `75928ce7521006ff423fb5081ebfb8c4f3711d9d`. Independent read-only preflight
-  supported minor 8.2.0: material improvement and optional fields, no
-  required migration or canonical-file write-policy change.
-- Release commit `6afa72495a70731c3b545ab44307541adcc3ecee` passed main
-  pipeline `3068704117` before signed tag `v8.2.0` was pushed. The tag
-  signature verifies locally. Tag pipeline `3068710797` passed verify
-  and npm publication. npm briefly queued processing; no republish or
-  retag was needed.
-- Local release checks passed 271 tests, site and production audit;
-  version/lock/image references agree. Pi's native changelog parser
-  returns exactly one new entry after 8.1.9: 8.2.0.
-- Registry version/latest/gitHead match. All 214 published files match
-  local contents, with no unexpected files. Download SHA-1/SHA-512 match
-  registry metadata; SLSA provenance metadata matches the SHA-512, source
-  commit, tag and tag pipeline. Attestation signatures were not
-  independently cryptographically validated.
-- Downloaded evidence: `/tmp/pi-sych-8.2.0-publication-aeJ7rf/`.
-
-## One short soak
-
-Command: `PI_SYCH_COMPACTION_SOAK=1 node --test tests/usage/compaction-soak.test.mjs`,
-with `PI_SYCH_SOAK_REPORT=/tmp/pi-sych-full-context-soak.json` to retain
-the local diagnostic report at that path.
-
-On 2026-11-14, the configured workhorse completed six real synthetic-data
-batches (18 reads, six note writes) in 105.091 seconds
-with a 32,000-token threshold. Three automatic custom compactions
-succeeded, with zero observed custom failure notices, native fallbacks,
-failed/cancelled/incomplete attempts. Durations: 15.398, 11.247 and 9.329
-seconds; mean 11.991, total 35.974 seconds. Settled input was
-43,598–44,360 tokens at admission; subsequent batches continued after
-previous compactions. Proactive admission uses Pi's manual request path:
-`reason: manual` here does not mean a compact command was sent.
-
-All three summaries mentioned both survey labels; the weak literal
-`audit` diagnostic matched only the first. Neither lexical diagnostic
-proves semantic task retention or loss. Summaries are not retained in
-the report. Session stats estimated $0.0333819, not a verified provider
-charge. This short model/run checks repeated operation, timing and
-continued tool work, not long-duration reliability or lossless memory.
-Temporary workspace/credentials were removed. The soak did not change
-global settings, repository instructions, the repository inbox or
-publication state.
+- `make verify`: 271 tests passed, including coverage gates and the
+  package dry run. `make site` passed.
+- `PI_SYCH_USAGE_TEST=1 node --test tests/usage/custom-compaction.test.mjs`:
+  one live case proposed a standing preference, omitted a one-reply
+  request and a rule already in project style, and left canonical files
+  unchanged.
+- A fresh Pi launch loaded personal context, the local writing skill,
+  and `project_status`.
+- The worked R example reproduced the reported slope, standard error,
+  degrees of freedom, and test. A paired pilot elicited the intended R
+  style; its single prose case showed no clear improvement.
+- In one synthetic citation audit with the new rule supplied directly,
+  Terra scoped the methods citation, preserved an independently
+  supported claim, identified a disagreement, and flagged an unsupported
+  generalization. This did not test whether the model would load the
+  route unprompted.

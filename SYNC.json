@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "confirmedAt": "2026-11-17T02:15:07.008Z",
+  "confirmedAt": "2026-11-26T23:16:27.356Z",
   "artifacts": [
     {
       "path": "docs/code-tour.md",
-      "fingerprint": "sha256:d43127d57d8e10a4284eb73284582d21139b41bf79469702e3648a55d88bc7ee",
+      "fingerprint": "sha256:51960acc9e61c204596d790d6181c119210bc974289548778ff6215c90b9a137",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
@@ -16,29 +16,26 @@
         "skills/review/SKILL.md"
       ],
       "acknowledgement": {
-        "at": "2026-11-17T01:48:01.709Z",
-        "reason": "Reviewed tour against current worker launch, compaction, review skill and architecture; corrected review cue, full-visible input and provisional reports. Documentation-only update; other existing review states retained."
+        "at": "2026-11-26T22:46:20.985Z",
+        "reason": "Reviewed the updated agent guidance, review labels, and compaction preference nomination against implementation, tests, and actual local verification. Existing release and broader documentation review flags remain open."
       }
     },
     {
       "path": "EVIDENCE.md",
-      "fingerprint": "sha256:91ac8c10050d3b67cf5a5a33bd60b705da6627a6076676b14614db78314786de",
+      "fingerprint": "sha256:423805b6e76943c68cf2c0408f505be939764a809515c9d1dd17eeda8a6b5956",
       "status": "current",
       "role": "evidence",
       "authoritativeFor": [
-        "full-context-compaction-local-verification"
+        "current-task-verification"
       ],
       "updateFrom": [
         "extensions/workbench/src/compaction.ts",
-        "tests/unit/compaction-full-context.test.mjs",
-        "tests/unit/compaction-budget.test.mjs",
-        "tests/usage/compaction-soak.test.mjs",
-        "tests/usage/compaction-soak-observer.ts"
+        "tests/usage/custom-compaction.test.mjs",
+        "skills/_methods/claim-evidence/guidance.md"
       ],
-      "pendingReason": "New bounded task evidence; supervisor inspected the actual local check logs and one soak report.",
       "acknowledgement": {
-        "at": "2026-11-14T17:59:07.698Z",
-        "reason": "Inspected completed8.2.0 release evidence. Implementation main3068694564 and release main3068704117 passed before signed v8.2.0 at6afa72495a70731c3b545ab44307541adcc3ecee. Tag pipeline3068710797 passed verify and publish-npm after npm processing delay; no retag/republish. Registry version/latest/gitHead match; downloaded tarball SHA1/SHA512 match registry, all214 file contents match local release with no unexpected files, and decoded SLSA metadata matches source commit/digest/tag/pipeline. Git tag signature verifies locally; attestation signatures not independently cryptographically validated. Local record make verify passed271 tests; site passed. Honest coverage dip and short-soak semantic limits remain explicit. Existing broader needs-review states retained; inbox not read or staged."
+        "at": "2026-11-26T23:16:27.356Z",
+        "reason": "Reviewed the active digest against recorded results and verified that removed release and soak details remain retrievable at 240aaeb1. Existing broader documentation review flags remain open."
       }
     },
     {
@@ -61,15 +58,15 @@
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "fingerprint": "sha256:7368a905dbf13a0781dac87a504695de1fe1e56ad9848053bb1860fe127ecbb9",
+      "fingerprint": "sha256:7365efa2d838853184107aabb1192446ed5f1ee6d0e8c674e803683b893fb8e8",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
         "implemented-architecture"
       ],
       "acknowledgement": {
-        "at": "2026-11-14T17:16:02.471Z",
-        "reason": "Reviewed full-visible-context compaction against source, native projection/lifecycle and regressions: no turn sampling or transcript/prior-memory/message byte caps; native token estimates and model capacity govern fitting/output; optional snapshots yield before necessary marked bulky tool-output reduction; narrative/arguments remain complete or custom compaction explicitly falls back. Memory text/count quotas removed while schema/provenance, bounded external reads and five one-line 1000-character inbox proposals remain. Independent static review found no concrete blocker; supervisor completed/inspected integration after a partial worker timeout. Final make verify passed 271 tests at 97.89/92.90/96.71% line/branch/function coverage, packaging and about3250/3400-line source budget; site passed and production audit found zero vulnerabilities. Supervisor inspected exactly one separately gated workhorse short soak: 105.091s, six real read/write batches, three automatic custom successes, no observed failure notices/native fallbacks/failed or cancelled attempts; compaction9.329-15.398s. Report and limits recorded in EVIDENCE.md: native token estimates/lexical diagnostics are not exact provider accounting or semantic-retention proof; this is not long-duration reliability evidence. Soak skips by default and under ordinary usage gate; no CI execution, global settings changes, inbox review, push or release. Existing broader needs-review states retained."
+        "at": "2026-11-26T22:46:20.985Z",
+        "reason": "Reviewed the updated agent guidance, review labels, and compaction preference nomination against implementation, tests, and actual local verification. Existing release and broader documentation review flags remain open."
       }
     },
     {
@@ -114,15 +111,15 @@
     },
     {
       "path": "docs/configuration.md",
-      "fingerprint": "sha256:1c03255674d152ecdc0c89f2992c266229e2b3a4a41d94f77013896fa51560b6",
+      "fingerprint": "sha256:a6cb8686b64108982826dad41f51ebaba23fc46136fd40e2163d48aac2c8e41b",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "configuration"
       ],
       "acknowledgement": {
-        "at": "2026-11-17T02:15:07.008Z",
-        "reason": "Reviewed worker AGENTS discovery clarification against worker launch and context packet; independent review found no material blockers. make verify passed 271 tests; site and production audit passed. Existing broader pending reviews remain."
+        "at": "2026-11-26T22:46:20.985Z",
+        "reason": "Reviewed the updated agent guidance, review labels, and compaction preference nomination against implementation, tests, and actual local verification. Existing release and broader documentation review flags remain open."
       }
     },
     {
@@ -154,15 +151,15 @@
     },
     {
       "path": "docs/review-workflow.md",
-      "fingerprint": "sha256:962289258097ebd5630484d8ab52aef88f053b3eb50cbaf9b2c75c8f356f015e",
+      "fingerprint": "sha256:c15363bd2dddc585232922a6ceb08ee93aa6a173721942fe96b2e1ca54932004",
       "status": "current",
       "role": "documentation",
       "authoritativeFor": [
         "review-workflow"
       ],
       "acknowledgement": {
-        "at": "2026-10-14T18:00:20.695Z",
-        "reason": "Reviewed the worker dispatch summary split and the worker/packaged-prompt lens-cue changes, docs examples, release note, and architecture-diagram metadata. Independent read-only review found no concrete defects. `make verify` passed 248 tests at 97.92/92.52/96.93% line/branch/function coverage; `make site`, style, source-budget, and diff checks passed. The migration guide remains pending review because of separate earlier configuration changes."
+        "at": "2026-11-26T22:46:20.985Z",
+        "reason": "Reviewed the updated agent guidance, review labels, and compaction preference nomination against implementation, tests, and actual local verification. Existing release and broader documentation review flags remain open."
       },
       "pendingReason": "Documentation changed after recorded acknowledgement; fingerprint and dependent-document review pending. Previous acknowledgement is retained as historical, not current approval."
     },
@@ -206,7 +203,7 @@
     },
     {
       "path": "docs/compaction-design.md",
-      "fingerprint": "sha256:626028e047666e4f0d97c05b3b5258429e0422a575f7278f0d98e61d85ee57c7",
+      "fingerprint": "sha256:7967f907f9c35c8148cceee923db45c56ffad5efa12c8ec2ea8021a60188b816",
       "status": "current",
       "role": "architecture",
       "authoritativeFor": [
@@ -226,8 +223,8 @@
         "tests/usage/compaction-soak-observer.ts"
       ],
       "acknowledgement": {
-        "at": "2026-11-14T17:16:02.471Z",
-        "reason": "Reviewed full-visible-context compaction against source, native projection/lifecycle and regressions: no turn sampling or transcript/prior-memory/message byte caps; native token estimates and model capacity govern fitting/output; optional snapshots yield before necessary marked bulky tool-output reduction; narrative/arguments remain complete or custom compaction explicitly falls back. Memory text/count quotas removed while schema/provenance, bounded external reads and five one-line 1000-character inbox proposals remain. Independent static review found no concrete blocker; supervisor completed/inspected integration after a partial worker timeout. Final make verify passed 271 tests at 97.89/92.90/96.71% line/branch/function coverage, packaging and about3250/3400-line source budget; site passed and production audit found zero vulnerabilities. Supervisor inspected exactly one separately gated workhorse short soak: 105.091s, six real read/write batches, three automatic custom successes, no observed failure notices/native fallbacks/failed or cancelled attempts; compaction9.329-15.398s. Report and limits recorded in EVIDENCE.md: native token estimates/lexical diagnostics are not exact provider accounting or semantic-retention proof; this is not long-duration reliability evidence. Soak skips by default and under ordinary usage gate; no CI execution, global settings changes, inbox review, push or release. Existing broader needs-review states retained."
+        "at": "2026-11-26T22:46:20.985Z",
+        "reason": "Reviewed the updated agent guidance, review labels, and compaction preference nomination against implementation, tests, and actual local verification. Existing release and broader documentation review flags remain open."
       }
     },
     {
@@ -246,20 +243,20 @@
     },
     {
       "path": "skills/code/SKILL.md",
-      "fingerprint": "sha256:3a2d3a8a3c6075c38d9e58375701c89a6e02807222be65ed726ab3674a0153eb",
+      "fingerprint": "sha256:f2677c9193139cfd9b525dfc0dec7b6b5a9d2a5cd5cef117d835fa3bbb908e2c",
       "status": "current",
       "role": "skill",
       "authoritativeFor": [
         "code-skill"
       ],
       "acknowledgement": {
-        "at": "2026-09-25T10:22:52.007Z",
-        "reason": "Reviewed the v7 release-hardening implementation, reconciled tracked project and public documentation with current worker observation, optional Plannotator, literature migration, and promotion-scope behavior; reviewed README against architecture."
+        "at": "2026-11-26T22:46:20.985Z",
+        "reason": "Reviewed the updated agent guidance, review labels, and compaction preference nomination against implementation, tests, and actual local verification. Existing release and broader documentation review flags remain open."
       }
     },
     {
       "path": "skills/research/SKILL.md",
-      "fingerprint": "sha256:d1667daca4709fcefea0e414024e9f65b15a92430cff03dea554342e36cb4313",
+      "fingerprint": "sha256:f3461169b2863c2972f10803ff09ff200322417a1152d6dd828fc76619a90332",
       "status": "current",
       "role": "skill",
       "authoritativeFor": [
@@ -270,8 +267,8 @@
         "skills/research/modules/search/guidance.md"
       ],
       "acknowledgement": {
-        "at": "2026-10-01T22:13:18Z",
-        "reason": "Reviewed the OpenAlex module routing and capability-first research search guidance against the active MCP tool descriptions and current project research principles."
+        "at": "2026-11-26T22:46:20.985Z",
+        "reason": "Reviewed the updated agent guidance, review labels, and compaction preference nomination against implementation, tests, and actual local verification. Existing release and broader documentation review flags remain open."
       }
     },
     {

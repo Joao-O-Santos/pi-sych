@@ -1,4 +1,13 @@
-# Remaining follow-ups
+# Agent behavior and personal setup
+
+- [x] Revise prose, evidence reasoning, reporting, and R defaults and examples.
+- [x] Simplify supervisor and reassessment guidance and make trajectory
+  handoffs concrete.
+- [x] Improve durable-preference proposals and verify the inbox-only path.
+- [x] Add private context and stack notes and verify a fresh Pi launch.
+- [x] Verify and document the changes; see `EVIDENCE.md`.
+
+## Existing follow-ups
 
 - [ ] Review outstanding semantic acknowledgements in `SYNC.json` for
   `PROJECT.md`, `README.md`, `package.json`, `docs/public-contract.md`,

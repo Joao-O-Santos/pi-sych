@@ -19,6 +19,8 @@ different recovery path.
 Run checks with project-native or available tooling, inspect changed files and
 relevant outputs afterwards, and report only actual exit status, failures, and
 limits.
-Record durable verification in `EVIDENCE.md`, a decision, or a
-`project_status` acknowledgement only when useful. Passing checks do not prove
-semantic correctness, approval, or untested behavior.
+Summarize key checks for active or recently completed work in the optional
+[project evidence digest](../../../project/modules/artifacts/guidance.md#keep-the-evidence-digest-current)
+when useful. Replace superseded results and link to raw logs if they matter.
+Passing checks do not prove semantic correctness, approval, or untested
+behavior.

@@ -4,6 +4,22 @@ Notable user-facing changes to Pi Sych, in reverse version order.
 
 ## Unreleased
 
+- Lead with the result in supervisor replies, carry authorized work
+  through to completion, and choose trajectory for handoffs that depend
+  on prior feedback or exploration. Completion reassessment preserves
+  earlier Pi boundary entries and asks for action rather than another
+  recap.
+- Adopt direct, author-aware prose and practical R and Quarto defaults,
+  with worked examples for scientific reasoning, reporting and analysis.
+  Review prompts retain a short provenance label without a stock
+  disclaimer.
+- Show how in-text citation placement and signals distinguish claim
+  support, methods, related work, and disagreement.
+- Keep optional evidence files as current digests for writing or
+  verification, with older material in source records or history.
+- Nominate clear, reusable user preferences for inbox review, including
+  a standing request stated once. Keep one-off instructions task-local.
+
 ## 8.2.2
 
 - Patch release: documentation clarifications within the existing

@@ -16,4 +16,5 @@ For each consequential source record the verified identity, relevant claim,
 method or basis, strength, and caveats. Distinguish discovery from inspected
 support and report failed or unavailable retrieval. Do not silently substitute
 an unverified summary for inaccessible primary material. Source notes are not
-manuscript prose; hand off evidence and uncertainty before drafting.
+manuscript prose; hand off evidence and uncertainty before drafting. Keep the
+notes needed for current writing in the [project evidence digest](../../../project/modules/artifacts/guidance.md#keep-the-evidence-digest-current).
