@@ -37,10 +37,14 @@ const prompt = (previousSummary) =>
 test("feedback and recovery guidance are explicit", () => {
 	const instructions = prompt();
 	for (const cue of [
-		"repeated explicit corrections/frustrations",
-		"positive feedback",
-		"Repeated copies",
-		"Later corrections",
+		"A single explicit standing instruction counts",
+		"specific praise",
+		"copies in prior summaries are not fresh evidence",
+		"Honor later corrections",
+		"separately nominate durable preferences",
+		"The user need not ask for an inbox entry",
+		"personal-agents for clearly cross-project preferences",
+		"Leave uncertain scope in working memory",
 		"failure symptom",
 		"observed remedy and outcome",
 		"unverified fix",

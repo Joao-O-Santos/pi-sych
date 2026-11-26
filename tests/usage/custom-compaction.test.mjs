@@ -60,6 +60,8 @@ test("real Pi proactively invokes custom compaction and retains usable memory/pr
 		join(projectRoot, "AGENTS.md"),
 		"Do not merge the nesting and lighting surveys.\n",
 	);
+	const style = "Use the full names of months in captions.\n";
+	await writeFile(join(projectRoot, "STYLE.md"), style);
 	await writeFile(join(projectRoot, "SURVEY_TEMPLATE.md"), "# Survey\n\nDate:\nObserver:\n");
 	await writeFile(
 		join(projectRoot, "SYNC.json"),
@@ -170,6 +172,24 @@ test("real Pi proactively invokes custom compaction and retains usable memory/pr
 			timestamp: Date.now(),
 		},
 		say("Acknowledged."),
+		{
+			role: "user",
+			content: "Across all my projects, put the main finding before model names in Results.",
+			timestamp: Date.now(),
+		},
+		say("Understood."),
+		{
+			role: "user",
+			content: "For this project, always spell out the names of months in figure captions.",
+			timestamp: Date.now(),
+		},
+		say("Noted."),
+		{
+			role: "user",
+			content: "For this reply only, call me Captain Turnip.",
+			timestamp: Date.now(),
+		},
+		say("Understood, Captain Turnip."),
 	])
 		manager.appendMessage(message);
 	const session = manager.getSessionFile();
@@ -348,6 +368,24 @@ test("real Pi proactively invokes custom compaction and retains usable memory/pr
 		proposals,
 		/\{(?:project|agents|style|evidence|decisions|todo)\}[^\n]*(?:date|observer)[^\n]*survey/i,
 		`Custom compaction produced no usable survey-metadata promotion. Inbox:\n${proposals}\n${diagnostics}`,
+	);
+	assert.ok(
+		proposals
+			.split("\n")
+			.some(
+				(line) =>
+					line.startsWith("- {personal-agents} ") &&
+					/findings?|results?/i.test(line) &&
+					/models?/i.test(line),
+			),
+		`The one-time explicit cross-project standing preference should become an inbox candidate. Inbox:\n${proposals}`,
+	);
+	assert.doesNotMatch(proposals, /Captain Turnip/i, "a one-reply request is not durable");
+	assert.doesNotMatch(proposals, /\bmonths?\b/i, "existing project style needs no proposal");
+	assert.equal(await readFile(join(projectRoot, "STYLE.md"), "utf8"), style);
+	assert.equal(
+		await readFile(join(projectRoot, "AGENTS.md"), "utf8"),
+		"Do not merge the nesting and lighting surveys.\n",
 	);
 	assert.equal(
 		await readFile(join(projectRoot, "PROJECT.md"), "utf8"),

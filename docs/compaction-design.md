@@ -112,11 +112,11 @@ custom request's no-turn-sampling policy does not constrain that native
 fallback.
 
 Working memory includes `userPreferences` and `toolLessons`. Preferences
-capture repeated user corrections, frustrations, and positive feedback
-with their evidence and explicit/inferred status; repeated summary copies
-are not independent evidence, later corrections supersede earlier ones,
-and praise is scoped to what was praised. Project/personal scope remains
-unknown unless visible evidence establishes it. Tool lessons retain
+capture explicit standing requests, corrections, and specific praise with
+their evidence and explicit/inferred status. A single explicit standing
+request can qualify. Later corrections supersede earlier ones; summary
+copies are not fresh evidence. Project/personal scope follows the visible
+evidence. Tool lessons retain
 failure, observed repair/outcome, and applicability limits; an untested
 suggestion is not a demonstrated fix. Both are arrays of single-line strings carrying evidence, scope and
 uncertainty, not objects or private reasoning. Prior summaries are
@@ -143,9 +143,17 @@ Distinguish conversation state already represented durably, durable
 state that changed, conversation decisions missing from durable state,
 conflicts with accepted state, and proposals not yet accepted.
 
-Missing durable state is a finding, not automatic permission to edit
-canonical semantic files. The implementation never mutates canonical
-semantic files. Status input is capped at 8 KiB and retains bounded
+The compactor separately nominates newly evidenced, reusable preferences
+for inbox review even when the user has not requested a proposal. A clear
+cross-project preference targets `personal-agents`; project-local style
+targets `style` and other working conventions target `agents`. A one-off
+request stays task-local, uncertain scope stays in working memory, and
+preferences already represented in the visible durable record are not meant
+to be nominated again. Within the existing snapshot budget the compactor can
+consult project `agents` and `style` as optional reference files. It does not
+see the inbox contents or personal instruction files as snapshots, so unseen
+rules or pending proposals can still be nominated. Nomination is model
+judgment, not an instruction-file write. Status input is capped at 8 KiB and retains bounded
 diagnostics for missing core files and dependency cycles even when other
 status fields must be omitted. It may append only bounded, one-line,
 visibly unreviewed proposals to the configured inbox. The inbox is

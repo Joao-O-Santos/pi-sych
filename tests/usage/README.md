@@ -48,11 +48,13 @@ uses RPC mode and waits for the compaction outcome before stopping Pi,
 so the process does not shut down while the settled-boundary compaction
 is still running. Within a three-minute bound, the test distinguishes
 the proactive attempt, too-small rejection, completion event, persisted
-extension (`fromHook`) summary, and proposal inbox output. It also
-checks canonical project state was not changed. The test copies the
-configured OpenAI Codex auth entry when available; it may incur model
-cost. Diagnostics include Pi stdout/stderr and the disposable session is
-removed after the run.
+extension (`fromHook`) summary, and proposal inbox output. It checks
+that an explicit standing preference can become a `personal-agents`
+candidate, while a one-reply instruction and an already recorded project
+style rule do not. It also checks that canonical project files stay
+unchanged. The test copies the configured OpenAI Codex auth entry when
+available; it may incur model cost. Diagnostics include Pi stdout/stderr
+and the disposable session is removed after the run.
 
 ## Separately opted-in automatic-compaction soak
 

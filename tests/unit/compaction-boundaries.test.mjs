@@ -105,7 +105,14 @@ test("snapshot byte limits include replacement characters from invalid UTF-8", a
 	const snapshot = await compactionSnapshot(
 		{
 			projectRoot: root,
-			canonical: { project, todo, decisions, inbox },
+			canonical: {
+				project,
+				todo,
+				decisions,
+				inbox,
+				agents: join(root, "AGENTS.md"),
+				style: join(root, "STYLE.md"),
+			},
 			syncPath: join(root, "SYNC.json"),
 		},
 		{},
@@ -141,6 +148,8 @@ test("snapshot clips unicode and rejects inbox aliases", async (t) => {
 			projectRoot: root,
 			canonical: {
 				project: projectPath,
+				agents: join(root, "AGENTS.md"),
+				style: join(root, "STYLE.md"),
 				todo: join(root, "TODO.md"),
 				decisions: join(root, "DECISIONS.md"),
 				inbox: join(root, "INBOX.md"),

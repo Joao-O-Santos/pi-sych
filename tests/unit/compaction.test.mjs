@@ -135,10 +135,7 @@ test("prompt preserves recorded decision attributions across continuation passes
 	);
 	assert.equal(prompt.split(first).length - 1, 1);
 	assert.match(prompt, /not independently verified and not new authorization/);
-	assert.match(
-		prompt,
-		/Promotions must be an array of at most five objects shaped \{target,proposal\}/,
-	);
+	assert.match(prompt, /Return up to five \{target,proposal\} objects/);
 	assert.match(
 		prompt,
 		/target must be one of project,agents,personal-agents,style,evidence,decisions,todo/,
@@ -434,9 +431,14 @@ test("snapshot excludes inbox and bounds canonical content", async (t) => {
 	const { root } = await fixture(t);
 	await writeFile(join(root, "TODO.md"), "todo\n".repeat(20_000));
 	await writeFile(join(root, "DECISIONS.md"), "");
+	await writeFile(join(root, "STYLE.md"), "Report estimates before statistics.\n");
 	const project = await resolveProject(root),
 		snapshot = await compactionSnapshot(project, await checkProjectStatus(root, project));
 	assert.ok(snapshot.files.every((file) => Buffer.byteLength(file.content) <= 16 * 1024));
+	assert.equal(
+		snapshot.files.find((file) => file.path === "STYLE.md")?.content,
+		"Report estimates before statistics.\n",
+	);
 	assert.equal(
 		snapshot.files.some((file) => file.path === "INBOX.md"),
 		false,

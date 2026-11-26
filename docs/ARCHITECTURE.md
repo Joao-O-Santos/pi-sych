@@ -201,19 +201,21 @@ provider accounting. Working-memory text/count quotas are removed;
 schema and proposal safeguards remain. Invalid model limits, a genuinely
 oversized backbone or model failure use explicit native fallback rather
 than silently dropping turns. That fallback uses Pi's own policy.
-Working memory includes bounded user preferences and tool
-failure/recovery lessons. Explicit versus inferred feedback and
-project/personal/unknown scope remain distinguishable; repeated summary
-copies are not new evidence. Tool fixes retain outcome and applicability
-limits. Hidden thinking stays excluded. Canonical snapshots are
-separately bounded. Recorded `user-explicit` and `accepted-project`
-decision attributions are preserved without verification; inferences are
-kept separate. Malformed optional collections and invalid individual
-members are skipped independently so usable siblings survive. Invalid
-promotion candidates are likewise skipped rather than invalidating the
-memory summary. The required objective and next action must remain
-usable; malformed JSON or missing or unusable required fields leave
-native fallback in control.
+Working memory includes user preferences and tool failure/recovery
+lessons. The compactor separately nominates newly evidenced, reusable
+preferences for human inbox review. One explicit standing instruction
+can qualify; a one-off request does not. Explicit versus inferred
+feedback and project/personal/unknown scope remain distinguishable;
+repeated summary copies are not new evidence. Tool fixes retain outcome
+and applicability limits. Hidden thinking stays excluded. Canonical
+snapshots are separately bounded. Recorded `user-explicit` and
+`accepted-project` decision attributions are preserved without
+verification; inferences are kept separate. Malformed optional
+collections and invalid individual members are skipped independently so
+usable siblings survive. Invalid promotion candidates are likewise
+skipped rather than invalidating the memory summary. The required
+objective and next action must remain usable; malformed JSON or missing
+or unusable required fields leave native fallback in control.
 
 At most bounded one-line proposals are appended to the configured inbox
 as visibly unreviewed state. Canonical semantic files are never mutated.

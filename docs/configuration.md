@@ -45,10 +45,12 @@ ceilings. Active-model context/output limits and Pi's token estimate
 control fitting; bulky tool outputs may be explicitly reduced as needed.
 Output is not capped at 16,384 tokens. External snapshot reads and inbox
 proposals retain separate safety bounds. No new configuration keys are
-required. Both manual and automatic requests retain bounded actionable
-user preferences and tool recovery lessons when visible. Stable
-preferences may become unreviewed project/agents/personal-agents inbox
-proposals, never direct edits to those instruction files. See the
+required. Manual and automatic requests preserve actionable user
+preferences and tool recovery lessons. Clearly scoped standing
+preferences can become unreviewed inbox proposals, even when stated
+once. The compactor can consult project instructions and style within
+its snapshot budget; it does not edit those files or personal
+instructions. See the
 [architecture](ARCHITECTURE.md#configuration-and-compaction) for the
 continuity model and its limits.
 

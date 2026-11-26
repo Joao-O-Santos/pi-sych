@@ -424,7 +424,14 @@ test("snapshots skip duplicate and inbox-aliased roles but surface other errors"
 	const snapshot = await compactionSnapshot(
 		{
 			projectRoot: root,
-			canonical: { project: shared, todo: shared, decisions: join(root, "MISSING.md"), inbox },
+			canonical: {
+				project: shared,
+				todo: shared,
+				decisions: join(root, "MISSING.md"),
+				agents: join(root, "AGENTS.md"),
+				style: join(root, "STYLE.md"),
+				inbox,
+			},
 			syncPath: join(root, "SYNC.json"),
 		},
 		{ manifest: { artifacts: [{ path: "EXTRA.md" }] } },
@@ -436,6 +443,8 @@ test("snapshots skip duplicate and inbox-aliased roles but surface other errors"
 			projectRoot: root,
 			canonical: {
 				project: inbox,
+				agents: inbox,
+				style: root,
 				todo: join(root, "MISSING.md"),
 				decisions: join(root, "MISSING.md"),
 				inbox,
