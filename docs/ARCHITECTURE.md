@@ -167,10 +167,11 @@ workbench uses Pi's final actionable `agent_before_settle` event after
 ordinary post-run handling. It injects one hidden message and requests
 one continuation only for a completed outcome, with no queued messages
 and `context.canContinue` true. A per-user-message guard prevents
-recursive reassessment; a new user message resets it. The instruction
-keeps work within existing authorization and directs the supervisor to
-stop when complete or genuinely blocked. This trigger is separate from
-compaction.
+recursive reassessment; a new user message resets it. The reminder asks
+the supervisor to take the next authorized action or name a blocker.
+When the request is complete and already answered, it asks for no second
+recap. Pi Sych preserves entries proposed by earlier boundary handlers.
+This trigger is separate from compaction.
 
 The continuation is a bounded observable trajectory: objective,
 authorization, constraints, user preferences, progress, decisions,

@@ -345,7 +345,7 @@ test("workbench lifecycle and status commands cover configured branches", async 
 		{ systemPrompt: "system", systemPromptOptions: { selectedTools: [] } },
 		ctx,
 	);
-	assert.match(before.systemPrompt, /Pi Sych/);
+	assert.match(before.systemPrompt, /Finish the authorized request/);
 	await writeFile(join(cwd, "AGENTS.md"), "Local rule\n");
 	const withInstructions = await extension.events.get("before_agent_start")(
 		{ systemPrompt: "system", systemPromptOptions: { selectedTools: [] } },

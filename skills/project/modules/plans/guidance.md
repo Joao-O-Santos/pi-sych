@@ -11,9 +11,11 @@ one integrated response, state implementation order and global constraints, and
 identify suggestions deliberately not adopted. Prefer a simple coherent revision
 over locally optimal changes that sprawl.
 
-Keep the plan conceptual and small: outcome, constraints and
-non-goals, relevant dependencies and context, unresolved
-consequential choices, verification, and next work.
+Keep the plan small: outcome, constraints, dependencies, consequential
+choices, verification, and next work. For a multi-part task, a checkbox list
+can be enough. Mark steps done when they are complete, then take the next
+unchecked step you can do within scope. Use a final checklist when it helps
+the user see remaining decisions or blockers, not to defer doable work.
 
 Choose execution by the current task and context needs rather than a fixed
 default. A clean worker is appropriate when an explicit packet is sufficient;

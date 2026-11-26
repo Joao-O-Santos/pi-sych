@@ -16,6 +16,17 @@ interfaces that must not change, required verification, and when to return a
 blocker. The worker continues the defined scope; it does not repeat the first
 change or obey an obsolete instruction to stop after planning.
 
+## Continue a style pass after author feedback
+
+Read the author's samples and revise one passage yourself. Say what you
+learned: for example, the author wants the result before the model name,
+keeps uncertainty beside the estimate, and uses the Discussion to explain a
+plausible competing process. Hand off a separate passage with
+`contextMode: trajectory` when the author's corrections and your comparison
+with the sample would help. Include the current draft, sample, and relevant
+outputs; state which passage the worker owns. Use a clean reader afterward if
+you want to know whether the result makes sense without the drafting history.
+
 ## A clean plan is enough
 
 The accepted migration is fully specified in a brief with target interfaces,

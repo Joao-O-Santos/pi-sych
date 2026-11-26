@@ -238,9 +238,9 @@ test("worker prompt carries assignment, context, persistence, and terminal-resul
 	assert.match(prompt, /receive no supervisor conversation/i);
 	assert.match(prompt, /Read every context file and selected skill/i);
 	assert.match(prompt, /only the primary route and optional modules\/methods/i);
-	assert.match(prompt, /until the completion target is satisfied or you are genuinely blocked/i);
-	assert.match(prompt, /Do not invent user checkpoints inside the assigned scope/i);
-	assert.match(prompt, /Report missing context, unresolved ambiguity/i);
+	assert.match(prompt, /Complete the assigned outcome and run the checks needed/i);
+	assert.match(prompt, /If blocked, say what would let the work proceed/i);
+	assert.match(prompt, /Use limitations for gaps that affect reliance/i);
 	assert.match(prompt, /existing project-relative paths/i);
 	assert.match(prompt, /submit_artifact exactly once as the final tool call/i);
 	assert.doesNotMatch(prompt, /workerInstructions|AGENTS\.md-level/);
@@ -264,8 +264,8 @@ test("worker prompt carries assignment, context, persistence, and terminal-resul
 		},
 		[],
 	);
-	assert.match(research, /Tool exposure does not establish working credentials/);
-	assert.match(research, /source validity, or completeness/);
+	assert.match(research, /identify the sources actually inspected/);
+	assert.match(research, /access gaps that affect the findings/);
 	const trajectory = taskPrompt(
 		{
 			id: "task-3",
