@@ -1,47 +1,56 @@
 # R and Quarto
 
-## Evidence chain and reproducibility
+## Start with the data and the question
 
-- Preserve established project layout, object names, and conventions unless an
-  approved change requires otherwise.
-- Document inputs and access constraints; record transformations and exclusions;
-  separate confirmatory from exploratory and robustness work; provide an
-  executable runner; and render from the same evidence chain.
-- Do not install tools or invent package availability.
+Read comparable scripts and the project's style guide. Follow their analysis
+layout, naming, and package choices. For new work without a house style,
+use the defaults below.
 
-## R coding defaults
+Before fitting, find out what one row represents, which rows share a unit,
+and where the predictors vary. Inspect the few columns and counts that bear
+on the question. Use `head()`, `summary()`, `count()`, or `table()` directly
+when they answer it. For example, `count(ds, tank, treatment)` shows both
+how many observations came from each tank and whether treatment varied
+within tanks. Keep checks that let someone understand or rerun a decision;
+use assertions when an unattended run needs to stop on invalid input.
 
-These defaults are defeasible:
+## Default script style
 
-- Preserve established project conventions first.
-- For new code, prefer base `|>` over `%>%`; use another pipe only when
-  compatibility or an established project convention requires it.
-- Prefer clear pipelines and small functions that transform inputs and return
-  values when that makes the data flow easier to inspect.
-- Minimize mutation, hidden global state, and side effects when a direct
-  functional flow is simpler.
-- Use tidyverse consistently for tidyverse-shaped data manipulation rather than
-  switching gratuitously between dialects. Prefer base R where it is clearer or
-  avoids a needless dependency.
-- Prefer tidyselect helpers for coherent sets of columns when they avoid
-  parallel manually maintained name vectors.
-- Use `snake_case` unless project conventions say otherwise.
-- Keep comments sparse. Explain reasons, non-obvious constraints, analytical
-  decisions, or gotchas rather than narrating obvious code.
-- Let project-native formatters and linters own mechanical formatting.
+- Load the packages used throughout the script once at the start with
+  `library()`. Call functions directly in analysis and teaching code; use
+  `pkg::fun()` for collisions or when a deliberate local dependency is clearer.
+  Install packages separately from analysis and render paths.
+- Use `ds` for the main analysis data, `snake_case` for object names, and
+  descriptive names for derived data and models. Prepare columns explicitly,
+  then write `lm(mass_g ~ length_mm, data = ds)`, with column names in the
+  formula. Preserve external names that belong to an input schema.
+- Use the native pipe `|>` for a readable sequence of transformations. Use
+  `dplyr` and `tidyr` where they simplify the work (for example,
+  `drop_na(ds, mass_g, length_mm)` for complete cases on those two columns).
+  Use base R for a simple operation when it reads better. Prefer a few direct
+  steps to wrappers, nested selection machinery, or duplicated versions of
+  the same workflow. Factor out actual repetition or a useful abstraction.
+- Set contrast coding deliberately before fitting categorical models where
+  coding affects the target tests. Use sum contrasts for a Type III workflow
+  that calls for them, not as a session-wide reflex in unrelated code. Use
+  `lm()` for ordinary linear models, `afex` for repeated-measures or mixed
+  workflows where appropriate, `emmeans` for estimated means and contrasts,
+  and `ggplot2` for plots. Choose the model and tools for the question.
+- Use comments to explain analytical choices, units, or pitfalls. In
+  teaching, explain the question and what to notice before moving on; put
+  optional machinery after the runnable main path.
 
-## Checks and rendering
+## Keep analysis and report aligned
 
-- Inspect project-native and available formatting, linting, testing, package and
-  check, and render capabilities, and use them proportionately. Actual
-  user-machine tool preferences can live in `STACK.md`; project-specific
-  requirements can live in `AGENTS.md`.
-- If a preferred tool is absent, report it and use the next best available
-  check; never install tools unless explicitly asked.
-- Compare rendered output with source data and computed objects.
-- Before changing prose or code, identify affected tables, figures, methods, and
-  results. Check variable names, conditions, samples, estimates, and
-  interpretations agree everywhere.
-- When a tool or dependency is unavailable, preserve the last verified state and
-  never write results from expected output, partial console text, or statistical
-  intuition.
+Trace the reported comparison to the data preparation, model, contrast and
+output that produce it. Use the same sample when comparing nested models.
+Keep planned and exploratory work identifiable. Update captions, tables,
+figures, and prose from the same analysis; check signs, scales, units,
+denominators, and uncertainty against the output.
+
+Run the relevant project checks and render the affected Quarto target. Inspect
+the finished output as well as the source. If execution is blocked, preserve
+verified results and say which result or render remains unverified.
+
+See the [worked example](examples.md) and the
+[reporting route](../reporting/guidance.md).
