@@ -291,7 +291,7 @@ test("dispatch observes tracked and untracked changes in Git projects", async (t
 		["config", "user.name", "Pi Sych test"],
 		["config", "user.email", "test@example.invalid"],
 		["add", "A.md"],
-		["commit", "-qm", "baseline"],
+		["-c", "commit.gpgsign=false", "commit", "-qm", "baseline"],
 	])
 		execFileSync("git", args, { cwd: root, stdio: "ignore" });
 	const outcome = await dispatchWorker({
@@ -318,7 +318,7 @@ test("Git snapshot hashing errors do not fall back to directory traversal", asyn
 		["config", "user.name", "Pi Sych test"],
 		["config", "user.email", "test@example.invalid"],
 		["add", "nested/A.md"],
-		["commit", "-qm", "baseline"],
+		["-c", "commit.gpgsign=false", "commit", "-qm", "baseline"],
 	])
 		execFileSync("git", args, { cwd: root, stdio: "ignore" });
 	await rm(nested, { recursive: true });
@@ -350,7 +350,7 @@ test("dispatch scopes Git changes to a nested canonical project root", async (t)
 		["config", "user.name", "Pi Sych test"],
 		["config", "user.email", "test@example.invalid"],
 		["add", "subproject/A.md"],
-		["commit", "-qm", "baseline"],
+		["-c", "commit.gpgsign=false", "commit", "-qm", "baseline"],
 	])
 		execFileSync("git", args, { cwd: root, stdio: "ignore" });
 	const outcome = await dispatchWorker({
