@@ -4,6 +4,11 @@ Notable user-facing changes to Pi Sych, in reverse version order.
 
 ## Unreleased
 
+## 8.2.3
+
+- Patch release: refine built-in guidance and correct compaction and
+  completion reassessment within their existing contracts. No public
+  schema, configuration, or stored-state migration is required.
 - Lead with the result in supervisor replies, carry authorized work
   through to completion, and choose trajectory for handoffs that depend
   on prior feedback or exploration. Completion reassessment preserves
